@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+       <mvc:annotation-driven/>
+       <context:component-scan base-package="com.yipeng.bill.bms.web">
+       	<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+       	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+       	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+       </context:component-scan>
+       
+       <mvc:resources mapping="/static/**" location="/static/" />
+
+       <bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+              <property name="order" value="0" />
+              <property name="cache" value="true" />
+              <!-- 模板后缀，指定html页面为模板 -->
+              <property name="prefix" value=""/>
+              <property name="suffix" value=".ftl"/>
+              <!-- 使用这个模板类来解析视图 -->
+              <property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
+              <property name="exposeSpringMacroHelpers" value="true" />
+              <!-- 允许访问请求属性，默认为false -->
+              <property name="exposeRequestAttributes" value="true" />
+              <!-- 允许访问会话属性，默认为false -->
+              <property name="exposeSessionAttributes" value="true" />
+              <!-- 页面上下文，类似于request.contextPath-->
+              <property name="requestContextAttribute" value="rc" />
+              <!-- 模板输出内容编码，此处应与defaultEncoding保持一致-->
+              <property name="contentType" value="text/html;charset=UTF-8" />
+       </bean>
+
+       <bean id="freemarkerConfig" class="com.yipeng.bill.bms.core.freemarker.FreeMarkerConfigurerEx">
+              <!-- 模板文件所在目录-->
+              <property name="templateLoaderPath" value="/WEB-INF/pages/" />
+              <!-- 指定FreeMarker模板文件的编码格式-->
+              <property name="defaultEncoding" value="UTF-8" />
+              <!-- FreeMarker属性配置-->
+              <property name="freemarkerSettings">
+                     <props>
+                            <prop key="template_update_delay">0</prop>
+                            <prop key="locale">zh_CN</prop>
+                            <prop key="default_encoding">UTF-8</prop>
+                            <prop key="number_format">0.##########</prop>
+                            <prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+                            <prop key="classic_compatible">true</prop>
+                            <prop key="template_exception_handler">ignore</prop>
+                     </props>
+              </property>
+              <property name="freemarkerVariables">
+                     <map>
+                            <entry key="showDictContent" value-ref="showDictTemplate"/>
+                     </map>
+              </property>
+       </bean>
+		<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+			 <property name="maxUploadSize" value="20000000"></property>
+		</bean> 
+		
+       <mvc:interceptors>
+              <mvc:interceptor>
+                     <mvc:mapping path="/**"/>
+                     <bean class="com.yipeng.bill.bms.core.spring.interceptor.HttpInterceptor"/>
+              </mvc:interceptor>
+       </mvc:interceptors>
+       
+       <bean id="showDictTemplate" class="com.yipeng.bill.bms.core.freemarker.ShowDictTemplate">
+			<property name="mappingClazz">
+            	<map>
+                </map>
+            </property>
+            <property name="dataLoaderMap">
+            	<map key-type="java.lang.String" value-type="com.yipeng.bill.bms.core.freemarker.IDictDataLoader">
+                </map>
+            </property>
+       </bean>
+</beans>

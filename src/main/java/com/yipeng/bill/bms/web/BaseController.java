@@ -130,3 +130,4 @@ public abstract class BaseController extends BaseCommController {
 		model.addAttribute("bmsModel", bms);
 	}*/
 }
+

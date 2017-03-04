@@ -418,24 +418,24 @@
         </plugins>
 
         <!-- 资源文件设置及过滤 -->
-        <resources>
+        <!--<resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <!--  资源根目录排除各环境的配置，使用单独的资源目录来指定  -->
+                &lt;!&ndash;  资源根目录排除各环境的配置，使用单独的资源目录来指定  &ndash;&gt;
                 <excludes>
                     <exclude>env/dev/*</exclude>
                     <exclude>env/test/*</exclude>
                     <exclude>env/sit/*</exclude>
                     <exclude>env/pre/*</exclude>
                     <exclude>env/prod/*</exclude>
-                    <!--<exclude>mvntools/*</exclude>-->
+                    &lt;!&ndash;<exclude>mvntools/*</exclude>&ndash;&gt;
                 </excludes>
             </resource>
             <resource>
-                <!-- 分生产环境资源 -->
+                &lt;!&ndash; 分生产环境资源 &ndash;&gt;
                 <directory>src/main/resources/env/${env}</directory>
             </resource>
-        </resources>
+        </resources>-->
 
     </build>
 

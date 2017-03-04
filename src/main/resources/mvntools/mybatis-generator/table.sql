@@ -1,58 +1,152 @@
-# ************************************************************
-# Sequel Pro SQL dump
-# Version 4541
-#
-# http://www.sequelpro.com/
-# https://github.com/sequelpro/sequelpro
-#
-# Host: 127.0.0.1 (MySQL 5.6.31)
-# Database: promotionsysbp
-# Generation Time: 2016-08-02 06:34:19 +0000
-# ************************************************************
+CREATE TABLE IF NOT EXISTS `t_user` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
+  `user_name` VARCHAR(64) NOT NULL COMMENT '用户名',
+  `real_name` VARCHAR(45) NULL COMMENT '真实姓名',
+  `password` VARCHAR(64) NOT NULL COMMENT '密码',
+  `status` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '1：正常状态；0：被屏蔽 （待审核）',
+  `create_user_id` BIGINT NULL COMMENT '创建人id',
+  `create_time` DATETIME NULL COMMENT '创建时间',
+  `update_user_id` BIGINT NULL COMMENT '修改人id',
+  `update_time` DATETIME NULL COMMENT '修改时间',
+  `contact` VARCHAR(45) NULL COMMENT '联系人',
+  `qq` VARCHAR(20) NULL COMMENT 'QQ号',
+  `phone` VARCHAR(20) NULL COMMENT '手机号',
+  `last_login_time` DATETIME NULL COMMENT '最后登录时间',
+  `login_count` INT NULL COMMENT '登录次数',
+  PRIMARY KEY (`id`)  COMMENT '')
+ENGINE = InnoDB;
 
+CREATE TABLE IF NOT EXISTS `t_user_role` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
+  `user_id` BIGINT NOT NULL COMMENT '',
+  `role_id` BIGINT NOT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '',
+  INDEX `fk_t_user_role_t_user_idx` (`user_id` ASC)  COMMENT '',
+  INDEX `fk_t_user_role_t_role1_idx` (`role_id` ASC)  COMMENT '',
+  CONSTRAINT `fk_t_user_role_t_user`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `t_user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_t_user_role_t_role1`
+    FOREIGN KEY (`role_id`)
+    REFERENCES `t_role` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = '用户角色关联表';
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+CREATE TABLE IF NOT EXISTS `t_role` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
+  `role_name` VARCHAR(64) NOT NULL COMMENT '角色名',
+  `role_code` VARCHAR(45) NULL COMMENT '角色编码',
+  `role_desc` VARCHAR(64) NOT NULL COMMENT '角色描述',
+  PRIMARY KEY (`id`)  COMMENT '')
+ENGINE = InnoDB
+COMMENT = '角色表';
 
+CREATE TABLE IF NOT EXISTS `t_fund_account` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
+  `user_id` BIGINT NOT NULL COMMENT '',
+  `balance` DECIMAL NULL COMMENT '余额',
+  `create_time` DATETIME NULL COMMENT '',
+  `create_user_id` BIGINT NULL COMMENT '',
+  `update_time` DATETIME NULL COMMENT '',
+  `update_user_id` BIGINT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '',
+  INDEX `fk_t_customer_fund_t_user1_idx` (`user_id` ASC)  COMMENT '',
+  CONSTRAINT `fk_t_customer_fund_t_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `t_user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = '客户资金帐户表';
 
-# Dump of table WD_DEMO_INFO
-# ------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `t_fund_item` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
+  `fund_account_id` BIGINT NOT NULL COMMENT '',
+  `change_amount` DECIMAL NULL COMMENT '变动金额',
+  `change_time` DATETIME NULL COMMENT '变动时间',
+  `item_type` VARCHAR(64) NULL COMMENT '消费形式',
+  PRIMARY KEY (`id`)  COMMENT '',
+  INDEX `fk_t_fund_item_t_fund_account1_idx` (`fund_account_id` ASC)  COMMENT '',
+  CONSTRAINT `fk_t_fund_item_t_fund_account1`
+    FOREIGN KEY (`fund_account_id`)
+    REFERENCES `t_fund_account` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = '客户资金帐户表';
 
-DROP TABLE IF EXISTS `WD_DEMO_INFO`;
+CREATE TABLE IF NOT EXISTS `t_bill` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
+  `website` VARCHAR(256) NULL COMMENT '网址',
+  `keywords` VARCHAR(128) NULL COMMENT '关键字',
+  `create_time` DATETIME NULL COMMENT '',
+  `update_time` DATETIME NULL COMMENT '',
+  `create_user_id` BIGINT NULL COMMENT '',
+  `update_user_id` BIGINT NULL COMMENT '',
+  `first_ranking` INT NULL COMMENT '初始排名',
+  `new_ranking` INT NULL COMMENT '新的排名',
+  `web_app_id` INT NULL COMMENT '订单接口调用查询ID',
+  `day_optimization` INT NULL COMMENT '日优化（初始值为1）可以调整数值，调整参数时，调用接口传入参数',
+  `all_optimization` INT NULL COMMENT '总优化（计算总优化数）',
+  `state` INT NULL COMMENT '订单状态',
+  PRIMARY KEY (`id`)  COMMENT '')
+ENGINE = InnoDB
+COMMENT = '计费单表';
 
-CREATE TABLE `WD_DEMO_INFO` (
-  `ID` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '自增主键',
-  `GOODS_CODE` bigint(20) DEFAULT '0' COMMENT '商品码，对外使用。生成规则：1，旧有数据：业态码(bizCode,4位)+原业态商品码,最大64位长度，全局唯一；不允许空；2，新生成的：业态码(bizCode,4位)+唯一32位字符串；统一小写'',',
-  `GOODS_SN` bigint(20) DEFAULT '0' COMMENT '商品编码(64位长度编码)(对应原ID)(唯一非空)',
-  `STATUS` tinyint(4) DEFAULT '0' COMMENT '记录状态,0有效,1无效',
-  `CREATE_TIME` datetime DEFAULT NULL COMMENT '创建时间',
-  `UPDATE_TIME` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `VERSION` int(11) DEFAULT '0' COMMENT '乐观锁版本号',
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='初始框架测试用表';
+CREATE TABLE IF NOT EXISTS `t_bill_search_support` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
+  `bill_id` BIGINT NOT NULL COMMENT '',
+  `search_support` VARCHAR(20) NULL COMMENT '搜索引擎名',
+  PRIMARY KEY (`id`)  COMMENT '',
+  INDEX `fk_t_bill_search_support_t_bill1_idx` (`bill_id` ASC)  COMMENT '',
+  CONSTRAINT `fk_t_bill_search_support_t_bill1`
+    FOREIGN KEY (`bill_id`)
+    REFERENCES `t_bill` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = '搜索引擎支持对象表';
 
-LOCK TABLES `WD_DEMO_INFO` WRITE;
-/*!40000 ALTER TABLE `WD_DEMO_INFO` DISABLE KEYS */;
+CREATE TABLE IF NOT EXISTS `t_bill_price` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
+  `bill_id` BIGINT NOT NULL COMMENT '',
+  `price` DECIMAL NULL COMMENT '',
+  `in_member_id` BIGINT NULL COMMENT '收款方id',
+  `out_member_id` BIGINT NULL COMMENT '付款方id',
+  `create_time` DATETIME NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)  COMMENT '',
+  INDEX `fk_t_bill_price_t_bill1_idx` (`bill_id` ASC)  COMMENT '',
+  CONSTRAINT `fk_t_bill_price_t_bill1`
+    FOREIGN KEY (`bill_id`)
+    REFERENCES `t_bill` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = '计费价格表';
 
-INSERT INTO `WD_DEMO_INFO` (`ID`, `GOODS_CODE`, `GOODS_SN`, `STATUS`, `CREATE_TIME`, `UPDATE_TIME`, `VERSION`)
-VALUES
-	(1,10,10,0,'2016-08-02 11:32:15','2016-08-02 14:32:50',0),
-	(2,20,20,0,'2016-08-02 14:27:17','2016-08-02 14:33:01',0),
-	(3,30,30,0,'2016-08-02 14:32:25','2016-08-02 14:33:06',0);
-
-/*!40000 ALTER TABLE `WD_DEMO_INFO` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+CREATE TABLE IF NOT EXISTS `t_bill_cost` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
+  `t_bill_id` BIGINT NOT NULL COMMENT '',
+  `t_bill_price_id` BIGINT NOT NULL COMMENT '',
+  `cost_amount` DECIMAL NULL COMMENT '消费金额',
+  `cost_date` DATE NULL COMMENT '',
+  `ranking` INT NULL COMMENT '排名',
+  PRIMARY KEY (`id`)  COMMENT '',
+  INDEX `fk_t_bill_cost_t_bill1_idx` (`t_bill_id` ASC)  COMMENT '',
+  INDEX `fk_t_bill_cost_t_bill_price1_idx` (`t_bill_price_id` ASC)  COMMENT '',
+  CONSTRAINT `fk_t_bill_cost_t_bill1`
+    FOREIGN KEY (`t_bill_id`)
+    REFERENCES `t_bill` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_t_bill_cost_t_bill_price1`
+    FOREIGN KEY (`t_bill_price_id`)
+    REFERENCES `t_bill_price` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = '计费消费表'

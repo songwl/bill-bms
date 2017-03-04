@@ -35,9 +35,9 @@
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource" />
-        <property name="configLocation" value="classpath:/META-INF/mybatis/mybatis_config.xml" />
+        <property name="configLocation" value="classpath:/mybatis/mybatis_config.xml" />
         <property name="mapperLocations">
-            <value>classpath*:META-INF/mybatis/mapper/*Mapper.xml</value>
+            <value>classpath*:mybatis/mapping/*Mapper.xml</value>
         </property>
         <property name="typeAliasesPackage" value="com.yipeng.bill.bms.domain" />
     </bean>

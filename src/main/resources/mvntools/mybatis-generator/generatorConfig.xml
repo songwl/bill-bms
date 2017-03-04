@@ -59,7 +59,7 @@
             targetPackage：生成的类要放的包，真实的包受enableSubPackages属性控制；
             targetProject：目标项目，指定一个存在的目录下，生成的内容会放到指定目录中，如果目录不存在，MBG不会自动建目录
        -->
-        <javaModelGenerator targetPackage="com.wanda.promotion.persistent.domain" targetProject="./src/main/java">
+        <javaModelGenerator targetPackage="com.yipeng.bill.bms.domain" targetProject="./src/main/java">
             <!--  for MyBatis3/MyBatis3Simple
                 自动为每一个生成的类创建一个构造方法，构造方法包含了所有的field；而不是使用setter；
              -->
@@ -78,8 +78,9 @@
                 如果设置了这个根对象，那么生成的keyClass或者recordClass会继承这个类；在Table的rootClass属性中可以覆盖该选项
                 注意：如果在key class或者record class中有root class相同的属性，MBG就不会重新生成这些属性了，包括：
                     1，属性名相同，类型相同，有相同的getter/setter方法；
+                    <property name="rootClass" value="com.wanda.promotion.persistent.domain.prom.BaseDo"/>
              -->
-            <property name="rootClass" value="com.wanda.promotion.persistent.domain.prom.BaseDo"/>
+
 
             <!-- 设置是否在getter方法中，对String类型字段调用trim()方法 -->
             <property name="trimStrings" value="true"/>
@@ -87,13 +88,13 @@
 
 
         <!--对应的mapper.xml文件  -->
-        <sqlMapGenerator targetPackage="common.mybatis.mapping" targetProject="./src/main/resources">
+        <sqlMapGenerator targetPackage="mybatis.mapping" targetProject="./src/main/resources">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
 
         <!-- 对应的Mapper接口类文件 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.wanda.promotion.persistent.dao"
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.yipeng.bill.bms.dao"
                              targetProject="./src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
@@ -140,8 +141,8 @@
        注意，table里面很多参数都是对javaModelGenerator，context等元素的默认属性的一个复写；
        -->
         <!-- 不生成Example -->
-        <table tableName="prom_budget_body"
-               domainObjectName="PromBudgetBody"
+        <table tableName="t_user"
+               domainObjectName="User"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
@@ -263,80 +264,9 @@
         </table>
 
 
-        <table tableName="prom_budget" domainObjectName="PromBudget" enableCountByExample="false"
+       <!-- <table tableName="prom_budget" domainObjectName="PromBudget" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_budget_body_item" domainObjectName="PromBudgetBodyItem" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_budget_item" domainObjectName="PromBudgetItem" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_config_budget" domainObjectName="PromConfigBudget" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_config_plan" domainObjectName="PromConfigPlan" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_config_settle" domainObjectName="PromConfigSettle" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_config_time" domainObjectName="PromConfigTime" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_control" domainObjectName="PromControl" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_plan" domainObjectName="PromPlan" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_plan_exe_discount" domainObjectName="PromPlanExeDiscount" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_plan_exe_given" domainObjectName="PromPlanExeGiven" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_plan_exe_random" domainObjectName="PromPlanExeRandom" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_plan_exe_reduce" domainObjectName="PromPlanExeReduce" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_plan_exe_sale" domainObjectName="PromPlanExeSale" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_plan_target" domainObjectName="PromPlanTarget" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_plan_target_exe" domainObjectName="PromPlanTargetExe" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_rule" domainObjectName="PromRule" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_rule_control" domainObjectName="PromRuleControl" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_rule_time" domainObjectName="PromRuleTime" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_settle" domainObjectName="PromSettle" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_settle_item" domainObjectName="PromSettleItem" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_settle_support" domainObjectName="PromSettleSupport" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_template" domainObjectName="PromTemplate" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_template_control" domainObjectName="PromTemplateControl" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
-        <table tableName="prom_template_control_group" domainObjectName="PromTemplateControlGroup"
-               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false"></table>
+               selectByExampleQueryId="false"></table>-->
+
     </context>
 </generatorConfiguration>

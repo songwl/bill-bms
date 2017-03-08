@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
-
+@Repository
 public interface UserMapper {
     int deleteByPrimaryKey(Long id);
 
@@ -19,5 +19,7 @@ public interface UserMapper {
 
     int updateByPrimaryKey(User record);
 
-    List<User> selectByParams(Map<String,Object> params);
+    List<User> selectList(Map<String, Object> params);
+
+    User selectByUserName(String userName);
 }

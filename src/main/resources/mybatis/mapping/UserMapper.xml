@@ -27,11 +27,19 @@
     from t_user
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+  <select id="selectByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user
+    where user_name = #{userName,jdbcType=VARCHAR}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from t_user
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.User" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.User">
     insert into t_user (id, user_name, real_name, 
       password, status, create_user_id, 
       create_time, update_user_id, update_time, 
@@ -43,7 +51,7 @@
       #{contact,jdbcType=VARCHAR}, #{qq,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
       #{lastLoginTime,jdbcType=TIMESTAMP}, #{loginCount,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.User" >
+  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.User">
     insert into t_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -196,10 +204,4 @@
       login_count = #{loginCount,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
-
-  <select id="selectByParams" resultMap="BaseResultMap" parameterType="java.util.Map" >
-    select
-    <include refid="Base_Column_List" />
-    from t_user
-  </select>
 </mapper>

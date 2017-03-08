@@ -1,4 +1,4 @@
-package com.yipeng.bill.bms.service.Impl;
+package com.yipeng.bill.bms.service.impl;
 
 import com.yipeng.bill.bms.dao.UserMapper;
 import com.yipeng.bill.bms.domain.User;
@@ -17,7 +17,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
     @Override
-    public int SaveUser(User user) {
+    public int saveUser(User user) {
         return  userMapper.insert(user);
     }
 

@@ -30,8 +30,10 @@
 	  	<title>${title}</title>
 	
 	  	<!--common-->
-
-
+        <script src="${ctx}/static/js/public/jquery.js"></script>
+        <script type="text/javascript">
+            var CTX = "${ctx}";
+        </script>
 		${head_content!""}
 		
 	  	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->

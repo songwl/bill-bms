@@ -1,9 +1,8 @@
-<#import "/base/base.html" as base>
-<#import "/base/func.html" as func>
+<#import "/base/base.ftl" as base>
+<#import "/base/func.ftl" as func>
 
 <@base.html "用户注册">
 <link href="${ctx}/static/css/user/Register.css" rel="stylesheet">
-<script src="${ctx}/static/js/public/jquery.js"></script>
 <script src="${ctx}/static/js/user/verificationNumbers.js"></script>
 <script src="${ctx}/static/js/user/Particleground.js"></script>
 <script src="${ctx}/static/js/user/AjaxName.js"></script>

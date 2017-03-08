@@ -1,5 +1,5 @@
-﻿<#import "/base/base.html" as base>
-<#import "/base/func.html" as func>
+﻿<#import "/base/base.ftl" as base>
+<#import "/base/func.ftl" as func>
 
 <@base.html "登录-酒店及会议室信息发布平台" "login-body">
 	<div class="container">

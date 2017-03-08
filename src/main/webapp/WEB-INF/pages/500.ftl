@@ -1,5 +1,5 @@
-<#import "/base/base.html" as base>
-<#import "/base/func.html" as func>
+<#import "/base/base.ftl" as base>
+<#import "/base/func.ftl" as func>
 
 <@base.html "500 Page" "error-page">
 	<section>

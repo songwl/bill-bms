@@ -16,17 +16,23 @@ $(document).ready(function() {
     $("#logid").blur(function () {
         if ($("#logid").val() != "")
         {
-            var ReLogid=$("#logid").val();
+            var userName=$("#logid").val();
             if (/^[A-Za-z]\w{5,12}$/.test($("#logid").val())) {
 
 
                 $.ajax({
                     type: "get",
-                    data:{ReLogid:ReLogid},
-                    url:"/bill/user/ajaxName",
-                    dataType:"text",
-                    success:function (response, ioArgs) {
-
+                    data:{userName:userName},
+                    url:CTX+"/user/validUserName",
+                    dataType:"json",
+                    success:function (result) {
+                        if (result.code==200){ //返回结果code==200代表正确
+                            //验证可以使用,然后。。。
+                        }else{
+                            //验证为已注册,不能使用,然后。。。
+                        }
+                        var msg = result.message;  //这是返回结果给的消息
+                        alert(msg);
                     }
 
                 })

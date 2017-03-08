@@ -267,27 +267,27 @@
         <table tableName="t_role" domainObjectName="Role" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false"></table>
-        <table tableName="t_user_role" domainObjectName="userRole" enableCountByExample="false"
+        <table tableName="t_user_role" domainObjectName="UserRole" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false"></table>
 
         <table tableName="t_bill" domainObjectName="Bill" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false"></table>
-        <table tableName="t_bill_cost" domainObjectName="billCost" enableCountByExample="false"
+        <table tableName="t_bill_cost" domainObjectName="BillCost" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false"></table>
-        <table tableName="t_bill_price" domainObjectName="billPrice" enableCountByExample="false"
+        <table tableName="t_bill_price" domainObjectName="BillPrice" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false"></table>
-        <table tableName="t_bill_search_support" domainObjectName="billSearchSupport" enableCountByExample="false"
+        <table tableName="t_bill_search_support" domainObjectName="BillSearchSupport" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false"></table>
-        <table tableName="t_fund_account" domainObjectName="fundAccount" enableCountByExample="false"
+        <table tableName="t_fund_account" domainObjectName="FundAccount" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false"></table>
 
-        <table tableName="t_fund_item" domainObjectName="fundItem" enableCountByExample="false"
+        <table tableName="t_fund_item" domainObjectName="FundItem" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false"></table>
 

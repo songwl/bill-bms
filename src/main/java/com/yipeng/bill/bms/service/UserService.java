@@ -37,4 +37,12 @@ public interface UserService {
      * @return
      */
     List<User> findList(Map<String,Object> params);
+
+    /**
+     * 判断登录
+     * @param userName
+     * @param password
+     * @return
+     */
+    boolean login(String userName,String password);
 }

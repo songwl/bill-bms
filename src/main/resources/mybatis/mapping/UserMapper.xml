@@ -27,13 +27,13 @@
     from t_user
     where id = #{id,jdbcType=BIGINT}
   </select>
-
   <select id="selectByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from t_user
     where user_name = #{userName,jdbcType=VARCHAR}
   </select>
+
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from t_user
@@ -204,4 +204,5 @@
       login_count = #{loginCount,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
 </mapper>

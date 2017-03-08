@@ -11,7 +11,7 @@ $(document).ready(function() {
     var logid = false;
     var pwd = false;
     var rpwd = false;
-    var zhongwen = false;
+
     //用户名
     $("#logid").blur(function () {
         if ($("#logid").val() != "")
@@ -27,12 +27,15 @@ $(document).ready(function() {
                     dataType:"json",
                     success:function (result) {
                         if (result.code==200){ //返回结果code==200代表正确
-                            //验证可以使用,然后。。。
+                            //验证可以使用,
+                            $(".pdlogid").css({ "color": "#00ff00" }).text("可以使用！");
+                            logid=true;
                         }else{
-                            //验证为已注册,不能使用,然后。。。
+                            //验证为已注册,不能使用,
+                            $(".pdlogid").css({ "color": "#ff0000" }).text("用户名已存在！");
+                            logid = false;
                         }
-                        var msg = result.message;  //这是返回结果给的消息
-                        alert(msg);
+
                     }
 
                 })
@@ -72,6 +75,8 @@ $(document).ready(function() {
     });
     $("#pwd").focus(function () {
         $(".pdpwd").css({ "color": "#ff0000" }).text("");
+        $("#rpwd").val("");
+        $(".pdrpwd").css({ "color": "#ff0000" }).text("");
 
     });
 
@@ -99,28 +104,16 @@ $(document).ready(function() {
 
     });
 
-    //中文姓名
-    $("#zhongwen").blur(function () {
-        if ($("#zhongwen").val() != "")
+    $(".submit_btn").click(function () {
+        if(logid&&pwd&&rpwd)
         {
-            if (/^[\u4E00-\u9FA5]+$/.test($(this).val())) {
-                zhongwen = true;
-                $(".zhongwen").css({ "color": "#00ff00" }).text("√");
-            }
-            else {
-                //格式不对
-                zhongwen = false;
-                $(".zhongwen").css({ "color": "#ff0000" }).text("请输入正确的姓名！");
-            }
+            $("#f1").submit();
         }
-
-
-
-    });
-    $("#zhongwen").focus(function () {
-        $(".zhongwen").css({ "color": "#ff0000" }).text("");
-
-    });
+        else
+        {
+            alert("请将信息填写完整!");
+        }
+    })
 
 
 

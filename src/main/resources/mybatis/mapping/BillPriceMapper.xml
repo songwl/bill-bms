@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yipeng.bill.bms.dao.BillPriceMapper">
+  <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.BillPrice">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="bill_id" jdbcType="BIGINT" property="billId" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="in_member_id" jdbcType="BIGINT" property="inMemberId" />
+    <result column="out_member_id" jdbcType="BIGINT" property="outMemberId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, bill_id, price, in_member_id, out_member_id, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_bill_price
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_bill_price
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.BillPrice">
+    insert into t_bill_price (id, bill_id, price, 
+      in_member_id, out_member_id, create_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{billId,jdbcType=BIGINT}, #{price,jdbcType=DECIMAL}, 
+      #{inMemberId,jdbcType=BIGINT}, #{outMemberId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.BillPrice">
+    insert into t_bill_price
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="billId != null">
+        bill_id,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="inMemberId != null">
+        in_member_id,
+      </if>
+      <if test="outMemberId != null">
+        out_member_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="billId != null">
+        #{billId,jdbcType=BIGINT},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="inMemberId != null">
+        #{inMemberId,jdbcType=BIGINT},
+      </if>
+      <if test="outMemberId != null">
+        #{outMemberId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.BillPrice">
+    update t_bill_price
+    <set>
+      <if test="billId != null">
+        bill_id = #{billId,jdbcType=BIGINT},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="inMemberId != null">
+        in_member_id = #{inMemberId,jdbcType=BIGINT},
+      </if>
+      <if test="outMemberId != null">
+        out_member_id = #{outMemberId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.BillPrice">
+    update t_bill_price
+    set bill_id = #{billId,jdbcType=BIGINT},
+      price = #{price,jdbcType=DECIMAL},
+      in_member_id = #{inMemberId,jdbcType=BIGINT},
+      out_member_id = #{outMemberId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yipeng.bill.bms.dao.BillSearchSupportMapper">
+  <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.BillSearchSupport">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="bill_id" jdbcType="BIGINT" property="billId" />
+    <result column="search_support" jdbcType="VARCHAR" property="searchSupport" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, bill_id, search_support
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_bill_search_support
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_bill_search_support
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.BillSearchSupport">
+    insert into t_bill_search_support (id, bill_id, search_support
+      )
+    values (#{id,jdbcType=BIGINT}, #{billId,jdbcType=BIGINT}, #{searchSupport,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.BillSearchSupport">
+    insert into t_bill_search_support
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="billId != null">
+        bill_id,
+      </if>
+      <if test="searchSupport != null">
+        search_support,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="billId != null">
+        #{billId,jdbcType=BIGINT},
+      </if>
+      <if test="searchSupport != null">
+        #{searchSupport,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.BillSearchSupport">
+    update t_bill_search_support
+    <set>
+      <if test="billId != null">
+        bill_id = #{billId,jdbcType=BIGINT},
+      </if>
+      <if test="searchSupport != null">
+        search_support = #{searchSupport,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.BillSearchSupport">
+    update t_bill_search_support
+    set bill_id = #{billId,jdbcType=BIGINT},
+      search_support = #{searchSupport,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

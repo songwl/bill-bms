@@ -75,7 +75,8 @@ $(document).ready(function() {
     });
     $("#pwd").focus(function () {
         $(".pdpwd").css({ "color": "#ff0000" }).text("");
-        $("#rpwd").val("");
+        pwd = false;
+        rpwd = false;
         $(".pdrpwd").css({ "color": "#ff0000" }).text("");
 
     });
@@ -105,13 +106,14 @@ $(document).ready(function() {
     });
 
     $(".submit_btn").click(function () {
+
         if(logid&&pwd&&rpwd)
         {
             $("#f1").submit();
         }
         else
         {
-            alert("请将信息填写完整!");
+            alert("信息填写不正确，请重新输入!");
         }
     })
 

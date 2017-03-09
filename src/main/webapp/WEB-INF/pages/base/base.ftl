@@ -31,6 +31,11 @@
 	
 	  	<!--common-->
         <script src="${ctx}/static/js/public/jquery.js"></script>
+        <script src="${ctx}/static/js/public/bootstrap.min.js"></script>
+        <link href="${ctx}/static/css/public/bootstrap.min.css" rel="stylesheet">
+        <link href="${ctx}/static/css/public/font-awesome.min.css" rel="stylesheet">
+        <link href="${ctx}/static/css/public/style.css" rel="stylesheet">
+        <link href="${ctx}/static/css/public/style-non-responsive.css" rel="stylesheet">
         <script type="text/javascript">
             var CTX = "${ctx}";
         </script>

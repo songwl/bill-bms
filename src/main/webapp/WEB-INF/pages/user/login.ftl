@@ -15,7 +15,7 @@
     <div class="state"></div>
     <input value="登录" style="width:100%;" type="submit" id="dengru">
 
-    <div class="zhuce"> 立即注册</div>
+    <div class="zhuce"> <a href="${rc.contextPath}/user/register">立即注册</a></div>
     <div class="clear"></div>
     <hr class="hr20">
 </div>

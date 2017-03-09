@@ -10,6 +10,7 @@ import com.yipeng.bill.bms.domain.UserRole;
 import com.yipeng.bill.bms.service.UserRoleService;
 import com.yipeng.bill.bms.service.UserService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -57,16 +58,20 @@ public class UserController extends BaseController {
         boolean loginType=  userService.login(userName,password);
         if(loginType)
         {
-          modelMap.put("userName",userName);
-          return "/home/index";
+
+          return "redirect:/user/home";
         }
         else
         {
-            return "/user/login";
+            return "redirect:/user/home";
         }
 
     }
-
+    @RequestMapping(value="/home",method = RequestMethod.GET)
+    public  String home(HttpServletRequest request)
+    {
+        return "/home/index";
+    }
 
     /**
      * 注册用户
@@ -80,15 +85,13 @@ public class UserController extends BaseController {
         if(user.getUserName()!=""&&user.getPassword()!="")
         {
             user.setStatus(false);
-            userService.saveUser(user);
+              userService.saveUser(user);
 
-            User u= userService.getUserByName(user.getUserName());
-            Long UserId=u.getId();
 
-            UserRole userRole=new UserRole();
+            Long id=user.getId();
 
-            userRole.setUserId(UserId);
-            userRoleService.saveUserRole(userRole);
+
+
 
         }
         return  "/user/login";

@@ -27,7 +27,7 @@
         });
     });
 </script>
-<form action="${rc.contextPath}/user/create" method="post">
+<form action="${rc.contextPath}/user/create" method="post" id="f1">
     <dl class="admin_login">
         <dt>
             <strong>翊芃网络科技会员注册</strong>
@@ -49,26 +49,9 @@
         </dd>
         <span style="font-size:14px;" class="pdrpwd"></span>
 
-        <dd class="pwd_icon">
-            <input type="text" name="realName" placeholder="真实姓名" class="login_txtbx" id="realName" />
-        </dd>
-        <span style="font-size:14px;" class="pdrpwd"></span>
-
-        <dd class="pwd_icon">
-            <input type="text" name="contact" placeholder="联系人" class="login_txtbx" id="contact" />
-        </dd>
-        <span style="font-size:14px;" class="realName"></span>
-        <dd class="pwd_icon">
-            <input type="text" name="qq" placeholder="qq" class="login_txtbx" id="qq" />
-        </dd>
-        <span style="font-size:14px;" class="qq"></span>
-        <dd class="pwd_icon">
-            <input type="text" name="phone" placeholder="电话" class="login_txtbx" id="phone" />
-        </dd>
-        <span style="font-size:14px;" class="phone"></span>
 
         <dd>
-            <input type="submit" value="立即注册" class="submit_btn" />
+            <input type="button" value="立即注册" class="submit_btn" />
         </dd>
         <dd>
             <p></p>

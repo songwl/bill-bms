@@ -36,7 +36,7 @@ public interface UserService {
      * @param params
      * @return
      */
-    List<User> findList(Map<String,Object> params);
+    List<User> findList(int limit, int offset);
 
     /**
      * 判断登录
@@ -45,4 +45,5 @@ public interface UserService {
      * @return
      */
     boolean login(String userName,String password);
+    Long getUserListCount();
 }

@@ -15,17 +15,17 @@
     <meta content="" name="description"/>
     <meta content="" name="author"/>
     <meta name="MobileOptimized" content="320">
-    <link href="../static/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-    <link href="../static/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-    <link href="../static/assets/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
-    <link href="../static/assets/css/style-metronic.css" rel="stylesheet" type="text/css"/>
-    <link href="../static/assets/css/style.css" rel="stylesheet" type="text/css"/>
-    <link href="../static/assets/css/style-responsive.css" rel="stylesheet" type="text/css"/>
-    <link href="../static/assets/css/plugins.css" rel="stylesheet" type="text/css"/>
-    <link href="../static/assets/css/pages/tasks.css" rel="stylesheet" type="text/css"/>
-    <link href="../static/assets/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color"/>
-    <link href="../static/assets/css/custom.css" rel="stylesheet" type="text/css"/>
-    <link rel="shortcut icon" href="../static/assets/img/favicon.ico"/>
+    <link href="../static/js/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/js/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/js/assets/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/js/assets/css/style-metronic.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/js/assets/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/js/assets/css/style-responsive.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/js/assets/css/plugins.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/js/assets/css/pages/tasks.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/js/assets/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color"/>
+    <link href="../static/js/assets/css/custom.css" rel="stylesheet" type="text/css"/>
+    <link rel="shortcut icon" href="../static/js/assets/img/favicon.ico"/>
 </head>
 <body class="page-header-fixed">
 <div class="header navbar navbar-inverse navbar-fixed-top">
@@ -34,12 +34,12 @@
             翊芃网络
         </a>
         <a href="javascript:;" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <img src="../static/assets/img/menu-toggler.png" alt=""/>
+            <img src="../static/js/assets/img/menu-toggler.png" alt=""/>
         </a>
         <ul class="nav navbar-nav pull-right">
             <li class="dropdown user">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                    <img alt="" src="../static/assets/img/avatar1_small.jpg"/>
+                    <img alt="" src="../static/js/assets/img/avatar1_small.jpg"/>
                     <span class="username">张三</span>
                     <i class="fa fa-angle-down"></i>
                 </a>
@@ -230,20 +230,20 @@
         <span class="go-top"><i class="fa fa-angle-up"></i></span>
     </div>
 </div>
-<script src="../static/assets/plugins/respond.min.js"></script>
-<script src="../static/assets/plugins/excanvas.min.js"></script>
-<script src="../static/assets/plugins/jquery-1.10.2.min.js" type="text/javascript"></script>
-<script src="../static/assets/plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
-<script src="../static/assets/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
-<script src="../static/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="../static/assets/plugins/bootstrap-hover-dropdown/twitter-bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
-<script src="../static/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
-<script src="../static/assets/plugins/jquery.blockui.min.js" type="text/javascript"></script>
-<script src="../static/assets/plugins/jquery.cokie.min.js" type="text/javascript"></script>
-<script src="../static/assets/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
-<script src="../static/assets/plugins/jquery-validation/dist/jquery.validate.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="../static/assets/plugins/select2/select2.min.js"></script>
-<script src="../static/assets/scripts/app.js" type="text/javascript"></script>
-<script type="text/javascript" src="../static/app/js/index.js"></script>
+<script src="../static/js/assets/plugins/respond.min.js"></script>
+<script src="../static/js/assets/plugins/excanvas.min.js"></script>
+<script src="../static/js/assets/plugins/jquery-1.10.2.min.js" type="text/javascript"></script>
+<script src="../static/js/assets/plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+<script src="../static/js/assets/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
+<script src="../static/js/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="../static/js/assets/plugins/bootstrap-hover-dropdown/twitter-bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+<script src="../static/js/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="../static/js/assets/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="../static/js/assets/plugins/jquery.cokie.min.js" type="text/javascript"></script>
+<script src="../static/js/assets/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
+<script src="../static/js/assets/plugins/jquery-validation/dist/jquery.validate.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="../static/js/assets/plugins/select2/select2.min.js"></script>
+<script src="../static/js/assets/scripts/app.js" type="text/javascript"></script>
+<script type="text/javascript" src="../static/js/app/js/index.js"></script>
 </body>
 </html>

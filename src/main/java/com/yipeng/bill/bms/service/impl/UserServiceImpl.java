@@ -29,8 +29,8 @@ public class UserServiceImpl implements UserService {
     public User getUserByName(String userName) {  return  userMapper.selectByUserName(userName);    }
 
     @Override
-    public List<User> findList(Map<String, Object> params) {
-        return userMapper.selectList(params);
+    public List<User> findList(int limit, int offset) {
+        return userMapper.selectList(limit,offset);
     }
 
     @Override
@@ -46,6 +46,11 @@ public class UserServiceImpl implements UserService {
 
             return  false;
 
+    }
+
+    @Override
+    public Long getUserListCount() {
+        return  userMapper.getUserListCount();
     }
 
 }

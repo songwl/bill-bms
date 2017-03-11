@@ -32,10 +32,12 @@
 	  	<!--common-->
         <script src="${ctx}/static/js/public/jquery.js"></script>
         <script src="${ctx}/static/js/public/bootstrap.min.js"></script>
-        <link href="${ctx}/static/css/public/bootstrap.min.css" rel="stylesheet">
+        <script src="${ctx}/static/js/public/bootstrap-table.js"></script>
+        <script src="${ctx}/static/js/public/bootstrap-table-zh-CN.js"></script>
+        <script src="${ctx}/static/js/public/bootstrap-table-export.js"></script>
         <link href="${ctx}/static/css/public/font-awesome.min.css" rel="stylesheet">
-        <link href="${ctx}/static/css/public/style.css" rel="stylesheet">
-        <link href="${ctx}/static/css/public/style-non-responsive.css" rel="stylesheet">
+        <link href="${ctx}/static/css/public/bootstrap.min.css" rel="stylesheet">
+        <link href="${ctx}/static/css/public/bootstrap-table.css" rel="stylesheet">
         <script type="text/javascript">
             var CTX = "${ctx}";
         </script>

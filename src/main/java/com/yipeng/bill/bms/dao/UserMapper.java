@@ -21,5 +21,6 @@ public interface UserMapper {
 
     User selectByUserName(String userName);
 
-    List<User> selectList(Map<String, Object> params);
+    List<User> selectList( int limit, int offset);
+    Long getUserListCount();
 }

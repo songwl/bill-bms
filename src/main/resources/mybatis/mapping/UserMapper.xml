@@ -33,8 +33,6 @@
     from t_user
     where user_name = #{userName,jdbcType=VARCHAR}
   </select>
-
-
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from t_user
     where id = #{id,jdbcType=BIGINT}
@@ -204,5 +202,14 @@
       login_count = #{loginCount,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
-
+  <select id="getUserListCount" resultType="java.lang.Long">
+    select count(*) from
+    t_user
+  </select>
+  <select id="selectList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user
+   limit #{1},#{0}
+  </select>
 </mapper>

@@ -85,7 +85,7 @@ public class UserController extends BaseController {
         if(user.getUserName()!=""&&user.getPassword()!="")
         {
             user.setStatus(false);
-              userService.saveUser(user);
+            userService.saveUser(user);
 
 
             Long id=user.getId();

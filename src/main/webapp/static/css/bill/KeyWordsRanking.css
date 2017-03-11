@@ -117,3 +117,17 @@ display:inline-block;
   background:#eee;  
 
     }
+.samepriceDiv
+{
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 20%;
+}
+.differentpriceDiv
+{
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 20%;
+}

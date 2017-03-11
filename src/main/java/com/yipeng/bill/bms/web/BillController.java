@@ -37,18 +37,19 @@ public class BillController {
 
         return "/bill/billList";
     }
+
+    /**
+     * table表格获取数据
+     * @param limit
+     * @param offset
+     * @return
+     */
     @RequestMapping(value = "/getUser")
     @ResponseBody
     public Map<String, Object> getUser( int limit, int offset)
     {
-        Map<String, Object> modelMap = new HashMap<String, Object>(2);
-
-
-        long total=userService.getUserListCount();
-        //测试数据
-        List<User> users =userService.findList(limit, offset);
-        modelMap.put("total",total);
-        modelMap.put("rows",users);
+        //调的是USER表的数据
+        Map<String, Object> modelMap=userService.findList(limit, offset);
 
        return  modelMap;
 

@@ -7,6 +7,7 @@ import com.yipeng.bill.bms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,8 +30,14 @@ public class UserServiceImpl implements UserService {
     public User getUserByName(String userName) {  return  userMapper.selectByUserName(userName);    }
 
     @Override
-    public List<User> findList(int limit, int offset) {
-        return userMapper.selectList(limit,offset);
+    public Map<String, Object> findList(int limit, int offset) {
+
+        List<User> users=userMapper.selectList(limit,offset);
+        long total=userMapper.getUserListCount();
+        Map<String, Object> modelMap = new HashMap<String, Object>(2);
+        modelMap.put("total",total);
+        modelMap.put("rows",users);
+        return  modelMap;
     }
 
     @Override

@@ -1,35 +1,63 @@
 $(document).ready(function () {
     //显示导入价格内容
     $(".Import").click(function (e) {
-        e.stopPropagation();
-        $(".ImportPrice").show();
-
-    })
-    //点击屏幕 隐藏弹窗
-    $(document).click(function(){
-        if($(".ImportPrice").css("display")=="block"){
-            $(".ImportPrice").hide();
-
+        if($(".ImportPrice").css("display")=="block") {
+            $(".ImportPrice").slideUp();
         }
+        else
+        {
+            $(".ImportPrice").slideDown();
+            $(".samepriceDiv").slideUp();
+            $(".differentpriceDiv").slideUp();
+            $(".Navs2").slideUp();
+        }
+    })
 
-    });
     //相同价导入
     $("#Sameprice").click(function () {
 
+        if($(".samepriceDiv").css("display")=="block") {
+            $(".samepriceDiv").slideUp();
+
+        }
+        else {
+            $(".samepriceDiv").slideDown();
+            $(".differentpriceDiv").slideUp();
+            $(".Navs2").slideUp();
+        }
+
     })
+
     //不同价导入
     $("#Differentprice").click(function () {
+        if($(".differentpriceDiv").css("display")=="block") {
+            $(".differentpriceDiv").slideUp();
 
+        }
+        else {
+            $(".differentpriceDiv").slideDown();
+            $(".samepriceDiv").slideUp();
+            $(".Navs2").slideUp();
+        }
+
+
+    })
+    $(".close").click(function () {
+        $(".samepriceDiv").slideUp();
+        $(".differentpriceDiv").slideUp();
     })
     //显示搜索内容
     $(".search").click(function () {
         if($(".Navs2").css("display")=="block"){
-            $(".Navs2").hide();
+            $(".Navs2").slideUp();
 
         }
         else
         {
-            $(".Navs2").show();
+            $(".Navs2").slideDown();
+            $(".samepriceDiv").slideUp();
+            $(".differentpriceDiv").slideUp();
+            $(".ImportPrice").slideUp();
         }
 
 
@@ -80,7 +108,7 @@ var TableInit = function () {
             cardView: false,                    //是否显示详细视图
             detailView: false,                   //是否显示父子表
             showExport: true,                     //是否显示导出
-            exportDataType: "selected",              //basic', 'all', 'selected'.
+            exportDataType: "basic",
             columns: [
                 {
                     checkbox: true

@@ -2,11 +2,17 @@ package com.yipeng.bill.bms.service.impl;
 
 import com.yipeng.bill.bms.core.crypto.CryptoUtils;
 import com.yipeng.bill.bms.dao.UserMapper;
+import com.yipeng.bill.bms.domain.Role;
 import com.yipeng.bill.bms.domain.User;
+import com.yipeng.bill.bms.domain.UserRole;
+import com.yipeng.bill.bms.service.RoleService;
+import com.yipeng.bill.bms.service.UserRoleService;
 import com.yipeng.bill.bms.service.UserService;
+import com.yipeng.bill.bms.vo.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +24,31 @@ import java.util.Map;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private RoleService roleService;
+
+    @Autowired
+    private UserRoleService userRoleService;
+
     @Override
-    public int saveUser(User user) {   return  userMapper.insert(user);    }
+    public int saveUser(User user) {
+        user.setStatus(false);
+        user.setCreateTime(new Date());
+        user.setPassword(CryptoUtils.md5(user.getPassword()));
+
+        int c = userMapper.insert(user);
+
+        Role role = roleService.getRoleByRoleCode(Roles.DISTRIBUTOR.name());
+
+        if (role!=null) {
+            UserRole userRole = new UserRole();
+            userRole.setUserId(user.getId());
+            userRole.setRoleId(role.getId());
+            userRoleService.saveUserRole(userRole);
+        }
+        return  c;
+    }
 
     @Override
     public User getUserById(Long id) {
@@ -38,21 +67,6 @@ public class UserServiceImpl implements UserService {
         modelMap.put("total",total);
         modelMap.put("rows",users);
         return  modelMap;
-    }
-
-    @Override
-    public boolean login(String userName, String password) {
-        User user=userMapper.selectByUserName(userName);
-        if(user!=null)
-        {
-            if(user.getUserName().equals(userName)&&user.getPassword().equals(CryptoUtils.md5(password)))
-            {
-                return true;
-            }
-        }
-
-            return  false;
-
     }
 
     @Override

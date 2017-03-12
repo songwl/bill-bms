@@ -149,4 +149,16 @@ CREATE TABLE IF NOT EXISTS `t_bill_cost` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-COMMENT = '计费消费表'
+COMMENT = '计费消费表';
+
+CREATE TABLE IF NOT EXISTS `t_dict` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
+  `dict_group_code` VARCHAR(64) NOT NULL COMMENT '字典分组code',
+  `dict_code` VARCHAR(64) NOT NULL COMMENT '字典code',
+  `dict_name` VARCHAR(64) NOT NULL COMMENT '字典名称',
+  `valid` CHAR(1) NOT NULL DEFAULT 'Y' COMMENT '是否有效',
+  `seq` INT NOT NULL DEFAULT 0 COMMENT '排序',
+  `dict_desc` VARCHAR(256) NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '')
+ENGINE = InnoDB
+COMMENT = '数据字典表';

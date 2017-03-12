@@ -1,11 +1,11 @@
-package com.yipeng.bill.bms.viewmodel;
+package com.yipeng.bill.bms.vo;
 
 import java.util.Date;
 
 /**
  * Created by Administrator on 2017/3/11.
  */
-public class View_BillDetails {
+public class BillDetails {
     public  Long id;
 
     public  String userName;

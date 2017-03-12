@@ -1,5 +1,5 @@
-<#import "/base/base.html" as base>
-<#import "/base/layout.html" as layout>
+<#import "/base/base.ftl" as base>
+<#import "/base/layout.ftl" as layout>
 
 <#macro bmsheadcontent>
     <#assign bms_head_content>
@@ -22,23 +22,17 @@
 
 <@base.headcontent>
 	<!--icheck-->
-	<link href="${ctx}/adminx/js/iCheck/skins/minimal/minimal.css" rel="stylesheet">
-	<link href="${ctx}/adminx/js/iCheck/skins/square/square.css" rel="stylesheet">
-	<link href="${ctx}/adminx/js/iCheck/skins/square/red.css" rel="stylesheet">
-	<link href="${ctx}/adminx/js/iCheck/skins/square/blue.css" rel="stylesheet">
-	
-	<link href="${ctx}/adminx/js/advanced-datatable/css/demo_page.css" rel="stylesheet" />
-  	<link href="${ctx}/adminx/js/advanced-datatable/css/demo_table.css" rel="stylesheet" />
-	<link href="${ctx}/adminx/js/data-tables/DT_bootstrap.css" rel="stylesheet">
-	
-	<link href="${ctx}/js/jsonSuggest/jquery.jsonSuggest.css" rel="stylesheet">
-	
-	<!--pickers css-->
-	<link rel="stylesheet" type="text/css" href="${ctx}/adminx/js/bootstrap-datepicker/css/datepicker-custom.css" />
-	<link rel="stylesheet" type="text/css" href="${ctx}/adminx/js/bootstrap-datetimepicker/css/datetimepicker-custom.css" />
-	
-	<!--external css-->
-  	<link rel="stylesheet" type="text/css" href="${ctx}/adminx/js/fuelux/css/tree-style.css" />
+	<link href="${ctx}/static/js/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+	<link href="${ctx}/static/js/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+	<link href="${ctx}/static/js/assets/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
+	<link href="${ctx}/static/js/assets/css/style-metronic.css" rel="stylesheet" type="text/css"/>
+	<link href="${ctx}/static/js/assets/css/style.css" rel="stylesheet" type="text/css"/>
+	<link href="${ctx}/static/js/assets/css/style-responsive.css" rel="stylesheet" type="text/css"/>
+	<link href="${ctx}/static/js/assets/css/plugins.css" rel="stylesheet" type="text/css"/>
+	<link href="${ctx}/static/js/assets/css/pages/tasks.css" rel="stylesheet" type="text/css"/>
+	<link href="${ctx}/static/js/assets/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color"/>
+	<link href="${ctx}/static/js/assets/css/custom.css" rel="stylesheet" type="text/css"/>
+	<link rel="shortcut icon" href="${ctx}/static/js/assets/img/favicon.ico"/>
   
 	${bms_head_content!""}
 </@base.headcontent>
@@ -48,84 +42,156 @@
 </@base.headjscontent>
 
 <@base.jscontent>
-	<!--easy pie chart-->
-	<script src="${ctx}/adminx/js/easypiechart/jquery.easypiechart.js"></script>
-	<script src="${ctx}/adminx/js/easypiechart/easypiechart-init.js"></script>
-	
-	<!--Sparkline Chart-->
-	<script src="${ctx}/adminx/js/sparkline/jquery.sparkline.js"></script>
-	<script src="${ctx}/adminx/js/sparkline/sparkline-init.js"></script>
-	
-	<!--icheck -->
-	<script src="${ctx}/adminx/js/iCheck/jquery.icheck.js"></script>
-	
-	<!-- jQuery Flot Chart-->
-	<!-- <script src="${ctx}/adminx/js/flot-chart/jquery.flot.js"></script>
-	<script src="${ctx}/adminx/js/flot-chart/jquery.flot.tooltip.js"></script>
-	<script src="${ctx}/adminx/js/flot-chart/jquery.flot.resize.js"></script>
-	<script src="${ctx}/adminx/js/flot-chart/jquery.flot.pie.resize.js"></script>
-	<script src="${ctx}/adminx/js/flot-chart/jquery.flot.selection.js"></script>
-	<script src="${ctx}/adminx/js/flot-chart/jquery.flot.stack.js"></script>
-	<script src="${ctx}/adminx/js/flot-chart/jquery.flot.time.js"></script>
-	<script src="${ctx}/adminx/js/main-chart.js"></script> -->
-	
-	<script type="text/javascript" src="${ctx}/js/jsonSuggest/jquery.jsonSuggest-2.min.js"></script>
-	
-	<!--pickers plugins-->
-	<script type="text/javascript" src="${ctx}/adminx/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-	<script type="text/javascript" src="${ctx}/adminx/js/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
-	
-	<!--tree-->
-	<script src="${ctx}/adminx/js/fuelux/js/tree.min.js"></script>
-	
-	<script type="text/javascript" src="${ctx}/adminx/js/jquery.validate.js"></script>
-	<script type="text/javascript" src="${ctx}/adminx/js/jquery.metadata.js"></script>
-	<script src="${ctx}/js/bms.validate.js"></script>
-	
-	<!--common scripts for all pages-->
-	<script src="${ctx}/adminx/js/scripts.js"></script>
-	
-	<script src="${ctx}/js/bms.ui.js"></script>
-	<script src="${ctx}/js/bms.alertMsg.js"></script>
+	<script src="${ctx}/static/js/assets/plugins/respond.min.js"></script>
+	<script src="${ctx}/static/js/assets/plugins/excanvas.min.js"></script>
+	<script src="${ctx}/static/js/assets/plugins/jquery-1.10.2.min.js" type="text/javascript"></script>
+	<script src="${ctx}/static/js/assets/plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
+	<script src="${ctx}/static/js/assets/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
+	<script src="${ctx}/static/js/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="${ctx}/static/js/assets/plugins/bootstrap-hover-dropdown/twitter-bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
+	<script src="${ctx}/static/js/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+	<script src="${ctx}/static/js/assets/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+	<script src="${ctx}/static/js/assets/plugins/jquery.cokie.min.js" type="text/javascript"></script>
+	<script src="${ctx}/static/js/assets/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
+	<script src="${ctx}/static/js/assets/plugins/jquery-validation/dist/jquery.validate.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="${ctx}/static/js/assets/plugins/select2/select2.min.js"></script>
+	<script src="${ctx}/static/js/assets/scripts/app.js" type="text/javascript"></script>
+	<script type="text/javascript" src="${ctx}/static/js/app/js/index.js"></script>
 	
 	${bms_js_content!""}
 </@base.jscontent>
 
-<@base.html title "sticky-header">
-	<section>
-		<@layout.showNav bmsModel />
-	    
-	    <!-- main content start-->
-	    <div class="main-content" >
-			<@layout.showHeader bmsModel />
-			
-			<!-- 每个页面不同的内容在这里 -->
-			<div class="body-section" id＝"bodySection">
-			<#nested/>	
+<@base.html title "page-header-fixed">
+	<div class="header navbar navbar-inverse navbar-fixed-top">
+		<div class="header-inner">
+			<a class="navbar-brand" href="javascript:;">
+				翊芃网络
+			</a>
+			<a href="javascript:;" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+				<img src="../static/js/assets/img/menu-toggler.png" alt=""/>
+			</a>
+			<ul class="nav navbar-nav pull-right">
+				<li class="dropdown user">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+						<img alt="" src="../static/js/assets/img/avatar1_small.jpg"/>
+						<span class="username">${bmsModel.user.userName}</span>
+						<i class="fa fa-angle-down"></i>
+					</a>
+					<ul class="dropdown-menu">
+						<li>
+							<a href="javascript:;" id="trigger_fullscreen">
+								<i class="fa fa-move"></i> 全屏
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<i class="fa fa-lock"></i>修改头像
+							</a>
+						</li>
+						<li>
+							<a href="rest/user/logout">
+								<i class="fa fa-key"></i> 退出
+							</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="clearfix">
+	</div>
+	<div class="page-container">
+		<div class="page-sidebar-wrapper">
+			<div class="page-sidebar navbar-collapse collapse">
+				<ul class="page-sidebar-menu" id="page-sidebar-menu">
+					<li class="sidebar-toggler-wrapper">
+						<div class="sidebar-toggler hidden-phone">
+						</div>
+					</li>
+					<li class="start active">
+						<a href="rest/page/dashboard" id="btn-dashboard">
+							<i class="fa fa-home"></i><span class="title"> 首页 </span><span class="selected"></span>
+						</a>
+					</li>
+					<li class="">
+						<a href="javascript:;">
+							<i class="fa fa-star-o"></i><span class="title"> 优化管理 </span><span class="arrow "></span>
+						</a>
+						<ul class="sub-menu">
+							<li>
+								<a href="${ctx}/bill/list">
+									关键词排名
+								</a>
+							</li>
+
+						</ul>
+					</li>
+					<li class="">
+						<a href="javascript:;">
+							<i class="fa fa-paperclip"></i><span class="title"> 操作员管理 </span><span class="arrow "></span>
+						</a>
+						<ul class="sub-menu">
+							<li>
+								<a href="javascript:;">
+									操作员列表
+								</a>
+							</li>
+
+						</ul>
+					</li>
+					<li class="">
+						<a href="javascript:;">
+							<i class="fa fa-magic"></i><span class="title"> 客户管理 </span><span class="arrow "></span>
+						</a>
+						<ul class="sub-menu">
+							<li>
+								<a href="javascript:;">
+									客户管理
+								</a>
+							</li>
+							<li>
+								<a href="javascript:;">
+									资金明细
+								</a>
+							</li>
+
+						</ul>
+					</li>
+					<li class="">
+						<a href="javascript:;">
+							<i class="fa fa-magnet"></i><span class="title"> 个人中心 </span><span class="arrow "></span>
+						</a>
+						<ul class="sub-menu">
+							<li>
+								<a href="javascript:;">
+									信息修改
+								</a>
+							</li>
+							<li>
+								<a href="javascript:;">
+									密码修改
+								</a>
+							</li>
+
+						</ul>
+					</li>
+				</ul>
 			</div>
-			
-			<!--footer section start-->
-		    <footer class="sticky-footer">
-		        2016 &copy; AdminEx by ThemeBucket
-		    </footer>
-		    <!--footer section end-->
-	    </div>
-	    <!-- main content end-->
-	</section>
-	
-	<!--Modal Template -->
-    <div class="modal fade" id="modalTemplate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content" style="width:800px;">
-            </div>
-        </div>
-    </div>
-    <script type="text/javascript">
-    	$('#modalTemplate').on("hidden.bs.modal", function() {  
-    	    $(this).removeData("bs.modal");  
-    	});  
-	</script>
-    <!-- modal -->
+		</div>
+		<div class="page-content-wrapper">
+			<div class="page-content">
+				<#nested />
+			</div>
+		</div>
+	</div>
+	<div class="footer">
+		<div class="footer-inner">
+			2017 &copy; 鱼在我这里。
+		</div>
+		<div class="footer-tools">
+			<span class="go-top"><i class="fa fa-angle-up"></i></span>
+		</div>
+	</div>
 </@base.html>
 
 </#macro>

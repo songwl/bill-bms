@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yipeng.bill.bms.dao.DictMapper">
+  <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.Dict">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="dict_group_code" jdbcType="VARCHAR" property="dictGroupCode" />
+    <result column="dict_code" jdbcType="VARCHAR" property="dictCode" />
+    <result column="dict_name" jdbcType="VARCHAR" property="dictName" />
+    <result column="valid" jdbcType="CHAR" property="valid" />
+    <result column="seq" jdbcType="INTEGER" property="seq" />
+    <result column="dict_desc" jdbcType="VARCHAR" property="dictDesc" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, dict_group_code, dict_code, dict_name, valid, seq, dict_desc
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_dict
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_dict
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.Dict">
+    insert into t_dict (id, dict_group_code, dict_code, 
+      dict_name, valid, seq, 
+      dict_desc)
+    values (#{id,jdbcType=BIGINT}, #{dictGroupCode,jdbcType=VARCHAR}, #{dictCode,jdbcType=VARCHAR}, 
+      #{dictName,jdbcType=VARCHAR}, #{valid,jdbcType=CHAR}, #{seq,jdbcType=INTEGER}, 
+      #{dictDesc,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.Dict">
+    insert into t_dict
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="dictGroupCode != null">
+        dict_group_code,
+      </if>
+      <if test="dictCode != null">
+        dict_code,
+      </if>
+      <if test="dictName != null">
+        dict_name,
+      </if>
+      <if test="valid != null">
+        valid,
+      </if>
+      <if test="seq != null">
+        seq,
+      </if>
+      <if test="dictDesc != null">
+        dict_desc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="dictGroupCode != null">
+        #{dictGroupCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dictCode != null">
+        #{dictCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dictName != null">
+        #{dictName,jdbcType=VARCHAR},
+      </if>
+      <if test="valid != null">
+        #{valid,jdbcType=CHAR},
+      </if>
+      <if test="seq != null">
+        #{seq,jdbcType=INTEGER},
+      </if>
+      <if test="dictDesc != null">
+        #{dictDesc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.Dict">
+    update t_dict
+    <set>
+      <if test="dictGroupCode != null">
+        dict_group_code = #{dictGroupCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dictCode != null">
+        dict_code = #{dictCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dictName != null">
+        dict_name = #{dictName,jdbcType=VARCHAR},
+      </if>
+      <if test="valid != null">
+        valid = #{valid,jdbcType=CHAR},
+      </if>
+      <if test="seq != null">
+        seq = #{seq,jdbcType=INTEGER},
+      </if>
+      <if test="dictDesc != null">
+        dict_desc = #{dictDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.Dict">
+    update t_dict
+    set dict_group_code = #{dictGroupCode,jdbcType=VARCHAR},
+      dict_code = #{dictCode,jdbcType=VARCHAR},
+      dict_name = #{dictName,jdbcType=VARCHAR},
+      valid = #{valid,jdbcType=CHAR},
+      seq = #{seq,jdbcType=INTEGER},
+      dict_desc = #{dictDesc,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByDictGroupCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_dict
+    where dict_group_code = #{dictGroupCode,jdbcType=VARCHAR}
+    AND valid = 'Y'
+    ORDER  BY seq
+  </select>
+</mapper>

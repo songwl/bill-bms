@@ -1,5 +1,6 @@
 package com.yipeng.bill.bms.service;
 
+import com.yipeng.bill.bms.core.model.Page;
 import com.yipeng.bill.bms.domain.Bill;
 
 import java.util.List;
@@ -29,5 +30,6 @@ public interface BillService {
      * @return
      */
     List<Bill> findBillList(Map<String,Object> params);
+
 
 }

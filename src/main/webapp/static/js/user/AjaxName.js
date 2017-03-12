@@ -23,7 +23,7 @@ $(document).ready(function() {
                 $.ajax({
                     type: "get",
                     data:{userName:userName},
-                    url:CTX+"/user/validUserName",
+                    url:CTX+"/user/register/validUserName",
                     dataType:"json",
                     success:function (result) {
                         if (result.code==200){ //返回结果code==200代表正确

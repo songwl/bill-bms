@@ -78,6 +78,9 @@
             </property>
             <property name="dataLoaderMap">
             	<map key-type="java.lang.String" value-type="com.yipeng.bill.bms.core.freemarker.IDictDataLoader">
+                       <entry key="DICT">
+                              <bean class="com.yipeng.bill.bms.web.componet.DictLoader"></bean>
+                       </entry>
                 </map>
             </property>
        </bean>

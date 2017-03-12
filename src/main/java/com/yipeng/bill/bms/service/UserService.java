@@ -1,5 +1,7 @@
 package com.yipeng.bill.bms.service;
 
+import com.yipeng.bill.bms.core.model.Page;
+import com.yipeng.bill.bms.domain.Bill;
 import com.yipeng.bill.bms.domain.User;
 
 import java.util.List;
@@ -38,13 +40,6 @@ public interface UserService {
      */
     Map<String, Object>findList(int limit, int offset);
 
-    /**
-     * 判断登录
-     * @param userName
-     * @param password
-     * @return
-     */
-    boolean login(String userName,String password);
     Long getUserListCount();
 
 }

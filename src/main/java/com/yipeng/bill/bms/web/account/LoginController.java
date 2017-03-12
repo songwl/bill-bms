@@ -1,64 +1,59 @@
 package com.yipeng.bill.bms.web.account;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
+import com.yipeng.bill.bms.core.crypto.CryptoUtils;
+import com.yipeng.bill.bms.core.utils.ServletUtil;
+import com.yipeng.bill.bms.domain.User;
+import com.yipeng.bill.bms.service.UserService;
+import com.yipeng.bill.bms.web.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.yipeng.bill.bms.core.crypto.CryptoUtils;
-import com.yipeng.bill.bms.core.model.LoginAccount;
-import com.yipeng.bill.bms.core.model.ResultMessage;
-import com.yipeng.bill.bms.core.utils.ServletUtil;
-import com.yipeng.bill.bms.web.BaseController;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * LoginController负责打开登录页面(GET请求)和登录出错页面(POST请求)，
  * Created by song on 2016/6/2.
  */
 @Controller
-@RequestMapping(value = "/login")
+@RequestMapping(value = "")
 public class LoginController extends BaseController {
 
-	public static final String V_PATH_LOGIN = "/login";
 	public static final String V_PATH_AJAX_LOGIN = "/unauthorized";
 
-	//@Autowired
-	//private UserService userService;
+	@Autowired
+	private UserService userService;
 
-	@RequestMapping(value = "", method = RequestMethod.GET)
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(HttpServletRequest request) {
-		return V_PATH_LOGIN;
+		return  "/user/login";
 	}
 
-	/*@RequestMapping(value = "", method = RequestMethod.POST)
-	public String dologin(@RequestParam String loginName, @RequestParam String password, @RequestParam(required = false, defaultValue = "false") boolean rememberMe, Model model,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if (StringUtils.isNotEmpty(loginName) && StringUtils.isNotEmpty(password)) {
-			LoginAccount account = userService.getSysUserByLoginname(loginName);
-			if (account != null && account.getLoginPassword().equals(CryptoUtils.md5(password))) {
-				boolean flag = executeLogin(request, response, account);
-				if (flag) {
-					return "redirect:/index";
-				} else {
-					model.addAttribute("loginFailureMessage", "系统异常");
-				}
-			} else {
-				model.addAttribute("loginName", loginName);
-				model.addAttribute("loginFailureMessage", "用户名密码错误");
+	@RequestMapping(value="/login",method = RequestMethod.POST)
+	public  String dologin(HttpServletRequest request,HttpServletResponse response,
+						   @RequestParam String userName, @RequestParam String password,ModelMap modelMap)
+	{
+		User user = userService.getUserByName(userName);
+
+		if(user!=null)
+		{
+			if(user.getUserName().equals(userName)&&user.getPassword().equals(CryptoUtils.md5(password)))
+			{
+				boolean flag = executeLogin(request, response, user);
+				return "redirect:/index";
 			}
-		} else {
-			model.addAttribute("loginFailureMessage", "用户名密码不能为空");
 		}
 
-		return V_PATH_LOGIN;
+		modelMap.addAttribute("loginFailureMessage", "用户名密码错误");
+		return "/user/login";
 	}
 
+
+	/*
 	@RequestMapping(value = "ajax", method = RequestMethod.POST)
 	public ResultMessage ajaxlogin(@RequestParam String loginName, @RequestParam String password, @RequestParam(required = false, defaultValue = "false") boolean rememberMe,
 			HttpServletRequest request, HttpServletResponse response) {
@@ -87,7 +82,9 @@ public class LoginController extends BaseController {
 		return V_PATH_LOGIN;
 	}
 
-	private boolean executeLogin(HttpServletRequest request, HttpServletResponse response, LoginAccount account) {
+	*/
+
+	private boolean executeLogin(HttpServletRequest request, HttpServletResponse response, User account) {
 		try {
 			ServletUtil.initMaidouSessionId(request, response);
 			ServletUtil.putSession(request, response, ServletUtil.SESSION_USER, account);
@@ -96,6 +93,6 @@ public class LoginController extends BaseController {
 			return false;
 		}
 		return true;
-	}*/
+	}
 
 }

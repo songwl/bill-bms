@@ -141,8 +141,8 @@
        注意，table里面很多参数都是对javaModelGenerator，context等元素的默认属性的一个复写；
        -->
         <!-- 不生成Example -->
-        <table tableName="t_user"
-               domainObjectName="User"
+        <table tableName="t_dict"
+               domainObjectName="Dict"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
@@ -264,7 +264,7 @@
         </table>
 
 
-        <table tableName="t_role" domainObjectName="Role" enableCountByExample="false"
+        <!--<table tableName="t_role" domainObjectName="Role" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false"></table>
         <table tableName="t_user_role" domainObjectName="UserRole" enableCountByExample="false"
@@ -289,7 +289,7 @@
 
         <table tableName="t_fund_item" domainObjectName="FundItem" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
+               selectByExampleQueryId="false"></table>-->
 
 
     </context>

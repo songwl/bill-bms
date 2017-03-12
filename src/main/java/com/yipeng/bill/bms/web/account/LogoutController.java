@@ -17,12 +17,11 @@ import com.yipeng.bill.bms.web.BaseController;
 @RequestMapping(value = "/logout")
 public class LogoutController extends BaseController {
 	//视图地址映射
-	public static final String V_PATH = "/login";
 
 	@RequestMapping(value = "")
 	public String logout(HttpServletRequest request, HttpServletResponse response) {
 		ServletUtil.removeSession(request, response, ServletUtil.SESSION_USER);
-		return V_PATH;
+		return "/user/login";
 	}
 
 }

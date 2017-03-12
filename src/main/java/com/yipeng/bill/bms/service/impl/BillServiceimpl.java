@@ -1,5 +1,6 @@
 package com.yipeng.bill.bms.service.impl;
 
+import com.yipeng.bill.bms.core.model.Page;
 import com.yipeng.bill.bms.dao.BillMapper;
 import com.yipeng.bill.bms.domain.Bill;
 import com.yipeng.bill.bms.service.BillService;
@@ -46,4 +47,5 @@ public class BillServiceimpl implements BillService {
     public List<Bill> findBillList(Map<String, Object> params) {
         return billMapper.selectList(params);
     }
+
 }

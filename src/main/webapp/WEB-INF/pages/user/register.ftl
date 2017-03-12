@@ -27,7 +27,7 @@
         });
     });
 </script>
-<form action="${rc.contextPath}/user/create" method="post" id="f1">
+<form action="${rc.contextPath}/user/register" method="post" id="f1">
     <dl class="admin_login">
         <dt>
             <strong>翊芃网络科技会员注册</strong>

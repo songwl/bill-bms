@@ -1,6 +1,8 @@
 <#import "/base/base.ftl" as base>
-<#import "/base/func.ftl" as func>
+<#import "/base/dict.ftl" as dict>
+
 <@base.html "关键词优化">
+
 <script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <script src="${ctx}/static/js/bill/billList.js"></script>
@@ -116,8 +118,7 @@
                         </label>
                         <div class="col-md-2 padding-right-0px padding-left-5px input-width-small">
                             <select id="searchengineid" name="searchengineid" class="form-control input-width-small">
-                                <option value="">请选择</option>
-
+                                <@dict.showOptions dictKey="search" dictType="DICT" haveBlank="Y" />
                             </select>
                         </div>
 
@@ -239,14 +240,7 @@
                         </label>
                         <div class="col-md-2 padding-right-0px padding-left-5px input-width-small">
                             <select id="searchengineid" name="searchengineid" class="form-control input-width-small" style="width:120px;">
-                                <option value="">请选择</option>
-                                <option value="1">百度</option>
-                                <option value="2">360</option>
-                                <option value="3">搜狗</option>
-                                <option value="4">百度移动</option>
-                                <option value="5">360移动</option>
-                                <option value="6">搜狗移动</option>
-                                <option value="7">神马</option>
+                                    <@dict.showOptions dictKey="search" dictType="DICT" haveBlank="Y" />
                             </select>
                         </div>
 

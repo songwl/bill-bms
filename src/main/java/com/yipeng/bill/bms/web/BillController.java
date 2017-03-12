@@ -3,6 +3,7 @@ package com.yipeng.bill.bms.web;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.sun.corba.se.impl.protocol.giopmsgheaders.RequestMessage;
 import com.yipeng.bill.bms.core.model.Page;
 import com.yipeng.bill.bms.core.model.ResultMessage;
 import com.yipeng.bill.bms.domain.Bill;
@@ -14,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import org.springframework.ui.Model;
@@ -66,7 +69,37 @@ public class BillController extends BaseController {
         page.setItemList(billService.findBillList(params));
 
         return  page;
+    }
 
+    /**
+     *  相同价提交(测试)
+     * @param search
+     * @param keyword
+     * @param url
+     * @param rankend
+     * @param price
+     * @param rankend1
+     * @param price1
+     * @param rankend2
+     * @param price2
+     * @param rankend3
+     * @param price3
+     * @return
+     */
+    @RequestMapping(value = "/list/sameprice",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultMessage samePrice(@RequestParam(value="search",required = true) String search,@RequestParam(value="keyword",required = true) String keyword,
+                                    @RequestParam(value="url",required = true) String url,@RequestParam(value="rankend",required = true) float rankend,
+                                    @RequestParam(value="price",required = true) float price,@RequestParam(value="rankend1",required = false) float rankend1,
+                                    @RequestParam(value="price1",required = false) float price1,@RequestParam(value="rankend2",required = false) float rankend2,
+                                    @RequestParam(value="price2",required = false) float price2,@RequestParam(value="rankend3",required = false) float rankend3,
+                                    @RequestParam(value="price3",required = false) float price3
+    )
+    {
 
+        User user = this.getCurrentAccount();
+        billService.saveBill( user,search,url, keyword, rankend, price, rankend1, price1, rankend2, price2, rankend3, price3);
+
+        return this.ajaxDoneError("用户名已注册!");
     }
 }

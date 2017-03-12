@@ -30,7 +30,7 @@
     delete from t_bill
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.Bill">
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.Bill"  useGeneratedKeys="true" keyColumn="id" keyProperty="id">
     insert into t_bill (id, website, keywords, 
       create_time, update_time, create_user_id, 
       update_user_id, first_ranking, new_ranking, 

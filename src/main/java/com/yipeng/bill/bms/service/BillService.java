@@ -2,6 +2,7 @@ package com.yipeng.bill.bms.service;
 
 import com.yipeng.bill.bms.core.model.Page;
 import com.yipeng.bill.bms.domain.Bill;
+import com.yipeng.bill.bms.domain.User;
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ public interface BillService {
      * @param bill
      * @return
      */
-    int saveBill(Bill bill);
+    int saveBill(User user , String search, String url, String keyword, float rankend, float price, float rankend1, float price1, float rankend2, float price2, float rankend3, float price3);
 
     /**
      * 通过ID查询订单

@@ -940,9 +940,8 @@ Page breadcrumb
   padding-right: 30px;
   padding-left: 8px;
   margin-top: 15px;
-  margin-bottom: 25px;
   border:0px !important;  
-  background-color: #eee;
+  background-color: #00ffff;
 }
 
 .page-content .page-breadcrumb.breadcrumb > li > a, 
@@ -3041,7 +3040,7 @@ Theme Panel
 }
 
 .theme-panel > .toggler {
-  top:4px;
+  top:24px;
   right:0;
   padding:20px;
   cursor:pointer;
@@ -3055,7 +3054,7 @@ Theme Panel
 
 .theme-panel > .toggler-close {
   display: none;
-  top:4px;
+  top:24px;
   right:0;
   padding:20px;
   cursor:pointer;
@@ -3068,7 +3067,7 @@ Theme Panel
 }
 
 .theme-panel > .theme-options {
-  top:4px;
+  top:24px;
   right:40px;
   display:none;
   position:absolute;

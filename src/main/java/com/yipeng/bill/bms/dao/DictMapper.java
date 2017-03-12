@@ -13,6 +13,7 @@ public interface DictMapper {
     int insertSelective(Dict record);
 
     Dict selectByPrimaryKey(Long id);
+    Dict selectByDictCode(String dictCode);
 
     int updateByPrimaryKeySelective(Dict record);
 

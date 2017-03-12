@@ -63,6 +63,48 @@ $(document).ready(function () {
 
     })
 
+    //提交相同价订单
+    $(".samepricecmt").click(function () {
+        var search= $("#searchengineid ").val();
+        var keyword= $("#keyword").val();
+        var url= $("#url").val();
+        var rankend=$("input[name='rankend']").val();
+        var price=$("input[name='price']").val();
+        var rankend1=$("input[name='rankend1']").val();
+        var price1=$("input[name='price1']").val();
+        var rankend2=$("input[name='rankend2']").val();
+        var price2=$("input[name='price2']").val();
+        var rankend3=$("input[name='rankend3']").val();
+        var price3=$("input[name='price3']").val();
+       $.ajax({
+           type:"get",
+           url:CTX+"/bill/list/sameprice",
+           data:{
+               search:search,
+               keyword:keyword,
+               url:url,
+               rankend:rankend,
+               price:price,
+               rankend1:rankend1,
+               price1:price1,
+               rankend2:rankend2,
+               price2:price2,
+               rankend3:rankend3,
+               price3:price3
+
+
+               },
+           success:function () {
+               
+           }
+
+       })
+
+    })
+
+
+
+
 
 })
 

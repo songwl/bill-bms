@@ -123,4 +123,12 @@
     AND valid = 'Y'
     ORDER  BY seq
   </select>
+  <select id="selectByDictCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_dict
+    where dict_code = #{dictCode,jdbcType=VARCHAR}
+    AND valid = 'Y'
+    ORDER  BY seq
+  </select>
 </mapper>

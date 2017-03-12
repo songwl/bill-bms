@@ -8,7 +8,7 @@ import java.util.Map;
 public interface BillMapper {
     int deleteByPrimaryKey(Long id);
 
-    int insert(Bill record);
+    Long insert(Bill record);
 
     int insertSelective(Bill record);
 

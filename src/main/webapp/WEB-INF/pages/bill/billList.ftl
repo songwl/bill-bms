@@ -126,22 +126,19 @@
                     <div class="form-group">
                         <label class="col-md-1 control-label padding-right-0px">
                             关键词*
-
                         </label>
                         <div class="col-md-4 padding-left-5px">
-                            <textarea name="keyword" rows="15" class="form-control"  style="width: 296px; height: 297px;resize: none;"></textarea>
+                            <textarea name="keyword" id="keyword" rows="15" class="form-control"  style="width: 296px; height: 297px;resize: none;"></textarea>
                         </div>
                         <label class="col-md-1 control-label padding-right-0px">
                             网址
                             <span class="required">*</span>
                         </label>
                         <div class="col-md-6 padding-left-5px">
-                            <textarea name="url" rows="15" class="form-control"   style=" height: 297px;resize: none;"></textarea>
+                            <textarea name="url" id="url" rows="15" class="form-control"   style=" height: 297px;resize: none;"></textarea>
                         </div>
                     </div>
                     <div class="form-group" style="margin-top:30px;">
-
-
                         <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
                             前
                             <span class="red">N</span>名<span class="required">*</span>
@@ -161,42 +158,42 @@
                             <span class="red">N</span>名
                         </label>
                         <div class="col-md-1 padding-left-0px padding-right-0px" style="width: 35px;">
-                            <input name="rankend"   style="width: 35px;">
+                            <input name="rankend1"   style="width: 35px;">
                         </div>
 
                         <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
                             <span>元/天</span>
                         </label>
                         <div class="col-md-1 padding-left-5px padding-right-0px" style="width: 35px;">
-                            <input name="price"   style="width: 35px;">
+                            <input name="price1"   style="width: 35px;">
                         </div>
                         <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
                             前
                             <span class="red">N</span>名
                         </label>
                         <div class="col-md-1 padding-left-0px padding-right-0px" style="width: 35px;">
-                            <input name="rankend" class="form-control" style="width: 35px;">
+                            <input name="rankend2"  style="width: 35px;">
                         </div>
 
                         <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
                             <span>元/天</span><span class="required">*</span>
                         </label>
                         <div class="col-md-1 padding-left-5px padding-right-0px" style="width: 35px;">
-                            <input name="price"   style="width: 35px;">
+                            <input name="price2"   style="width: 35px;">
                         </div>
                         <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
                             前
                             <span class="red">N</span>名
                         </label>
                         <div class="col-md-1 padding-left-0px padding-right-0px" style="width: 35px;">
-                            <input name="rankend"   style="width: 35px;">
+                            <input name="rankend3"   style="width: 35px;">
                         </div>
 
                         <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
                             <span>元/天</span>
                         </label>
                         <div class="col-md-1 padding-left-5px padding-right-0px" style="width: 35px;">
-                            <input name="price"   style="width: 35px;">
+                            <input name="price3"   style="width: 35px;">
                         </div>
 
                     </div>
@@ -206,7 +203,7 @@
 
 
         <div class="modal-footer">
-            <button data-bb-handler="success" type="button" class="btn wzgj-blue">确定</button><button data-bb-handler="cancel" type="button" class="btn wzgj-btn">取消</button>
+            <button data-bb-handler="success" type="button" class="btn wzgj-blue samepricecmt">确定</button><button data-bb-handler="cancel" type="button" class="btn wzgj-btn">取消</button>
         </div>
     </div>
 </div>
@@ -276,6 +273,7 @@
                         </div>
                     </div>
                 </form>
+
 
             </div>
         </div>

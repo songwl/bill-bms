@@ -59,7 +59,7 @@ public class BillController extends BaseController {
     public Object getUser( int limit, int offset)
     {
 
-
+      offset=offset-1;
         Page<Bill> page = this.getPageRequest();    //分页对象
         Map<String, Object> params = this.getSearchRequest(); //查询参数
         params.put("limit",limit);

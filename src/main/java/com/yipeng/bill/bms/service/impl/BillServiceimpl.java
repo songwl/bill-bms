@@ -39,7 +39,6 @@ public class BillServiceimpl implements BillService {
         String[] keywords=keyword.split("\n");
         if(urls.length==keywords.length)
         {
-
              for(int i=0;i<urls.length;i++)
              {
                 //订单主表

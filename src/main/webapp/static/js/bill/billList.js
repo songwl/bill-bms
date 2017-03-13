@@ -79,6 +79,8 @@ $(document).ready(function () {
        $.ajax({
            type:"get",
            url:CTX+"/bill/list/sameprice",
+           dataType:'json',
+           contentType: "application/x-www-form-urlencoded; charset=utf-8",
            data:{
                search:search,
                keyword:keyword,
@@ -94,8 +96,13 @@ $(document).ready(function () {
 
 
                },
+           beforeSend: function () {
+               $("#pload").show();
+           },
+
            success:function () {
-               
+               $("#pload").hide();
+               alert("导入成功！");
            }
 
        })

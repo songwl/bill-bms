@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import org.springframework.ui.Model;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,13 +90,23 @@ public class BillController extends BaseController {
     @RequestMapping(value = "/list/sameprice",method = RequestMethod.GET)
     @ResponseBody
     public ResultMessage samePrice(@RequestParam(value="search",required = true) String search,@RequestParam(value="keyword",required = true) String keyword,
-                                    @RequestParam(value="url",required = true) String url,@RequestParam(value="rankend",required = true) float rankend,
-                                    @RequestParam(value="price",required = true) float price,@RequestParam(value="rankend1",required = false) float rankend1,
-                                    @RequestParam(value="price1",required = false) float price1,@RequestParam(value="rankend2",required = false) float rankend2,
-                                    @RequestParam(value="price2",required = false) float price2,@RequestParam(value="rankend3",required = false) float rankend3,
-                                    @RequestParam(value="price3",required = false) float price3
-    )
-    {
+                                    @RequestParam(value="url",required = true) String url,@RequestParam(value="rankend",required = true) Long rankend,
+                                    @RequestParam(value="price",required = true) Long price,@RequestParam(value="rankend1",required = false) Long rankend1,
+                                    @RequestParam(value="price1",required = false) Long price1,@RequestParam(value="rankend2",required = false) Long rankend2,
+                                    @RequestParam(value="price2",required = false) Long price2,@RequestParam(value="rankend3",required = false) Long rankend3,
+                                    @RequestParam(value="price3",required = false) Long price3
+    ) throws UnsupportedEncodingException {
+
+         if(keyword!=null)
+         {
+             try {
+                 //get参数乱码问题
+                 keyword=new String(keyword.getBytes("ISO-8859-1"), "UTF-8");
+
+             } catch (UnsupportedEncodingException e) {
+                 e.printStackTrace();
+             }
+         }
 
         User user = this.getCurrentAccount();
         billService.saveBill( user,search,url, keyword, rankend, price, rankend1, price1, rankend2, price2, rankend3, price3);

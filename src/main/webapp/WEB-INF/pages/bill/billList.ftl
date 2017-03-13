@@ -277,11 +277,13 @@
 
             </div>
         </div>
+
         <div class="modal-footer">
             <button data-bb-handler="success" type="button" class="btn wzgj-blue">确定</button><button data-bb-handler="cancel" type="button" class="btn wzgj-btn">取消</button>
         </div>
     </div>
 </div>
+<div id="pload" style="position:fixed;top:45%;left: 47%; z-index:1200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none;"></div>
 <!--不同价导入end-->
 
 </@base.html>

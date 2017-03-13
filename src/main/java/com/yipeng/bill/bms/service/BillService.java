@@ -16,7 +16,7 @@ public interface BillService {
      * @param bill
      * @return
      */
-    int saveBill(User user , String search, String url, String keyword, float rankend, float price, float rankend1, float price1, float rankend2, float price2, float rankend3, float price3);
+    int saveBill(User user , String search, String url, String keyword, Long rankend, Long price, Long rankend1, Long price1, Long rankend2, Long price2, Long rankend3, Long price3);
 
     /**
      * 通过ID查询订单

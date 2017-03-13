@@ -116,6 +116,7 @@ CREATE TABLE IF NOT EXISTS `t_bill_price` (
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
   `bill_id` BIGINT NOT NULL COMMENT '',
   `price` DECIMAL NULL COMMENT '',
+  `bill_ranking_standard` BIGINT NULL COMMENT '',
   `in_member_id` BIGINT NULL COMMENT '收款方id',
   `out_member_id` BIGINT NULL COMMENT '付款方id',
   `create_time` DATETIME NULL COMMENT '创建时间',

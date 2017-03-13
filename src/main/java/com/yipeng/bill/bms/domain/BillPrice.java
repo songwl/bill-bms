@@ -9,7 +9,7 @@ public class BillPrice implements Serializable {
     private Long billId;
 
     private Long price;
-
+    private Long billRankingStandard;
     private Long inMemberId;
 
     private Long outMemberId;
@@ -41,6 +41,9 @@ public class BillPrice implements Serializable {
     public void setPrice(Long price) {
         this.price = price;
     }
+    public  Long getBillRankingStandard() {return billRankingStandard;}
+
+    public  void  setBillRankingStandard(Long billRankingStandard){this.billRankingStandard=billRankingStandard;}
 
     public Long getInMemberId() {
         return inMemberId;

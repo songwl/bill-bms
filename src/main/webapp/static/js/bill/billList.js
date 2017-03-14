@@ -102,13 +102,32 @@ $(document).ready(function () {
 
            success:function () {
                $("#pload").hide();
+               $(".samepriceDiv").slideUp();
+               $('#myTable').bootstrapTable('refresh');
                alert("导入成功！");
            }
 
        })
 
     })
+    //不同价订单导入
+    $("#dfpricecmt").click(function () {
+        
+    })
+    
+    
+     $("#testpm").click(function () {
+         $.ajax({
+             type: "get",
+             url: CTX + "/bill/testpm",
+             success:function () {
+                 alert("查询成功！");
+                 $('#myTable').bootstrapTable('refresh');
 
+             }
+             
+         })
+     })
 
 
 
@@ -135,7 +154,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#myTable').bootstrapTable({
-            url: '/bill/bill/getUser',         //请求后台的URL（*）
+            url: '/bill/bill/getBillDetails',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
@@ -208,7 +227,16 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     sortable: true,
-                    title: '初排'
+                    title: '初排',
+                    formatter:function (value,row,index) {
+                        var a="";
+                        if(value>50)
+                        {
+                            a="<span>" +">50"+"</span>";
+                        }
+                        return a;
+                    }
+
 
                 },
                 {
@@ -217,9 +245,23 @@ var TableInit = function () {
                     valign: 'middle',
                     sortable: true,
                     title: '新排',
+                    formatter:function (value,row,index) {
+                        var a="";
+                        if(value<=3)
+                        {
+                            a="<span style='color:#FF0000;font-weight: bold;'>" +value+"</span>";
+                        }
+                        else
+                        {
+                            a="<span>" +value+"</span>";
+                        }
+                        return a;
+                    }
+
+
                 },
                 {
-                    field: 'firstPrice',
+                    field: 'priceOne',
                     align: 'center',
                     valign: 'middle',
                     title: '价格1',
@@ -227,7 +269,7 @@ var TableInit = function () {
                 },
 
                 {
-                    field: 'secondPrice',
+                    field: 'priceTwo',
                     align: 'center',
                     valign: 'middle',
                     sortable: true,
@@ -256,6 +298,19 @@ var TableInit = function () {
                     valign: 'middle',
                     sortable: true,
                     title: '当天消费',
+                    formatter:function (value,row,index) {
+                        var a="";
+                        if(value==0)
+                        {
+                            a="<span style='color: #54728c'>-</span>";
+                        }
+                        else
+                        {
+                            a="<span style='color: #54728c'>¥ "+value+"</span>";
+                        }
+
+                        return a;
+                    }
 
                 },
                 {
@@ -273,10 +328,23 @@ var TableInit = function () {
 
                 },
                 {
-                    field: "OrderState",
+                    field: "state",
                     align: 'center',
                     valign: 'middle',
                     title: '合作状态',
+                    formatter:function (value,row,index) {
+                        var a="";
+                        if(value==1)
+                        {
+                            a="<span style='color:#94b86e;'>优化中</span>";
+                        }
+                        else
+                        {
+                            a="<span>合作停</span>";
+                        }
+                        return a;
+                    }
+
 
                 },
                 {
@@ -284,6 +352,11 @@ var TableInit = function () {
                     title: '操作',
                     align: 'center',
                     valign: 'middle',
+                    formatter:function (value,row,index) {
+                        var a="<span style='color:#4382CF;'>详情</span>";
+
+                        return a;
+                    }
 
                 },
 

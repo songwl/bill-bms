@@ -6,7 +6,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.sun.corba.se.impl.protocol.giopmsgheaders.RequestMessage;
 import com.yipeng.bill.bms.core.model.Page;
 import com.yipeng.bill.bms.core.model.ResultMessage;
+import com.yipeng.bill.bms.dao.BillCostMapper;
+import com.yipeng.bill.bms.dao.BillMapper;
+import com.yipeng.bill.bms.dao.BillPriceMapper;
 import com.yipeng.bill.bms.domain.Bill;
+import com.yipeng.bill.bms.domain.BillCost;
+import com.yipeng.bill.bms.domain.BillPrice;
 import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.service.BillService;
 import com.yipeng.bill.bms.service.UserService;
@@ -22,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,22 +60,24 @@ public class BillController extends BaseController {
      * @param offset
      * @return
      */
-    @RequestMapping(value = "/getUser")
+    @RequestMapping(value = "/getBillDetails")
     @ResponseBody
-    public Object getUser( int limit, int offset)
+    public Map<String,Object> getBillDetails( int limit, int offset)
     {
 
-      offset=offset-1;
-        Page<Bill> page = this.getPageRequest();    //分页对象
-        Map<String, Object> params = this.getSearchRequest(); //查询参数
+       offset=(offset-1)*limit;
+       // Page<Bill> page = this.getPageRequest();    //分页对象
+       Map<String, Object> params = this.getSearchRequest(); //查询参数
+        User user=this.getCurrentAccount();
         params.put("limit",limit);
         params.put("offset",offset);
+        params.put("user",user);
+
 
         //调的是USER表的数据
-        //Map<String, Object> modelMap=userService.findList(limit, offset);
-        page.setItemList(billService.findBillList(params));
 
-        return  page;
+        Map<String, Object> modelMap=billService.findBillList(params);
+        return  modelMap;
     }
 
     /**
@@ -111,6 +119,74 @@ public class BillController extends BaseController {
         User user = this.getCurrentAccount();
         billService.saveBill( user,search,url, keyword, rankend, price, rankend1, price1, rankend2, price2, rankend3, price3);
 
-        return this.ajaxDoneError("用户名已注册!");
+        return this.ajaxDoneError("xxx!");
+    }
+    @Autowired
+    private BillMapper billMapper;
+    @Autowired
+    private BillPriceMapper billPriceMapper;
+    @Autowired
+    private BillCostMapper  billCostMapper;
+    //测试查排名 产生消费记录
+    @RequestMapping(value = "/testpm")
+    @ResponseBody
+    public ResultMessage testpm()
+    {
+        List<Bill> billList=billMapper.selectAll();
+        for (Bill bill: billList
+             ) {
+            int x=1+(int)(Math.random()*30);
+            bill.setNewRanking(x);
+            billMapper.updateByPrimaryKeySelective(bill);
+           List<BillPrice>  billPrice=billPriceMapper.selectByBillId(bill.getId());
+            Map<String, Object> modelMap = new HashMap();
+            modelMap.put("BillId",bill.getId());
+            modelMap.put("date",new Date());
+            if(x<=billPrice.get(0).getBillRankingStandard())
+            {
+
+                BillCost billCost=billCostMapper.selectByBillIdAndDate(modelMap);
+                if(billCost!=null)
+                {
+                    billCost.setCostAmount(billPrice.get(0).getPrice());
+                    billCost.setRanking(x);
+                    billCostMapper.updateByPrimaryKey(billCost);
+                }
+                else
+                {
+                    BillCost billCost1=new BillCost();
+                    billCost1.settBillId(bill.getId());
+                    billCost1.settBillPriceId(billPrice.get(0).getId());
+                    billCost1.setCostAmount(billPrice.get(0).getPrice());
+                    billCost1.setCostDate(new Date());
+                    billCost1.setRanking(x);
+                    billCostMapper.insert(billCost1);
+                }
+
+            }
+            else
+            {
+                long a=0;
+                BillCost billCost2=billCostMapper.selectByBillIdAndDate(modelMap);
+                if(billCost2!=null)
+                {
+                    billCost2.setCostAmount(a);
+                    billCost2.setRanking(x);
+                    billCostMapper.updateByPrimaryKey(billCost2);
+                }
+                else
+                {
+                    BillCost billCost3=new BillCost();
+                    billCost3.settBillId(bill.getId());
+                    billCost3.settBillPriceId(billPrice.get(0).getId());
+                    billCost3.setCostAmount(a);
+                    billCost3.setCostDate(new Date());
+                    billCost3.setRanking(x);
+                    billCostMapper.insert(billCost3);
+                }
+            }
+        }
+
+        return  this.ajaxDoneError("");
     }
 }

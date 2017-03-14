@@ -79,9 +79,15 @@
                         <option value="">导出当前</option>
                         <option value="all">导出全部</option>
                         <option value="selected">导出选中</option>
+
                     </select>
                 </div>
-                <table id="myTable" class="table table-striped " style="width:100%">
+                <div   class="toolbar btn-group">
+                    <button data-bb-handler="success" type="button" class="btn" id="testpm">测试查排名</button>
+                </div>
+
+
+                <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%">
 
 
                 </table>
@@ -236,7 +242,7 @@
                             <span class="required">*</span>
                         </label>
                         <div class="col-md-2 padding-right-0px padding-left-5px input-width-small">
-                            <select id="searchengineid" name="searchengineid" class="form-control input-width-small" style="width:120px;">
+                            <select id="dfpricesearch" name="searchengineid" class="form-control input-width-small" style="width:120px;">
                                     <@dict.showOptions dictKey="search" dictType="DICT" haveBlank="Y" />
                             </select>
                         </div>
@@ -246,7 +252,7 @@
                             <span class="red">N</span>名<span class="required">*</span>
                         </label>
                         <div class="col-md-2 padding-right-0px padding-left-5px" style="width: 190px">
-                            <input name="rankend" class="form-control input-width-middle" type="text">
+                            <input name="rankend" class="form-control input-width-middle" type="text" id="dfrankend">
                         </div>
                     </div>
                     <div class="form-group">
@@ -255,31 +261,29 @@
                             <span class="required"></span>
                         </label>
                         <div class="col-md-3 padding-left-5px">
-                            <textarea name="keyword" rows="15" class="form-control"></textarea>
+                            <textarea name="keyword" rows="15" class="form-control" style="resize: none;" id="dfkeyword"></textarea>
                         </div>
                         <label class="col-md-1 control-label padding-right-0px">
                             网址
                             <span class="required">*</span>
                         </label>
                         <div class="col-md-5 padding-left-5px">
-                            <textarea name="url" rows="15" class="form-control"></textarea>
+                            <textarea name="url" rows="15" class="form-control" style="resize: none;" id="dfurl"></textarea>
                         </div>
                         <label class="col-md-1 control-label padding-right-0px">
                             元/天
                             <span class="required">*</span>
                         </label>
                         <div class="col-md-1 padding-left-5px">
-                            <textarea name="price" rows="15" class="form-control"></textarea>
+                            <textarea name="price" rows="15" class="form-control" style="resize: none;" id="dfprice"></textarea>
                         </div>
                     </div>
                 </form>
-
-
             </div>
         </div>
 
         <div class="modal-footer">
-            <button data-bb-handler="success" type="button" class="btn wzgj-blue">确定</button><button data-bb-handler="cancel" type="button" class="btn wzgj-btn">取消</button>
+            <button data-bb-handler="success" type="button" class="btn wzgj-blue dfpricecmt">确定</button><button data-bb-handler="cancel" type="button" class="btn wzgj-btn">取消</button>
         </div>
     </div>
 </div>

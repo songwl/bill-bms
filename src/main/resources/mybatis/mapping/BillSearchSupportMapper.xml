@@ -68,4 +68,10 @@
       search_support = #{searchSupport,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="selectByBillId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_bill_search_support
+    where bill_id = #{BillId,jdbcType=BIGINT}
+  </select>
 </mapper>

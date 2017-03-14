@@ -30,7 +30,7 @@ public interface BillService {
      * @param params
      * @return
      */
-    List<Bill> findBillList(Map<String,Object> params);
+    Map<String, Object> findBillList(Map<String,Object> params);
 
 
 }

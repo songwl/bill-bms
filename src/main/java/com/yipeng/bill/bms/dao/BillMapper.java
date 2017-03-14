@@ -18,4 +18,6 @@ public interface BillMapper {
 
     int updateByPrimaryKey(Bill record);
     List<Bill> selectList(Map<String,Object> params);
+    Long getBillListCount();
+    List<Bill> selectAll();
 }

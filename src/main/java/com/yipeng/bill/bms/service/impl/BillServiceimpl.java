@@ -1,18 +1,16 @@
 package com.yipeng.bill.bms.service.impl;
 
 import com.yipeng.bill.bms.core.model.Page;
-import com.yipeng.bill.bms.dao.BillMapper;
-import com.yipeng.bill.bms.dao.BillPriceMapper;
-import com.yipeng.bill.bms.dao.BillSearchSupportMapper;
-import com.yipeng.bill.bms.dao.DictMapper;
+import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.service.BillService;
+import com.yipeng.bill.bms.vo.BillDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by Administrator on 2017/3/10.
@@ -27,6 +25,10 @@ public class BillServiceimpl implements BillService {
     private BillPriceMapper billPriceMapper;
     @Autowired
     private BillSearchSupportMapper billSearchSupportMapper;
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private BillCostMapper billCostMapper;
     /**
      * 实现新增订单(判断都未做)
      * @param bill
@@ -93,8 +95,65 @@ public class BillServiceimpl implements BillService {
      * @return
      */
     @Override
-    public List<Bill> findBillList(Map<String, Object> params) {
-        return billMapper.selectList(params);
+    public Map<String, Object> findBillList(Map<String, Object> params) {
+        //先查出订单
+        List<Bill> bills=billMapper.selectList(params);
+        //视图模型
+        List<BillDetails>  billDetails=new ArrayList<BillDetails>();
+        //循环判断填充数据
+        for (Bill bill:bills
+             ) {
+            BillDetails billDetails1=new BillDetails();
+            billDetails1.setId(bill.getId());
+            //获取客户名称
+            Object object=params.get("user");
+            User user=(User)object;
+            billDetails1.setUserName(user.getUserName());
+            billDetails1.setKeywords(bill.getKeywords());
+            billDetails1.setWebsite(bill.getWebsite());
+            //获取搜索引擎名称
+            BillSearchSupport billSearchSupport=billSearchSupportMapper.selectByBillId(bill.getId());
+            billDetails1.setSearchName(billSearchSupport.getSearchSupport());
+            //转换时间("yy-MM-dd")
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            String dateString = formatter.format(bill.getCreateTime());
+            billDetails1.setCreateTime(dateString);
+            billDetails1.setFirstRanking(bill.getFirstRanking());
+            billDetails1.setNewRanking(bill.getNewRanking());
+
+            List<BillPrice>  billPrice=billPriceMapper.selectByBillId(bill.getId());
+            BillPrice billPrice1= billPrice.get(0);
+            billDetails1.setPriceOne(billPrice1.getPrice());
+           // if(billPrice.get(1)!=null)
+           // {
+             //   BillPrice billPrice2= billPrice.get(1);
+             //   billDetails1.setPriceTwo(billPrice2.getPrice());
+            //}
+            billDetails1.setDayOptimization(bill.getDayOptimization());
+            billDetails1.setAllOptimization(bill.getAllOptimization());
+            //查询今日消费
+            List<BillCost> billCost=billCostMapper.selectByBillId(bill.getId());
+            for (BillCost billCost1:billCost
+                 ) {
+                String costDate= formatter.format(billCost1.getCostDate());
+                String costDate1= formatter.format(new Date());
+                if(costDate.equals(costDate1))
+                {
+                    billDetails1.setDayConsumption(billCost1.getCostAmount());
+                }
+            }
+           billDetails1.setState(bill.getState());
+
+
+            billDetails.add(billDetails1);
+        }
+
+
+        Long total=billMapper.getBillListCount();
+        Map<String, Object> modelMap = new HashMap();
+        modelMap.put("total",total);
+        modelMap.put("rows",billDetails);
+        return modelMap;
     }
 
 }

@@ -185,10 +185,19 @@
       state = #{state,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="getBillListCount" resultType="java.lang.Long">
+    select count(*) from
+    t_bill
+  </select>
   <select id="selectList" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from t_bill
     limit #{offset},#{limit}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_bill
   </select>
 </mapper>

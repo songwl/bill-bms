@@ -10,7 +10,7 @@ public interface BillSearchSupportMapper {
     int insertSelective(BillSearchSupport record);
 
     BillSearchSupport selectByPrimaryKey(Long id);
-
+    BillSearchSupport selectByBillId(Long BillId);
     int updateByPrimaryKeySelective(BillSearchSupport record);
 
     int updateByPrimaryKey(BillSearchSupport record);

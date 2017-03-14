@@ -103,4 +103,16 @@
       ranking = #{ranking,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="selectByBillId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_bill_cost
+    where t_bill_id = #{BillId,jdbcType=BIGINT}
+  </select>
+  <select id="selectByBillIdAndDate" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_bill_cost
+    where t_bill_id = #{BillId,jdbcType=BIGINT} AND cost_date=#{date,jdbcType=DATE}
+  </select>
 </mapper>

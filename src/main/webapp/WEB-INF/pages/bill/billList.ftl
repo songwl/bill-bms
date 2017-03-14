@@ -242,7 +242,7 @@
                             <span class="required">*</span>
                         </label>
                         <div class="col-md-2 padding-right-0px padding-left-5px input-width-small">
-                            <select id="dfpricesearch" name="searchengineid" class="form-control input-width-small" style="width:120px;">
+                            <select id="dfsearch" name="searchengineid" class="form-control input-width-small" style="width:120px;">
                                     <@dict.showOptions dictKey="search" dictType="DICT" haveBlank="Y" />
                             </select>
                         </div>

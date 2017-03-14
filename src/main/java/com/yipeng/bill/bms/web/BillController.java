@@ -121,6 +121,40 @@ public class BillController extends BaseController {
 
         return this.ajaxDoneError("xxx!");
     }
+
+    /**
+     * 不同价导入
+     * @param dfsearch
+     * @param dfkeyword
+     * @param dfurl
+     * @param dfrankend
+     * @param dfprice
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    @RequestMapping(value = "/list/diffrentprice",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultMessage diffrentprice( @RequestParam(value="dfsearch",required = true) String dfsearch,@RequestParam(value="dfkeyword",required = true) String dfkeyword,
+                                        @RequestParam(value="dfurl",required = true) String dfurl,@RequestParam(value="dfrankend",required = true) Long dfrankend,
+                                        @RequestParam(value="dfprice",required = true) String dfprice
+    ) throws UnsupportedEncodingException {
+
+        if(keyword!=null)
+        {
+            try {
+                //get参数乱码问题
+                dfkeyword=new String(dfkeyword.getBytes("ISO-8859-1"), "UTF-8");
+
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+
+        User user = this.getCurrentAccount();
+        billService.savaDiffrentBill( user,dfsearch,dfurl,dfkeyword, dfrankend, dfprice);
+
+        return this.ajaxDoneError("xxx!");
+    }
     @Autowired
     private BillMapper billMapper;
     @Autowired

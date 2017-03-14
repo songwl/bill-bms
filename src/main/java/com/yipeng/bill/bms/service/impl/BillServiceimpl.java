@@ -80,6 +80,31 @@ public class BillServiceimpl implements BillService {
     }
 
     /**
+     * 实现不同价导入
+     * @param user
+     * @param dfsearch
+     * @param dfurl
+     * @param dfkeyword
+     * @param dfrankend
+     * @param dfprice
+     * @return
+     */
+    @Override
+    public int savaDiffrentBill(User user, String dfsearch, String dfurl, String dfkeyword, Long dfrankend, String dfprice) {
+        String[] dfurls=dfurl.split("\n");
+        String[] dfkeywords=dfkeyword.split("\n");
+        String[] dfprices=dfprice.split("\n");
+        if(dfurls.length==dfkeywords.length&&dfkeywords.length==dfprices.length)
+        {
+            for(int i=0;i<dfurls.length;i++)
+            {
+
+            }
+        }
+        return 0;
+    }
+
+    /**
      * 实现通过主键ID查订单
      * @param id
      * @return

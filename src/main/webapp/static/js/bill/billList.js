@@ -112,7 +112,27 @@ $(document).ready(function () {
     })
     //不同价订单导入
     $("#dfpricecmt").click(function () {
-        
+        var dfsearch=$("#dfsearch").val();
+        var dfrankend=$("#dfrankend").val();
+        var dfkeyword=$("#dfkeyword").val();
+        var dfurl=$("#dfurl").val();
+        var dfprice=$("#dfprice").val();
+        $.ajax({
+            type:'get',
+            url:CTX+"/bill/list/diffrentprice",
+            dataType:'json',
+            data:{
+                dfsearch:dfsearch,
+                dfrankend:dfsearch,
+                dfkeyword:dfkeyword,
+                dfurl:dfurl,
+                dfprice:dfprice
+             },
+            success:function () {
+                
+            }
+            
+        })
     })
     
     

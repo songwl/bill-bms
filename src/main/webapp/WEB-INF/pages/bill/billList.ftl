@@ -283,7 +283,7 @@
 <!--不同价导入end-->
 
 <!--调价-->
-<div class="bootbox modal in changeprice" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
+<div class="bootbox modal in changepriceDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -351,7 +351,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button data-bb-handler="success" type="button" class="btn wzgj-blue">确定</button><button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
+                <button data-bb-handler="success" type="button" class="btn wzgj-blue changeprice">确定</button><button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
             </div>
         </div>
     </div>

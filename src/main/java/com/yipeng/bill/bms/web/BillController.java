@@ -19,18 +19,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.ui.Model;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * Created by Administrator on 2017/3/10.
@@ -97,12 +92,12 @@ public class BillController extends BaseController {
      */
     @RequestMapping(value = "/list/sameprice",method = RequestMethod.GET)
     @ResponseBody
-    public ResultMessage samePrice(@RequestParam(value="search",required = true) String search,@RequestParam(value="keyword",required = true) String keyword,
-                                    @RequestParam(value="url",required = true) String url,@RequestParam(value="rankend",required = true) Long rankend,
-                                    @RequestParam(value="price",required = true) Long price,@RequestParam(value="rankend1",required = false) Long rankend1,
-                                    @RequestParam(value="price1",required = false) Long price1,@RequestParam(value="rankend2",required = false) Long rankend2,
-                                    @RequestParam(value="price2",required = false) Long price2,@RequestParam(value="rankend3",required = false) Long rankend3,
-                                    @RequestParam(value="price3",required = false) Long price3
+    public ResultMessage samePrice(@RequestParam(value="search",required = true) String search, @RequestParam(value="keyword",required = true) String keyword,
+                                   @RequestParam(value="url",required = true) String url, @RequestParam(value="rankend",required = true) Long rankend,
+                                   @RequestParam(value="price",required = true) BigDecimal price, @RequestParam(value="rankend1",required = false) Long rankend1,
+                                   @RequestParam(value="price1",required = false) BigDecimal price1, @RequestParam(value="rankend2",required = false) Long rankend2,
+                                   @RequestParam(value="price2",required = false) BigDecimal price2, @RequestParam(value="rankend3",required = false) Long rankend3,
+                                   @RequestParam(value="price3",required = false) BigDecimal price3
     ) throws UnsupportedEncodingException {
 
          if(keyword!=null)
@@ -155,6 +150,40 @@ public class BillController extends BaseController {
 
         return this.ajaxDoneSuccess(errorDetails);
     }
+
+    /**
+     * 调整价格
+     * @param rankend
+     * @param price
+     * @param rankend1
+     * @param price1
+     * @param rankend2
+     * @param price2
+     * @param rankend3
+     * @param price3
+     * @param selectContent
+     * @return
+     */
+    @RequestMapping(value = "/billList/updatePrice",method = RequestMethod.GET)
+    @ResponseBody
+    public ResultMessage updatePrice( @RequestParam(value="rankend",required = true) Long rankend,@RequestParam(value="price",required = true) BigDecimal price, @RequestParam(value="rankend1",required = false) Long rankend1,
+                                      @RequestParam(value="price1",required = false) BigDecimal price1, @RequestParam(value="rankend2",required = false) Long rankend2,
+                                      @RequestParam(value="price2",required = false) BigDecimal price2, @RequestParam(value="rankend3",required = false) Long rankend3,
+                                      @RequestParam(value="price3",required = false) BigDecimal price3,@RequestParam(value="selectContent",required = true) Objects selectContent)
+    {
+        Map<String,Object> map=new HashMap();
+        map.put("rankend",rankend);
+        map.put("price",price1);
+        map.put("rankend1",rankend1);
+        map.put("price1",price2);
+        map.put("rankend2",rankend2);
+        map.put("price2",price2);
+        map.put("rankend3",rankend3);
+        map.put("price3",price3);
+        int a=billService.updateBillPrice(map);
+      return  this.ajaxDoneSuccess("");
+    }
+
     @Autowired
     private BillMapper billMapper;
     @Autowired
@@ -176,7 +205,7 @@ public class BillController extends BaseController {
             Map<String, Object> modelMap = new HashMap();
             modelMap.put("BillId",bill.getId());
             modelMap.put("date",new Date());
-            long a=0;
+            BigDecimal a=new BigDecimal("0");
             //如果排名小于排名扣费标准，则产生扣费记录
             if(billPrice.size()<=1)
             {

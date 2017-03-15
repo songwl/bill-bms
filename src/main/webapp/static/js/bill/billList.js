@@ -45,12 +45,12 @@ $(document).ready(function () {
     $(".close").click(function () {
         $(".samepriceDiv").slideUp();
         $(".differentpriceDiv").slideUp();
-        $(".changeprice").slideUp();
+        $(".changepriceDiv").slideUp();
     })
     $(".cancel").click(function () {
         $(".samepriceDiv").slideUp();
         $(".differentpriceDiv").slideUp();
-        $(".changeprice").slideUp();
+        $(".changepriceDiv").slideUp();
     })
     //显示搜索内容
     $(".search").click(function () {
@@ -142,12 +142,12 @@ $(document).ready(function () {
      })
     //复选框
     $("#btn_update").click(function () {
-        var selectContent = $('#myTable').bootstrapTable('getSelections')[0];
-        if(typeof(selectContent) == 'undefined') {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        if(selectContent == "") {
             alert('请选择一列数据!');
-            return false;
+
         }else{
-          $(".changeprice").slideDown();
+          $(".changepriceDiv").slideDown();
 
         }
     })

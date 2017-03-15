@@ -1,5 +1,6 @@
 package com.yipeng.bill.bms.vo;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -14,12 +15,12 @@ public class BillDetails {
     private String keywords;
     private Integer firstRanking;
     private Integer newRanking;
-    private Long priceOne;
-    private Long priceTwo;
+    private BigDecimal priceOne;
+    private BigDecimal priceTwo;
     private Integer webAppId;
     private Integer dayOptimization;
     private Integer allOptimization;
-    private Long   dayConsumption;
+    private BigDecimal   dayConsumption;
     private Integer   standardDays;
     private Integer state;
 
@@ -42,18 +43,18 @@ public class BillDetails {
     public  Integer  setFirstRanking(Integer  firstRanking){return  this.firstRanking=firstRanking;}
     public  Integer  getNewRanking(){return  newRanking;}
     public  Integer  setNewRanking(Integer  newRanking){return  this.newRanking=newRanking;}
-    public  Long  getPriceOne(){return  priceOne;}
-    public  Long  setPriceOne(Long  priceOne){return  this.priceOne=priceOne;}
-    public  Long  getPriceTwo(){return  priceTwo;}
-    public  Long  setPriceTwo(Long  priceTwo){return  this.priceTwo=priceTwo;}
+    public  BigDecimal  getPriceOne(){return  priceOne;}
+    public  BigDecimal  setPriceOne(BigDecimal  priceOne){return  this.priceOne=priceOne;}
+    public  BigDecimal  getPriceTwo(){return  priceTwo;}
+    public  BigDecimal  setPriceTwo(BigDecimal  priceTwo){return  this.priceTwo=priceTwo;}
     public  Integer  getWebAppId(){return  webAppId;}
     public  Integer  setWebAppId(Integer  webAppId){return  this.webAppId=webAppId;}
     public  Integer  getDayOptimization(){return  dayOptimization;}
     public  Integer  setDayOptimization(Integer  dayOptimization){return  this.dayOptimization=dayOptimization;}
     public  Integer  getAllOptimization(){return  allOptimization;}
     public  Integer  setAllOptimization(Integer  allOptimization){return  this.allOptimization=allOptimization;}
-    public  Long  getDayConsumption (){return  dayConsumption;}
-    public  Long  setDayConsumption(Long  dayConsumption){return  this.dayConsumption=dayConsumption;}
+    public  BigDecimal  getDayConsumption (){return  dayConsumption;}
+    public  BigDecimal  setDayConsumption(BigDecimal  dayConsumption){return  this.dayConsumption=dayConsumption;}
     public  Integer  getStandardDays (){return  standardDays;}
     public  Integer  setStandardDays(Integer  standardDays){return  this.standardDays=standardDays;}
     public  Integer  getState(){return  state;}

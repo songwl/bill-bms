@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -35,7 +36,7 @@ public class BillServiceimpl implements BillService {
      * @return
      */
     @Override
-    public String saveBill(User user , String search,String url,String keyword,Long rankend,Long price,Long rankend1,Long price1,Long rankend2,Long price2,Long rankend3,Long price3) {
+    public String saveBill(User user , String search, String url, String keyword, Long rankend, BigDecimal price, Long rankend1, BigDecimal price1, Long rankend2, BigDecimal price2, Long rankend3, BigDecimal price3) {
 
         String[] urls=url.split("\n");
         String[] keywords=keyword.split("\n");
@@ -154,6 +155,7 @@ public class BillServiceimpl implements BillService {
                 params.put("website",dfurls[i]);
                 params.put("keywords",dfkeywords[i]);
                 List<Bill> billList=billMapper.selectAllSelective(params);
+            //还有else判断
               if(billList!=null)
               {
                   Boolean bool=true;
@@ -192,7 +194,8 @@ public class BillServiceimpl implements BillService {
                       //订单单价表
                       BillPrice billPrice=new BillPrice();
                       billPrice.setBillId(bill.getId());
-                      billPrice.setPrice(Long.parseLong(dfprices[i]));
+                      BigDecimal bd=new BigDecimal(dfprices[i]);
+                      billPrice.setPrice(bd);
                       billPrice.setBillRankingStandard(dfrankend);
                       billPrice.setInMemberId(user.getId());
                       billPrice.setCreateTime(new Date());
@@ -250,13 +253,17 @@ public class BillServiceimpl implements BillService {
             billDetails1.setNewRanking(bill.getNewRanking());
 
             List<BillPrice>  billPrice=billPriceMapper.selectByBillId(bill.getId());
-            BillPrice billPrice1= billPrice.get(0);
-            billDetails1.setPriceOne(billPrice1.getPrice());
-            if(billPrice.size()>=2)
+            if(billPrice.size()>0)
             {
-                BillPrice billPrice2= billPrice.get(1);
-                billDetails1.setPriceTwo(billPrice2.getPrice());
+                BillPrice billPrice1= billPrice.get(0);
+                billDetails1.setPriceOne(billPrice1.getPrice());
+                if(billPrice.size()>=2)
+                {
+                    BillPrice billPrice2= billPrice.get(1);
+                    billDetails1.setPriceTwo(billPrice2.getPrice());
+                }
             }
+
 
 
 
@@ -265,15 +272,19 @@ public class BillServiceimpl implements BillService {
             billDetails1.setAllOptimization(bill.getAllOptimization());
             //查询今日消费
             List<BillCost> billCost=billCostMapper.selectByBillId(bill.getId());
-            for (BillCost billCost1:billCost
-                 ) {
-                String costDate= formatter.format(billCost1.getCostDate());
-                String costDate1= formatter.format(new Date());
-                if(costDate.equals(costDate1))
-                {
-                    billDetails1.setDayConsumption(billCost1.getCostAmount());
+            if(billCost.size()>0)
+            {
+                for (BillCost billCost1:billCost
+                        ) {
+                    String costDate= formatter.format(billCost1.getCostDate());
+                    String costDate1= formatter.format(new Date());
+                    if(costDate.equals(costDate1))
+                    {
+                        billDetails1.setDayConsumption(billCost1.getCostAmount());
+                    }
                 }
             }
+
            billDetails1.setState(bill.getState());
 
 
@@ -286,6 +297,11 @@ public class BillServiceimpl implements BillService {
         modelMap.put("total",total);
         modelMap.put("rows",billDetails);
         return modelMap;
+    }
+
+    @Override
+    public int updateBillPrice(Map<String, Object> params) {
+        return 0;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.yipeng.bill.bms.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class BillCost implements Serializable {
@@ -10,7 +11,7 @@ public class BillCost implements Serializable {
 
     private Long tBillPriceId;
 
-    private Long costAmount;
+    private BigDecimal costAmount;
 
     private Date costDate;
 
@@ -42,11 +43,11 @@ public class BillCost implements Serializable {
         this.tBillPriceId = tBillPriceId;
     }
 
-    public Long getCostAmount() {
+    public BigDecimal getCostAmount() {
         return costAmount;
     }
 
-    public void setCostAmount(Long costAmount) {
+    public void setCostAmount(BigDecimal costAmount) {
         this.costAmount = costAmount;
     }
 

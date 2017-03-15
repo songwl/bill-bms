@@ -9,14 +9,15 @@ $(document).ready(function () {
         var search= $("#searchengineid ").val();
         var keyword= $("#keyword").val();
         var url= $("#url").val();
-        var rankend=$("input[name='samePricerankend']").val();
-        var price=$("input[name='samePriceprice']").val();
-        var rankend1=$("input[name='samePricerankend1']").val();
-        var price1=$("input[name='samePriceprice1']").val();
-        var rankend2=$("input[name='samePricerankend2']").val();
-        var price2=$("input[name='samePriceprice2']").val();
-        var rankend3=$("input[name='samePricerankend3']").val();
-        var price3=$("input[name='samePriceprice3']").val();
+
+        var rankend = parseInt(jQuery("input[name='samePricerankend']").val());
+        var price = parseFloat(jQuery("input[name='samePriceprice']").val());
+        var rankend1 = parseInt(jQuery("input[name='samePricerankend1']").val());
+        var price1 = parseFloat(jQuery("input[name='samePriceprice1']").val());
+        var rankend2 = parseInt(jQuery("input[name='samePricerankend2']").val());
+        var price2 = parseFloat(jQuery("input[name='samePriceprice2']").val());
+        var rankend3 = parseInt(jQuery("input[name='samePricerankend3']").val());
+        var price3 = parseFloat(jQuery("input[name='samePriceprice3']").val());
 
         if (!isNaN(rankend) && !isNaN(rankend1) && !isNaN(rankend2) && !isNaN(rankend3)
             && !isNaN(price) && !isNaN(price1) && !isNaN(price2) && !isNaN(price3)
@@ -47,12 +48,20 @@ $(document).ready(function () {
             {
                var keyword_arr=$.trim(keyword).split('\n');
                 var url_arr=$.trim(url).split('\n');
-                if(keyword_arr.length>1&&keyword_arr.length!=url_arr.length)
+             if(keyword_arr.length>1&&keyword_arr.length!=url_arr.length)
                 {
                     alert("网址行数为1或者与关键词一一对应");
                 }
                 else
                 {
+                    var Arankend = jQuery("input[name='samePricerankend']").val();
+                    var Aprice = jQuery("input[name='samePriceprice']").val();
+                    var Arankend1 = jQuery("input[name='samePricerankend1']").val();
+                    var Aprice1 = jQuery("input[name='samePriceprice1']").val();
+                    var Arankend2 = jQuery("input[name='samePricerankend2']").val();
+                    var Aprice2 = jQuery("input[name='samePriceprice2']").val();
+                    var Arankend3 =jQuery("input[name='samePricerankend3']").val();
+                    var Aprice3 = jQuery("input[name='samePriceprice3']").val();
                     $.ajax({
                         type:"get",
                         url:CTX+"/bill/list/sameprice",
@@ -62,15 +71,14 @@ $(document).ready(function () {
                             search:search,
                             keyword:keyword,
                             url:url,
-                            rankend:rankend,
-                            price:price,
-                            rankend1:rankend1,
-                            price1:price1,
-                            rankend2:rankend2,
-                            price2:price2,
-                            rankend3:rankend3,
-                            price3:price3
-
+                            rankend:Arankend,
+                            price:Aprice,
+                            rankend1:Arankend1,
+                            price1:Aprice1,
+                            rankend2:Arankend2,
+                            price2:Aprice2,
+                            rankend3:Arankend3,
+                            price3:Aprice3
 
                         },
                         beforeSend: function () {
@@ -101,7 +109,7 @@ $(document).ready(function () {
                         }
 
                     })
-                }
+               }
 
             }
 

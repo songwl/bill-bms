@@ -1,6 +1,7 @@
 package com.yipeng.bill.bms.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class BillPrice implements Serializable {
@@ -8,7 +9,7 @@ public class BillPrice implements Serializable {
 
     private Long billId;
 
-    private Long price;
+    private BigDecimal price;
     private Long billRankingStandard;
     private Long inMemberId;
 
@@ -34,11 +35,11 @@ public class BillPrice implements Serializable {
         this.billId = billId;
     }
 
-    public Long getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
     public  Long getBillRankingStandard() {return billRankingStandard;}

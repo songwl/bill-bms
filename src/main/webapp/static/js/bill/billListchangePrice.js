@@ -3,7 +3,7 @@
  */
 $(document).ready(function () {
 
-    $(".wzgj-blue").click(function () {
+    $(".changeprice").click(function () {
 
         var rankend = parseInt(jQuery("input[name='changerankend']").val());
         var price = parseFloat(jQuery("input[name='changeprice']").val());
@@ -34,7 +34,35 @@ $(document).ready(function () {
             && 1000 > price && price > 0
         )
         {
-            alert("1");
+            var changerankend = jQuery("input[name='changerankend']").val();
+            var changeprice = jQuery("input[name='changeprice']").val();
+            var changerankend1 = jQuery("input[name='changerankend1']").val();
+            var changeprice1 = jQuery("input[name='changeprice1']").val();
+            var changerankend2 = jQuery("input[name='changerankend2']").val();
+            var changeprice2 = jQuery("input[name='changeprice2']").val();
+            var changerankend3 = jQuery("input[name='changerankend3']").val();
+            var changeprice3 = jQuery("input[name='changeprice3']").val();
+            var selectContent = $('#myTable').bootstrapTable('getSelections');
+            alert(selectContent);
+            $.ajax({
+                type:'get',
+                url:CTX+"/bill/billList/updatePrice",
+                data:{
+                    rankend:changerankend,
+                    price:changeprice,
+                    rankend1:changerankend1,
+                    price1:changeprice1,
+                    rankend2:changerankend2,
+                    price2:changeprice2,
+                    rankend3:changerankend3,
+                    price3:changeprice3,
+                    selectContent:selectContent
+                },
+                success:function (result) {
+                    
+                }
+                
+            })
         }
         else
         {

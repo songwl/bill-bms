@@ -45,6 +45,12 @@ $(document).ready(function () {
     $(".close").click(function () {
         $(".samepriceDiv").slideUp();
         $(".differentpriceDiv").slideUp();
+        $(".changeprice").slideUp();
+    })
+    $(".cancel").click(function () {
+        $(".samepriceDiv").slideUp();
+        $(".differentpriceDiv").slideUp();
+        $(".changeprice").slideUp();
     })
     //显示搜索内容
     $(".search").click(function () {
@@ -63,55 +69,9 @@ $(document).ready(function () {
 
     })
 
-    //提交相同价订单
-    $(".samepricecmt").click(function () {
-        var search= $("#searchengineid ").val();
-        var keyword= $("#keyword").val();
-        var url= $("#url").val();
-        var rankend=$("input[name='rankend']").val();
-        var price=$("input[name='price']").val();
-        var rankend1=$("input[name='rankend1']").val();
-        var price1=$("input[name='price1']").val();
-        var rankend2=$("input[name='rankend2']").val();
-        var price2=$("input[name='price2']").val();
-        var rankend3=$("input[name='rankend3']").val();
-        var price3=$("input[name='price3']").val();
-       $.ajax({
-           type:"get",
-           url:CTX+"/bill/list/sameprice",
-           dataType:'json',
-           contentType: "application/x-www-form-urlencoded; charset=utf-8",
-           data:{
-               search:search,
-               keyword:keyword,
-               url:url,
-               rankend:rankend,
-               price:price,
-               rankend1:rankend1,
-               price1:price1,
-               rankend2:rankend2,
-               price2:price2,
-               rankend3:rankend3,
-               price3:price3
 
-
-               },
-           beforeSend: function () {
-               $("#pload").show();
-           },
-
-           success:function () {
-               $("#pload").hide();
-               $(".samepriceDiv").slideUp();
-               $('#myTable').bootstrapTable('refresh');
-               alert("导入成功！");
-           }
-
-       })
-
-    })
     //不同价订单导入
-    $("#dfpricecmt").click(function () {
+    $(".dfpricecmt").click(function () {
         var dfsearch=$("#dfsearch").val();
         var dfrankend=$("#dfrankend").val();
         var dfkeyword=$("#dfkeyword").val();
@@ -120,16 +80,39 @@ $(document).ready(function () {
         $.ajax({
             type:'get',
             url:CTX+"/bill/list/diffrentprice",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
             dataType:'json',
             data:{
                 dfsearch:dfsearch,
-                dfrankend:dfsearch,
+                dfrankend:dfrankend,
                 dfkeyword:dfkeyword,
                 dfurl:dfurl,
                 dfprice:dfprice
              },
-            success:function () {
-                
+            beforeSend: function () {
+                $("#pload").show();
+            },
+            success:function (result) {
+                if(result.code==200)
+                {
+
+                    if(result.message=="")
+                    {
+                        alert("导入成功!");
+                        $(".differentpriceDiv").slideUp();
+                        $('#myTable').bootstrapTable('refresh');
+                    }
+                    else
+                    {
+                        $("#pload").hide();
+                        alert(result.message+" 已经存在!");
+                    }
+                }
+                else
+                {
+                    $("#pload").hide();
+                    alert("系统繁忙，请稍后再试！");
+                }
             }
             
         })
@@ -140,14 +123,34 @@ $(document).ready(function () {
          $.ajax({
              type: "get",
              url: CTX + "/bill/testpm",
-             success:function () {
-                 alert("查询成功！");
-                 $('#myTable').bootstrapTable('refresh');
+             dataType:'json',
+             beforeSend: function () {
+                 $("#pload").show();
+             },
+             success:function (result) {
+                 $("#pload").hide();
+                 if(result.code==200)
+                 {
+                     alert("查询成功！");
+                     $('#myTable').bootstrapTable('refresh');
+                 }
+
 
              }
              
          })
      })
+    //复选框
+    $("#btn_update").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections')[0];
+        if(typeof(selectContent) == 'undefined') {
+            alert('请选择一列数据!');
+            return false;
+        }else{
+          $(".changeprice").slideDown();
+
+        }
+    })
 
 
 
@@ -181,8 +184,8 @@ var TableInit = function () {
             cache: false,                       //是否使用缓存，默认为true，
             pagination: true,                   //是否显示分页（*）
             pageNumber: 1,                       //初始化加载第一页，默认第一页
-            pageSize: 10,                       //每页的记录行数（*）
-            pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+            pageSize: 20,                       //每页的记录行数（*）
+            pageList: [20, 50, 100],        //可供选择的每页的行数（*）
             sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
             queryParams: oTableInit.queryParams,//传递参数（*）
             queryParamsType: "",
@@ -190,13 +193,24 @@ var TableInit = function () {
             showRefresh: true,                  //是否显示刷新按钮
             minimumCountColumns: 2,             //最少允许的列数
             clickToSelect: true,                //是否启用点击选中行
-            height: 600,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            height: 700,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
             uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
             showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
             cardView: false,                    //是否显示详细视图
             detailView: false,                   //是否显示父子表
             showExport: true,                     //是否显示导出
             exportDataType: "basic",
+            rowStyle: function (row, index) {
+                //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
+                var strclass = "";
+                if ((row.id)%2==0){
+                    strclass = '';
+                      }
+                    else {
+                    strclass = 'active';
+                    }
+                    return { classes: strclass }
+                },
             columns: [
                 {
                     checkbox: true
@@ -321,6 +335,10 @@ var TableInit = function () {
                     formatter:function (value,row,index) {
                         var a="";
                         if(value==0)
+                        {
+                            a="<span style='color: #54728c'>-</span>";
+                        }
+                        else if(value==null)
                         {
                             a="<span style='color: #54728c'>-</span>";
                         }

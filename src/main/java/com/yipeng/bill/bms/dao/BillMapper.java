@@ -20,4 +20,5 @@ public interface BillMapper {
     List<Bill> selectList(Map<String,Object> params);
     Long getBillListCount();
     List<Bill> selectAll();
+    List<Bill> selectAllSelective(Map<String,Object> params);
 }

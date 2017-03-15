@@ -91,6 +91,7 @@ CREATE TABLE IF NOT EXISTS `t_bill` (
   `first_ranking` INT NULL COMMENT '初始排名',
   `new_ranking` INT NULL COMMENT '新的排名',
   `web_app_id` INT NULL COMMENT '订单接口调用查询ID',
+  `standard_days` INT NULL COMMENT '达标天数',
   `day_optimization` INT NULL COMMENT '日优化（初始值为1）可以调整数值，调整参数时，调用接口传入参数',
   `all_optimization` INT NULL COMMENT '总优化（计算总优化数）',
   `state` INT NULL COMMENT '订单状态',

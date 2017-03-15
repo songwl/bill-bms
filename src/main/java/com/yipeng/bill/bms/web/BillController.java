@@ -117,9 +117,9 @@ public class BillController extends BaseController {
          }
 
         User user = this.getCurrentAccount();
-        billService.saveBill( user,search,url, keyword, rankend, price, rankend1, price1, rankend2, price2, rankend3, price3);
+         String errorDetails=billService.saveBill( user,search,url, keyword, rankend, price, rankend1, price1, rankend2, price2, rankend3, price3);
 
-        return this.ajaxDoneError("xxx!");
+        return this.ajaxDoneSuccess(errorDetails);
     }
 
     /**
@@ -139,7 +139,7 @@ public class BillController extends BaseController {
                                         @RequestParam(value="dfprice",required = true) String dfprice
     ) throws UnsupportedEncodingException {
 
-        if(keyword!=null)
+        if(dfkeyword!=null)
         {
             try {
                 //get参数乱码问题
@@ -151,9 +151,9 @@ public class BillController extends BaseController {
         }
 
         User user = this.getCurrentAccount();
-        billService.savaDiffrentBill( user,dfsearch,dfurl,dfkeyword, dfrankend, dfprice);
+        String  errorDetails= billService.savaDiffrentBill( user,dfsearch,dfurl,dfkeyword, dfrankend, dfprice);
 
-        return this.ajaxDoneError("xxx!");
+        return this.ajaxDoneSuccess(errorDetails);
     }
     @Autowired
     private BillMapper billMapper;
@@ -168,59 +168,145 @@ public class BillController extends BaseController {
     {
         List<Bill> billList=billMapper.selectAll();
         for (Bill bill: billList
-             ) {
+                ) {
             int x=1+(int)(Math.random()*30);
             bill.setNewRanking(x);
             billMapper.updateByPrimaryKeySelective(bill);
-           List<BillPrice>  billPrice=billPriceMapper.selectByBillId(bill.getId());
+            List<BillPrice>  billPrice=billPriceMapper.selectByBillId(bill.getId());
             Map<String, Object> modelMap = new HashMap();
             modelMap.put("BillId",bill.getId());
             modelMap.put("date",new Date());
-            if(x<=billPrice.get(0).getBillRankingStandard())
+            long a=0;
+            //如果排名小于排名扣费标准，则产生扣费记录
+            if(billPrice.size()<=1)
             {
-
-                BillCost billCost=billCostMapper.selectByBillIdAndDate(modelMap);
-                if(billCost!=null)
+                if(x<=billPrice.get(0).getBillRankingStandard())
                 {
-                    billCost.setCostAmount(billPrice.get(0).getPrice());
-                    billCost.setRanking(x);
-                    billCostMapper.updateByPrimaryKey(billCost);
+
+                    BillCost billCost=billCostMapper.selectByBillIdAndDate(modelMap);
+                    //如果今日已有记录，则更新
+                    if(billCost!=null)
+                    {
+                        billCost.setCostAmount(billPrice.get(0).getPrice());
+                        billCost.setRanking(x);
+                        billCostMapper.updateByPrimaryKey(billCost);
+                    }
+                    //没有记录，记录数据
+                    else
+                    {
+                        BillCost billCost1=new BillCost();
+                        billCost1.settBillId(bill.getId());
+                        billCost1.settBillPriceId(billPrice.get(0).getId());
+                        billCost1.setCostAmount(billPrice.get(0).getPrice());
+                        billCost1.setCostDate(new Date());
+                        billCost1.setRanking(x);
+                        billCostMapper.insert(billCost1);
+                    }
+
                 }
+                //没有达到标准
                 else
                 {
-                    BillCost billCost1=new BillCost();
-                    billCost1.settBillId(bill.getId());
-                    billCost1.settBillPriceId(billPrice.get(0).getId());
-                    billCost1.setCostAmount(billPrice.get(0).getPrice());
-                    billCost1.setCostDate(new Date());
-                    billCost1.setRanking(x);
-                    billCostMapper.insert(billCost1);
+
+                    BillCost billCost2=billCostMapper.selectByBillIdAndDate(modelMap);
+                    //已有，更新记录
+                    if(billCost2!=null)
+                    {
+                        billCost2.setCostAmount(a);
+                        billCost2.setRanking(x);
+                        billCostMapper.updateByPrimaryKey(billCost2);
+                    }
+                    //没有，插入数据
+                    else
+                    {
+                        BillCost billCost3=new BillCost();
+                        billCost3.settBillId(bill.getId());
+                        billCost3.settBillPriceId(billPrice.get(0).getId());
+                        billCost3.setCostAmount(a);
+                        billCost3.setCostDate(new Date());
+                        billCost3.setRanking(x);
+                        billCostMapper.insert(billCost3);
+                    }
                 }
 
             }
             else
             {
-                long a=0;
-                BillCost billCost2=billCostMapper.selectByBillIdAndDate(modelMap);
-                if(billCost2!=null)
+                if(x<=billPrice.get(0).getBillRankingStandard())
                 {
-                    billCost2.setCostAmount(a);
-                    billCost2.setRanking(x);
-                    billCostMapper.updateByPrimaryKey(billCost2);
+
+                    BillCost billCost4=billCostMapper.selectByBillIdAndDate(modelMap);
+                    //如果今日已有记录，则更新
+                    if(billCost4!=null)
+                    {
+                        billCost4.setCostAmount(billPrice.get(0).getPrice());
+                        billCost4.setRanking(x);
+                        billCostMapper.updateByPrimaryKey(billCost4);
+                    }
+                    //没有记录，记录数据
+                    else
+                    {
+                        BillCost billCost5=new BillCost();
+                        billCost5.settBillId(bill.getId());
+                        billCost5.settBillPriceId(billPrice.get(0).getId());
+                        billCost5.setCostAmount(billPrice.get(0).getPrice());
+                        billCost5.setCostDate(new Date());
+                        billCost5.setRanking(x);
+                        billCostMapper.insert(billCost5);
+                    }
+
                 }
+                else  if(x>billPrice.get(0).getBillRankingStandard()&&x<=billPrice.get(1).getBillRankingStandard())
+                {
+
+                    BillCost billCost6=billCostMapper.selectByBillIdAndDate(modelMap);
+                    //如果今日已有记录，则更新
+                    if(billCost6!=null)
+                    {
+                        billCost6.setCostAmount(billPrice.get(1).getPrice());
+                        billCost6.setRanking(x);
+                        billCostMapper.updateByPrimaryKey(billCost6);
+                    }
+                    //没有记录，记录数据
+                    else
+                    {
+                        BillCost billCost7=new BillCost();
+                        billCost7.settBillId(bill.getId());
+                        billCost7.settBillPriceId(billPrice.get(1).getId());
+                        billCost7.setCostAmount(billPrice.get(1).getPrice());
+                        billCost7.setCostDate(new Date());
+                        billCost7.setRanking(x);
+                        billCostMapper.insert(billCost7);
+                    }
+                }
+                //没有达到标准
                 else
                 {
-                    BillCost billCost3=new BillCost();
-                    billCost3.settBillId(bill.getId());
-                    billCost3.settBillPriceId(billPrice.get(0).getId());
-                    billCost3.setCostAmount(a);
-                    billCost3.setCostDate(new Date());
-                    billCost3.setRanking(x);
-                    billCostMapper.insert(billCost3);
+
+                    BillCost billCost8=billCostMapper.selectByBillIdAndDate(modelMap);
+                    //已有，更新记录
+                    if(billCost8!=null)
+                    {
+                        billCost8.setCostAmount(a);
+                        billCost8.setRanking(x);
+                        billCostMapper.updateByPrimaryKey(billCost8);
+                    }
+                    //没有，插入数据
+                    else
+                    {
+                        BillCost billCost9=new BillCost();
+                        billCost9.settBillId(bill.getId());
+                        billCost9.settBillPriceId(billPrice.get(0).getId());
+                        billCost9.setCostAmount(a);
+                        billCost9.setCostDate(new Date());
+                        billCost9.setRanking(x);
+                        billCostMapper.insert(billCost9);
+                    }
                 }
             }
+
         }
 
-        return  this.ajaxDoneError("");
+        return  this.ajaxDoneSuccess("");
     }
 }

@@ -16,9 +16,9 @@ public interface BillService {
      * @param bill
      * @return
      */
-    int saveBill(User user , String search, String url, String keyword, Long rankend, Long price, Long rankend1, Long price1, Long rankend2, Long price2, Long rankend3, Long price3);
+    String saveBill(User user , String search, String url, String keyword, Long rankend, Long price, Long rankend1, Long price1, Long rankend2, Long price2, Long rankend3, Long price3);
 
-     int savaDiffrentBill(User user,String dfsearch, String dfurl, String dfkeyword, Long dfrankend, String dfprice);
+     String savaDiffrentBill(User user,String dfsearch, String dfurl, String dfkeyword, Long dfrankend, String dfprice);
     /**
      * 通过ID查询订单
      * @param id

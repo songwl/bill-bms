@@ -20,7 +20,7 @@ public class BillDetails {
     private Integer dayOptimization;
     private Integer allOptimization;
     private Long   dayConsumption;
-    private Long   standardDays;
+    private Integer   standardDays;
     private Integer state;
 
     public  Long  getId(){return  id;}
@@ -54,8 +54,8 @@ public class BillDetails {
     public  Integer  setAllOptimization(Integer  allOptimization){return  this.allOptimization=allOptimization;}
     public  Long  getDayConsumption (){return  dayConsumption;}
     public  Long  setDayConsumption(Long  dayConsumption){return  this.dayConsumption=dayConsumption;}
-    public  Long  getStandardDays (){return  standardDays;}
-    public  Long  setStandardDays(Long  standardDays){return  this.standardDays=standardDays;}
+    public  Integer  getStandardDays (){return  standardDays;}
+    public  Integer  setStandardDays(Integer  standardDays){return  this.standardDays=standardDays;}
     public  Integer  getState(){return  state;}
     public  Integer  setState(Integer  state){return  this.state=state;}
 }

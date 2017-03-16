@@ -3,6 +3,7 @@ $(document).ready(function () {
     $(".Import").click(function (e) {
         if($(".ImportPrice").css("display")=="block") {
             $(".ImportPrice").slideUp();
+
         }
         else
         {
@@ -19,7 +20,7 @@ $(document).ready(function () {
 
         if($(".samepriceDiv").css("display")=="block") {
             $(".samepriceDiv").slideUp();
-
+            $(".modal-backdrop").hide();
 
         }
         else {
@@ -114,24 +115,25 @@ $(document).ready(function () {
                         },
 
                         success:function (result) {
+                            $("#pload").hide();
                             if(result.code==200)
                             {
+
                                 if(result.message=="")
                                 {
                                     alert("导入成功!");
-                                    $("#pload").hide();
-                                    $(".samepriceDiv").slideUp();
+                                    $(".modal-backdrop").hide();
                                     $('#myTable').bootstrapTable('refresh');
                                 }
                                 else
                                 {
-                                    $("#pload").hide();
+
                                     alert(result.message+" 已经存在!");
                                 }
                             }
                             else
                             {
-                                $("#pload").hide();
+
                                 alert("系统繁忙，请稍后再试！");
                             }
                         }
@@ -158,7 +160,6 @@ $(document).ready(function () {
     $("#Differentprice").click(function () {
         if($(".differentpriceDiv").css("display")=="block") {
             $(".differentpriceDiv").slideUp();
-
 
         }
         else {
@@ -225,6 +226,7 @@ $(document).ready(function () {
                 $("#pload").show();
             },
             success:function (result) {
+                $("#pload").hide();
                 if(result.code==200)
                 {
 
@@ -232,17 +234,18 @@ $(document).ready(function () {
                     {
                         alert("导入成功!");
                         $(".differentpriceDiv").slideUp();
+                        $(".modal-backdrop").hide();
                         $('#myTable').bootstrapTable('refresh');
                     }
                     else
                     {
-                        $("#pload").hide();
+
                         alert(result.message+" 已经存在!");
                     }
                 }
                 else
                 {
-                    $("#pload").hide();
+
                     alert("系统繁忙，请稍后再试！");
                 }
             }

@@ -137,7 +137,7 @@
 						</a>
 						<ul class="sub-menu">
 							<li>
-								<a href="javascript:;">
+								<a href="${ctx}/operator/list">
 									操作员列表
 								</a>
 							</li>
@@ -150,12 +150,12 @@
 						</a>
 						<ul class="sub-menu">
 							<li>
-								<a href="javascript:;">
+                                <a href="${ctx}/customer/customerList">
 									客户管理
 								</a>
 							</li>
 							<li>
-								<a href="javascript:;">
+                                <a href="${ctx}/customer/fundAccount">
 									资金明细
 								</a>
 							</li>

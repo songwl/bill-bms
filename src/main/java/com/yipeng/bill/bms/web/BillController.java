@@ -53,6 +53,12 @@ public class BillController extends BaseController {
 
         return "/bill/billList";
     }
+    @RequestMapping(value = "/pendingAudit")
+    public  String pendingAudit(HttpServletRequest request)
+    {
+
+        return "/bill/billPendingAudit";
+    }
 
     /**
      * table表格获取数据

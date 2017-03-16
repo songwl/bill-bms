@@ -123,6 +123,11 @@
 									关键词排名
 								</a>
 							</li>
+                            <li>
+                                <a href="${ctx}/bill/pendingAudit">
+                                    待审核订单
+                                </a>
+                            </li>
 
 						</ul>
 					</li>

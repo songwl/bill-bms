@@ -3,8 +3,7 @@
 <@bms.bmshtml bmsModel "主页">
 
 <div class="theme-panel hidden-xs hidden-sm">
-    <div class="toggler">
-    </div>
+
     <div class="toggler-close">
     </div>
     <div class="theme-options">
@@ -60,7 +59,7 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-
+<!--
         <ul class="page-breadcrumb breadcrumb">
             <li>
                 <i class="fa fa-home"></i>
@@ -70,7 +69,7 @@
                 <i class="fa fa-angle-right"></i>
             </li>
 
-        </ul>
+        </ul>-->
     </div>
 </div>
 <div id="main-content">

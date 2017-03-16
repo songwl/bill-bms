@@ -34,7 +34,7 @@ public interface BillService {
      */
     Map<String, Object> findBillList(Map<String,Object> params);
 
-    int updateBillPrice(Map<String,Object> params);
+    int updateBillPrice(Map<String, String[]>  params,User user);
 
 
 }

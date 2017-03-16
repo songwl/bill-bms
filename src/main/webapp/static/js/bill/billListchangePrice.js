@@ -43,10 +43,11 @@ $(document).ready(function () {
             var changerankend3 = jQuery("input[name='changerankend3']").val();
             var changeprice3 = jQuery("input[name='changeprice3']").val();
             var selectContent = $('#myTable').bootstrapTable('getSelections');
-            alert(selectContent);
+
             $.ajax({
-                type:'get',
+                type:'post',
                 url:CTX+"/bill/billList/updatePrice",
+                dataType:'json',
                 data:{
                     rankend:changerankend,
                     price:changeprice,
@@ -55,7 +56,7 @@ $(document).ready(function () {
                     rankend2:changerankend2,
                     price2:changeprice2,
                     rankend3:changerankend3,
-                    price3:changeprice3,
+                   price3:changeprice3,
                     selectContent:selectContent
                 },
                 success:function (result) {

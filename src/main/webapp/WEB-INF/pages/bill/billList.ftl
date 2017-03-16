@@ -7,7 +7,6 @@
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <script src="${ctx}/static/js/bill/billList.js"></script>
 <script src="${ctx}/static/js/bill/billListchangePrice.js"></script>
-<script src="${ctx}/static/js/bill/billListsamePrice.js"></script>
 
 <div class="Navs">
     <div class="nav_L left">
@@ -357,4 +356,97 @@
     </div>
 </div>
 <!--调价end-->
+<!--详情-->
+
+    <div class="modal-backdrop in" style="display: none">
+    </div>
+    <div class="bootbox modal in" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false" id="billCostDetail">
+        <div class="modal-dialog listdetails">
+            <div class="modal-content">
+                <div class="modal-body" style="max-height: 374px;">
+                    <button type="button" class="bootbox-close-button close" style="margin-top: -10px;">×</button>
+                    <div class="bootbox-body">
+                        <style type="text/css">
+                            .listdetails {
+                                width: 800px;
+                            }
+                        </style>
+                        <div class="row" style="margin-top: -5px;">
+                            <div class="col-md-12">
+                                <label>价格配置</label>
+                                <table class="table table-hover table-striped table-bordered">
+                                    <table class="table table-hover table-striped table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 100px;">达标位置
+                                            </th>
+                                            <th>收费标准<span>(元/天)</span>
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>前<span class="red">10</span>名
+                                            </td>
+                                            <td>￥1.25
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>前<span class="red">20</span>名
+                                            </td>
+                                            <td>￥0.47
+                                            </td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
+                                </table>
+                                <label>任务消费记录</label>
+                                <div class="widget box">
+                                    <div class="widget-header">
+                                        <h4><i class="icon-reorder"></i>(17条记录)</h4>
+                                    </div>
+                                    <div class="widget-content">
+                                        <table id="teacher_table" data-toggle="table" data-url="./data.php" data-method="post"
+                                               data-query-params="queryParams"
+                                               data-toolbar="#toolbar"
+                                               data-pagination="true"
+                                               data-page-size="5">
+                                            <thead>
+                                            <tr>
+                                                <th data-field="id">序号</th>
+                                                <th data-field="costDate">消费日期</th>
+                                                <th data-field="ranking">排名</th>
+                                                <th data-field="price">金额</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                        <div class="row">
+                                            <div class="table-footer">
+                                                <div class="col-md-6">
+                                                    <div class="dataTables_paginate paging_bootstrap" style="float:left;">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="dataTables_paginate paging_bootstrap">
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input name="Bid" value="" type="hidden">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button data-bb-handler="cancel" type="button" class="btn wzgj-blue cancel">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--详情end-->
 </@base.html>

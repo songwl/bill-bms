@@ -13,8 +13,10 @@ import com.yipeng.bill.bms.domain.Bill;
 import com.yipeng.bill.bms.domain.BillCost;
 import com.yipeng.bill.bms.domain.BillPrice;
 import com.yipeng.bill.bms.domain.User;
+import com.yipeng.bill.bms.model.BillPriceDetails;
 import com.yipeng.bill.bms.service.BillService;
 import com.yipeng.bill.bms.service.UserService;
+import com.yipeng.bill.bms.vo.BillDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.ui.Model;
+import sun.misc.Request;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.*;
@@ -164,23 +169,14 @@ public class BillController extends BaseController {
      * @param selectContent
      * @return
      */
-    @RequestMapping(value = "/billList/updatePrice",method = RequestMethod.GET)
+    @RequestMapping(value = "/billList/updatePrice",method = RequestMethod.POST)
     @ResponseBody
-    public ResultMessage updatePrice( @RequestParam(value="rankend",required = true) Long rankend,@RequestParam(value="price",required = true) BigDecimal price, @RequestParam(value="rankend1",required = false) Long rankend1,
-                                      @RequestParam(value="price1",required = false) BigDecimal price1, @RequestParam(value="rankend2",required = false) Long rankend2,
-                                      @RequestParam(value="price2",required = false) BigDecimal price2, @RequestParam(value="rankend3",required = false) Long rankend3,
-                                      @RequestParam(value="price3",required = false) BigDecimal price3,@RequestParam(value="selectContent",required = true) Objects selectContent)
+    public ResultMessage updatePrice( HttpServletRequest request, HttpServletResponse response)
     {
-        Map<String,Object> map=new HashMap();
-        map.put("rankend",rankend);
-        map.put("price",price1);
-        map.put("rankend1",rankend1);
-        map.put("price1",price2);
-        map.put("rankend2",rankend2);
-        map.put("price2",price2);
-        map.put("rankend3",rankend3);
-        map.put("price3",price3);
-        int a=billService.updateBillPrice(map);
+        Map<String, String[]> params= request.getParameterMap();
+
+        User user = this.getCurrentAccount();
+        int a=billService.updateBillPrice(params,user);
       return  this.ajaxDoneSuccess("");
     }
 

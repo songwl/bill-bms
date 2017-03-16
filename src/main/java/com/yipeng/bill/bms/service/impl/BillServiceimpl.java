@@ -300,7 +300,10 @@ public class BillServiceimpl implements BillService {
     }
 
     @Override
-    public int updateBillPrice(Map<String, Object> params) {
+    public int updateBillPrice(Map<String, String[]>  params,User user) {
+
+
+
         return 0;
     }
 

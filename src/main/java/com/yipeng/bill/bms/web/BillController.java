@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.ui.Model;
@@ -48,9 +49,10 @@ public class BillController extends BaseController {
 
 
     @RequestMapping(value = "/list")
-    public  String listDetails(HttpServletRequest request)
+    public  String listDetails(ModelMap modelMap,@RequestParam(defaultValue = "1") String way)
     {
-
+        //type 1代表 查询下游的订单   2代表 查询提交到上游的订单
+        modelMap.put("way",way);
         return "/bill/billList";
     }
     @RequestMapping(value = "/pendingAudit")

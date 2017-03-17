@@ -7,7 +7,10 @@ public enum Roles {
 
     DISTRIBUTOR("渠道商"),
     AGENT("代理商"),
-    CUSTOMER("客户");
+    CUSTOMER("客户"),
+    COMMISSIONER("专员"),
+    SUPER_ADMIN("超级管理员"),
+    ADMIN("管理员");
 
     private String cnName;
 

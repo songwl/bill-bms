@@ -7,6 +7,8 @@ import com.yipeng.bill.bms.domain.Role;
  */
 public interface RoleService {
 
+    Role getRoleById(Long roleId);
+
     Role getRoleByRoleCode(String roleCode);
 
 }

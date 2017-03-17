@@ -46,6 +46,7 @@
 <div class="Navs2">
 
     <div class="nav_R2 right" >
+        <input type="hidden" name="type" value="${way}">
         <div>
             客户ID:
         </div>

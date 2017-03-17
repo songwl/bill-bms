@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.yipeng.bill.bms.domain.User;
+import com.yipeng.bill.bms.vo.LoginUser;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -42,12 +43,12 @@ public abstract class BaseController extends BaseCommController {
 	//默认分页大小
 	public static final int DEFAUTL_PAGE_SIZE = 20;
 
-	protected User getCurrentAccount() {
-		return (User) getSession(ServletUtil.SESSION_USER);
+	protected LoginUser getCurrentAccount() {
+		return (LoginUser) getSession(ServletUtil.SESSION_USER);
 	}
 
 	protected Long getCurrentAccountId() {
-		User account = getCurrentAccount();
+		LoginUser account = getCurrentAccount();
 		if (account != null) {
 			return account.getId();
 		}

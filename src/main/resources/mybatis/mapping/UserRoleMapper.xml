@@ -68,4 +68,18 @@
       role_id = #{roleId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="selectByUserRole" parameterType="com.yipeng.bill.bms.domain.UserRole" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user_role
+    where 1=1
+    <if test="userId != null">
+      and user_id = #{userId,jdbcType=BIGINT}
+    </if>
+    <if test="roleId != null">
+      and role_id = #{roleId,jdbcType=BIGINT}
+    </if>
+  </select>
+
 </mapper>

@@ -3,6 +3,8 @@ package com.yipeng.bill.bms.dao;
 import com.yipeng.bill.bms.domain.UserRole;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 public interface UserRoleMapper {
     int deleteByPrimaryKey(Long id);
@@ -16,4 +18,6 @@ public interface UserRoleMapper {
     int updateByPrimaryKeySelective(UserRole record);
 
     int updateByPrimaryKey(UserRole record);
+
+    List<UserRole> selectByUserRole(UserRole userRole);
 }

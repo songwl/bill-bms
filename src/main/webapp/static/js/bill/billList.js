@@ -123,6 +123,7 @@ $(document).ready(function () {
                                 {
                                     alert("导入成功!");
                                     $(".modal-backdrop").hide();
+                                    $(".samepriceDiv").slideUp();
                                     $('#myTable').bootstrapTable('refresh');
                                 }
                                 else

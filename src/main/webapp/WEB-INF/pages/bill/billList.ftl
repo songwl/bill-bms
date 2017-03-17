@@ -5,6 +5,8 @@
 
 <script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
+<link href="${ctx}/static/css/public/pace.css" rel="stylesheet">
+<script src="${ctx}/static/js/public/pace.js"></script>
 <script src="${ctx}/static/js/bill/billList.js"></script>
 <script src="${ctx}/static/js/bill/billListchangePrice.js"></script>
 
@@ -278,7 +280,7 @@
     </div>
 </div>
 </div>
-<div id="pload" style="position:fixed;top:45%;left: 47%; z-index:1200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none;"></div>
+<div id="pload" style="position:absolute;top:45%;left: 87%; z-index:2200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none;"></div>
 <!--不同价导入end-->
 
 <!--调价-->

@@ -203,6 +203,7 @@
     select
     <include refid="Base_Column_List" />
     from t_bill
+    WHERE state = #{state,jdbcType=BIGINT}
     limit #{offset},#{limit}
   </select>
   <select id="selectAll" resultMap="BaseResultMap">

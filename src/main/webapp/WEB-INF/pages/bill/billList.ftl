@@ -9,7 +9,7 @@
 <script src="${ctx}/static/js/public/pace.js"></script>
 <script src="${ctx}/static/js/bill/billList.js"></script>
 <script src="${ctx}/static/js/bill/billListchangePrice.js"></script>
-
+<script src="${ctx}/static/js/bill/billListsamePrice.js"></script>
 <div class="Navs">
     <div class="nav_L left">
         <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>关键词排名</span>
@@ -276,7 +276,8 @@
         </div>
 
         <div class="modal-footer">
-            <button data-bb-handler="success" type="button" class="btn wzgj-blue dfpricecmt">确定</button><button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
+            <button data-bb-handler="success" type="button" class="btn wzgj-blue dfpricecmt">确定</button>
+            <button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
         </div>
     </div>
 </div>
@@ -346,7 +347,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <input name="tids" value="10219309,10219308" type="hidden">
+                        <input name="tids" value="" type="hidden">
                         <input name="op" value="cp" type="hidden">
                     </form>
 

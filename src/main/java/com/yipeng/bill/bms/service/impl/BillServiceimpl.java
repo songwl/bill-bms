@@ -31,98 +31,176 @@ public class BillServiceimpl implements BillService {
     @Autowired
     private BillCostMapper billCostMapper;
     /**
-     * 实现新增订单(判断都未做)
+     * 相同价导入
      * @param bill
      * @return
      */
     @Override
-    public String saveBill(User user , String search, String url, String keyword, Long rankend, BigDecimal price, Long rankend1, BigDecimal price1, Long rankend2, BigDecimal price2, Long rankend3, BigDecimal price3) {
+    public String saveSameBill(Map<String, String[]>  params,User user ) {
 
-        String[] urls=url.split("\n");
-        String[] keywords=keyword.split("\n");
+        String[] urlsArr=params.get("url");
+        String[] keywordsArr=params.get("keyword");
+        String[] rankend=params.get("rankend");
+        String[] price=params.get("price");
+        String[] rankend1=params.get("rankend1");
+        String[] price1=params.get("price1");
+        String[] rankend2=params.get("rankend2");
+        String[] price2=params.get("price2");
+        String[] rankend3=params.get("rankend3");
+        String[] price3=params.get("price3");
+        String[] urls=urlsArr[0].split("\n");
+        String[] keywords=keywordsArr[0].split("\n");
+        String[] search=params.get("search");
         String errorDetails="";
-        if(urls.length==keywords.length)
-        {
+        if(urls.length==keywords.length) {
 
-             for(int i=0;i<urls.length;i++) {
-                 //先查询是否订单已经存在
-                 Map<String, Object> params = new HashMap();
-                 params.put("website", urls[i]);
-                 params.put("keywords", keywords[i]);
-                 List<Bill> billList = billMapper.selectAllSelective(params);
-                 if (billList != null) {
-                     Boolean bool = true;
-                     for (Bill bill : billList
-                             ) {
-                         //查询每个订单对应的搜索引擎名
-                         BillSearchSupport billSearchSupport = billSearchSupportMapper.selectByBillId(bill.getId());
-                         if (billSearchSupport.getSearchSupport().equals(search)) {
-                             bool = false;
-                             errorDetails += +(i + 1) + "网址：" + urls[i] + "  关键词：" + keywords[i] + " ";
+            for (int i = 0; i < urls.length; i++) {
+                //先查询是否订单已经存在
+                Map<String, Object> params1 = new HashMap();
+                params1.put("website", urls[i]);
+                params1.put("keywords", keywords[i]);
+                List<Bill> billList = billMapper.selectAllSelective(params1);
+                //存在 判断搜索引擎是否一致
+                if (billList.size() > 0) {
+                    Boolean bool = true;
+                    for (Bill bill : billList
+                            ) {
+                        //查询每个订单对应的搜索引擎名
+                        BillSearchSupport billSearchSupport = billSearchSupportMapper.selectByBillId(bill.getId());
+                        if (billSearchSupport.getSearchSupport().equals(search[0])) {
+                            bool = false;
+                            errorDetails += +(i + 1) + "网址：" + urls[i] + "  关键词：" + keywords[i] + " ";
 
-                         }
-                     }
+                        }
+                    }
 
-                     if (bool) {
-                         //订单主表
-                         Bill bill = new Bill();
-                         bill.setWebsite(urls[i]);
-                         bill.setKeywords(keywords[i]);
-                         bill.setCreateUserId(user.getId());
-                         bill.setCreateTime(new Date());
-                         bill.setFirstRanking(51);
-                         bill.setNewRanking(51);
-                         bill.setWebAppId(123456);
-                         bill.setStandardDays(0);
-                         bill.setDayOptimization(1);
-                         bill.setAllOptimization(1);
-                         bill.setState(1);
-                         Long billId = billMapper.insert(bill);
-                         //订单引擎表
-                         BillSearchSupport billSearchSupport = new BillSearchSupport();
-                         billSearchSupport.setBillId(bill.getId());
-                         billSearchSupport.setSearchSupport(search);
-                         billSearchSupportMapper.insert(billSearchSupport);
-                         //订单单价表
-                         BillPrice billPrice = new BillPrice();
-                         billPrice.setBillId(bill.getId());
-                         billPrice.setPrice(price);
-                         billPrice.setBillRankingStandard(rankend);
-                         billPrice.setInMemberId(user.getId());
-                         billPrice.setCreateTime(new Date());
-                         billPriceMapper.insert(billPrice);
-                         if (price1 != null && rankend1 != null) {
-                             BillPrice billPrice1 = new BillPrice();
-                             billPrice1.setBillId(bill.getId());
-                             billPrice1.setPrice(price1);
-                             billPrice1.setBillRankingStandard(rankend1);
-                             billPrice1.setInMemberId(user.getId());
-                             billPrice1.setCreateTime(new Date());
-                             billPriceMapper.insert(billPrice1);
-                             if (price2 != null && rankend2 != null) {
-                                 BillPrice billPrice2 = new BillPrice();
-                                 billPrice2.setBillId(bill.getId());
-                                 billPrice2.setPrice(price2);
-                                 billPrice2.setBillRankingStandard(rankend2);
-                                 billPrice2.setInMemberId(user.getId());
-                                 billPrice2.setCreateTime(new Date());
-                                 billPriceMapper.insert(billPrice2);
-                                 if (price3 != null && rankend3 != null) {
-                                     BillPrice billPrice3 = new BillPrice();
-                                     billPrice3.setBillId(bill.getId());
-                                     billPrice3.setPrice(price);
-                                     billPrice3.setBillRankingStandard(rankend3);
-                                     billPrice3.setInMemberId(user.getId());
-                                     billPrice3.setCreateTime(new Date());
-                                     billPriceMapper.insert(billPrice3);
+                    if (bool) {
+                        //订单主表
+                        Bill bill = new Bill();
+                        bill.setWebsite(urls[i]);
+                        bill.setKeywords(keywords[i]);
+                        bill.setCreateUserId(user.getId());
+                        bill.setCreateTime(new Date());
+                        bill.setFirstRanking(51);
+                        bill.setNewRanking(51);
+                        bill.setWebAppId(123456);
+                        bill.setStandardDays(0);
+                        bill.setDayOptimization(1);
+                        bill.setAllOptimization(1);
+                        bill.setState(0);
+                        Long billId = billMapper.insert(bill);
+                        //订单引擎表
+                        BillSearchSupport billSearchSupport = new BillSearchSupport();
+                        billSearchSupport.setBillId(bill.getId());
+                        billSearchSupport.setSearchSupport(search[0]);
+                        billSearchSupportMapper.insert(billSearchSupport);
+                        //订单单价表
+                        BillPrice billPrice = new BillPrice();
+                        billPrice.setBillId(bill.getId());
+                        BigDecimal bigDecimalprice = new BigDecimal(price[0]);
+                        billPrice.setPrice(bigDecimalprice);
+                        billPrice.setBillRankingStandard(Long.parseLong(rankend[0]));
+                        billPrice.setInMemberId(user.getId());
+                        billPrice.setCreateTime(new Date());
+                        billPriceMapper.insert(billPrice);
+                        if (price1[0] != "" && rankend1[0] != "") {
+                            BillPrice billPrice1 = new BillPrice();
+                            billPrice1.setBillId(bill.getId());
+                            BigDecimal bigDecimalprice1 = new BigDecimal(price1[0]);
+                            billPrice1.setPrice(bigDecimalprice1);
+                            billPrice1.setBillRankingStandard(Long.parseLong(rankend1[0]));
+                            billPrice1.setInMemberId(user.getId());
+                            billPrice1.setCreateTime(new Date());
+                            billPriceMapper.insert(billPrice1);
+                            if (price2[0] != "" && rankend2[0] != "") {
+                                BillPrice billPrice2 = new BillPrice();
+                                billPrice2.setBillId(bill.getId());
+                                BigDecimal bigDecimalprice2 = new BigDecimal(price2[0]);
+                                billPrice2.setPrice(bigDecimalprice2);
+                                billPrice2.setBillRankingStandard(Long.parseLong(rankend2[0]));
+                                billPrice2.setInMemberId(user.getId());
+                                billPrice2.setCreateTime(new Date());
+                                billPriceMapper.insert(billPrice2);
+                                if (price3[0] != "" && rankend3[0] != "") {
+                                    BillPrice billPrice3 = new BillPrice();
+                                    billPrice3.setBillId(bill.getId());
+                                    BigDecimal bigDecimalprice3 = new BigDecimal(price3[0]);
+                                    billPrice3.setPrice(bigDecimalprice3);
+                                    billPrice3.setBillRankingStandard(Long.parseLong(rankend3[0]));
+                                    billPrice3.setInMemberId(user.getId());
+                                    billPrice3.setCreateTime(new Date());
+                                    billPriceMapper.insert(billPrice3);
 
-                                 }
-                             }
-                         }
+                                }
+                            }
+                        }
 
-                     }
-                 }
-             }
+                    }
+                }
+                //不存在 直接录入
+                else {
+                    //订单主表
+                    Bill bill1 = new Bill();
+                    bill1.setWebsite(urls[i]);
+                    bill1.setKeywords(keywords[i]);
+                    bill1.setCreateUserId(user.getId());
+                    bill1.setCreateTime(new Date());
+                    bill1.setFirstRanking(51);
+                    bill1.setNewRanking(51);
+                    bill1.setWebAppId(123456);
+                    bill1.setStandardDays(0);
+                    bill1.setDayOptimization(1);
+                    bill1.setAllOptimization(1);
+                    bill1.setState(0);
+                    Long billId1 = billMapper.insert(bill1);
+                    //订单引擎表
+                    BillSearchSupport billSearchSupport1 = new BillSearchSupport();
+                    billSearchSupport1.setBillId(bill1.getId());
+                    billSearchSupport1.setSearchSupport(search[0]);
+                    billSearchSupportMapper.insert(billSearchSupport1);
+                    //订单单价表
+                    BillPrice billPriceA = new BillPrice();
+                    billPriceA.setBillId(bill1.getId());
+                    BigDecimal bigDecimalprice = new BigDecimal(price[0]);
+                    billPriceA.setPrice(bigDecimalprice);
+                    billPriceA.setBillRankingStandard(Long.parseLong(rankend[0]));
+                    billPriceA.setInMemberId(user.getId());
+                    billPriceA.setCreateTime(new Date());
+                    billPriceMapper.insert(billPriceA);
+                    if (price1[0] != "" && rankend1[0] != "") {
+                        BillPrice billPriceA1 = new BillPrice();
+                        billPriceA1.setBillId(bill1.getId());
+                        BigDecimal bigDecimalprice1 = new BigDecimal(price1[0]);
+                        billPriceA1.setPrice(bigDecimalprice1);
+                        billPriceA1.setBillRankingStandard(Long.parseLong(rankend1[0]));
+                        billPriceA1.setInMemberId(user.getId());
+                        billPriceA1.setCreateTime(new Date());
+                        billPriceMapper.insert(billPriceA1);
+                        if (price2[0] != "" && rankend2[0] != "") {
+                            BillPrice billPriceA2 = new BillPrice();
+                            billPriceA2.setBillId(bill1.getId());
+                            BigDecimal bigDecimalprice2 = new BigDecimal(price2[0]);
+                            billPriceA2.setPrice(bigDecimalprice2);
+                            billPriceA2.setBillRankingStandard(Long.parseLong(rankend2[0]));
+                            billPriceA2.setInMemberId(user.getId());
+                            billPriceA2.setCreateTime(new Date());
+                            billPriceMapper.insert(billPriceA2);
+                            if (price3[0] != "" && rankend3[0] != "") {
+                                BillPrice billPriceA3 = new BillPrice();
+                                billPriceA3.setBillId(bill1.getId());
+                                BigDecimal bigDecimalprice3 = new BigDecimal(price3[0]);
+                                billPriceA3.setPrice(bigDecimalprice3);
+                                billPriceA3.setBillRankingStandard(Long.parseLong(rankend3[0]));
+                                billPriceA3.setInMemberId(user.getId());
+                                billPriceA3.setCreateTime(new Date());
+                                billPriceMapper.insert(billPriceA3);
+
+                            }
+                        }
+                    }
+                }
+            }
+
         }
 
 
@@ -132,29 +210,30 @@ public class BillServiceimpl implements BillService {
 
     /**
      * 实现不同价导入
-     * @param user
-     * @param dfsearch
-     * @param dfurl
-     * @param dfkeyword
-     * @param dfrankend
-     * @param dfprice
      * @return
      */
     @Override
-    public String savaDiffrentBill(User user, String dfsearch, String dfurl, String dfkeyword, Long dfrankend, String dfprice) {
-        String[] dfurls=dfurl.split("\n");
-        String[] dfkeywords=dfkeyword.split("\n");
-        String[] dfprices=dfprice.split("\n");
+    public String savaDiffrentBill(Map<String, String[]>  params,User user) {
+
+
+        String[] dfurlsArr=params.get("dfurl");
+        String[] dfkeywordsArr=params.get("dfkeyword");
+        String[] dfpricesArr=params.get("dfprice");
+        String[] dfurls=dfurlsArr[0].split("\n");
+        String[] dfkeywords=dfkeywordsArr[0].split("\n");
+        String[] dfprices=dfpricesArr[0].split("\n");
+        String[] dfsearch=params.get("dfsearch");
+        String[] dfrankend=params.get("dfrankend");
         String errorDetails="";
         if(dfurls.length==dfkeywords.length&&dfkeywords.length==dfprices.length)
         {
             for(int i=0;i<dfurls.length;i++)
             {
                 //先查询是否订单已经存在
-                Map<String,Object> params=new HashMap();
-                params.put("website",dfurls[i]);
-                params.put("keywords",dfkeywords[i]);
-                List<Bill> billList=billMapper.selectAllSelective(params);
+                Map<String,Object> params1=new HashMap();
+                params1.put("website",dfurls[i]);
+                params1.put("keywords",dfkeywords[i]);
+                List<Bill> billList=billMapper.selectAllSelective(params1);
             //还有else判断
               if(billList!=null)
               {
@@ -184,19 +263,19 @@ public class BillServiceimpl implements BillService {
                       bill.setStandardDays(0);
                       bill.setDayOptimization(1);
                       bill.setAllOptimization(1);
-                      bill.setState(1);
+                      bill.setState(0);
                       Long billId=billMapper.insert(bill);
                       //订单引擎表
                       BillSearchSupport billSearchSupport=new BillSearchSupport();
                       billSearchSupport.setBillId(bill.getId());
-                      billSearchSupport.setSearchSupport(dfsearch);
+                      billSearchSupport.setSearchSupport(dfsearch[0]);
                       billSearchSupportMapper.insert(billSearchSupport);
                       //订单单价表
                       BillPrice billPrice=new BillPrice();
                       billPrice.setBillId(bill.getId());
                       BigDecimal bd=new BigDecimal(dfprices[i]);
                       billPrice.setPrice(bd);
-                      billPrice.setBillRankingStandard(dfrankend);
+                      billPrice.setBillRankingStandard(Long.parseLong(dfrankend[0]));
                       billPrice.setInMemberId(user.getId());
                       billPrice.setCreateTime(new Date());
                       billPriceMapper.insert(billPrice);

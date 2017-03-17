@@ -17,9 +17,15 @@ public interface BillService {
      * @param bill
      * @return
      */
-    String saveBill(User user , String search, String url, String keyword, Long rankend, BigDecimal price, Long rankend1, BigDecimal price1, Long rankend2, BigDecimal price2, Long rankend3, BigDecimal price3);
+    String saveSameBill(Map<String, String[]>  params,User user);
 
-     String savaDiffrentBill(User user,String dfsearch, String dfurl, String dfkeyword, Long dfrankend, String dfprice);
+    /**
+     * 不同价导入
+     * @param params
+     * @param user
+     * @return
+     */
+     String savaDiffrentBill(Map<String, String[]>  params,User user);
     /**
      * 通过ID查询订单
      * @param id

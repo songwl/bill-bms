@@ -63,7 +63,7 @@ public class BillController extends BaseController {
     }
 
     /**
-     * table表格获取数据
+     * 订单table表格获取数据
      * @param limit
      * @param offset
      * @return
@@ -80,6 +80,7 @@ public class BillController extends BaseController {
         params.put("limit",limit);
         params.put("offset",offset);
         params.put("user",user);
+        params.put("state",1);
 
 
         //调的是USER表的数据
@@ -89,92 +90,63 @@ public class BillController extends BaseController {
     }
 
     /**
-     *  相同价提交(测试)
-     * @param search
-     * @param keyword
-     * @param url
-     * @param rankend
-     * @param price
-     * @param rankend1
-     * @param price1
-     * @param rankend2
-     * @param price2
-     * @param rankend3
-     * @param price3
+     * 待审核订单table表格获取数据
+     * @param limit
+     * @param offset
      * @return
      */
-    @RequestMapping(value = "/list/sameprice",method = RequestMethod.GET)
+    @RequestMapping(value = "/pendingAuditList")
     @ResponseBody
-    public ResultMessage samePrice(@RequestParam(value="search",required = true) String search, @RequestParam(value="keyword",required = true) String keyword,
-                                   @RequestParam(value="url",required = true) String url, @RequestParam(value="rankend",required = true) Long rankend,
-                                   @RequestParam(value="price",required = true) BigDecimal price, @RequestParam(value="rankend1",required = false) Long rankend1,
-                                   @RequestParam(value="price1",required = false) BigDecimal price1, @RequestParam(value="rankend2",required = false) Long rankend2,
-                                   @RequestParam(value="price2",required = false) BigDecimal price2, @RequestParam(value="rankend3",required = false) Long rankend3,
-                                   @RequestParam(value="price3",required = false) BigDecimal price3
-    ) throws UnsupportedEncodingException {
+    public Map<String,Object> pendingAuditList( int limit, int offset)
+    {
 
-         if(keyword!=null)
-         {
-             try {
-                 //get参数乱码问题
-                 keyword=new String(keyword.getBytes("ISO-8859-1"), "UTF-8");
+        offset=(offset-1)*limit;
+        // Page<Bill> page = this.getPageRequest();    //分页对象
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        User user=this.getCurrentAccount();
+        params.put("limit",limit);
+        params.put("offset",offset);
+        params.put("user",user);
+        params.put("state",0);
+        //调的是USER表的数据
 
-             } catch (UnsupportedEncodingException e) {
-                 e.printStackTrace();
-             }
-         }
+        Map<String, Object> modelMap=billService.findBillList(params);
+        return  modelMap;
+    }
+    /**
+     *  相同价提交(测试)
+     * @return
+     */
+    @RequestMapping(value = "/list/sameprice",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage samePrice(HttpServletRequest request) {
 
+        //getParameterMap()，获得请求参数map
+        Map<String,String[]> map= request.getParameterMap();
         User user = this.getCurrentAccount();
-         String errorDetails=billService.saveBill( user,search,url, keyword, rankend, price, rankend1, price1, rankend2, price2, rankend3, price3);
+        String errorDetails=billService.saveSameBill(map,user );
 
         return this.ajaxDoneSuccess(errorDetails);
     }
 
     /**
      * 不同价导入
-     * @param dfsearch
-     * @param dfkeyword
-     * @param dfurl
-     * @param dfrankend
-     * @param dfprice
      * @return
-     * @throws UnsupportedEncodingException
      */
-    @RequestMapping(value = "/list/diffrentprice",method = RequestMethod.GET)
+    @RequestMapping(value = "/list/diffrentprice",method = RequestMethod.POST)
     @ResponseBody
-    public ResultMessage diffrentprice( @RequestParam(value="dfsearch",required = true) String dfsearch,@RequestParam(value="dfkeyword",required = true) String dfkeyword,
-                                        @RequestParam(value="dfurl",required = true) String dfurl,@RequestParam(value="dfrankend",required = true) Long dfrankend,
-                                        @RequestParam(value="dfprice",required = true) String dfprice
-    ) throws UnsupportedEncodingException {
-
-        if(dfkeyword!=null)
-        {
-            try {
-                //get参数乱码问题
-                dfkeyword=new String(dfkeyword.getBytes("ISO-8859-1"), "UTF-8");
-
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-        }
-
+    public ResultMessage diffrentprice(HttpServletRequest request)
+    {
+        //getParameterMap()，获得请求参数map
+        Map<String,String[]> map= request.getParameterMap();
         User user = this.getCurrentAccount();
-        String  errorDetails= billService.savaDiffrentBill( user,dfsearch,dfurl,dfkeyword, dfrankend, dfprice);
+       String  errorDetails= billService.savaDiffrentBill( map,user );
 
-        return this.ajaxDoneSuccess(errorDetails);
+        return this.ajaxDoneSuccess("");
     }
 
     /**
      * 调整价格
-     * @param rankend
-     * @param price
-     * @param rankend1
-     * @param price1
-     * @param rankend2
-     * @param price2
-     * @param rankend3
-     * @param price3
-     * @param selectContent
      * @return
      */
     @RequestMapping(value = "/billList/updatePrice",method = RequestMethod.POST)
@@ -185,7 +157,7 @@ public class BillController extends BaseController {
 
         User user = this.getCurrentAccount();
         int a=billService.updateBillPrice(params,user);
-      return  this.ajaxDoneSuccess("");
+        return  this.ajaxDoneSuccess("");
     }
 
     @Autowired

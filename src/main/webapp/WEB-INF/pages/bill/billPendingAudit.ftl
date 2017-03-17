@@ -6,6 +6,7 @@
 <script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <script src="${ctx}/static/js/bill/pendingAudit.js"></script>
+<script src="${ctx}/static/js/bill/pendingAuditStyle.js"></script>
 
 <div class="Navs">
     <div class="nav_L left">
@@ -44,14 +45,11 @@
                 <div class="panel-nav">
                     <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;待审核订单</div>
                     <div class="Nav_Right">
-
-
-
                     </div>
                     <div class="cls"></div>
                 </div>
                 <div id="toolbar" class="btn-group">
-                    <button id="btn_update" type="button" class="btn btn-default">
+                    <button id="billExamine" type="button" class="btn btn-default">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 审核通过
                     </button>
                     <button id="testpm" type="button" class="btn btn-default">
@@ -66,5 +64,44 @@
         </div>
     </div>
 </div>
+<div class="modal-backdrop in" style="display: none">
+</div>
+<!--审核-->
+
+<div class="bootbox modal in billExamineDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="bootbox-close-button close">×</button>
+                <h4 class="modal-title">审核</h4>
+            </div>
+            <div class="modal-body" style="max-height: 374px;">
+                <div class="bootbox-body">
+                    <style type="text/css">
+                        .modal-dialog {
+                            width: 400px;
+                        }
+                    </style>
+                    <div>
+                        <div><h5>专员分配</h5></div>
+                        <select class="selectpicker">
+                            <option>--请选择--</option>
+                            <option>张三</option>
+                            <option>李四</option>
+                            <option>王五</option>
+                            <option>赵六</option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button data-bb-handler="success" type="button" class="btn wzgj-blue changeprice">确定</button>
+                <button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--调价end-->
 
 </@base.html>

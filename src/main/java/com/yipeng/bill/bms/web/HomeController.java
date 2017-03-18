@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.yipeng.bill.bms.domain.User;
+import com.yipeng.bill.bms.vo.LoginUser;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +22,7 @@ public class HomeController extends BaseController {
 	@RequestMapping(value = "/index")
 	public String index(ModelMap model) throws Exception {
 		Map<String, Object> bms = new HashMap<>();
-		User user = this.getCurrentAccount();
+		LoginUser user = this.getCurrentAccount();
 		bms.put("user", user);
 		//bms.put("bmsNavigationList", authorityService.queryBmsNavByUserType(NumberUtils.toInt(account.getLoginUserType())));
 		model.addAttribute("bmsModel", bms);

@@ -118,7 +118,7 @@
 							<i class="fa fa-star-o"></i><span class="title"> 优化管理 </span><span class="arrow "></span>
 						</a>
 						<ul class="sub-menu">
-							<#if user.hasRole("DISTRIBUTOR") || user.hasRole("AGENT")> <#--如果是渠道商或者代理商-->
+							<#if bmsModel.user.hasRole("DISTRIBUTOR") || bmsModel.user.hasRole("AGENT")> <#--如果是渠道商或者代理商-->
                                 <li>
                                     <a href="${ctx}/bill/list?way=1"> <#--1代表 查询下游的订单-->
                                         关键词排名1
@@ -129,7 +129,7 @@
                                         关键词排名2
                                     </a>
                                 </li>
-							<#elseif user.hasRole("CUSTOMER")> <#--如果是客户-->
+							<#elseif bmsModel.user.hasRole("CUSTOMER")> <#--如果是客户-->
                                 <li>
                                     <a href="${ctx}/bill/list?way=2"> <#--2代表 查询提交到上游的订单-->
                                         关键词排名

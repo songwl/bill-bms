@@ -15,9 +15,12 @@
         <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>关键词排名</span>
     </div>
     <div class="nav_R right" id="divQx">
+
+       <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("ADMIN")||bmsModel.user.hasRole("COMMISSIONER")> <#--如果是优化方-->
         <div>
             <span>&nbsp;<i class="fa fa-play"></i>&nbsp;优化启动</span>
         </div>
+
         <div>
             <span>&nbsp;<i class="fa fa-certificate"></i>&nbsp;优化调整</span>
         </div>
@@ -28,6 +31,8 @@
         <div>
             <span>&nbsp;<i class="fa fa-trash"></i>&nbsp;删除</span>
         </div>
+       </#if>
+    <#if  bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")> <#--如果是客户-->
         <div class="Import">
             <span id="Import">&nbsp;<i class="fa fa-arrow-down"></i>&nbsp;导入</span>
             <ul class="ImportPrice">
@@ -35,6 +40,7 @@
                 <li id="Differentprice">不同价导入</li>
             </ul>
         </div>
+    </#if>
         <div class="search">
             <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
         </div>
@@ -71,9 +77,12 @@
                     <div class="cls"></div>
                 </div>
                 <div id="toolbar" class="btn-group">
+
+
                     <button id="btn_update" type="button" class="btn btn-default">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 调价
                     </button>
+
                     <button id="testpm" type="button" class="btn btn-default">
                         <span class="glyphicon glyphicon-leaf" aria-hidden="true" id=""></span> 查排名
                     </button>

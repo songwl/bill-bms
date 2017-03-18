@@ -324,22 +324,7 @@ var TableInit = function () {
                     title: '价格2',
 
                 },
-                {
-                    field: 'dayOptimization',
-                    align: 'center',
-                    valign: 'middle',
-                    sortable: true,
-                    title: '日优化',
 
-                },
-                {
-                    field: 'allOptimization',
-                    align: 'center',
-                    valign: 'middle',
-                    sortable: true,
-                    title: '总优化',
-
-                },
                 {
                     field: 'dayConsumption',
                     align: 'center',

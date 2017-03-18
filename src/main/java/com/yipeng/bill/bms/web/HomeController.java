@@ -22,6 +22,7 @@ public class HomeController extends BaseController {
 	@RequestMapping(value = "/index")
 	public String index(ModelMap model) throws Exception {
 		Map<String, Object> bms = new HashMap<>();
+
 		LoginUser user = this.getCurrentAccount();
 		bms.put("user", user);
 		//bms.put("bmsNavigationList", authorityService.queryBmsNavByUserType(NumberUtils.toInt(account.getLoginUserType())));

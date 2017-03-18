@@ -17,6 +17,7 @@ import com.yipeng.bill.bms.model.BillPriceDetails;
 import com.yipeng.bill.bms.service.BillService;
 import com.yipeng.bill.bms.service.UserService;
 import com.yipeng.bill.bms.vo.BillDetails;
+import com.yipeng.bill.bms.vo.LoginUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +50,14 @@ public class BillController extends BaseController {
 
 
     @RequestMapping(value = "/list")
-    public  String listDetails(ModelMap modelMap,@RequestParam(defaultValue = "1") String way)
+    public  String listDetails(ModelMap model,@RequestParam(defaultValue = "1") String way)
     {
+        Map<String, Object> bms = new HashMap<>();
+        LoginUser user = this.getCurrentAccount();
+        bms.put("user", user);
         //type 1代表 查询下游的订单   2代表 查询提交到上游的订单
-        modelMap.put("way",way);
+        model.put("way",way);
+        model.addAttribute("bmsModel", bms);
         return "/bill/billList";
     }
     @RequestMapping(value = "/pendingAudit")
@@ -124,7 +129,7 @@ public class BillController extends BaseController {
         //getParameterMap()，获得请求参数map
         Map<String,String[]> map= request.getParameterMap();
         User user = this.getCurrentAccount();
-        String errorDetails=billService.saveSameBill(map,user );
+        String errorDetails=billService.saveSameBill(map,user);
 
         return this.ajaxDoneSuccess(errorDetails);
     }

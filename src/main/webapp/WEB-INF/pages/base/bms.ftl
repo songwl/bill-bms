@@ -89,7 +89,7 @@
 							</a>
 						</li>
 						<li>
-							<a href="rest/user/logout">
+							<a href="${ctx}/logout">
 								<i class="fa fa-key"></i> 退出
 							</a>
 						</li>
@@ -109,48 +109,109 @@
 						</div>
 					</li>
 					<li class="start active">
-						<a href="rest/page/dashboard" id="btn-dashboard">
+						<a href="javascript:;"  >
 							<i class="fa fa-home"></i><span class="title"> 首页 </span><span class="selected"></span>
 						</a>
 					</li>
+					<#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("ADMIN")||bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("CUSTOMER")>
 					<li class="">
 						<a href="javascript:;">
 							<i class="fa fa-star-o"></i><span class="title"> 优化管理 </span><span class="arrow "></span>
 						</a>
 						<ul class="sub-menu">
-							<#if bmsModel.user.hasRole("DISTRIBUTOR") || bmsModel.user.hasRole("AGENT")> <#--如果是渠道商或者代理商-->
-                                <li>
-                                    <a href="${ctx}/bill/list?way=1"> <#--1代表 查询下游的订单-->
-                                        关键词排名1
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="${ctx}/bill/list?way=2"> <#--2代表 查询提交到上游的订单-->
-                                        关键词排名2
-                                    </a>
-                                </li>
-							<#elseif bmsModel.user.hasRole("CUSTOMER")> <#--如果是客户-->
-                                <li>
-                                    <a href="${ctx}/bill/list?way=2"> <#--2代表 查询提交到上游的订单-->
-                                        关键词排名
-                                    </a>
-                                </li>
-							<#else>
+                            <li>
+                                <a href="${ctx}/bill/list?way=1">
+                                    关键词排名
+                                </a>
+                            </li>
+
+						<#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("ADMIN")>
+     				  		 <li>
+                                <a href="${ctx}/bill/pendingAudit">
+                                    待审核订单
+                                </a>
+                            </li>
+						</#if>
+						</ul>
+						</li>
+					</#if>
+					<#if bmsModel.user.hasRole("DISTRIBUTOR")>
+                        <li class="">
+                            <a href="javascript:;">
+                                <i class="fa fa-star-o"></i><span class="title"> 优化方管理 </span><span class="arrow "></span>
+                            </a>
+                            <ul class="sub-menu">
                                 <li>
                                     <a href="${ctx}/bill/list?way=1">
                                         关键词排名
                                     </a>
                                 </li>
-							</#if>
-
+                            </ul>
+                        </li>
+					</#if>
+					<#if bmsModel.user.hasRole("DISTRIBUTOR")>
+                    <li class="">
+                        <a href="javascript:;">
+                            <i class="fa fa-star-o"></i><span class="title"> 代理商管理 </span><span class="arrow "></span>
+                        </a>
+                        <ul class="sub-menu">
                             <li>
-                                <a href="${ctx}/bill/pendingAudit">
-                                    待审核订单
+                                <a href="${ctx}/bill/list?way=1">
+                                    关键词排名
                                 </a>
                             </li>
+                            <li>
+                                <a href="${ctx}/bill/pendingAudit">
+                                    订单审核
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+				</#if>
+					<#if bmsModel.user.hasRole("DISTRIBUTOR")>
+                        <li class="">
+                            <a href="javascript:;">
+                                <i class="fa fa-star-o"></i><span class="title"> 直系客户管理 </span><span class="arrow "></span>
+                            </a>
+                            <ul class="sub-menu">
+                                <li>
+                                    <a href="${ctx}/bill/list?way=1">
+                                        关键词排名
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+					</#if>
+					<#if bmsModel.user.hasRole("AGENT")>
+                        <li class="">
+                            <a href="javascript:;">
+                                <i class="fa fa-star-o"></i><span class="title"> 渠道商管理 </span><span class="arrow "></span>
+                            </a>
+                            <ul class="sub-menu">
+                                <li>
+                                    <a href="${ctx}/bill/list?way=1">
+                                        关键词排名
+                                    </a>
+                                </li>
 
-						</ul>
-					</li>
+                            </ul>
+                        </li>
+					</#if>
+					<#if bmsModel.user.hasRole("AGENT")>
+                        <li class="">
+                            <a href="javascript:;">
+                                <i class="fa fa-star-o"></i><span class="title"> 客户管理 </span><span class="arrow "></span>
+                            </a>
+                            <ul class="sub-menu">
+                                <li>
+                                    <a href="${ctx}/bill/list?way=1">
+                                        关键词排名
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+					</#if>
+					<#if bmsModel.user.hasRole("SUPER_ADMIN") >
 					<li class="">
 						<a href="javascript:;">
 							<i class="fa fa-paperclip"></i><span class="title"> 操作员管理 </span><span class="arrow "></span>
@@ -164,14 +225,17 @@
 
 						</ul>
 					</li>
-					<li class="">
+		    		</#if>
+
+
+       			 <li class="">
 						<a href="javascript:;">
-							<i class="fa fa-magic"></i><span class="title"> 客户管理 </span><span class="arrow "></span>
+							<i class="fa fa-magic"></i><span class="title"> 资金管理 </span><span class="arrow "></span>
 						</a>
 						<ul class="sub-menu">
 							<li>
                                 <a href="${ctx}/customer/customerList">
-									客户管理
+									客户列表
 								</a>
 							</li>
 							<li>
@@ -179,9 +243,31 @@
 									资金明细
 								</a>
 							</li>
-
+						<#if bmsModel.user.hasRole("SUPER_ADMIN")>
+                            <li>
+                                <a href="${ctx}/customer/xxx">
+                                    客户审核
+                                </a>
+                            </li>
+  						</#if>
 						</ul>
 					</li>
+
+				<#if bmsModel.user.hasRole("COMMISSIONER") >
+                    <li class="">
+                        <a href="javascript:;">
+                            <i class="fa fa-line-chart"></i><span class="title"> 业绩管理 </span><span class="arrow "></span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a href="${ctx}/customer/customerList">
+                                    业绩详情
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+                 </#if>
 					<li class="">
 						<a href="javascript:;">
 							<i class="fa fa-magnet"></i><span class="title"> 个人中心 </span><span class="arrow "></span>

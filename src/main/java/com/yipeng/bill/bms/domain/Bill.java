@@ -30,6 +30,7 @@ public class Bill implements Serializable {
     private Integer allOptimization;
 
     private Integer state;
+    private Long billAscription;
 
     private static final long serialVersionUID = 1L;
 
@@ -143,5 +144,13 @@ public class Bill implements Serializable {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public Long getBillAscription() {
+        return billAscription;
+    }
+
+    public void setBillAscription(Long billAscription) {
+        this.billAscription = billAscription;
     }
 }

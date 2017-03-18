@@ -26,6 +26,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public List<UserRole> findUserRolesByUserId(Long userId) {
         UserRole userRole = new UserRole();
+        userRole.setUserId(userId);
         return userRoleMapper.selectByUserRole(userRole);
     }
 }

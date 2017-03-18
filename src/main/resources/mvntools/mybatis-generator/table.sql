@@ -95,6 +95,7 @@ CREATE TABLE IF NOT EXISTS `t_bill` (
   `day_optimization` INT NULL COMMENT '日优化（初始值为1）可以调整数值，调整参数时，调用接口传入参数',
   `all_optimization` INT NULL COMMENT '总优化（计算总优化数）',
   `state` INT NULL COMMENT '订单状态',
+   `bill_ascription` BIGINT NULL COMMENT '订单专员归属',
   PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB
 COMMENT = '计费单表';

@@ -188,7 +188,7 @@ public class CustomerServiceImpl implements CustomerService{
         params.put("userId",user.getId());
         int limit=Integer.parseInt(params.get("limit").toString()) ;
         int offset=Integer.parseInt(params.get("offset").toString()) ;
-        int i=(offset)*limit;
+        int i=offset;
         //操作员
          if(user.hasRole("COMMISSIONER"))
          {
@@ -238,6 +238,7 @@ public class CustomerServiceImpl implements CustomerService{
                      ) {
                  i++;
                  User user1=userMapper.selectByPrimaryKey(fundAccount.getUserId());
+
                  CustomerListDetails customerListDetails=new CustomerListDetails();
                  customerListDetails.setId(i);
                  customerListDetails.setCustomerId(user1.getId());
@@ -271,7 +272,7 @@ public class CustomerServiceImpl implements CustomerService{
     public Map<String, Object> getCustomerReviewList(Map<String, Object> params) {
         int limit=Integer.parseInt(params.get("limit").toString()) ;
         int offset=Integer.parseInt(params.get("offset").toString()) ;
-        int i=(offset)*limit;
+        int i=offset;
         List<CustomerListDetails> customerListDetailsList=new ArrayList<>();
        List<User> userList=userMapper.selectByReviewUser(params);
         for (User user: userList

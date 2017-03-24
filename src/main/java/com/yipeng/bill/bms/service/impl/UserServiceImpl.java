@@ -51,11 +51,7 @@ public class UserServiceImpl implements UserService {
             userRole.setUserId(user.getId());
             userRole.setRoleId(role.getId());
             userRoleMapper.insert(userRole);
-            FundAccount fundAccount=new FundAccount();
-            fundAccount.setUserId(user.getId());
-            fundAccount.setBalance(new BigDecimal(0));
-            fundAccount.setCreateTime(new Date());
-           fundAccountMapper.insert(fundAccount);
+
         }
         return  c;
     }

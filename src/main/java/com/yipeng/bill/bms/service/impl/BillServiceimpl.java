@@ -228,7 +228,7 @@ public class BillServiceimpl implements BillService {
         List<BillDetails> billDetailsList = new ArrayList<BillDetails>();
         int limit=Integer.parseInt(params.get("limit").toString()) ;
         int offset=Integer.parseInt(params.get("offset").toString()) ;
-        int i=(offset)*limit;
+        int i=offset;
         if(user.hasRole("SUPER_ADMIN"))
         {
 
@@ -565,7 +565,7 @@ public class BillServiceimpl implements BillService {
         int way=Integer.parseInt(params.get("way").toString()) ;
         int limit=Integer.parseInt(params.get("limit").toString()) ;
         int offset=Integer.parseInt(params.get("offset").toString()) ;
-        int i=(offset)*limit;
+        int i=offset;
            //上游
            if(way==1)
            {

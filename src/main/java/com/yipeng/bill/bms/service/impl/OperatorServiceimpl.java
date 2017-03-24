@@ -83,7 +83,7 @@ public class OperatorServiceImpl implements OperatorService {
          List<User> userList=userMapper.getQueryUserAll(params);
         int limit=Integer.parseInt(params.get("limit").toString()) ;
         int offset=Integer.parseInt(params.get("offset").toString()) ;
-        int i=(offset)*limit;
+        int i=offset;
         for ( User user:userList
              ) {
             i++;
@@ -99,7 +99,11 @@ public class OperatorServiceImpl implements OperatorService {
             {
                 customerListDetails.setLastLoginTime(DateUtils.formatDate(user.getLastLoginTime()));
             }
-            customerListDetails.setLoginCount(user.getLoginCount());
+            if(user.getLoginCount()!=null)
+            {
+                customerListDetails.setLoginCount(user.getLoginCount());
+            }
+
             customerListDetailsList.add(customerListDetails);
 
 

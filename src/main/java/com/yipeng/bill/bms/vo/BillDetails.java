@@ -1,12 +1,16 @@
 package com.yipeng.bill.bms.vo;
 
+import com.yipeng.bill.bms.domain.BillPrice;
+
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/3/11.
  */
 public class BillDetails {
+    private int displayId;
     private Long id;
     private String userName;
     private String website;
@@ -15,14 +19,18 @@ public class BillDetails {
     private String keywords;
     private Integer firstRanking;
     private Integer newRanking;
-    private BigDecimal priceOne;
-    private BigDecimal priceTwo;
+    private Long createUserId;
+    private Long updateUserId;
     private Integer webAppId;
     private Integer dayOptimization;
     private Integer allOptimization;
     private BigDecimal   dayConsumption;
     private Integer   standardDays;
     private Integer state;
+    private List<BillPrice> billPriceList;
+
+    public  int  getdisplayId(){return  displayId;}
+    public int setdisplayId(int displayId){return  this.displayId=displayId;}
 
     public  Long  getId(){return  id;}
     public Long setId(Long id){return  this.id=id;}
@@ -43,10 +51,7 @@ public class BillDetails {
     public  Integer  setFirstRanking(Integer  firstRanking){return  this.firstRanking=firstRanking;}
     public  Integer  getNewRanking(){return  newRanking;}
     public  Integer  setNewRanking(Integer  newRanking){return  this.newRanking=newRanking;}
-    public  BigDecimal  getPriceOne(){return  priceOne;}
-    public  BigDecimal  setPriceOne(BigDecimal  priceOne){return  this.priceOne=priceOne;}
-    public  BigDecimal  getPriceTwo(){return  priceTwo;}
-    public  BigDecimal  setPriceTwo(BigDecimal  priceTwo){return  this.priceTwo=priceTwo;}
+
     public  Integer  getWebAppId(){return  webAppId;}
     public  Integer  setWebAppId(Integer  webAppId){return  this.webAppId=webAppId;}
     public  Integer  getDayOptimization(){return  dayOptimization;}
@@ -59,4 +64,27 @@ public class BillDetails {
     public  Integer  setStandardDays(Integer  standardDays){return  this.standardDays=standardDays;}
     public  Integer  getState(){return  state;}
     public  Integer  setState(Integer  state){return  this.state=state;}
+    public Long getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Long createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public Long getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Long updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public List<BillPrice> getBillPriceList() {
+        return billPriceList;
+    }
+
+    public void setBillPriceList(List<BillPrice> billPriceList)  {
+        this.billPriceList = billPriceList;
+    }
 }

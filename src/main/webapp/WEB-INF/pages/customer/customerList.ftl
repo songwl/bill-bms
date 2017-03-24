@@ -13,10 +13,15 @@
     </div>
     <div class="nav_R right" id="divQx">
     <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")>
-        <div class="Import">
+        <div class="Import addMember">
             <span id="Import">&nbsp;<i class="fa fa-plus"></i>&nbsp;添加客户</span>
         </div>
     </#if>
+        <#if bmsModel.user.hasRole("DISTRIBUTOR")>
+            <div class="Import addAGENT">
+                <span id="Import">&nbsp;<i class="fa fa-plus"></i>&nbsp;添加代理商</span>
+            </div>
+        </#if>
         <div class="search">
             <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
         </div>
@@ -52,7 +57,7 @@
                 </div>
                 <div id="toolbar" class="btn-group">
 
-                <#if  bmsModel.user.hasRole("SUPER_ADMIN")|| bmsModel.user.hasRole("DISTRIBUTOR")>
+                <#if  bmsModel.user.hasRole("SUPER_ADMIN")|| bmsModel.user.hasRole("DISTRIBUTOR")|| bmsModel.user.hasRole("AGENT")>
                     <button id="btn_update" type="button" class="btn btn-default">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 充值
                     </button>
@@ -73,15 +78,13 @@
 </div>
 
 
-<!--添加操作员-->
-
-
-<div class="bootbox modal in addOperatorDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
+<!--添加客户-->
+<div class="bootbox modal in addMemberDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="bootbox-close-button close">×</button>
-                <h4 class="modal-title">添加客户</h4>
+                <h4 class="modal-title"></h4>
             </div>
             <div class="modal-body" style="max-height: 574px;">
                 <div class="bootbox-body">
@@ -98,23 +101,18 @@
                             <div class="col-md-9">
                                 <input name="userName" class="form-control input-width-large" type="text">
                             </div>
+                            <div class="pdlogid"></div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-3 control-label">
                                 密码<span class="required">* </span>
                             </label>
                             <div class="col-md-9">
-                                <input name="pass" class="form-control input-width-large" type="password">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">
-                                确认密码<span class="required">* </span>
-                            </label>
-                            <div class="col-md-9">
                                 <input name="password" class="form-control input-width-large" type="password">
                             </div>
+                            <div class="pdpwd"></div>
                         </div>
+
                         <div class="form-group">
                             <label class="col-md-3 control-label">
                                 真实姓名<span class="required">* </span>
@@ -147,8 +145,16 @@
                                 <input name="qq" class="form-control input-width-large" type="text">
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">
+                                充值金额<span class="required">*</span>
+                            </label>
+                            <div class="col-md-9">
+                                <input name="balance" id="balance" class="form-control input-width-large" type="text" value="0">
+                            </div>
+                        </div>
                     </form>
-
+                   <input type="hidden" value="1" id="addMemberId">
                 </div>
             </div>
             <div class="modal-footer">
@@ -158,9 +164,6 @@
         </div>
     </div>
 </div>
-
-
-
-<!--添加操作员end-->
+<!--添加客户end-->
 
 </@base.html>

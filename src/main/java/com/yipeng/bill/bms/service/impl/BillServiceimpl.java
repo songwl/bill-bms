@@ -1,10 +1,13 @@
 package com.yipeng.bill.bms.service.impl;
 
 import com.yipeng.bill.bms.core.model.Page;
+import com.yipeng.bill.bms.core.utils.DateUtils;
 import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.service.BillService;
 import com.yipeng.bill.bms.vo.BillDetails;
+import com.yipeng.bill.bms.vo.LoginUser;
+import org.hamcrest.text.IsEmptyString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +33,8 @@ public class BillServiceimpl implements BillService {
     private UserMapper userMapper;
     @Autowired
     private BillCostMapper billCostMapper;
+    @Autowired
+    private UserRoleMapper userRoleMapper;
     /**
      * 相同价导入
      * @param bill
@@ -37,6 +42,18 @@ public class BillServiceimpl implements BillService {
      */
     @Override
     public String saveSameBill(Map<String, String[]>  params,User user ) {
+
+        int state=0;
+        UserRole userRole=new UserRole();
+        userRole.setUserId(user.getId());
+         List<UserRole> userRole1= userRoleMapper.selectByUserRole(userRole);
+         if(userRole1.size()>0)
+         {
+                if(userRole1.get(0).getRoleId()==4)
+                {
+                    state=1;
+                }
+         }
 
         String[] urlsArr=params.get("url");
         String[] keywordsArr=params.get("keyword");
@@ -51,20 +68,36 @@ public class BillServiceimpl implements BillService {
         String[] urls=urlsArr[0].split("\n");
         String[] keywords=keywordsArr[0].split("\n");
         String[] search=params.get("search");
+        String[] customerId=params.get("customerId");
         String errorDetails="";
         if(urls.length==keywords.length) {
-
             for (int i = 0; i < urls.length; i++) {
                 //先查询是否订单已经存在
                 Map<String, Object> params1 = new HashMap();
                 params1.put("website", urls[i]);
                 params1.put("keywords", keywords[i]);
                 List<Bill> billList = billMapper.selectAllSelective(params1);
+                Map<String,Object> map=new HashMap<>();
+                map.put("url",urls[i]);
+                map.put("keywords",keywords[i]);
+                map.put("CreateUserId",user.getId());
+                map.put("search",search[0]);
+                map.put("price",price[0]);
+                map.put("rankend",rankend[0]);
+                map.put("customerId",customerId[0]);
+                map.put("price1",price1[0]);
+                map.put("rankend1",rankend1[0]);
+                map.put("price2",price2[0]);
+                map.put("rankend2",rankend2[0]);
+                map.put("price3",price3[0]);
+                map.put("rankend3",rankend3[0]);
+                map.put("state",state);
                 //存在 判断搜索引擎是否一致
                 if (billList.size() > 0) {
                     Boolean bool = true;
                     for (Bill bill : billList
                             ) {
+
                         //查询每个订单对应的搜索引擎名
                         BillSearchSupport billSearchSupport = billSearchSupportMapper.selectByBillId(bill.getId());
                         if (billSearchSupport.getSearchSupport().equals(search[0])) {
@@ -76,128 +109,12 @@ public class BillServiceimpl implements BillService {
 
                     if (bool) {
                         //订单主表
-                        Bill bill = new Bill();
-                        bill.setWebsite(urls[i]);
-                        bill.setKeywords(keywords[i]);
-                        bill.setCreateUserId(user.getId());
-                        bill.setCreateTime(new Date());
-                        bill.setFirstRanking(51);
-                        bill.setNewRanking(51);
-                        bill.setWebAppId(123456);
-                        bill.setStandardDays(0);
-                        bill.setDayOptimization(1);
-                        bill.setAllOptimization(1);
-                        bill.setState(0);
-                        Long billId = billMapper.insert(bill);
-                        //订单引擎表
-                        BillSearchSupport billSearchSupport = new BillSearchSupport();
-                        billSearchSupport.setBillId(bill.getId());
-                        billSearchSupport.setSearchSupport(search[0]);
-                        billSearchSupportMapper.insert(billSearchSupport);
-                        //订单单价表
-                        BillPrice billPrice = new BillPrice();
-                        billPrice.setBillId(bill.getId());
-                        BigDecimal bigDecimalprice = new BigDecimal(price[0]);
-                        billPrice.setPrice(bigDecimalprice);
-                        billPrice.setBillRankingStandard(Long.parseLong(rankend[0]));
-                        billPrice.setInMemberId(user.getId());
-                        billPrice.setCreateTime(new Date());
-                        billPriceMapper.insert(billPrice);
-                        if (price1[0] != "" && rankend1[0] != "") {
-                            BillPrice billPrice1 = new BillPrice();
-                            billPrice1.setBillId(bill.getId());
-                            BigDecimal bigDecimalprice1 = new BigDecimal(price1[0]);
-                            billPrice1.setPrice(bigDecimalprice1);
-                            billPrice1.setBillRankingStandard(Long.parseLong(rankend1[0]));
-                            billPrice1.setInMemberId(user.getId());
-                            billPrice1.setCreateTime(new Date());
-                            billPriceMapper.insert(billPrice1);
-                            if (price2[0] != "" && rankend2[0] != "") {
-                                BillPrice billPrice2 = new BillPrice();
-                                billPrice2.setBillId(bill.getId());
-                                BigDecimal bigDecimalprice2 = new BigDecimal(price2[0]);
-                                billPrice2.setPrice(bigDecimalprice2);
-                                billPrice2.setBillRankingStandard(Long.parseLong(rankend2[0]));
-                                billPrice2.setInMemberId(user.getId());
-                                billPrice2.setCreateTime(new Date());
-                                billPriceMapper.insert(billPrice2);
-                                if (price3[0] != "" && rankend3[0] != "") {
-                                    BillPrice billPrice3 = new BillPrice();
-                                    billPrice3.setBillId(bill.getId());
-                                    BigDecimal bigDecimalprice3 = new BigDecimal(price3[0]);
-                                    billPrice3.setPrice(bigDecimalprice3);
-                                    billPrice3.setBillRankingStandard(Long.parseLong(rankend3[0]));
-                                    billPrice3.setInMemberId(user.getId());
-                                    billPrice3.setCreateTime(new Date());
-                                    billPriceMapper.insert(billPrice3);
-
-                                }
-                            }
-                        }
-
+                       this.insertPirce(map);
                     }
                 }
                 //不存在 直接录入
                 else {
-                    //订单主表
-                    Bill bill1 = new Bill();
-                    bill1.setWebsite(urls[i]);
-                    bill1.setKeywords(keywords[i]);
-                    bill1.setCreateUserId(user.getId());
-                    bill1.setCreateTime(new Date());
-                    bill1.setFirstRanking(51);
-                    bill1.setNewRanking(51);
-                    bill1.setWebAppId(123456);
-                    bill1.setStandardDays(0);
-                    bill1.setDayOptimization(1);
-                    bill1.setAllOptimization(1);
-                    bill1.setState(0);
-                    Long billId1 = billMapper.insert(bill1);
-                    //订单引擎表
-                    BillSearchSupport billSearchSupport1 = new BillSearchSupport();
-                    billSearchSupport1.setBillId(bill1.getId());
-                    billSearchSupport1.setSearchSupport(search[0]);
-                    billSearchSupportMapper.insert(billSearchSupport1);
-                    //订单单价表
-                    BillPrice billPriceA = new BillPrice();
-                    billPriceA.setBillId(bill1.getId());
-                    BigDecimal bigDecimalprice = new BigDecimal(price[0]);
-                    billPriceA.setPrice(bigDecimalprice);
-                    billPriceA.setBillRankingStandard(Long.parseLong(rankend[0]));
-                    billPriceA.setInMemberId(user.getId());
-                    billPriceA.setCreateTime(new Date());
-                    billPriceMapper.insert(billPriceA);
-                    if (price1[0] != "" && rankend1[0] != "") {
-                        BillPrice billPriceA1 = new BillPrice();
-                        billPriceA1.setBillId(bill1.getId());
-                        BigDecimal bigDecimalprice1 = new BigDecimal(price1[0]);
-                        billPriceA1.setPrice(bigDecimalprice1);
-                        billPriceA1.setBillRankingStandard(Long.parseLong(rankend1[0]));
-                        billPriceA1.setInMemberId(user.getId());
-                        billPriceA1.setCreateTime(new Date());
-                        billPriceMapper.insert(billPriceA1);
-                        if (price2[0] != "" && rankend2[0] != "") {
-                            BillPrice billPriceA2 = new BillPrice();
-                            billPriceA2.setBillId(bill1.getId());
-                            BigDecimal bigDecimalprice2 = new BigDecimal(price2[0]);
-                            billPriceA2.setPrice(bigDecimalprice2);
-                            billPriceA2.setBillRankingStandard(Long.parseLong(rankend2[0]));
-                            billPriceA2.setInMemberId(user.getId());
-                            billPriceA2.setCreateTime(new Date());
-                            billPriceMapper.insert(billPriceA2);
-                            if (price3[0] != "" && rankend3[0] != "") {
-                                BillPrice billPriceA3 = new BillPrice();
-                                billPriceA3.setBillId(bill1.getId());
-                                BigDecimal bigDecimalprice3 = new BigDecimal(price3[0]);
-                                billPriceA3.setPrice(bigDecimalprice3);
-                                billPriceA3.setBillRankingStandard(Long.parseLong(rankend3[0]));
-                                billPriceA3.setInMemberId(user.getId());
-                                billPriceA3.setCreateTime(new Date());
-                                billPriceMapper.insert(billPriceA3);
-
-                            }
-                        }
-                    }
+                    this.insertPirce(map);
                 }
             }
 
@@ -300,84 +217,107 @@ public class BillServiceimpl implements BillService {
     }
 
     /**
-     * 实现通过参数来查询集合
+     * 实现通过参数来查询集合(待审核页面)
      * @param params
      * @return
      */
     @Override
-    public Map<String, Object> findBillList(Map<String, Object> params) {
-        //先查出订单
-        List<Bill> bills=billMapper.selectList(params);
+    public Map<String, Object> pendingAuditList(Map<String, Object> params, LoginUser user) {
+
         //视图模型
-        List<BillDetails>  billDetails=new ArrayList<BillDetails>();
-        //循环判断填充数据
-        for (Bill bill:bills
-             ) {
-            BillDetails billDetails1=new BillDetails();
-            billDetails1.setId(bill.getId());
-            //获取客户名称
-            Object object=params.get("user");
-            User user=(User)object;
-            billDetails1.setUserName(user.getUserName());
-            billDetails1.setKeywords(bill.getKeywords());
-            billDetails1.setWebsite(bill.getWebsite());
-            //获取搜索引擎名称
-            BillSearchSupport billSearchSupport=billSearchSupportMapper.selectByBillId(bill.getId());
-            billDetails1.setSearchName(billSearchSupport.getSearchSupport());
-            //转换时间("yy-MM-dd")
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            String dateString = formatter.format(bill.getCreateTime());
-            billDetails1.setCreateTime(dateString);
-            billDetails1.setFirstRanking(bill.getFirstRanking());
-            billDetails1.setNewRanking(bill.getNewRanking());
+        List<BillDetails> billDetailsList = new ArrayList<BillDetails>();
+        int limit=Integer.parseInt(params.get("limit").toString()) ;
+        int offset=Integer.parseInt(params.get("offset").toString()) ;
+        int i=(offset)*limit;
+        if(user.hasRole("SUPER_ADMIN"))
+        {
 
-            List<BillPrice>  billPrice=billPriceMapper.selectByBillId(bill.getId());
-            if(billPrice.size()>0)
-            {
-                BillPrice billPrice1= billPrice.get(0);
-                billDetails1.setPriceOne(billPrice1.getPrice());
-                if(billPrice.size()>=2)
-                {
-                    BillPrice billPrice2= billPrice.get(1);
-                    billDetails1.setPriceTwo(billPrice2.getPrice());
-                }
+            params.put("state",1);
+           //查询所有订单状态为1的
+             List<Bill> billList=billMapper.selectAll(params);
+            for (Bill bill: billList
+                 ) {
+                i++;
+                BillDetails billDetails=new BillDetails();
+                billDetails.setdisplayId(i);
+                billDetails.setId(bill.getId());
+                User user1= userMapper.selectByPrimaryKey(bill.getUpdateUserId());
+                billDetails.setUserName(user1.getUserName());
+                billDetails.setKeywords(bill.getKeywords());
+                billDetails.setWebsite(bill.getWebsite());
+                //查出搜索引擎
+                BillSearchSupport billSearchSupport=  billSearchSupportMapper.selectByBillId(bill.getId());
+                billDetails.setSearchName(billSearchSupport.getSearchSupport());
+                billDetails.setCreateTime(DateUtils.formatDate(bill.getCreateTime()));
+                billDetails.setUpdateUserId(bill.getUpdateUserId());
+                billDetails.setFirstRanking(bill.getFirstRanking());
+                billDetails.setNewRanking(bill.getNewRanking());
+                billDetails.setDayOptimization(bill.getDayOptimization());
+                billDetails.setAllOptimization(billDetails.getAllOptimization());
+                //当天消费(缺)
+                //本月消费（缺）
+                billDetails.setStandardDays(bill.getStandardDays());
+                billDetails.setState(bill.getState());
+                billDetailsList.add(billDetails);
             }
+            Long total=billMapper.selectAllCount(1);
+            Map<String,Object> map=new HashMap<>();
+            map.put("total",total);
+            map.put("rows",billDetailsList);
+            return  map;
 
+        }
+        else
+        {
 
-
-
-            billDetails1.setStandardDays(bill.getStandardDays());
-            billDetails1.setDayOptimization(bill.getDayOptimization());
-            billDetails1.setAllOptimization(bill.getAllOptimization());
-            //查询今日消费
-            List<BillCost> billCost=billCostMapper.selectByBillId(bill.getId());
-            if(billCost.size()>0)
-            {
-                for (BillCost billCost1:billCost
-                        ) {
-                    String costDate= formatter.format(billCost1.getCostDate());
-                    String costDate1= formatter.format(new Date());
-                    if(costDate.equals(costDate1))
-                    {
-                        billDetails1.setDayConsumption(billCost1.getCostAmount());
-                    }
-                }
+            params.put("userId",user.getId());
+            params.put("state",0);
+            //查询所有订单状态为0的
+            List<Bill> billList=billMapper.selectAgentBill(params);
+            for (Bill bill: billList
+                 ) {
+                i++;
+                BillDetails billDetails=new BillDetails();
+                billDetails.setdisplayId(i);
+                billDetails.setId(bill.getId());
+                User user1= userMapper.selectByPrimaryKey(bill.getUpdateUserId());
+                billDetails.setUserName(user1.getUserName());
+                billDetails.setKeywords(bill.getKeywords());
+                billDetails.setWebsite(bill.getWebsite());
+                //查出搜索引擎
+                BillSearchSupport billSearchSupport=  billSearchSupportMapper.selectByBillId(bill.getId());
+                billDetails.setSearchName(billSearchSupport.getSearchSupport());
+                billDetails.setCreateTime(DateUtils.formatDate(bill.getCreateTime()));
+                billDetails.setUpdateUserId(bill.getUpdateUserId());
+                billDetails.setFirstRanking(bill.getFirstRanking());
+                billDetails.setNewRanking(bill.getNewRanking());
+                billDetails.setDayOptimization(bill.getDayOptimization());
+                billDetails.setAllOptimization(billDetails.getAllOptimization());
+                //当天消费(缺)
+                //本月消费（缺）
+                billDetails.setStandardDays(bill.getStandardDays());
+                billDetails.setState(bill.getState());
+                billDetailsList.add(billDetails);
             }
+            Long total=billMapper.selectAgentBillCount(params);
+            Map<String,Object> map=new HashMap<>();
+            map.put("total",total);
+            map.put("rows",billDetailsList);
+            return  map;
 
-           billDetails1.setState(bill.getState());
-
-
-            billDetails.add(billDetails1);
         }
 
 
-        Long total=billMapper.getBillListCount();
-        Map<String, Object> modelMap = new HashMap();
-        modelMap.put("total",total);
-        modelMap.put("rows",billDetails);
-        return modelMap;
+
+
     }
 
+    /**
+     * 调整价格
+     * @param params
+     * @param user
+     * @return
+     */
     @Override
     public int updateBillPrice(Map<String, String[]>  params,User user) {
 
@@ -385,5 +325,579 @@ public class BillServiceimpl implements BillService {
 
         return 0;
     }
+
+    /**
+     * 渠道商审核订单，录入单价表数据
+     * @param params 价格
+     * @param user 当前登录对象
+     * @return
+     */
+    @Override
+    public int distributorPrice(Map<String, String[]> params, User user) {
+
+        String[] bill=params.get("rankend1");
+        String[] selectContent=params.get("selectContent[0][userName]");
+        String[] checkboxLength=params.get("checkboxLength");
+        String[] price1=params.get("price1");
+        String[] price2=params.get("price2");
+        String[] price3=params.get("price3");
+
+        int  length=Integer.parseInt(checkboxLength[0]);
+        for(int i=0;i<length;i++)
+        {
+            String[] id=params.get("selectContent["+i+"][id]");
+            String[] price=params.get("price");
+            String[] rankend=params.get("rankend");
+            Long billId=Long.parseLong(id[0]);
+            //判断渠道商订单价格是否已经存在(有BUG 如果管理员录入价格 bool会变成true)
+            List<BillPrice> billPriceList= billPriceMapper.selectByBillId(billId);
+            Boolean bool=true;
+            //如果有了 就修改
+             if(billPriceList.size()>0)
+            {
+                for (BillPrice billPrice1:billPriceList
+                     ) {
+                    if(billPrice1.getInMemberId().longValue()==user.getId().longValue())
+                    {
+                         bool=false;
+                    }
+                }
+            }
+            if(bool)
+            {
+                BillPrice billPrice=new BillPrice();
+                billPrice.setBillId(billId);
+                BigDecimal ret = null;
+                ret= new BigDecimal((String)price[0]);
+                billPrice.setPrice(ret);
+                billPrice.setBillRankingStandard(Long.parseLong(rankend[0]));
+                billPrice.setInMemberId(user.getId()); ;
+                String[] updateUserId=params.get("selectContent["+i+"][updateUserId]");
+                billPrice.setOutMemberId(Long.parseLong(updateUserId[0]));
+                billPrice.setCreateTime(new Date());
+                billPriceMapper.insert(billPrice);
+                 Bill bill1=new Bill();
+                 bill1.setId(billId);
+                 bill1.setUpdateUserId(user.getId());
+                 bill1.setState(1);
+                 billMapper.updateByPrimaryKeySelective(bill1);
+                if (!"NaN".equals(price1[0])) {
+                    String[] id1=params.get("selectContent["+i+"][id]");
+                    String[] rankend1=params.get("rankend1");
+                    Long billId1=Long.parseLong(id1[0]);
+                    BillPrice billPrice1=new BillPrice();
+                    billPrice1.setBillId(billId1);
+                    BigDecimal ret1 = null;
+                    ret1= new BigDecimal((String)price1[0]);
+                    billPrice1.setPrice(ret1);
+                    billPrice1.setBillRankingStandard(Long.parseLong(rankend1[0]));
+                    billPrice1.setInMemberId(user.getId());
+                    String[] updateUserId1=params.get("selectContent["+i+"][updateUserId]");
+                    billPrice1.setOutMemberId(Long.parseLong(updateUserId1[0]));
+                    billPrice1.setCreateTime(new Date());
+                    billPriceMapper.insert(billPrice1);
+                    if (!"NaN".equals(price2[0])) {
+                        String[] id2=params.get("selectContent["+i+"][id]");
+                        String[] rankend2=params.get("rankend2");
+                        Long billId2=Long.parseLong(id2[0]);
+                        BillPrice billPrice2=new BillPrice();
+                        billPrice2.setBillId(billId2);
+                        BigDecimal ret2 = null;
+                        ret2= new BigDecimal((String)price2[0]);
+                        billPrice2.setPrice(ret2);
+                        billPrice2.setBillRankingStandard(Long.parseLong(rankend2[0]));
+                        billPrice2.setInMemberId(user.getId());
+                        String[] updateUserId2=params.get("selectContent["+i+"][updateUserId]");
+                        billPrice2.setOutMemberId(Long.parseLong(updateUserId2[0]));
+                        billPrice2.setCreateTime(new Date());
+                        billPriceMapper.insert(billPrice2);
+                        if (!"NaN".equals(price3[0])) {
+                            String[] id3=params.get("selectContent["+i+"][id]");
+                            String[] rankend3=params.get("rankend3");
+                            Long billId3=Long.parseLong(id3[0]);
+                            BillPrice billPrice3=new BillPrice();
+                            billPrice3.setBillId(billId3);
+                            BigDecimal ret3 = null;
+                            ret3= new BigDecimal((String)price3[0]);
+                            billPrice3.setPrice(ret3);
+                            billPrice3.setBillRankingStandard(Long.parseLong(rankend3[0]));
+                            billPrice3.setInMemberId(user.getId());
+                            String[] updateUserId3=params.get("selectContent["+i+"][updateUserId]");
+                            billPrice3.setOutMemberId(Long.parseLong(updateUserId3[0]));
+                            billPrice3.setCreateTime(new Date());
+                            billPriceMapper.insert(billPrice3);
+                        }
+                    }
+                }
+            }
+
+
+        }
+        return 0;
+    }
+
+    /**
+     * 优化方录入价格
+     * @param params
+     * @param user
+     * @return
+     */
+    @Override
+    public int adminPrice(Map<String, String[]> params, User user) {
+
+        String[] bill=params.get("rankend1");
+        String[] selectContent=params.get("selectContent[0][userName]");
+        String[] checkboxLength=params.get("checkboxLength");
+        String[] price1=params.get("price1");
+        String[] price2=params.get("price2");
+        String[] price3=params.get("price3");
+        String[] caozuoyuan=params.get("caozuoyuan");
+        Long caozuoyuanId=Long.parseLong(caozuoyuan[0]);
+
+        int  length=Integer.parseInt(checkboxLength[0]);
+        for(int i=0;i<length;i++)
+        {
+            String[] id=params.get("selectContent["+i+"][id]");
+            String[] price=params.get("price");
+            String[] rankend=params.get("rankend");
+            Long billId=Long.parseLong(id[0]);
+            //判断渠道商订单价格是否已经存在(有BUG 如果管理员录入价格 bool会变成true)
+            List<BillPrice> billPriceList= billPriceMapper.selectByBillId(billId);
+            Boolean bool=true;
+            //如果有了 就修改
+            if(billPriceList.size()>0)
+            {
+                for (BillPrice billPrice1:billPriceList
+                        ) {
+                    if(billPrice1.getInMemberId().longValue()==user.getId().longValue())
+                    {
+                        bool=false;
+                    }
+                }
+            }
+            if(bool)
+            {
+                BillPrice billPrice=new BillPrice();
+                billPrice.setBillId(billId);
+                BigDecimal ret = null;
+                ret= new BigDecimal((String)price[0]);
+                billPrice.setPrice(ret);
+                billPrice.setBillRankingStandard(Long.parseLong(rankend[0]));
+                billPrice.setInMemberId(user.getId()); ;
+                String[] updateUserId=params.get("selectContent["+i+"][updateUserId]");
+                billPrice.setOutMemberId(Long.parseLong(updateUserId[0]));
+                billPrice.setCreateTime(new Date());
+                billPriceMapper.insert(billPrice);
+                Bill bill1=new Bill();
+                bill1.setId(billId);
+                bill1.setUpdateUserId(user.getId());
+                bill1.setBillAscription(caozuoyuanId);
+                bill1.setState(2);
+                billMapper.updateByPrimaryKeySelective(bill1);
+                if (!"NaN".equals(price1[0])) {
+                    String[] id1=params.get("selectContent["+i+"][id]");
+                    String[] rankend1=params.get("rankend1");
+                    Long billId1=Long.parseLong(id1[0]);
+                    BillPrice billPrice1=new BillPrice();
+                    billPrice1.setBillId(billId1);
+                    BigDecimal ret1 = null;
+                    ret1= new BigDecimal((String)price1[0]);
+                    billPrice1.setPrice(ret1);
+                    billPrice1.setBillRankingStandard(Long.parseLong(rankend1[0]));
+                    billPrice1.setInMemberId(user.getId());
+                    String[] updateUserId1=params.get("selectContent["+i+"][updateUserId]");
+                    billPrice1.setOutMemberId(Long.parseLong(updateUserId1[0]));
+                    billPrice1.setCreateTime(new Date());
+                    billPriceMapper.insert(billPrice1);
+                    if (!"NaN".equals(price2[0])) {
+                        String[] id2=params.get("selectContent["+i+"][id]");
+                        String[] rankend2=params.get("rankend2");
+                        Long billId2=Long.parseLong(id2[0]);
+                        BillPrice billPrice2=new BillPrice();
+                        billPrice2.setBillId(billId2);
+                        BigDecimal ret2 = null;
+                        ret2= new BigDecimal((String)price2[0]);
+                        billPrice2.setPrice(ret2);
+                        billPrice2.setBillRankingStandard(Long.parseLong(rankend2[0]));
+                        billPrice2.setInMemberId(user.getId());
+                        String[] updateUserId2=params.get("selectContent["+i+"][updateUserId]");
+                        billPrice2.setOutMemberId(Long.parseLong(updateUserId2[0]));
+                        billPrice2.setCreateTime(new Date());
+                        billPriceMapper.insert(billPrice2);
+                        if (!"NaN".equals(price3[0])) {
+                            String[] id3=params.get("selectContent["+i+"][id]");
+                            String[] rankend3=params.get("rankend3");
+                            Long billId3=Long.parseLong(id3[0]);
+                            BillPrice billPrice3=new BillPrice();
+                            billPrice3.setBillId(billId3);
+                            BigDecimal ret3 = null;
+                            ret3= new BigDecimal((String)price3[0]);
+                            billPrice3.setPrice(ret3);
+                            billPrice3.setBillRankingStandard(Long.parseLong(rankend3[0]));
+                            billPrice3.setInMemberId(user.getId());
+                            String[] updateUserId3=params.get("selectContent["+i+"][updateUserId]");
+                            billPrice3.setOutMemberId(Long.parseLong(updateUserId3[0]));
+                            billPrice3.setCreateTime(new Date());
+                            billPriceMapper.insert(billPrice3);
+                        }
+                    }
+                }
+            }
+
+
+        }
+        return 0;
+    }
+
+    /**
+     * 订单列表
+     * @param params
+     * @return
+     */
+    @Override
+    public Map<String, Object> getBillDetails(Map<String, Object> params, LoginUser user) {
+        //判断查询条件
+
+
+        //视图模型
+        List<BillDetails> billDetailsList = new ArrayList<BillDetails>();
+
+        int way=Integer.parseInt(params.get("way").toString()) ;
+        int limit=Integer.parseInt(params.get("limit").toString()) ;
+        int offset=Integer.parseInt(params.get("offset").toString()) ;
+        int i=(offset)*limit;
+           //上游
+           if(way==1)
+           {
+                //先获取对应的订单
+               if(params.get("searchUserNameId")!=null)
+               {
+                   User user1=userMapper.selectByPrimaryKey(Long.parseLong(params.get("searchUserNameId").toString()));
+                   params.put("userId",user1.getId());
+               }
+               else
+               {
+                   params.put("userId",user.getId());
+               }
+               List<Bill> billList=billMapper.selectByOutMemberId(params);
+
+               Long total=billMapper.getBillListCount(params);
+               for (Bill bill: billList
+                       ) {
+                   i++;
+                   //调用方法  加入集合
+                   BillDetails billDetails=this.insertBillDetails(bill, user,way);
+                   billDetails.setdisplayId(i);
+                   billDetailsList.add(billDetails);
+               }
+               Map<String,Object> map=new HashMap<>();
+               map.put("total",total);
+               map.put("rows",billDetailsList);
+               return  map;
+           }
+           //下游
+           else if(way==2)
+           {
+                 if(user.hasRole("SUPER_ADMIN")||user.hasRole("AGENT"))
+                 {
+                     params.put("userId",user.getId());
+                     //先获取对应的订单
+                     List<Bill> billList=billMapper.selectByInMemberId(params);
+                     Long total=billMapper.getBillListCount(params);
+                     for (Bill bill: billList
+                             ) {
+                         i++;
+                         //调用方法  加入集合
+                         BillDetails billDetails=this.insertBillDetails(bill, user,way);
+                         billDetails.setdisplayId(i);
+                         billDetailsList.add(billDetails);
+                     }
+                     Map<String,Object> map=new HashMap<>();
+                     map.put("total",total);
+                     map.put("rows",billDetailsList);
+                     return  map;
+                 }
+                 else if(user.hasRole("DISTRIBUTOR"))
+                 {
+                     //先获取对应的订单
+                     params.put("userId",user.getId());
+                     List<Bill> billList=billMapper.selectByInMemberId(params);
+                     Long total=billMapper.getBillListCount(params);
+                     for (Bill bill: billList
+                             ) {
+
+                         //调用方法  加入集合
+                         BillPrice billPrice=new BillPrice();
+                         billPrice.setBillId(bill.getId());
+                         billPrice.setInMemberId(user.getId());
+                         Long OutMemberId=  billPriceMapper.selectByBillPriceOutMemberId(billPrice);
+                         UserRole userRole=userRoleMapper.selectByUserId(OutMemberId);
+                         //查询渠道商的付款方是不是代理商
+                         if(userRole.getRoleId()==5)
+                         {
+                             i++;
+                             BillDetails billDetails=this.insertBillDetails(bill, user,way);
+                             billDetails.setdisplayId(i);
+                             billDetailsList.add(billDetails);
+                         }
+
+
+                     }
+                     Map<String,Object> map=new HashMap<>();
+                     map.put("total",total);
+                     map.put("rows",billDetailsList);
+                     return  map;
+                 }
+                 else//操作员
+                 {
+                     //先获取对应的订单
+                     params.put("userId",user.getCreateUserId());
+                     params.put("billAscription",user.getId());
+                     List<Bill> billList=billMapper.selectByInMemberId(params);
+                     Long total=billMapper.getBillListCount(params);
+                     for (Bill bill: billList
+                             ) {
+                         i++;
+                         //调用方法  加入集合
+                         BillDetails billDetails=this.insertBillDetails(bill, user,way);
+                         billDetails.setdisplayId(i);
+                         billDetailsList.add(billDetails);
+                     }
+                     Map<String,Object> map=new HashMap<>();
+                     map.put("total",total);
+                     map.put("rows",billDetailsList);
+                     return  map;
+                 }
+
+           }
+           else
+           {
+
+               //渠道商直属客户，先获取对应的订单
+               params.put("userId",user.getId());
+               List<Bill> billList=billMapper.selectByInMemberId(params);
+               Long total=billMapper.getBillListCount(params);
+               for (Bill bill: billList
+                       ) {
+                   //调用方法  加入集合
+                   BillPrice billPrice=new BillPrice();
+                   billPrice.setBillId(bill.getId());
+                   billPrice.setInMemberId(user.getId());
+                   Long OutMemberId=  billPriceMapper.selectByBillPriceOutMemberId(billPrice);
+                   UserRole userRole=userRoleMapper.selectByUserId(OutMemberId);
+                   //查询渠道商的付款方是不是直接客户
+                   if(userRole.getRoleId()==6)
+                   {
+                       i++;
+                       BillDetails billDetails=this.insertBillDetails(bill, user,way);
+                       billDetails.setdisplayId(i);
+                       billDetailsList.add(billDetails);
+                   }
+
+
+               }
+               Map<String,Object> map=new HashMap<>();
+               map.put("total",total);
+               map.put("rows",billDetailsList);
+               return  map;
+           }
+
+
+    }
+
+    /**
+     * 插入视图模型数据 封装成方法
+     * @param bill
+     * @return
+     */
+    public  BillDetails insertBillDetails(Bill bill,LoginUser user,int way)
+    {
+        BillPrice billPrice=new BillPrice();
+        List<BillPrice> billPriceList=new ArrayList<>();
+        //上游
+        if(way==1)
+        {
+            billPrice.setBillId(bill.getId());
+            billPrice.setOutMemberId(user.getId());
+            //查出对应单价
+            billPriceList=billPriceMapper.selectByBillPrice(billPrice);
+        }
+        //下游
+        else
+        {
+            if(user.hasRole("COMMISSIONER"))
+            {
+                billPrice.setBillId(bill.getId());
+                billPrice.setInMemberId(user.getCreateUserId());
+                //查出对应单价
+                billPriceList=billPriceMapper.selectByBillPrice(billPrice);
+            }
+            else
+            {
+                billPrice.setBillId(bill.getId());
+                billPrice.setInMemberId(user.getId());
+                //查出对应单价
+                billPriceList=billPriceMapper.selectByBillPrice(billPrice);
+            }
+
+        }
+
+
+
+
+        //查出搜索引擎
+        BillSearchSupport billSearchSupport=  billSearchSupportMapper.selectByBillId(bill.getId());
+        BillDetails billDetails=new BillDetails();
+        billDetails.setId(bill.getId());
+        if(way==1)
+        {
+            BillPrice billPrice1=new BillPrice();
+            billPrice1.setBillId(bill.getId());
+            billPrice1.setInMemberId(user.getId());
+           List<BillPrice> billPriceList1= billPriceMapper.selectByBillPrice(billPrice1);
+            User user2= userMapper.selectByPrimaryKey(billPriceList1.get(0).getOutMemberId());
+            billDetails.setUserName(user2.getUserName());
+
+        }
+        else
+        {
+            User user1= userMapper.selectByPrimaryKey(billPriceList.get(0).getOutMemberId());
+            billDetails.setUserName(user1.getUserName());
+        }
+
+
+        billDetails.setKeywords(bill.getKeywords());
+        billDetails.setWebsite(bill.getWebsite());
+        billDetails.setSearchName(billSearchSupport.getSearchSupport());
+        billDetails.setCreateTime(DateUtils.formatDate(bill.getCreateTime()));
+        billDetails.setFirstRanking(bill.getFirstRanking());
+        billDetails.setNewRanking(bill.getNewRanking());
+        billDetails.setBillPriceList(billPriceList);
+        billDetails.setDayOptimization(bill.getDayOptimization());
+        billDetails.setAllOptimization(bill.getAllOptimization());
+        //当天消费(缺)
+        //本月消费（缺）
+        billDetails.setStandardDays(bill.getStandardDays());
+        billDetails.setState(bill.getState());
+        return billDetails;
+    }
+    /**
+     * 优化调整
+     * @param params
+     * @param user
+     * @return
+     */
+    @Override
+    public int OptimizationUpdate(Map<String, String[]> params, LoginUser user) {
+        String[] checkboxLength=params.get("length");
+        int  length=Integer.parseInt(checkboxLength[0]);
+        String[] num=params.get("num");
+        int  nums=Integer.parseInt(num[0]);
+        for(int i=0;i<length;i++)
+        {
+            String[] id=params.get("selectContent["+i+"][id]");
+            Long  billId=Long.parseLong(id[0]);
+            Bill bill=billMapper.selectByPrimaryKey(billId);
+            int AllOptimization=bill.getAllOptimization();
+            int sum=nums+AllOptimization;
+            Bill  bill1 =new Bill();
+            bill1.setId(billId);
+            bill1.setDayOptimization(nums);
+            bill1.setAllOptimization(sum);
+            billMapper.updateByPrimaryKeySelective(bill1);
+
+        }
+        return 0;
+    }
+
+    /**
+     * 订单录入
+     * @param params
+     */
+    public  void  insertPirce(Map<String,Object> params)
+    {
+        Long customerId =Long.valueOf( params.get("customerId").toString());
+        Long CreateUserId =Long.valueOf( params.get("CreateUserId").toString());
+        Bill bill = new Bill();
+        bill.setWebsite(params.get("url").toString());
+        bill.setKeywords(params.get("keywords").toString());
+        bill.setCreateUserId((Long)params.get("CreateUserId"));
+        bill.setUpdateUserId((Long)params.get("CreateUserId"));
+        bill.setCreateTime(new Date());
+        bill.setFirstRanking(51);
+        bill.setNewRanking(51);
+        bill.setWebAppId(123456);
+        bill.setStandardDays(0);
+        bill.setDayOptimization(0);
+        bill.setAllOptimization(0);
+        bill.setState(Integer.parseInt(params.get("state").toString()));
+        Long billId = billMapper.insert(bill);
+        //订单引擎表
+        BillSearchSupport billSearchSupport = new BillSearchSupport();
+        billSearchSupport.setBillId(bill.getId());
+        billSearchSupport.setSearchSupport(params.get("search").toString());
+        billSearchSupportMapper.insert(billSearchSupport);
+        //订单单价表
+        BillPrice billPrice = new BillPrice();
+        billPrice.setBillId(bill.getId());
+        BigDecimal ret = null;
+        ret= new BigDecimal((String)params.get("price") );
+        billPrice.setPrice(ret);
+        Long rankend =Long.valueOf( params.get("rankend").toString());
+        billPrice.setBillRankingStandard((rankend));
+
+        billPrice.setInMemberId(CreateUserId);
+
+        billPrice.setOutMemberId(customerId);
+        billPrice.setCreateTime(new Date());
+        billPriceMapper.insert(billPrice);
+
+        if (!"".equals(params.get("price1").toString()) && null != params.get("price1").toString()) {
+            BillPrice billPrice1 = new BillPrice();
+            billPrice1.setBillId(bill.getId());
+            BigDecimal ret1 = null;
+            ret1= new BigDecimal( (String)params.get("price1") );
+            billPrice1.setPrice(ret1);
+            Long rankend1 =Long.valueOf( params.get("rankend1").toString());
+            billPrice1.setBillRankingStandard(rankend1);
+            billPrice1.setInMemberId(CreateUserId);
+            billPrice1.setOutMemberId(customerId);
+            billPrice1.setCreateTime(new Date());
+            billPriceMapper.insert(billPrice1);
+            if (!"".equals(params.get("price2").toString()) && null != params.get("price2").toString()) {
+                BillPrice billPrice2 = new BillPrice();
+                billPrice2.setBillId(bill.getId());
+                BigDecimal ret2 = null;
+                ret2= new BigDecimal((String)params.get("price2") );
+                billPrice2.setPrice(ret2);
+                Long rankend2 =Long.valueOf( params.get("rankend").toString());
+                billPrice2.setBillRankingStandard(rankend2);
+                billPrice2.setInMemberId(CreateUserId);
+                billPrice2.setOutMemberId(customerId);
+                billPrice2.setCreateTime(new Date());
+                billPriceMapper.insert(billPrice2);
+                if (!"".equals(params.get("price3").toString()) && null != params.get("price3").toString()) {
+                    BillPrice billPrice3 = new BillPrice();
+                    billPrice3.setBillId(bill.getId());
+                    BigDecimal ret3 = null;
+                    ret3= new BigDecimal( (String)params.get("price3") );
+                    billPrice3.setPrice(ret3);
+                    Long rankend3 =Long.valueOf( params.get("rankend").toString());
+                    billPrice3.setBillRankingStandard(rankend3);
+                    billPrice3.setInMemberId(CreateUserId);
+                    billPrice3.setOutMemberId(customerId);
+                    billPrice3.setCreateTime(new Date());
+                    billPriceMapper.insert(billPrice3);
+
+                }
+            }
+        }
+    }
+
+    /**
+     * 查询订单
+     * @param params
+     * @return
+     */
 
 }

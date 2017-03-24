@@ -20,11 +20,6 @@
         <div>
             <span>&nbsp;<i class="fa fa-play"></i>&nbsp;优化启动</span>
         </div>
-
-        <div>
-            <span>&nbsp;<i class="fa fa-certificate"></i>&nbsp;优化调整</span>
-        </div>
-
         <div>
             <span>&nbsp;<i class="fa fa-stop"></i>&nbsp;合作停止</span>
         </div>
@@ -32,15 +27,7 @@
             <span>&nbsp;<i class="fa fa-trash"></i>&nbsp;删除</span>
         </div>
        </#if>
-    <#if  bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")> <#--如果是客户-->
-        <div class="Import">
-            <span id="Import">&nbsp;<i class="fa fa-arrow-down"></i>&nbsp;导入</span>
-            <ul class="ImportPrice">
-                <li id="Sameprice">相同价导入</li>
-                <li id="Differentprice">不同价导入</li>
-            </ul>
-        </div>
-    </#if>
+
         <div class="search">
             <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
         </div>
@@ -51,12 +38,60 @@
 </div>
 <div class="Navs2">
 
-    <div class="nav_R2 right" >
-        <input type="hidden" name="type" value="${way}">
+    <div class="nav_R2 right col-md-11" >
+        <input type="hidden" name="type" value="${way}" id="way">
         <div>
-            客户ID:
+            网址:
         </div>
-        <input name="acid" class="form-control" value="" style="width: 60px;" type="text">
+        <input id="website" name="userName" class="form-control" value="" style="width: 150px;" type="text">
+        <div>
+            关键词:
+        </div>
+        <input id="keywords" name="keywords" class="form-control" value="" style="width: 150px;" type="text">
+        <span style="font-size:13px;text-align:center;cursor:pointer;font-weight:bold;margin-left: 10px;">
+        搜索引擎:
+        </span>
+        <select style="height: 35px;border: 1px solid #aaaaaa;" id="searchName">
+                <@dict.showOptions dictKey="search" dictType="DICT" haveBlank="Y" />
+        </select>
+
+
+        <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("ADMIN")||bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")>
+
+           <span style="font-size:13px;text-align:center;cursor:pointer;font-weight:bold;margin-left: 10px;">
+        客户:
+        </span>
+
+           <select style="height: 35px;border: 1px solid #aaaaaa;" id="searchUserName">
+               <option>--请选择--</option>
+               <#list userList as user>
+                   <option value="${user.id}">${user.userName}</option>
+               </#list>
+           </select>
+
+
+    </#if>
+        <span style="font-size:13px;text-align:center;cursor:pointer;font-weight:bold;margin-left: 10px;">
+            今日达标:
+        </span>
+        <select style="height: 35px;border: 1px solid #aaaaaa;">
+            <option>--请选择--</option>
+            <option>是</option>
+            <option>否</option>
+        </select>
+        <span style="font-size:13px;text-align:center;cursor:pointer;font-weight:bold;margin-left: 10px;" id="state">
+            状态:
+        </span>
+        <select style="height: 35px;border: none;border: 1px solid #aaaaaa;"  id="searchState">
+            <option>--请选择--</option>
+            <option value="2">优化中</option>
+            <option value="3">合作停</option>
+        </select>
+
+        <span id="searchButton">查询</span>
+
+
+
     </div>
     <div class="cls">
     </div>
@@ -95,202 +130,7 @@
         </div>
     </div>
 </div>
-<!--相同价导入-->
-<div class="bootbox modal in samepriceDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
-<div class="dv1">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="bootbox-close-button close">×</button>
-            <h4 class="modal-title">相同价导入</h4>
-        </div>
-        <div class="modal-body" style="max-height: 574px; border-bottom: 1px solid #eee;">
-            <div class="bootbox-body">
-                <style type="text/css">
-                    .dv1{
-                        width: 960px;
-                    }
-                </style>
-                <form class="form-horizontal row-border" id="edt-form" action="#" novalidate="novalidate">
-                    <div class="form-group hidden">
-                        <div class="progress progress-striped active">
-                            <span id="success_span" data-count="0" class="progress-bar progress-bar-success" style="width: 0%; text-align: center; color: black;" title=""></span>
-                            <span id="failed_span" data-count="0" class="progress-bar progress-bar-warning" style="width: 0%; text-align: center; color: black;" title=""></span>
-                        </div>
-                    </div>
-                    <div class="form-group" style="border-bottom: 1px solid #eee;padding-bottom: 3px">
-                        <label class="col-md-2 control-label padding-right-0px">
-                            搜索引擎
-                            <span class="required">*</span>
-                        </label>
-                        <div class="col-md-2 padding-right-0px padding-left-5px input-width-small">
-                            <select id="searchengineid" name="searchengineid" class="form-control input-width-small">
-                                <@dict.showOptions dictKey="search" dictType="DICT" haveBlank="Y" />
-                            </select>
-                        </div>
 
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-1 control-label padding-right-0px">
-                            关键词*
-                        </label>
-                        <div class="col-md-4 padding-left-5px">
-                            <textarea name="keyword" id="keyword" rows="15" class="form-control"  style="width: 296px; height: 297px;resize: none;"></textarea>
-                        </div>
-                        <label class="col-md-1 control-label padding-right-0px">
-                            网址
-                            <span class="required">*</span>
-                        </label>
-                        <div class="col-md-6 padding-left-5px">
-                            <textarea name="url" id="url" rows="15" class="form-control"   style=" height: 297px;resize: none;"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-top:30px;">
-                        <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
-                            前
-                            <span class="red">N</span>名<span class="required">*</span>
-                        </label>
-                        <div class="col-md-1 padding-left-0px padding-right-0px" style="width: 35px;">
-                            <input name="samePricerankend"   style="width: 35px;">
-                        </div>
-
-                        <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
-                            <span>元/天</span><span class="required">*</span>
-                        </label>
-                        <div class="col-md-1 padding-left-5px padding-right-0px" style="width: 35px;">
-                            <input name="samePriceprice"   style="width: 35px;">
-                        </div>
-                        <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
-                            前
-                            <span class="red">N</span>名
-                        </label>
-                        <div class="col-md-1 padding-left-0px padding-right-0px" style="width: 35px;">
-                            <input name="samePricerankend1"   style="width: 35px;">
-                        </div>
-
-                        <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
-                            <span>元/天</span>
-                        </label>
-                        <div class="col-md-1 padding-left-5px padding-right-0px" style="width: 35px;">
-                            <input name="samePriceprice1"   style="width: 35px;">
-                        </div>
-                        <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
-                            前
-                            <span class="red">N</span>名
-                        </label>
-                        <div class="col-md-1 padding-left-0px padding-right-0px" style="width: 35px;">
-                            <input name="samePricerankend2"  style="width: 35px;">
-                        </div>
-
-                        <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
-                            <span>元/天</span><span class="required">*</span>
-                        </label>
-                        <div class="col-md-1 padding-left-5px padding-right-0px" style="width: 35px;">
-                            <input name="samePriceprice2"   style="width: 35px;">
-                        </div>
-                        <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
-                            前
-                            <span class="red">N</span>名
-                        </label>
-                        <div class="col-md-1 padding-left-0px padding-right-0px" style="width: 35px;">
-                            <input name="samePricerankend3"   style="width: 35px;">
-                        </div>
-
-                        <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
-                            <span>元/天</span>
-                        </label>
-                        <div class="col-md-1 padding-left-5px padding-right-0px" style="width: 35px;">
-                            <input name="samePriceprice3"   style="width: 35px;">
-                        </div>
-
-                    </div>
-                </form>
-            </div>
-        </div>
-
-
-        <div class="modal-footer">
-            <button data-bb-handler="success" type="button" class="btn wzgj-blue samepricecmt">确定</button><button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
-        </div>
-    </div>
-</div>
-</div>
-<!--相同价导入end-->
-
-<!--不同价导入-->
-<div class="bootbox modal in differentpriceDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
-<div class="dv1">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="bootbox-close-button close">×</button>
-            <h4 class="modal-title">不同价导入</h4>
-        </div>
-        <div class="modal-body" style="max-height: 508px;">
-            <div class="bootbox-body">
-                <style type="text/css">
-                    .dv1 {
-                        width: 960px;
-                    }
-                </style>
-                <form class="form-horizontal row-border" id="edt-form" action="#" novalidate="novalidate">
-                    <div class="form-group hidden">
-                        <div class="progress progress-striped active">
-                            <span id="success_span" data-count="0" class="progress-bar progress-bar-success" style="width: 0%; text-align: center; color: black;" title=""></span>
-                            <span id="failed_span" data-count="0" class="progress-bar progress-bar-warning" style="width: 0%; text-align: center; color: black;" title=""></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-2 control-label padding-right-0px">
-                            搜索引擎
-                            <span class="required">*</span>
-                        </label>
-                        <div class="col-md-2 padding-right-0px padding-left-5px input-width-small">
-                            <select id="dfsearch" name="searchengineid" class="form-control input-width-small" style="width:120px;">
-                                    <@dict.showOptions dictKey="search" dictType="DICT" haveBlank="Y" />
-                            </select>
-                        </div>
-
-                        <label class="col-md-2 control-label padding-right-0px">
-                            前
-                            <span class="red">N</span>名<span class="required">*</span>
-                        </label>
-                        <div class="col-md-2 padding-right-0px padding-left-5px" style="width: 190px">
-                            <input name="rankend" class="form-control input-width-middle" type="text" id="dfrankend">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-1 control-label padding-right-0px">
-                            关键词*
-                            <span class="required"></span>
-                        </label>
-                        <div class="col-md-3 padding-left-5px">
-                            <textarea name="keyword" rows="15" class="form-control" style="resize: none;" id="dfkeyword"></textarea>
-                        </div>
-                        <label class="col-md-1 control-label padding-right-0px">
-                            网址
-                            <span class="required">*</span>
-                        </label>
-                        <div class="col-md-5 padding-left-5px">
-                            <textarea name="url" rows="15" class="form-control" style="resize: none;" id="dfurl"></textarea>
-                        </div>
-                        <label class="col-md-1 control-label padding-right-0px">
-                            元/天
-                            <span class="required">*</span>
-                        </label>
-                        <div class="col-md-1 padding-left-5px">
-                            <textarea name="price" rows="15" class="form-control" style="resize: none;" id="dfprice"></textarea>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div class="modal-footer">
-            <button data-bb-handler="success" type="button" class="btn wzgj-blue dfpricecmt">确定</button>
-            <button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
-        </div>
-    </div>
-</div>
-</div>
 <div id="pload" style="position:absolute;top:45%;left: 87%; z-index:2200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none;"></div>
 <!--不同价导入end-->
 
@@ -363,7 +203,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button data-bb-handler="success" type="button" class="btn wzgj-blue changeprice">确定</button><button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
+                <button data-bb-handler="success" type="button" class="btn wzgj-blue changeprice">确定</button>
+                <button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
             </div>
         </div>
     </div>
@@ -388,7 +229,7 @@
                             <div class="col-md-12">
                                 <label>价格配置</label>
                                 <table class="table table-hover table-striped table-bordered">
-                                    <table class="table table-hover table-striped table-bordered">
+                                    <table class="table table-hover table-striped table-bordered" >
                                         <thead>
                                         <tr>
                                             <th style="width: 100px;">达标位置
@@ -397,19 +238,8 @@
                                             </th>
                                         </tr>
                                         </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>前<span class="red">10</span>名
-                                            </td>
-                                            <td>￥1.25
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>前<span class="red">20</span>名
-                                            </td>
-                                            <td>￥0.47
-                                            </td>
-                                        </tr>
+                                        <tbody id="detailTable">
+
 
                                         </tbody>
                                     </table>
@@ -417,7 +247,7 @@
                                 <label>任务消费记录</label>
                                 <div class="widget box">
                                     <div class="widget-header">
-                                        <h4><i class="icon-reorder"></i>(17条记录)</h4>
+                                        <h4><i class="icon-reorder"></i>(0条记录)</h4>
                                     </div>
                                     <div class="widget-content">
                                         <table id="teacher_table" data-toggle="table" data-url="./data.php" data-method="post"

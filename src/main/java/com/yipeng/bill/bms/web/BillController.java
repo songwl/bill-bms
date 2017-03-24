@@ -6,18 +6,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.sun.corba.se.impl.protocol.giopmsgheaders.RequestMessage;
 import com.yipeng.bill.bms.core.model.Page;
 import com.yipeng.bill.bms.core.model.ResultMessage;
+import com.yipeng.bill.bms.core.utils.DateUtils;
 import com.yipeng.bill.bms.dao.BillCostMapper;
 import com.yipeng.bill.bms.dao.BillMapper;
 import com.yipeng.bill.bms.dao.BillPriceMapper;
-import com.yipeng.bill.bms.domain.Bill;
-import com.yipeng.bill.bms.domain.BillCost;
-import com.yipeng.bill.bms.domain.BillPrice;
-import com.yipeng.bill.bms.domain.User;
+import com.yipeng.bill.bms.dao.UserMapper;
+import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.model.BillPriceDetails;
 import com.yipeng.bill.bms.service.BillService;
 import com.yipeng.bill.bms.service.UserService;
 import com.yipeng.bill.bms.vo.BillDetails;
 import com.yipeng.bill.bms.vo.LoginUser;
+import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.ui.Model;
 import sun.misc.Request;
+import sun.rmi.runtime.Log;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,22 +49,128 @@ public class BillController extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
+    /**
+     * 上下层
+     * @param model
+     * @param way
+     * @return
+     */
     @RequestMapping(value = "/list")
     public  String listDetails(ModelMap model,@RequestParam(defaultValue = "1") String way)
     {
         Map<String, Object> bms = new HashMap<>();
         LoginUser user = this.getCurrentAccount();
         bms.put("user", user);
-        //type 1代表 查询下游的订单   2代表 查询提交到上游的订单
+        //type 1代表 查询上游的订单   2代表 查询提交到下游的订单
         model.put("way",way);
-        model.addAttribute("bmsModel", bms);
+            List<User> userList=  userService.getSearchUser(user,way);
+            model.put("userList",userList);
+             model.addAttribute("bmsModel", bms);
+
         return "/bill/billList";
     }
-    @RequestMapping(value = "/pendingAudit")
-    public  String pendingAudit(HttpServletRequest request)
+    /**
+     * 客户页面（渠道商和代理商 ）
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/billCustomer")
+    public  String billCustomer(HttpServletRequest request,ModelMap modelMap)
+    {
+         User user=this.getCurrentAccount();
+         Map<String,Long> params=new HashMap<>();
+         //查询当前登录对象对应的客户
+         params.put("createId",user.getId());
+         List<User> userList=userService.userCreater(params);
+        modelMap.put("userList",userList);
+        return "/bill/billCustomer";
+    }
+
+    /**
+     * 关键词优化
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/billOptimization")
+    public  String billOptimization(HttpServletRequest request)
     {
 
+        return "/bill/billOptimization";
+    }
+
+    /**
+     * 关键词优化列表获取
+     * @param limit
+     * @param offset
+     * @param way
+     * @param website
+     * @param state
+     * @return
+     */
+    @RequestMapping(value = "/getBillOptimization")
+    @ResponseBody
+    public Map<String,Object> getBillOptimization( int limit, int offset,int way,String website,int state)
+    {
+
+        offset=(offset-1)*limit;
+        // Page<Bill> page = this.getPageRequest();    //分页对象
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        LoginUser user=this.getCurrentAccount();
+        params.put("limit",limit);
+        params.put("offset",offset);
+        params.put("way",way);
+        params.put("userName",website);
+        params.put("state",state);
+        Map<String, Object> modelMap=billService.getBillDetails(params,user);
+        return  modelMap;
+    }
+
+    /**
+     * 调整优化
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/OptimizationUpdate",method = RequestMethod.POST)
+    @ResponseBody
+    public  ResultMessage OptimizationUpdate(HttpServletRequest request)
+    {
+        //getParameterMap()，获得请求参数map
+        Map<String,String[]> map= request.getParameterMap();
+        LoginUser user=this.getCurrentAccount();
+        if(user!=null)
+        {
+
+          int a=  billService.OptimizationUpdate(map,user);
+            return  this.ajaxDoneSuccess("调整成功");
+
+        }
+        else
+        {
+            return  this.ajaxDoneError("未登录");
+        }
+
+
+    }
+    /**
+     * 待审核订单
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/pendingAudit")
+    public  String pendingAudit(HttpServletRequest request,ModelMap model)
+    {
+        Map<String, Object> bms = new HashMap<>();
+        LoginUser user = this.getCurrentAccount();
+        if(user.hasRole("SUPER_ADMIN"))
+        {
+            long ret=3;
+            Map<String,Long> params=new HashMap<>();
+            params.put("role",ret);
+            List<User> userList=userService.getUserAll(params);
+            model.put("userList",userList);
+        }
+        bms.put("user", user);
+        model.addAttribute("bmsModel", bms);
         return "/bill/billPendingAudit";
     }
 
@@ -75,25 +182,110 @@ public class BillController extends BaseController {
      */
     @RequestMapping(value = "/getBillDetails")
     @ResponseBody
-    public Map<String,Object> getBillDetails( int limit, int offset)
-    {
+    public Map<String,Object> getBillDetails( int limit, int offset,int way,String website,String keywords,String searchName,String searchUserName, String state) throws UnsupportedEncodingException {
 
-       offset=(offset-1)*limit;
-       // Page<Bill> page = this.getPageRequest();    //分页对象
+
+        offset=(offset-1)*limit;
        Map<String, Object> params = this.getSearchRequest(); //查询参数
-        User user=this.getCurrentAccount();
+        if(!keywords.isEmpty())
+        {
+            try{
+                keywords = new String(keywords.getBytes("ISO-8859-1"),"utf-8");
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                    e.printStackTrace();
+            }
+            params.put("keywords",keywords);
+        }
+        if(!website.isEmpty())
+        {
+            params.put("website",website);
+        }
+        if(!searchName.isEmpty())
+        {
+            params.put("searchName",searchName);
+        }
+        if(!searchUserName.isEmpty())
+        {
+            params.put("searchUserNameId",searchUserName);
+        }
+        if(!state.isEmpty())
+        {
+            params.put("state",state);
+        }
+
+        LoginUser user=this.getCurrentAccount();
         params.put("limit",limit);
         params.put("offset",offset);
-        params.put("user",user);
-        params.put("state",1);
+        params.put("way",way);
 
-
-        //调的是USER表的数据
-
-        Map<String, Object> modelMap=billService.findBillList(params);
+        Map<String, Object> modelMap=billService.getBillDetails(params,user);
         return  modelMap;
     }
 
+    /**
+     * 客户订单table表格获取数据
+     * @param limit
+     * @param offset
+     * @return
+     */
+    @RequestMapping(value = "/getCustomerBill")
+    @ResponseBody
+    public Map<String,Object> getCustomerBill( int limit, int offset, String website,String keywords,String searchName,String searchUserName, String state)
+    {
+        LoginUser user=this.getCurrentAccount();
+
+
+        int way;
+        if(user.hasRole("DISTRIBUTOR"))
+        {
+            way=3;
+        }
+        else
+        {
+            way=2;
+        }
+
+
+        offset=(offset-1)*limit;
+        // Page<Bill> page = this.getPageRequest();    //分页对象
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+
+        if(!keywords.isEmpty())
+        {
+            try{
+                keywords = new String(keywords.getBytes("ISO-8859-1"),"utf-8");
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+            }
+            params.put("keywords",keywords);
+        }
+        if(!website.isEmpty())
+        {
+            params.put("website",website);
+        }
+        if(!searchName.isEmpty())
+        {
+            params.put("searchName",searchName);
+        }
+        if(!searchUserName.isEmpty())
+        {
+            params.put("searchUserNameId",searchUserName);
+        }
+        if(!state.isEmpty())
+        {
+            params.put("state",state);
+        }
+
+        params.put("limit",limit);
+        params.put("offset",offset);
+        params.put("way",way);
+        Map<String, Object> modelMap=billService.getBillDetails(params,user);
+        return  modelMap;
+    }
     /**
      * 待审核订单table表格获取数据
      * @param limit
@@ -106,16 +298,13 @@ public class BillController extends BaseController {
     {
 
         offset=(offset-1)*limit;
-        // Page<Bill> page = this.getPageRequest();    //分页对象
         Map<String, Object> params = this.getSearchRequest(); //查询参数
-        User user=this.getCurrentAccount();
+        LoginUser user=this.getCurrentAccount();
+
         params.put("limit",limit);
         params.put("offset",offset);
-        params.put("user",user);
-        params.put("state",0);
-        //调的是USER表的数据
 
-        Map<String, Object> modelMap=billService.findBillList(params);
+        Map<String, Object> modelMap=billService.pendingAuditList(params,user);
         return  modelMap;
     }
     /**
@@ -130,7 +319,6 @@ public class BillController extends BaseController {
         Map<String,String[]> map= request.getParameterMap();
         User user = this.getCurrentAccount();
         String errorDetails=billService.saveSameBill(map,user);
-
         return this.ajaxDoneSuccess(errorDetails);
     }
 
@@ -165,6 +353,49 @@ public class BillController extends BaseController {
         return  this.ajaxDoneSuccess("");
     }
 
+    /**
+     * 渠道商审核订单
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/billList/distributorPrice",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage distributorPrice( HttpServletRequest request, HttpServletResponse response)
+    {
+        Map<String, String[]> params= request.getParameterMap();
+
+        User user = this.getCurrentAccount();
+        if(user!=null)
+        {
+            int a=billService.distributorPrice(params,user);
+            return  this.ajaxDoneSuccess("成功！");
+        }
+        return  this.ajaxDoneError("未登录");
+
+    }
+    /**
+     * 管理员审核订单
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/billList/adminPrice",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage adminPrice( HttpServletRequest request, HttpServletResponse response)
+    {
+        Map<String, String[]> params= request.getParameterMap();
+
+        User user = this.getCurrentAccount();
+        if(user!=null)
+        {
+            int a=billService.adminPrice(params,user);
+            return  this.ajaxDoneSuccess("成功！");
+        }
+        return  this.ajaxDoneError("未登录");
+
+    }
+
     @Autowired
     private BillMapper billMapper;
     @Autowired
@@ -176,146 +407,7 @@ public class BillController extends BaseController {
     @ResponseBody
     public ResultMessage testpm()
     {
-        List<Bill> billList=billMapper.selectAll();
-        for (Bill bill: billList
-                ) {
-            int x=1+(int)(Math.random()*30);
-            bill.setNewRanking(x);
-            billMapper.updateByPrimaryKeySelective(bill);
-            List<BillPrice>  billPrice=billPriceMapper.selectByBillId(bill.getId());
-            Map<String, Object> modelMap = new HashMap();
-            modelMap.put("BillId",bill.getId());
-            modelMap.put("date",new Date());
-            BigDecimal a=new BigDecimal("0");
-            //如果排名小于排名扣费标准，则产生扣费记录
-            if(billPrice.size()<=1)
-            {
-                if(x<=billPrice.get(0).getBillRankingStandard())
-                {
 
-                    BillCost billCost=billCostMapper.selectByBillIdAndDate(modelMap);
-                    //如果今日已有记录，则更新
-                    if(billCost!=null)
-                    {
-                        billCost.setCostAmount(billPrice.get(0).getPrice());
-                        billCost.setRanking(x);
-                        billCostMapper.updateByPrimaryKey(billCost);
-                    }
-                    //没有记录，记录数据
-                    else
-                    {
-                        BillCost billCost1=new BillCost();
-                        billCost1.settBillId(bill.getId());
-                        billCost1.settBillPriceId(billPrice.get(0).getId());
-                        billCost1.setCostAmount(billPrice.get(0).getPrice());
-                        billCost1.setCostDate(new Date());
-                        billCost1.setRanking(x);
-                        billCostMapper.insert(billCost1);
-                    }
-
-                }
-                //没有达到标准
-                else
-                {
-
-                    BillCost billCost2=billCostMapper.selectByBillIdAndDate(modelMap);
-                    //已有，更新记录
-                    if(billCost2!=null)
-                    {
-                        billCost2.setCostAmount(a);
-                        billCost2.setRanking(x);
-                        billCostMapper.updateByPrimaryKey(billCost2);
-                    }
-                    //没有，插入数据
-                    else
-                    {
-                        BillCost billCost3=new BillCost();
-                        billCost3.settBillId(bill.getId());
-                        billCost3.settBillPriceId(billPrice.get(0).getId());
-                        billCost3.setCostAmount(a);
-                        billCost3.setCostDate(new Date());
-                        billCost3.setRanking(x);
-                        billCostMapper.insert(billCost3);
-                    }
-                }
-
-            }
-            else
-            {
-                if(x<=billPrice.get(0).getBillRankingStandard())
-                {
-
-                    BillCost billCost4=billCostMapper.selectByBillIdAndDate(modelMap);
-                    //如果今日已有记录，则更新
-                    if(billCost4!=null)
-                    {
-                        billCost4.setCostAmount(billPrice.get(0).getPrice());
-                        billCost4.setRanking(x);
-                        billCostMapper.updateByPrimaryKey(billCost4);
-                    }
-                    //没有记录，记录数据
-                    else
-                    {
-                        BillCost billCost5=new BillCost();
-                        billCost5.settBillId(bill.getId());
-                        billCost5.settBillPriceId(billPrice.get(0).getId());
-                        billCost5.setCostAmount(billPrice.get(0).getPrice());
-                        billCost5.setCostDate(new Date());
-                        billCost5.setRanking(x);
-                        billCostMapper.insert(billCost5);
-                    }
-
-                }
-                else  if(x>billPrice.get(0).getBillRankingStandard()&&x<=billPrice.get(1).getBillRankingStandard())
-                {
-
-                    BillCost billCost6=billCostMapper.selectByBillIdAndDate(modelMap);
-                    //如果今日已有记录，则更新
-                    if(billCost6!=null)
-                    {
-                        billCost6.setCostAmount(billPrice.get(1).getPrice());
-                        billCost6.setRanking(x);
-                        billCostMapper.updateByPrimaryKey(billCost6);
-                    }
-                    //没有记录，记录数据
-                    else
-                    {
-                        BillCost billCost7=new BillCost();
-                        billCost7.settBillId(bill.getId());
-                        billCost7.settBillPriceId(billPrice.get(1).getId());
-                        billCost7.setCostAmount(billPrice.get(1).getPrice());
-                        billCost7.setCostDate(new Date());
-                        billCost7.setRanking(x);
-                        billCostMapper.insert(billCost7);
-                    }
-                }
-                //没有达到标准
-                else
-                {
-
-                    BillCost billCost8=billCostMapper.selectByBillIdAndDate(modelMap);
-                    //已有，更新记录
-                    if(billCost8!=null)
-                    {
-                        billCost8.setCostAmount(a);
-                        billCost8.setRanking(x);
-                        billCostMapper.updateByPrimaryKey(billCost8);
-                    }
-                    //没有，插入数据
-                    else
-                    {
-                        BillCost billCost9=new BillCost();
-                        billCost9.settBillId(bill.getId());
-                        billCost9.settBillPriceId(billPrice.get(0).getId());
-                        billCost9.setCostAmount(a);
-                        billCost9.setCostDate(new Date());
-                        billCost9.setRanking(x);
-                        billCostMapper.insert(billCost9);
-                    }
-                }
-            }
-
-        }
 
         return  this.ajaxDoneSuccess("");
     }

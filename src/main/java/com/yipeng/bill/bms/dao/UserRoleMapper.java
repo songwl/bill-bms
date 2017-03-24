@@ -20,4 +20,10 @@ public interface UserRoleMapper {
     int updateByPrimaryKey(UserRole record);
 
     List<UserRole> selectByUserRole(UserRole userRole);
+
+    List<UserRole> selectByRoleId(Long roleId);
+    UserRole selectByUserId(Long userId);
+    int getCount(Long roleId);
+
+
 }

@@ -205,10 +205,6 @@
       bill_ascription= #{billAscription,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="getBillListCount" resultType="java.lang.Long">
-    select count(*) from
-    t_bill
-  </select>
   <select id="selectList" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
@@ -220,19 +216,253 @@
     select
     <include refid="Base_Column_List" />
     from t_bill
+    WHERE 1=1
+    AND
+    state = #{state,jdbcType=INTEGER}
+    limit #{offset},#{limit}
   </select>
+
+  <select id="selectAllCount" resultType="java.lang.Long">
+    select
+    COUNT(id)
+    from t_bill
+    WHERE 1=1
+    AND
+    state = #{state,jdbcType=INTEGER}
+  </select>
+
+
+  <select id="selectAgentBill" resultMap="BaseResultMap">
+   select a.* from t_bill as a,t_user as b
+    where a.create_user_id=b.id
+    and b.create_user_id=#{userId,jdbcType=BIGINT}
+    and state=#{state,jdbcType=INTEGER}
+     limit #{offset},#{limit}
+  </select>
+  <select id="selectAgentBillCount" resultType="java.lang.Long">
+    select COUNT(a.id)
+    from t_bill as a,t_user as b
+    where a.create_user_id=b.id
+    and b.create_user_id=#{userId,jdbcType=BIGINT}
+    and state=#{state,jdbcType=INTEGER}
+  </select>
+
   <select id="selectAllSelective" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from t_bill
-    WHERE
+    WHERE 1=1
     <if test="website != null">
-      website = #{website,jdbcType=VARCHAR}
+      AND  website = #{website,jdbcType=VARCHAR}
     </if>
-    AND
     <if test="keywords != null">
-      keywords = #{keywords,jdbcType=VARCHAR}
+      AND  keywords = #{keywords,jdbcType=VARCHAR}
     </if>
+  </select>
 
+  <select id="selectBill" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_bill
+    WHERE 1=1
+    <if test="website != null">
+      AND website = #{website,jdbcType=VARCHAR}
+    </if>
+    <if test="keywords != null">
+      AND keywords = #{keywords,jdbcType=VARCHAR}
+    </if>
+    <if test="createTime != null">
+      AND create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateTime != null">
+      AND update_time = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="createUserId != null">
+      AND  create_user_id = #{createUserId,jdbcType=BIGINT}
+    </if>
+    <if test="updateUserId != null">
+      AND update_user_id = #{updateUserId,jdbcType=BIGINT}
+    </if>
+    <if test="firstRanking != null">
+      AND first_ranking = #{firstRanking,jdbcType=INTEGER}
+    </if>
+    <if test="newRanking != null">
+      AND  new_ranking = #{newRanking,jdbcType=INTEGER}
+    </if>
+     <if test="webAppId != null">
+      AND  web_app_id = #{webAppId,jdbcType=INTEGER}
+    </if>
+     <if test="standardDays != null">
+       AND  standard_days = #{standardDays,jdbcType=INTEGER}
+    </if>
+    <if test="dayOptimization != null">
+      AND  day_optimization = #{dayOptimization,jdbcType=INTEGER}
+    </if>
+    <if test="allOptimization != null">
+      AND  all_optimization = #{allOptimization,jdbcType=INTEGER}
+    </if>
+    <if test="state != null">
+      AND  state = #{state,jdbcType=INTEGER}
+    </if>
+     <if test="billAscription != null">
+       AND  bill_ascription= #{billAscription,jdbcType=BIGINT}
+    </if>
+    limit #{offset},#{limit}
+  </select>
+
+
+
+  <select id="selectByInMemberId"  resultMap="BaseResultMap">
+    select DISTINCT a.*
+    from t_bill as a,t_bill_price as b,t_bill_search_support as d
+    where a.id=b.bill_id  AND  a.id=d.bill_id
+    AND b.in_member_id=#{userId,jdbcType=BIGINT}
+    <if test="website != null">
+      AND a.website = #{website,jdbcType=VARCHAR}
+    </if>
+    <if test="keywords != null">
+      AND a.keywords = #{keywords,jdbcType=VARCHAR}
+    </if>
+    <if test="createTime != null">
+      AND a.create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateTime != null">
+      AND a.update_time = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="createUserId != null">
+      AND  a.create_user_id = #{createUserId,jdbcType=BIGINT}
+    </if>
+    <if test="updateUserId != null">
+      AND a.update_user_id = #{updateUserId,jdbcType=BIGINT}
+    </if>
+    <if test="firstRanking != null">
+      AND a.first_ranking = #{firstRanking,jdbcType=INTEGER}
+    </if>
+    <if test="newRanking != null">
+      AND  a.new_ranking = #{newRanking,jdbcType=INTEGER}
+    </if>
+    <if test="webAppId != null">
+      AND  a.web_app_id = #{webAppId,jdbcType=INTEGER}
+    </if>
+    <if test="standardDays != null">
+      AND  a.standard_days = #{standardDays,jdbcType=INTEGER}
+    </if>
+    <if test="dayOptimization != null">
+      AND  a.day_optimization = #{dayOptimization,jdbcType=INTEGER}
+    </if>
+    <if test="allOptimization != null">
+      AND  a.all_optimization = #{allOptimization,jdbcType=INTEGER}
+    </if>
+    <if test="state != null">
+      AND  a.state = #{state,jdbcType=INTEGER}
+    </if>
+    <if test="billAscription != null">
+      AND  a.bill_ascription= #{billAscription,jdbcType=BIGINT}
+    </if>
+    <if test="searchName != null">
+      AND  d.search_support= #{searchName,jdbcType=VARCHAR}
+    </if>
+    <if test="searchUserNameId != null">
+      AND  b.out_member_id= #{searchUserNameId,jdbcType=VARCHAR}
+    </if>
+    limit #{offset},#{limit}
+  </select>
+
+  <select id="selectByOutMemberId"  resultMap="BaseResultMap">
+    select DISTINCT a.*
+    from t_bill as a,t_bill_price as b
+    where a.id=b.bill_id
+    AND b.out_member_id=#{userId,jdbcType=BIGINT}
+    <if test="website != null">
+      AND website = #{website,jdbcType=VARCHAR}
+    </if>
+    <if test="keywords != null">
+      AND keywords = #{keywords,jdbcType=VARCHAR}
+    </if>
+    <if test="createTime != null">
+      AND create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateTime != null">
+      AND update_time = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="createUserId != null">
+      AND  create_user_id = #{createUserId,jdbcType=BIGINT}
+    </if>
+    <if test="updateUserId != null">
+      AND update_user_id = #{updateUserId,jdbcType=BIGINT}
+    </if>
+    <if test="firstRanking != null">
+      AND first_ranking = #{firstRanking,jdbcType=INTEGER}
+    </if>
+    <if test="newRanking != null">
+      AND  new_ranking = #{newRanking,jdbcType=INTEGER}
+    </if>
+    <if test="webAppId != null">
+      AND  web_app_id = #{webAppId,jdbcType=INTEGER}
+    </if>
+    <if test="standardDays != null">
+      AND  standard_days = #{standardDays,jdbcType=INTEGER}
+    </if>
+    <if test="dayOptimization != null">
+      AND  day_optimization = #{dayOptimization,jdbcType=INTEGER}
+    </if>
+    <if test="allOptimization != null">
+      AND  all_optimization = #{allOptimization,jdbcType=INTEGER}
+    </if>
+    <if test="state != null">
+      AND  state = #{state,jdbcType=INTEGER}
+    </if>
+    <if test="billAscription != null">
+      AND  bill_ascription= #{billAscription,jdbcType=BIGINT}
+    </if>
+    limit #{offset},#{limit}
+  </select>
+  <select id="getBillListCount" resultType="java.lang.Long">
+    select COUNT(DISTINCT a.id)
+    from t_bill as a,t_bill_price as b
+    where a.id=b.bill_id
+    AND b.in_member_id=#{userId,jdbcType=BIGINT}
+    <if test="website != null">
+      AND website = #{website,jdbcType=VARCHAR}
+    </if>
+    <if test="keywords != null">
+      AND keywords = #{keywords,jdbcType=VARCHAR}
+    </if>
+    <if test="createTime != null">
+      AND create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateTime != null">
+      AND update_time = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="createUserId != null">
+      AND  create_user_id = #{createUserId,jdbcType=BIGINT}
+    </if>
+    <if test="updateUserId != null">
+      AND update_user_id = #{updateUserId,jdbcType=BIGINT}
+    </if>
+    <if test="firstRanking != null">
+      AND first_ranking = #{firstRanking,jdbcType=INTEGER}
+    </if>
+    <if test="newRanking != null">
+      AND  new_ranking = #{newRanking,jdbcType=INTEGER}
+    </if>
+    <if test="webAppId != null">
+      AND  web_app_id = #{webAppId,jdbcType=INTEGER}
+    </if>
+    <if test="standardDays != null">
+      AND  standard_days = #{standardDays,jdbcType=INTEGER}
+    </if>
+    <if test="dayOptimization != null">
+      AND  day_optimization = #{dayOptimization,jdbcType=INTEGER}
+    </if>
+    <if test="allOptimization != null">
+      AND  all_optimization = #{allOptimization,jdbcType=INTEGER}
+    </if>
+    <if test="state != null">
+      AND  state = #{state,jdbcType=INTEGER}
+    </if>
+    <if test="billAscription != null">
+      AND  bill_ascription= #{billAscription,jdbcType=BIGINT}
+    </if>
   </select>
 </mapper>

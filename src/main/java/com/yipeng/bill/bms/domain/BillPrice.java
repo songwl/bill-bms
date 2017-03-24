@@ -10,7 +10,9 @@ public class BillPrice implements Serializable {
     private Long billId;
 
     private BigDecimal price;
+
     private Long billRankingStandard;
+
     private Long inMemberId;
 
     private Long outMemberId;

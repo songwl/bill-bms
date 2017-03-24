@@ -81,5 +81,24 @@
       and role_id = #{roleId,jdbcType=BIGINT}
     </if>
   </select>
+  <select id="selectByRoleId" parameterType="java.lang.Long"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user_role
+    where 1=1
+    and role_id = #{roleId,jdbcType=BIGINT}
+  </select>
+  <select id="selectByUserId" parameterType="java.lang.Long"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user_role
+    where 1=1
+    and user_id = #{userId,jdbcType=BIGINT}
+  </select>
+  <select id="getCount" parameterType="java.lang.Long"  resultType="java.lang.Integer">
+    select count(*) from
+    t_user_role
+   WHERE role_id = #{roleId,jdbcType=BIGINT}
+  </select>
 
 </mapper>

@@ -3,6 +3,7 @@ package com.yipeng.bill.bms.service;
 import com.yipeng.bill.bms.core.model.Page;
 import com.yipeng.bill.bms.domain.Bill;
 import com.yipeng.bill.bms.domain.User;
+import com.yipeng.bill.bms.vo.LoginUser;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -34,13 +35,43 @@ public interface BillService {
     Bill getBillById(Long id);
 
     /**
-     * 根据参数查询订单列表
+     * 根据参数查询待审核订单列表
      * @param params
      * @return
      */
-    Map<String, Object> findBillList(Map<String,Object> params);
+    Map<String, Object> pendingAuditList(Map<String,Object> params, LoginUser user);
 
     int updateBillPrice(Map<String, String[]>  params,User user);
 
+    /**
+     *渠道商录入价格
+     * @param params
+     * @param user
+     * @return
+     */
+    int distributorPrice(Map<String, String[]>  params,User user);
+
+    /**
+     * g管理员录入价格
+     * @param params
+     * @param user
+     * @return
+     */
+    int adminPrice(Map<String, String[]>  params,User user);
+
+    /**
+     *  订单列表
+     * @param params
+     * @return
+     */
+    Map<String, Object> getBillDetails(Map<String,Object> params, LoginUser user);
+
+    /**
+     * 优化调整
+     * @param params
+     * @param user
+     * @return
+     */
+    int OptimizationUpdate(Map<String, String[]>  params,LoginUser user);
 
 }

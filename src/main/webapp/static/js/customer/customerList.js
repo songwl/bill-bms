@@ -1,6 +1,126 @@
 /**
  * Created by 鱼在我这里。 on 2017/3/16.
  */
+$(document).ready(function () {
+
+    //添加客户
+    $(".addMember").click(function () {
+
+        $(".modal-backdrop").show();
+        $(".addMemberDiv").slideDown();
+        $(".modal-title").html("添加客户");
+        $("#addMemberId").val("1");
+
+
+    })
+    //添加渠道商
+    $(".addAGENT").click(function () {
+        $(".modal-backdrop").show();
+        $(".addMemberDiv").slideDown();
+        $(".modal-title").html("添加渠道商");
+        $("#addMemberId").val("2");
+
+    })
+    $(".close").click(function () {
+        $(".addMemberDiv").slideUp();
+        $(".modal-backdrop").hide();
+
+    })
+    $(".cancel").click(function () {
+        $(".addMemberDiv").slideUp();
+        $(".modal-backdrop").hide();
+    })
+
+    var userName=false;
+    var password=false;
+
+//用户名
+    $("input[name='userName']").blur(function () {
+
+        if ($("input[name='userName']").val() != "")
+        {
+            if (/^[A-Za-z]\w{5,12}$/.test($("input[name='userName']").val())) {
+
+
+                $.ajax({
+                    type: "get",
+                    data:{userName:$("input[name='userName']").val()},
+                    url:CTX+"/user/register/validUserName",
+                    dataType:"json",
+                    success:function (result) {
+                        if (result.code==200){
+                            //返回结果code==200代表正确
+                            //验证可以使用,
+                            userName=true;
+                        }else{
+                            //验证为已注册,不能使用,
+                            $(".pdlogid").css({ "color": "#ff0000" }).text("用户名已存在！");
+                            userName = false;
+                        }
+
+                    }
+
+                })
+
+            }
+            else {
+                //格式不对
+                userName = false;
+                $(".pdlogid").css({ "color": "#ff0000" }).text("用户名格式不正确！");
+            }
+
+        }
+    });
+//密码
+    $("input[name='password']").blur(function () {
+
+        if ($("input[name='password']").val()!= "")
+        {
+            if (/^\w{6,12}$/.test($(this).val())) {
+                password = true;
+
+            }
+            else {
+                //格式不对
+                password = false;
+                $(".pdpwd").css({ "color": "#ff0000" }).text("密码格式不正确！");
+            }
+        }
+    });
+    $("input[name='userName']").focus(function () {
+        $(".pdlogid").css({ "color": "#ff0000" }).text("");
+        userName = false;
+
+    });
+    $(".addOperatorcmt").click(function () {
+        if(userName&&password)
+        {
+            $.ajax({
+                type: "post",
+                data:{userName: $("input[name='userName']").val(),password:$("input[name='password']").val(),addMemberId:  $("#addMemberId").val(),balance:$("#balance").val()},
+                url:CTX+"/customer/customerList",
+                dataType:"json",
+                success:function (result) {
+                    if(result.code==200)
+                    {
+                        $(".modal-backdrop").hide();
+                        $(".addMemberDiv").slideUp();
+                        alert(result.message);
+                    }
+                    else
+                    {
+                        alert(result.message);
+                    }
+
+                }
+
+            })
+        }
+
+    })
+
+
+})
 $(function () {
 
     //1.初始化Table
@@ -20,7 +140,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#myTable').bootstrapTable({
-            url: '/bill/bill/xxx',         //请求后台的URL（*）
+            url: CTX+'/customer/getCustomerList',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
@@ -63,6 +183,15 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '序号',
+
+                },
+                {
+                    field: 'customerId',
+                    sortable: true,
+                    align: 'center',
+                    valign: 'middle',
+                    title: '数据库编号',
+                    visible:false
 
                 },
                 {
@@ -127,7 +256,7 @@ var TableInit = function () {
 
                 },
                 {
-                    field: "billCount",
+                    field: "missionCount",
                     align: 'center',
                     valign: 'middle',
                     title: '任务数',

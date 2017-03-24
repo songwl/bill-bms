@@ -1,20 +1,124 @@
-/**
- * Created by 鱼在我这里。 on 2017/3/16.
- */
+
 /**
  * Created by Administrator on 2017/3/16.
  */
+
+var userName=false;
+var password=false;
+
+//用户名
+$("input[name='userName']").blur(function () {
+
+    if ($("#userName1").val() != "")
+    {
+        if (/^[A-Za-z]\w{5,12}$/.test($("#userName1").val())) {
+
+
+            $.ajax({
+                type: "get",
+                data:{userName:$("#userName1").val()},
+                url:CTX+"/user/register/validUserName",
+                dataType:"json",
+                success:function (result) {
+                    if (result.code==200){ //返回结果code==200代表正确
+                        //验证可以使用,
+                        userName=true;
+                    }else{
+                        //验证为已注册,不能使用,
+                        $(".pdlogid").css({ "color": "#ff0000" }).text("用户名已存在！");
+                        userName = false;
+                    }
+
+                }
+
+            })
+
+        }
+        else {
+            //格式不对
+            userName = false;
+            $(".pdlogid").css({ "color": "#ff0000" }).text("用户名格式不正确！");
+        }
+
+    }
+});
+//密码
+$("input[name='password']").blur(function () {
+
+    if ($("input[name='password']").val()!= "")
+    {
+        if (/^\w{6,12}$/.test($(this).val())) {
+            password = true;
+
+        }
+        else {
+            //格式不对
+            password = false;
+            $(".pdpwd").css({ "color": "#ff0000" }).text("密码格式不正确！");
+        }
+    }
+});
+$("input[name='userName']").focus(function () {
+    $(".pdlogid").css({ "color": "#ff0000" }).text("");
+    userName = false;
+
+});
+$(".addOperatorcmt").click(function () {
+    if(userName&&password)
+    {
+        $.ajax({
+            type: "post",
+            data:{userName:$("#userName1").val(),password:$("input[name='password']").val()},
+            url:CTX+"/operator/list",
+            dataType:"json",
+            success:function (result) {
+
+                  if(result.code==200)
+                  {
+                      alert(result.message);
+                      $(".addOperatorDiv").slideUp();
+                      $(".modal-backdrop").hide();
+                      $('#myTable').bootstrapTable('refresh');
+                  }
+                  else
+                  {
+                      alert(result.Message);
+                  }
+
+            }
+
+        })
+    }
+
+})
+
+
+
+//添加操作员
+    $("#addOperator").click(function () {
+
+        $(".modal-backdrop").show();
+        $(".addOperatorDiv").slideDown();
+
+
+    })
+    $(".close").click(function () {
+        $(".addOperatorDiv").slideUp();
+        $(".modal-backdrop").hide();
+
+    })
+    $(".cancel").click(function () {
+        $(".addOperatorDiv").slideUp();
+        $(".modal-backdrop").hide();
+    })
+
 $(function () {
 
     //1.初始化Table
     var oTable = new TableInit();
     oTable.Init();
-    var oTable1 = new TableInit();
-    oTable1.Init();
 
-    //2.初始化Button的点击事件
-    var oButtonInit = new ButtonInit();
-    oButtonInit.Init();
+
 
 
 });
@@ -23,7 +127,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#myTable').bootstrapTable({
-            url: '/bill/bill/xxx',         //请求后台的URL（*）
+            url: CTX+'/operator/getOperator',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
@@ -66,6 +170,15 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '序号',
+
+                },
+                {
+                    field: 'customerId',
+                    sortable: true,
+                    align: 'center',
+                    valign: 'middle',
+                    title: '数据库编号',
+                    visible:false
 
                 },
                 {
@@ -130,10 +243,37 @@ var TableInit = function () {
 
                 },
                 {
+                    field: "status",
+                    align: 'center',
+                    valign: 'middle',
+                    title: '状态',
+                    formatter:function (value,row,index) {
+                        var a="";
+                        if(value==1)
+                        {
+                            a="<span style='color:#94b86e;'>正常</span>";
+                        }
+                        else
+                        {
+                            a="<span>冻结中</span>";
+                        }
+                        return a;
+                    }
+
+
+
+                },
+                {
                     field: 'operate',
                     title: '操作',
                     align: 'center',
                     valign: 'middle',
+                    formatter:function (value,row,index) {
+                        var a="<span style='color:#4382CF;cursor:pointer;' id='operate'>☸</span>";
+
+                        return a;
+                    },
+                    events:operateEvents
 
 
                 },
@@ -155,7 +295,31 @@ var TableInit = function () {
         };
         return temp;
     }
+    window.operateEvents = {
+        'click #operate': function (e, value, row, index) {
 
+            if(confirm("是否冻结此账户？"))
+            {
+
+                $.ajax({
+                    type:'post',
+                    url:CTX+"/operator/updateUserState",
+                    data:{userId:row.customerId},
+                    success:function (result) {
+                        if(result.code==200)
+                        {
+                            alert(result.message);
+                            $('#myTable').bootstrapTable('refresh');
+                        }
+                        else
+                        {
+                            alert(result.message);
+                        }
+                    }
+                })
+            }
+        }
+    }
 
 
     return oTableInit;
@@ -168,4 +332,6 @@ $(function () {
     });
 
 });
+
+
 

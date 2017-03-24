@@ -6,6 +6,7 @@ $(".samepricecmt").click(function () {
     var keyword= $("#keyword").val();
     var url= $("#url").val();
 
+
     var rankend = parseInt(jQuery("input[name='samePricerankend']").val());
     var price = parseFloat(jQuery("input[name='samePriceprice']").val());
     var rankend1 = parseInt(jQuery("input[name='samePricerankend1']").val());
@@ -14,6 +15,7 @@ $(".samepricecmt").click(function () {
     var price2 = parseFloat(jQuery("input[name='samePriceprice2']").val());
     var rankend3 = parseInt(jQuery("input[name='samePricerankend3']").val());
     var price3 = parseFloat(jQuery("input[name='samePriceprice3']").val());
+    var customerIds=$("#sameSelect  option:selected").val();
 
     if (!isNaN(rankend) && !isNaN(rankend1) && !isNaN(rankend2) && !isNaN(rankend3)
         && !isNaN(price) && !isNaN(price1) && !isNaN(price2) && !isNaN(price3)
@@ -36,7 +38,7 @@ $(".samepricecmt").click(function () {
         && 1000 > price && price > 0
     )
     {
-        if(search==""||keyword==""||url=="")
+        if(search==""||keyword==""||url==""||customerIds=="--请选择--")
         {
             alert("请将信息填写完整！");
         }
@@ -58,6 +60,7 @@ $(".samepricecmt").click(function () {
                 var Aprice2 = jQuery("input[name='samePriceprice2']").val();
                 var Arankend3 =jQuery("input[name='samePricerankend3']").val();
                 var Aprice3 = jQuery("input[name='samePriceprice3']").val();
+                var customerId=$("#sameSelect  option:selected").val();
                 $.ajax({
                     type:"post",
                     url:CTX+"/bill/list/sameprice",
@@ -74,7 +77,8 @@ $(".samepricecmt").click(function () {
                         rankend2:Arankend2,
                         price2:Aprice2,
                         rankend3:Arankend3,
-                        price3:Aprice3
+                        price3:Aprice3,
+                        customerId:customerIds
 
                     },
                     beforeSend: function () {

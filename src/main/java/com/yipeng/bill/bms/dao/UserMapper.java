@@ -23,4 +23,23 @@ public interface UserMapper {
 
     List<User> selectList( int limit, int offset);
     Long getUserListCount();
+    List<User> userCreater(Long createId);
+
+    /**
+     * 获取角色
+     * @param params
+     * @return
+     */
+    List<User> getQueryUserAll(Map<String,Object> params);
+
+    /**
+     * 搜索框的客户
+     * @param userId
+     * @return
+     */
+    List<User> getUserByCreateId(Long userId);
+
+    List<User> selectByReviewUser(Map<String,Object> params);
+
+    Long  selectByReviewUserCount();
 }

@@ -1,6 +1,65 @@
 /**
- * Created by Administrator on 2017/3/16.
+ * Created by 鱼在我这里。 on 2017/3/19.
  */
+$(document).ready(function () {
+
+
+    //复选框
+    $("#OptimizationUpdate").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        if(selectContent == "") {
+            alert('请选择一列数据!');
+
+        }else{
+            $(".modal-backdrop").show();
+            $(".OptimizationUpdateDiv").slideDown();
+
+        }
+    })
+    $(".close").click(function () {
+        $(".modal-backdrop").hide();
+        $(".OptimizationUpdateDiv").slideUp();
+    })
+    $(".cancel").click(function () {
+        $(".modal-backdrop").hide();
+        $(".OptimizationUpdateDiv").slideUp();
+    })
+    //调整优化
+    $(".OptimizationUpdatecmt").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var len =selectContent.length;
+            if($("#OptimizationUpdateSelect option:selected").val()!="--请选择--")
+            {
+               var num= $("#OptimizationUpdateSelect option:selected").val();
+                $.ajax({
+                    type:"post",
+                    url:CTX+"/bill/OptimizationUpdate",
+                    data:{selectContent:selectContent,length:len,num:num},
+                    success:function (result) {
+                          if(result.code==200)
+                          {
+                              alert(result.message);
+                              $('#myTable').bootstrapTable('refresh');
+                              $(".modal-backdrop").hide();
+                              $(".OptimizationUpdateDiv").slideUp();
+
+                          }
+                    }
+                })
+            }
+            else
+            {
+                alert("请选择优化指数");
+            }
+
+    })
+
+
+
+})
+
+
+
 
 $(function () {
 
@@ -21,7 +80,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#myTable').bootstrapTable({
-            url: '/bill/bill/pendingAuditList',         //请求后台的URL（*）
+            url: CTX+'/bill/getBillOptimization',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
@@ -66,14 +125,14 @@ var TableInit = function () {
                     valign: 'middle',
                     title: '序号',
 
-                },{
+                },
+                {
                     field: 'id',
                     sortable: true,
                     align: 'center',
                     valign: 'middle',
-                    title: '数据库序号',
+                    title: '序号',
                     visible:false
-
                 },
                 {
                     field: 'userName',
@@ -109,15 +168,48 @@ var TableInit = function () {
                     sortable: true,
                     title: '增加时间'
                 },
-
                 {
-                    field: 'updateUserId',
+                    field: 'firstRanking',
                     align: 'center',
                     valign: 'middle',
                     sortable: true,
-                    title: '修改者ID'
-                },
+                    title: '初排',
+                    formatter:function (value,row,index) {
+                        var a="";
+                        if(value>50)
+                        {
+                            a="<span>" +">50"+"</span>";
+                        }
+                        return a;
+                    }
 
+
+                },
+                {
+                    field: 'newRanking',
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true,
+                    title: '新排',
+                    formatter:function (value,row,index) {
+                        var a="";
+                        if(value<=3)
+                        {
+                            a="<span style='color:#FF0000;font-weight: bold;'>" +value+"</span>";
+                        }
+                        else if(value>50)
+                        {
+                            a="<span>" +">50"+"</span>";
+                        }
+                        else
+                        {
+                            a="<span>" +value+"</span>";
+                        }
+                        return a;
+                    }
+
+
+                },
                 {
                     field: 'priceOne',
                     align: 'center',
@@ -135,14 +227,44 @@ var TableInit = function () {
 
                 },
 
+
+                {
+                    field: "standardDays",
+                    align: 'center',
+                    valign: 'middle',
+                    title: '达标天',
+
+                },
+
+                {
+                    field: "dayOptimization",
+                    align: 'center',
+                    valign: 'middle',
+                    title: '日优化',
+
+                },
+                {
+                    field: "allOptimization",
+                    align: 'center',
+                    valign: 'middle',
+                    title: '总优化',
+
+                },
                 {
                     field: "state",
                     align: 'center',
                     valign: 'middle',
-                    title: '状态',
+                    title: '合作状态',
                     formatter:function (value,row,index) {
-                        var  a="<span style='color:#94b86e;'>待审核</span>";
-
+                        var a="";
+                        if(value==2)
+                        {
+                            a="<span style='color:#94b86e;'>优化中</span>";
+                        }
+                        else
+                        {
+                            a="<span>合作停</span>";
+                        }
                         return a;
                     }
 
@@ -175,6 +297,9 @@ var TableInit = function () {
             offset: params.pageNumber,  //页码
             sortOrder: params.sortOrder,
             sortName: params.sortName,
+            website:$("#website").val(),
+            way:2,
+            state:2
 
         };
         return temp;
@@ -207,8 +332,11 @@ $(function () {
     });
 
 });
-function detail( ) {
-    var bid=$("input[name='Bid']").val();
 
 
-}
+
+
+
+
+
+

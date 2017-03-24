@@ -13,8 +13,10 @@ public interface BillPriceMapper {
 
     BillPrice selectByPrimaryKey(Long id);
     List<BillPrice> selectByBillId(Long BillId);
-
+    List<BillPrice> selectByBillPrice(BillPrice billPrice);
     int updateByPrimaryKeySelective(BillPrice record);
 
     int updateByPrimaryKey(BillPrice record);
+   int selectBillCount(Long UserId);
+   Long selectByBillPriceOutMemberId(BillPrice billPrice);
 }

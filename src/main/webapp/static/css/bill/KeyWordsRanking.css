@@ -65,7 +65,7 @@ cursor:pointer;
 .nav_R2 {
 float:right;
 display:inline-block;
-width:300px;
+width:95%;
 }
 .nav_R2 div {
 float:left;
@@ -129,4 +129,19 @@ display:inline-block;
     position: absolute;
     top: 0;
     left: 20%;
+}
+#searchButton
+{
+    display: inline-block;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    width: 58px;
+    background: #1b9dec;color: #fff;
+    cursor: pointer;
+    margin-left: 10px;
+}
+#searchButton:hover
+{
+    opacity: 0.8;
 }

@@ -3,10 +3,11 @@
 
 <@base.html "操作员列表">
 
-<script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
+
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <script src="${ctx}/static/js/operator/operatorList.js"></script>
-<script src="${ctx}/static/js/operator/operatorListStyle.js"></script>
+
+
 
 <div class="Navs">
     <div class="nav_L left">
@@ -83,25 +84,20 @@
                                 登录名<span class="required">* </span>
                             </label>
                             <div class="col-md-9">
-                                <input name="userName" class="form-control input-width-large" type="text">
+                                <input name="userName" class="form-control input-width-large" type="text" id="userName1">
                             </div>
+                            <div class="pdlogid"></div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-3 control-label">
                                 密码<span class="required">* </span>
                             </label>
                             <div class="col-md-9">
-                                <input name="pass" class="form-control input-width-large" type="password">
+                                <input name="password" class="form-control input-width-large" type="password" id="password">
                             </div>
+                            <div class="pdpwd"></div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">
-                                确认密码<span class="required">* </span>
-                            </label>
-                            <div class="col-md-9">
-                                <input name="password" class="form-control input-width-large" type="password">
-                            </div>
-                        </div>
+
                         <div class="form-group">
                             <label class="col-md-3 control-label">
                                 真实姓名<span class="required">* </span>
@@ -109,6 +105,7 @@
                             <div class="col-md-9">
                                 <input name="realName" class="form-control input-width-large" type="text">
                             </div>
+
                         </div>
                         <div class="form-group">
                             <label class="col-md-3 control-label">

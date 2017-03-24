@@ -110,10 +110,64 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="selectByBillId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="selectByBillId"   resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from t_bill_price
     where bill_id = #{BillId,jdbcType=BIGINT}
   </select>
+  <select id="selectByBillPrice" parameterType="com.yipeng.bill.bms.domain.BillPrice" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_bill_price
+    where 1=1
+    <if test="billId != null">
+      AND bill_id = #{billId,jdbcType=BIGINT}
+    </if>
+    <if test="price != null">
+     AND  price = #{price,jdbcType=DECIMAL}
+    </if>
+    <if test="billRankingStandard != null">
+    AND  #{billRankingStandard,jdbcType=BIGINT}
+    </if>
+    <if test="inMemberId != null">
+    AND  in_member_id = #{inMemberId,jdbcType=BIGINT}
+    </if>
+    <if test="outMemberId != null">
+     AND out_member_id = #{outMemberId,jdbcType=BIGINT}
+    </if>
+    <if test="createTime != null">
+    AND  create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+  </select>
+  <select id="selectBillCount" parameterType="java.lang.Long" resultType="java.lang.Integer">
+    SELECT COUNT(DISTINCT(bill_id))
+     from t_bill_price
+     where t_bill_price.out_member_id=#{userId,jdbcType=BIGINT}
+  </select>
+  <select id="selectByBillPriceOutMemberId" parameterType="com.yipeng.bill.bms.domain.BillPrice" resultType="java.lang.Long">
+    select
+    DISTINCT out_member_id
+    from t_bill_price
+    where 1=1
+    <if test="billId != null">
+      AND bill_id = #{billId,jdbcType=BIGINT}
+    </if>
+    <if test="price != null">
+      AND  price = #{price,jdbcType=DECIMAL}
+    </if>
+    <if test="billRankingStandard != null">
+      AND  #{billRankingStandard,jdbcType=BIGINT}
+    </if>
+    <if test="inMemberId != null">
+      AND  in_member_id = #{inMemberId,jdbcType=BIGINT}
+    </if>
+    <if test="outMemberId != null">
+      AND out_member_id = #{outMemberId,jdbcType=BIGINT}
+    </if>
+    <if test="createTime != null">
+      AND  create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+  </select>
+
 </mapper>

@@ -66,8 +66,8 @@
 </div>
 <div class="modal-backdrop in" style="display: none">
 </div>
-<!--审核-->
-
+<!--管理员审核-->
+<#if  bmsModel.user.hasRole("SUPER_ADMIN")>
 <div class="bootbox modal in billExamineDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -79,29 +79,171 @@
                 <div class="bootbox-body">
                     <style type="text/css">
                         .modal-dialog {
-                            width: 400px;
+                            width: 990px;
                         }
                     </style>
-                    <div>
-                        <div><h5>专员分配</h5></div>
-                        <select class="selectpicker">
-                            <option>--请选择--</option>
-                            <option>张三</option>
-                            <option>李四</option>
-                            <option>王五</option>
-                            <option>赵六</option>
-                        </select>
-                    </div>
 
+                        <div><h5>专员分配</h5></div>
+                        <select class="selectpicker" id="caozuoyuan">
+                            <option>--请选择--</option>
+                            <#list  userList as user>
+                                <option value="${user.id}">${user.userName}</option>
+                            </#list>
+                        </select>
+                        <div class="form-group" style="height:50px;margin-top:10px;">
+                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                前
+                                <span class="red">N</span>名<span class="required">*</span>
+                            </label>
+                            <div class="col-md-1 padding-left-0px padding-right-0px" style="width: 35px;">
+                                <input name="adminrankend"   style="width: 35px;">
+                            </div>
+
+                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                <span>元/天</span><span class="required">*</span>
+                            </label>
+                            <div class="col-md-1 padding-left-5px padding-right-0px" style="width: 35px;">
+                                <input name="adminprice"   style="width: 35px;">
+                            </div>
+                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                前
+                                <span class="red">N</span>名
+                            </label>
+                            <div class="col-md-1 padding-left-0px padding-right-0px" style="width: 35px;">
+                                <input name="adminrankend1"   style="width: 35px;">
+                            </div>
+
+                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                <span>元/天</span>
+                            </label>
+                            <div class="col-md-1 padding-left-5px padding-right-0px" style="width: 35px;">
+                                <input name="adminprice1"   style="width: 35px;">
+                            </div>
+                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                前
+                                <span class="red">N</span>名
+                            </label>
+                            <div class="col-md-1 padding-left-0px padding-right-0px" style="width: 35px;">
+                                <input name="adminrankend2"  style="width: 35px;">
+                            </div>
+
+                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                <span>元/天</span><span class="required">*</span>
+                            </label>
+                            <div class="col-md-1 padding-left-5px padding-right-0px" style="width: 35px;">
+                                <input name="adminprice2"   style="width: 35px;">
+                            </div>
+                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                前
+                                <span class="red">N</span>名
+                            </label>
+                            <div class="col-md-1 padding-left-0px padding-right-0px" style="width: 35px;">
+                                <input name="adminrankend3"   style="width: 35px;">
+                            </div>
+
+                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                <span>元/天</span>
+                            </label>
+                            <div class="col-md-1 padding-left-5px padding-right-0px" style="width: 35px;">
+                                <input name="adminprice3"   style="width: 35px;">
+                            </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button data-bb-handler="success" type="button" class="btn wzgj-blue changeprice">确定</button>
+            <div class="modal-footer" style="height:50px;">
+                <button data-bb-handler="success" type="button" class="btn wzgj-blue adminshenhe">确定</button>
                 <button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
             </div>
         </div>
     </div>
 </div>
-<!--调价end-->
+</#if>
+<!--审核end-->
+<!--渠道商审核-->
+    <#if  bmsModel.user.hasRole("DISTRIBUTOR")>
+    <div class="bootbox modal in billExamineDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="bootbox-close-button close">×</button>
+                    <h4 class="modal-title">审核</h4>
+                </div>
+                <div class="modal-body" style="max-height: 374px;">
+                    <div class="bootbox-body">
+                        <style type="text/css">
+                            .modal-dialog {
+                                width: 990px;
+                            }
+                        </style>
+                        <div>
 
+                            <div class="form-group" style="margin-top:30px;">
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                    前
+                                    <span class="red">N</span>名<span class="required">*</span>
+                                </label>
+                                <div class="col-md-1 padding-left-0px padding-right-0px" style="width: 35px;">
+                                    <input name="rankend"   style="width: 35px;">
+                                </div>
+
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                    <span>元/天</span><span class="required">*</span>
+                                </label>
+                                <div class="col-md-1 padding-left-5px padding-right-0px" style="width: 35px;">
+                                    <input name="price"   style="width: 35px;">
+                                </div>
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                    前
+                                    <span class="red">N</span>名
+                                </label>
+                                <div class="col-md-1 padding-left-0px padding-right-0px" style="width: 35px;">
+                                    <input name="rankend1"   style="width: 35px;">
+                                </div>
+
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                    <span>元/天</span>
+                                </label>
+                                <div class="col-md-1 padding-left-5px padding-right-0px" style="width: 35px;">
+                                    <input name="price1"   style="width: 35px;">
+                                </div>
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                    前
+                                    <span class="red">N</span>名
+                                </label>
+                                <div class="col-md-1 padding-left-0px padding-right-0px" style="width: 35px;">
+                                    <input name="rankend2"  style="width: 35px;">
+                                </div>
+
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                    <span>元/天</span><span class="required">*</span>
+                                </label>
+                                <div class="col-md-1 padding-left-5px padding-right-0px" style="width: 35px;">
+                                    <input name="price2"   style="width: 35px;">
+                                </div>
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                    前
+                                    <span class="red">N</span>名
+                                </label>
+                                <div class="col-md-1 padding-left-0px padding-right-0px" style="width: 35px;">
+                                    <input name="rankend3"   style="width: 35px;">
+                                </div>
+
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                    <span>元/天</span>
+                                </label>
+                                <div class="col-md-1 padding-left-5px padding-right-0px" style="width: 35px;">
+                                    <input name="price3"   style="width: 35px;">
+                                </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button data-bb-handler="success" type="button" class="btn wzgj-blue qudaoShenhe">确定</button>
+                    <button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </#if>
+<!--审核end-->
 </@base.html>

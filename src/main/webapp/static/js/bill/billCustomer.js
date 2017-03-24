@@ -1,17 +1,74 @@
+/**
+ * Created by 鱼在我这里。 on 2017/3/19.
+ */
+var website=null;
+var keywords=null;
+var searchName=null;
+var searchUserName=null;
+var searchState=null;
+
 $(document).ready(function () {
+    //显示导入价格内容
+    $(".Import").click(function (e) {
+        if($(".ImportPrice").css("display")=="block") {
+            $(".ImportPrice").slideUp();
 
+        }
+        else
+        {
+            $(".ImportPrice").slideDown();
+            $(".samepriceDiv").slideUp();
+            $(".differentpriceDiv").slideUp();
+            $(".Navs2").slideUp();
+        }
+    })
+
+
+    //相同价导入
+    $("#Sameprice").click(function () {
+
+        if($(".samepriceDiv").css("display")=="block") {
+            $(".samepriceDiv").slideUp();
+            $(".modal-backdrop").hide();
+
+        }
+        else {
+            $(".modal-backdrop").show();
+            $(".samepriceDiv").slideDown();
+            $(".differentpriceDiv").slideUp();
+            $(".Navs2").slideUp();
+        }
+
+    })
+
+    //不同价导入
+    $("#Differentprice").click(function () {
+        if($(".differentpriceDiv").css("display")=="block") {
+            $(".differentpriceDiv").slideUp();
+
+        }
+        else {
+            $(".modal-backdrop").show();
+            $(".differentpriceDiv").slideDown();
+            $(".samepriceDiv").slideUp();
+            $(".Navs2").slideUp();
+        }
+
+
+    })
     $(".close").click(function () {
-
+        $(".samepriceDiv").slideUp();
+        $(".differentpriceDiv").slideUp();
+        $(".changepriceDiv").slideUp();
         $(".modal-backdrop").hide();
         $("#billCostDetail").hide();
-        $(".changepriceDiv").slideUp();
     })
     $(".cancel").click(function () {
-
+        $(".samepriceDiv").slideUp();
+        $(".differentpriceDiv").slideUp();
+        $(".changepriceDiv").slideUp();
         $(".modal-backdrop").hide();
         $("#billCostDetail").hide();
-        $(".changepriceDiv").slideUp();
-
     })
     //显示搜索内容
     $(".search").click(function () {
@@ -22,35 +79,87 @@ $(document).ready(function () {
         else
         {
             $(".Navs2").slideDown();
-
+            $(".samepriceDiv").slideUp();
+            $(".differentpriceDiv").slideUp();
+            $(".ImportPrice").slideUp();
         }
 
 
     })
 
 
-    
-     $("#testpm").click(function () {
-         $.ajax({
-             type: "get",
-             url: CTX + "/bill/testpm",
-             dataType:'json',
-             beforeSend: function () {
-                 $("#pload").show();
-             },
-             success:function (result) {
-                 $("#pload").hide();
-                 if(result.code==200)
-                 {
-                     alert("查询成功！");
-                     $('#myTable').bootstrapTable('refresh');
-                 }
+    //不同价订单导入
+    $(".dfpricecmt").click(function () {
+        var dfsearch=$("#dfsearch").val();
+        var dfrankend=$("#dfrankend").val();
+        var dfkeyword=$("#dfkeyword").val();
+        var dfurl=$("#dfurl").val();
+        var dfprice=$("#dfprice").val();
+        $.ajax({
+            type:'post',
+            url:CTX+"/bill/list/diffrentprice",
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            dataType:'json',
+            data:{
+                dfsearch:dfsearch,
+                dfrankend:dfrankend,
+                dfkeyword:dfkeyword,
+                dfurl:dfurl,
+                dfprice:dfprice
+            },
+            beforeSend: function () {
+                $("#pload").show();
+            },
+            success:function (result) {
+                $("#pload").hide();
+                if(result.code==200)
+                {
+
+                    if(result.message=="")
+                    {
+                        alert("导入成功!");
+                        $(".differentpriceDiv").slideUp();
+                        $(".modal-backdrop").hide();
+                        $('#myTable').bootstrapTable('refresh');
+                    }
+                    else
+                    {
+
+                        alert(result.message+" 已经存在!");
+                    }
+                }
+                else
+                {
+
+                    alert("系统繁忙，请稍后再试！");
+                }
+            }
+
+        })
+    })
 
 
-             }
-             
-         })
-     })
+    $("#testpm").click(function () {
+        $.ajax({
+            type: "get",
+            url: CTX + "/bill/testpm",
+            dataType:'json',
+            beforeSend: function () {
+                $("#pload").show();
+            },
+            success:function (result) {
+                $("#pload").hide();
+                if(result.code==200)
+                {
+                    alert("查询成功！");
+                    $('#myTable').bootstrapTable('refresh');
+                }
+
+
+            }
+
+        })
+    })
     //复选框
     $("#btn_update").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
@@ -59,12 +168,11 @@ $(document).ready(function () {
 
         }else{
             $(".modal-backdrop").show();
-          $(".changepriceDiv").slideDown();
+            $(".changepriceDiv").slideDown();
 
         }
     })
     $("#searchButton").click(function () {
-
 
         if($("#website").val()!="")
         {
@@ -113,12 +221,6 @@ $(document).ready(function () {
 
 
 })
-var website=null;
-var keywords=null;
-var searchName=null;
-var searchUserName=null;
-var searchState=null;
-
 $(function () {
 
     //1.初始化Table
@@ -138,7 +240,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#myTable').bootstrapTable({
-            url: CTX+'/bill/getBillDetails',         //请求后台的URL（*）
+            url: CTX+'/bill/getCustomerBill',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
@@ -166,12 +268,12 @@ var TableInit = function () {
                 var strclass = "";
                 if ((row.id)%2==0){
                     strclass = '';
-                      }
-                    else {
+                }
+                else {
                     strclass = 'active';
-                    }
-                    return { classes: strclass }
-                },
+                }
+                return { classes: strclass }
+            },
             columns: [
                 {
                     checkbox: true
@@ -183,15 +285,15 @@ var TableInit = function () {
                     valign: 'middle',
                     title: '序号',
 
+                },{
+                    field: 'id',
+                    sortable: true,
+                    align: 'center',
+                    valign: 'middle',
+                    title: 'sql序号',
+                    visible:false
+
                 },
-                {
-                field: 'id',
-                sortable: true,
-                align: 'center',
-                valign: 'middle',
-                title: '序号',
-                 visible:false
-                 },
                 {
                     field: 'userName',
                     sortable: true,
@@ -301,6 +403,7 @@ var TableInit = function () {
                         return a;
                     }
 
+
                 },
 
                 {
@@ -389,27 +492,20 @@ var TableInit = function () {
             offset: params.pageNumber,  //页码
             sortOrder: params.sortOrder,
             sortName: params.sortName,
-            way:$("#way").val(),
             website:website,
             keywords:keywords,
             searchName:searchName,
             searchUserName:searchUserName,
             state:searchState
+
         };
         return temp;
     }
     window.operateEvents = {
         'click #details': function (e, value, row, index) {
-            $("#detailTable").empty();
             $("#billCostDetail").show();
             $(".modal-backdrop").show();
-            var str="";
-            for(var i=0;i<row.billPriceList.length;i++)
-            {
-               str+="<tr><td>前<span class='red'>"+row.billPriceList[i]['billRankingStandard']+"</span>名</td><td>￥"+row.billPriceList[i]['price']+"</td></tr>";
-            }
 
-              $("#detailTable").append(str);
 
 
 
@@ -433,12 +529,12 @@ $(function () {
     });
 
 });
-
 function detail( ) {
     var bid=$("input[name='Bid']").val();
 
 
 }
+
 
 
 

@@ -1,6 +1,7 @@
 package com.yipeng.bill.bms.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class FundAccount implements Serializable {
@@ -8,7 +9,7 @@ public class FundAccount implements Serializable {
 
     private Long userId;
 
-    private Long balance;
+    private BigDecimal balance;
 
     private Date createTime;
 
@@ -36,11 +37,11 @@ public class FundAccount implements Serializable {
         this.userId = userId;
     }
 
-    public Long getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(Long balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 

@@ -33,6 +33,12 @@
     from t_user
     where user_name = #{userName,jdbcType=VARCHAR}
   </select>
+  <select id="userCreater" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user
+    where create_user_id = #{createId,jdbcType=BIGINT}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from t_user
     where id = #{id,jdbcType=BIGINT}
@@ -211,5 +217,33 @@
     <include refid="Base_Column_List" />
     from t_user
    limit #{1},#{0}
+  </select>
+  <select id="getQueryUserAll" resultMap="BaseResultMap">
+    select  a.*
+    from t_user a ,t_user_role b
+    where a.id=b.user_id
+    and b.role_id= #{roleId,jdbcType=BIGINT}
+    limit #{offset},#{limit}
+  </select>
+  <select id="getUserByCreateId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user
+    where create_user_id= #{userId,jdbcType=BIGINT}
+  </select>
+  <select id="selectByReviewUser"  resultMap="BaseResultMap">
+    select b.* from t_user_role as a,t_user as b
+    where 1=1
+    and   a.user_id=b.id
+    and a.role_id=4
+    and b.status=0
+    limit #{offset},#{limit}
+  </select>
+  <select id="selectByReviewUserCount"  resultType="java.lang.Long">
+    select COUNT(a.id) from t_user_role as a,t_user as b
+    where 1=1
+    and   a.user_id=b.id
+    and a.role_id=4
+    and b.status=0
   </select>
 </mapper>

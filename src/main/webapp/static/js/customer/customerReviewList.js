@@ -1,5 +1,5 @@
 /**
- * Created by Administrator on 2017/3/16.
+ * Created by 鱼在我这里。 on 2017/3/16.
  */
 
 $(function () {
@@ -21,7 +21,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#myTable').bootstrapTable({
-            url: '/bill/bill/pendingAuditList',         //请求后台的URL（*）
+            url: CTX+'/customer/getCustomerReviewList',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
@@ -58,20 +58,20 @@ var TableInit = function () {
             columns: [
                 {
                     checkbox: true
-                },
-                {
-                    field: 'displayId',
-                    sortable: true,
-                    align: 'center',
-                    valign: 'middle',
-                    title: '序号',
-
                 },{
                     field: 'id',
                     sortable: true,
                     align: 'center',
                     valign: 'middle',
-                    title: '数据库序号',
+                    title: '序号',
+
+                },
+                {
+                    field: 'customerId',
+                    sortable: true,
+                    align: 'center',
+                    valign: 'middle',
+                    title: '数据库编号',
                     visible:false
 
                 },
@@ -84,68 +84,37 @@ var TableInit = function () {
 
                 },
                 {
-                    field: 'keywords',
+                    field: 'realName',
                     align: 'center',
                     valign: 'middle',
                     sortable: true,
-                    title: '关键词'
+                    title: '真实姓名'
                 }, {
-                    field: 'website',
+                    field: 'contact',
                     align: 'center',
                     valign: 'middle',
-                    title: '网址',
+                    title: '联系人',
 
                 }, {
-                    field: 'searchName',
+                    field: 'qq',
                     align: 'center',
                     sortable: true,
                     valign: 'middle',
-                    title: '搜索引擎'
+                    title: 'qq'
                 },
+                {
+                    field: 'phone',
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true,
+                    title: '电话'
+                },
+
                 {
                     field: 'createTime',
                     align: 'center',
                     valign: 'middle',
-                    sortable: true,
-                    title: '增加时间'
-                },
-
-                {
-                    field: 'updateUserId',
-                    align: 'center',
-                    valign: 'middle',
-                    sortable: true,
-                    title: '修改者ID'
-                },
-
-                {
-                    field: 'priceOne',
-                    align: 'center',
-                    valign: 'middle',
-                    title: '价格1',
-
-                },
-
-                {
-                    field: 'priceTwo',
-                    align: 'center',
-                    valign: 'middle',
-                    sortable: true,
-                    title: '价格2',
-
-                },
-
-                {
-                    field: "state",
-                    align: 'center',
-                    valign: 'middle',
-                    title: '状态',
-                    formatter:function (value,row,index) {
-                        var  a="<span style='color:#94b86e;'>待审核</span>";
-
-                        return a;
-                    }
-
+                    title: '注册时间',
 
                 },
                 {
@@ -154,12 +123,10 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     formatter:function (value,row,index) {
-                        var a="<span style='color:#4382CF;cursor:pointer;' id='details'>详情</span>";
-
+                        var a="<span style='color: #1b9dec;cursor: pointer;' id='Audit'>审核</span>";
                         return a;
                     },
                     events:operateEvents
-
                 },
 
 
@@ -180,25 +147,35 @@ var TableInit = function () {
         return temp;
     }
     window.operateEvents = {
-        'click #details': function (e, value, row, index) {
-            $("#billCostDetail").show();
-            $(".modal-backdrop").show();
-
-
-
-
-
+        'click #Audit': function (e, value, row, index) {
+           if(confirm("是否通过审核？"))
+           {
+              $.ajax({
+                  type:'post',
+                  url:CTX+"/customer/customerAudit",
+                  data:{customerId:row.customerId},
+                  success:function (result) {
+                      if(result.code==200)
+                      {
+                          alert(result.message);
+                          $('#myTable').bootstrapTable('refresh');
+                      }
+                      else
+                      {
+                          alert(result.message);
+                      }
+                      
+                  }
+              })
+           }
         }
 
     }
 
 
+
     return oTableInit;
 };
-
-
-
-
 
 $(function () {
     $("#queren").click(function () {
@@ -207,8 +184,5 @@ $(function () {
     });
 
 });
-function detail( ) {
-    var bid=$("input[name='Bid']").val();
 
 
-}

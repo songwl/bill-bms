@@ -2,6 +2,7 @@ package com.yipeng.bill.bms.web.account;
 
 import com.yipeng.bill.bms.core.crypto.CryptoUtils;
 import com.yipeng.bill.bms.core.utils.ServletUtil;
+import com.yipeng.bill.bms.dao.UserMapper;
 import com.yipeng.bill.bms.domain.Role;
 import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.domain.UserRole;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,6 +43,8 @@ public class LoginController extends BaseController {
 
 	@Autowired
 	private UserRoleService userRoleService;
+	@Autowired
+	private UserMapper userMapper;
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(HttpServletRequest request) {
@@ -57,6 +61,10 @@ public class LoginController extends BaseController {
 		{
 			if(user.getUserName().equals(userName)&&user.getPassword().equals(CryptoUtils.md5(password)))
 			{
+				int loginCount=user.getLoginCount();
+				user.setLastLoginTime(new Date());
+				user.setLoginCount(loginCount+1);
+				userMapper.updateByPrimaryKey(user);
 				boolean flag = executeLogin(request, response, user);
 				return "redirect:/index";
 			}

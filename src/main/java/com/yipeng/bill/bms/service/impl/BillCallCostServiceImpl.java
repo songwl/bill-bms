@@ -8,13 +8,14 @@ import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.service.BillCallCostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 /**
  * Created by song on 17/3/26.
  */
-@Service
+@Service("BillCallCostService")
 public class BillCallCostServiceImpl implements BillCallCostService {
 
     @Autowired

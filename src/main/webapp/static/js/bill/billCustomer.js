@@ -5,7 +5,8 @@ var website=null;
 var keywords=null;
 var searchName=null;
 var searchUserName=null;
-var searchState=null;
+var searchState=2;
+var searchState2=null;
 
 $(document).ready(function () {
     //显示导入价格内容
@@ -90,28 +91,7 @@ $(document).ready(function () {
 
 
 
-    $("#testpm").click(function () {
-        $.ajax({
-            type: "get",
-            url: CTX + "/bill/testpm",
-            dataType:'json',
-            beforeSend: function () {
-                $("#pload").show();
-            },
-            success:function (result) {
-                $("#pload").hide();
-                if(result.code==200)
-                {
-                    alert("查询成功！");
-                    $('#myTable').bootstrapTable('refresh');
-                }
-
-
-            }
-
-        })
-    })
-    //复选框
+   //复选框
     $("#btn_update").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
         if(selectContent == "") {
@@ -149,14 +129,7 @@ $(document).ready(function () {
         {
             searchName=null;
         }
-        if($("#searchUserName").val()!="--请选择--")
-        {
-            searchUserName=  $("#searchUserName").val();
-        }
-        else
-        {
-            searchUserName=null;
-        }
+
         if($("#searchState").val()!="--请选择--")
         {
             searchState=  $("#searchState").val();
@@ -168,7 +141,49 @@ $(document).ready(function () {
 
         $('#myTable').bootstrapTable('refresh');
     });
+    $("#searchState").change(function () {
+        var state=$("#searchState option:selected").val();
+        if(state==1)
+        {
+            searchState=2;
+        }
+        else if(state==2)
+        {
+            searchState=2;
+        }
+        else
+        {
+            searchState=3;
+            searchState2=null;
+        }
 
+
+    })
+    $("#continue").click(function () {
+        $("#continue").css({"background":"#eee"});
+        $("#stop").css({"background":"#fff"});
+        $("#all").css({"background":"#fff"});
+        searchState=2;
+        searchState2=null;
+        $('#myTable').bootstrapTable('refresh');
+    })
+    $("#stop").click(function () {
+        $("#stop").css({"background":"#eee"});
+        $("#continue").css({"background":"#fff"});
+        $("#all").css({"background":"#fff"});
+        searchState=3;
+        searchState2=null;
+        $('#myTable').bootstrapTable('refresh');
+    })
+    $("#all").click(function () {
+        $("#stop").css({"background":"#fff"});
+        $("#continue").css({"background":"#fff"});
+        $("#all").css({"background":"#eee"});
+        searchState=2;
+        searchState2=3;
+        $('#myTable').bootstrapTable('refresh');
+
+    })
 
 
 })
@@ -447,7 +462,8 @@ var TableInit = function () {
             keywords:keywords,
             searchName:searchName,
             searchUserName:searchUserName,
-            state:searchState
+            state:searchState,
+            state2:searchState2
 
         };
         return temp;

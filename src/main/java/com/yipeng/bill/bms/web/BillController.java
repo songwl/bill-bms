@@ -182,7 +182,7 @@ public class BillController extends BaseController {
      */
     @RequestMapping(value = "/getBillDetails")
     @ResponseBody
-    public Map<String,Object> getBillDetails( int limit, int offset,int way,String website,String keywords,String searchName,String searchUserName, String state) throws UnsupportedEncodingException {
+    public Map<String,Object> getBillDetails( int limit, int offset,int way,String website,String keywords,String searchName,String searchUserName, String state,String state2) throws UnsupportedEncodingException {
         offset=(offset-1)*limit;
        Map<String, Object> params = this.getSearchRequest(); //查询参数
         if(!keywords.isEmpty())
@@ -220,6 +220,10 @@ public class BillController extends BaseController {
         {
             params.put("state",state);
         }
+        if(!state2.isEmpty())
+        {
+            params.put("state2",state2);
+        }
 
         LoginUser user=this.getCurrentAccount();
         params.put("limit",limit);
@@ -239,7 +243,7 @@ public class BillController extends BaseController {
      */
     @RequestMapping(value = "/getCustomerBill")
     @ResponseBody
-    public Map<String,Object> getCustomerBill( int limit, int offset, String website,String keywords,String searchName,String searchUserName, String state)
+    public Map<String,Object> getCustomerBill( int limit, int offset, String website,String keywords,String searchName,String searchUserName, String state,String state2)
     {
         LoginUser user=this.getCurrentAccount();
 
@@ -285,6 +289,10 @@ public class BillController extends BaseController {
         if(!state.isEmpty())
         {
             params.put("state",state);
+        }
+        if(!state2.isEmpty())
+        {
+            params.put("state2",state);
         }
 
         params.put("limit",limit);
@@ -403,19 +411,97 @@ public class BillController extends BaseController {
 
     }
 
-    @Autowired
-    private BillMapper billMapper;
-    @Autowired
-    private BillPriceMapper billPriceMapper;
-    @Autowired
-    private BillCostMapper  billCostMapper;
-    //测试查排名 产生消费记录
-    @RequestMapping(value = "/testpm")
+    /**
+     * 优化停止
+     * @param request
+     * @return
+     */
+   @RequestMapping(value ="/billList/optimizationStop")
+   @ResponseBody
+    public  ResultMessage optimizationStop(HttpServletRequest request)
+    {
+        Map<String, String[]> params= request.getParameterMap();
+        LoginUser user=this.getCurrentAccount();
+        if(user!=null)
+        {
+
+            int a=  billService.optimizationStop(params,user);
+            return  this.ajaxDoneSuccess("操作成功");
+
+        }
+        else
+        {
+            return  this.ajaxDoneError("未登录");
+        }
+
+    }
+
+    /**
+     * 启动优化
+     * @param request
+     * @return
+     */
+    @RequestMapping(value ="/billList/optimizationStart")
     @ResponseBody
-    public ResultMessage testpm()
+    public  ResultMessage optimizationStart(HttpServletRequest request)
+    {
+        Map<String, String[]> params= request.getParameterMap();
+        LoginUser user=this.getCurrentAccount();
+        if(user!=null)
+        {
+
+            int a=  billService.optimizationStart(params,user);
+            return  this.ajaxDoneSuccess("操作成功");
+
+        }
+        else
+        {
+            return  this.ajaxDoneError("未登录");
+        }
+
+    }
+
+    /**
+     * 待审核订单
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/pendingAuditView")
+    public  String pendingAuditView(HttpServletRequest request,ModelMap model)
+    {
+        User user=this.getCurrentAccount();
+        Map<String,Long> params=new HashMap<>();
+        //查询当前登录对象对应的客户
+        params.put("createId",user.getId());
+        List<User> userList=userService.userCreater(params);
+        model.put("userList",userList);
+        return "/bill/billPendingAuditView";
+    }
+    /**
+     * 待审核订单y预览
+     * @param limit
+     * @param offset
+     * @return
+     */
+    @RequestMapping(value = "/pendingAuditViewList")
+    @ResponseBody
+    public Map<String,Object> pendingAuditViewList( int limit, int offset,String state)
     {
 
+        offset=(offset-1)*limit;
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        LoginUser user=this.getCurrentAccount();
+        params.put("limit",limit);
+        params.put("offset",offset);
+        params.put("state",state);
+        if(user.hasRole("AGENT"))
+        {
+            params.put("state2",0);
+        }
 
-        return  this.ajaxDoneSuccess("");
+
+        Map<String, Object> modelMap=billService.getBillDetails(params,user);
+        return  modelMap;
     }
+
 }

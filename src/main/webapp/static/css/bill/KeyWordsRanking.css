@@ -111,6 +111,12 @@ font-size:13px;
 text-align:center;
 cursor:pointer;
 display:inline-block;
+ height: 34px;
+border-bottom:1px solid #d9d9d9;
+}
+#continue  {
+    border-left:1px solid #d9d9d9;
+
 }
 .Nav_Right div:hover {
   background:#eee;  

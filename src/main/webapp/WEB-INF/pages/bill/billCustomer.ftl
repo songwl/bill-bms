@@ -70,12 +70,12 @@
             状态:
         </span>
         <select style="height: 35px;border: none;border: 1px solid #aaaaaa;"  id="searchState">
-            <option>--请选择--</option>
+            <option value="1">--请选择--</option>
             <option value="2">优化中</option>
             <option value="3">合作停</option>
 
         </select>
-
+        <input type="hidden" value="2" id="searchStatechange">
         <span id="searchButton">查询</span>
     </div>
 
@@ -311,7 +311,7 @@
                             <div class="col-md-3 padding-left-5px">
                                 <textarea name="keyword" rows="15" class="form-control" style="resize: none;" id="dfkeyword"></textarea>
                             </div>
-                            <div class="pload" style="position:absolute;top:45%;left: 50%; z-index:2200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none;"></div>
+                            <div class="pload" style="position:absolute;top:45%;left: 50%; z-index:2200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none    ;"></div>
 
                             <label class="col-md-1 control-label padding-right-0px">
                                 网址

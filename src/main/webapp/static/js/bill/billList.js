@@ -1,3 +1,10 @@
+var website=null;
+var keywords=null;
+var searchName=null;
+var searchUserName=null;
+var searchState=2;
+var searchState2=null;
+
 $(document).ready(function () {
 
     $(".close").click(function () {
@@ -29,28 +36,25 @@ $(document).ready(function () {
     })
 
 
-    
-     $("#testpm").click(function () {
-         $.ajax({
-             type: "get",
-             url: CTX + "/bill/testpm",
-             dataType:'json',
-             beforeSend: function () {
-                 $("#pload").show();
-             },
-             success:function (result) {
-                 $("#pload").hide();
-                 if(result.code==200)
-                 {
-                     alert("查询成功！");
-                     $('#myTable').bootstrapTable('refresh');
-                 }
+
+    $("#searchState").change(function () {
+         var state=$("#searchState option:selected").val();
+         if(state==1)
+         {
+             searchState=2;
+         }
+         else if(state==2)
+         {
+             searchState=2;
+         }
+         else
+         {
+             searchState=3;
+             searchState2=null;
+         }
 
 
-             }
-             
-         })
-     })
+    })
     //复选框
     $("#btn_update").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
@@ -98,26 +102,99 @@ $(document).ready(function () {
         {
             searchUserName=null;
         }
-        if($("#searchState").val()!="--请选择--")
-        {
-            searchState=  $("#searchState").val();
-        }
-        else
-        {
-            searchState=null;
-        }
+
+
 
         $('#myTable').bootstrapTable('refresh');
     });
+   $("#continue").click(function () {
+       $("#continue").css({"background":"#eee"});
+       $("#stop").css({"background":"#fff"});
+       $("#all").css({"background":"#fff"});
+       searchState=2;
+       searchState2=null;
+       $('#myTable').bootstrapTable('refresh');
+   })
+    $("#stop").click(function () {
+        $("#stop").css({"background":"#eee"});
+        $("#continue").css({"background":"#fff"});
+        $("#all").css({"background":"#fff"});
+        searchState=3;
+        searchState2=null;
+        $('#myTable').bootstrapTable('refresh');
+    })
+    $("#all").click(function () {
+        $("#stop").css({"background":"#fff"});
+        $("#continue").css({"background":"#fff"});
+        $("#all").css({"background":"#eee"});
+        searchState=2;
+        searchState2=3;
+        $('#myTable').bootstrapTable('refresh');
 
+    })
+    //优化停止
+    $("#optimizationStop").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var len =selectContent.length;
+        if(selectContent == "") {
+            alert('请选择一列数据!');
 
+        }else{
+            if(confirm("是否停止优化?"))
+            {
+                $.ajax({
+                    type:"post",
+                    url:CTX+"/bill/billList/optimizationStop",
+                    data:{ selectContent:selectContent,length:len},
+                    success:function (result) {
+                        if(result.code==200)
+                        {
+                            alert(result.message);
+                            $('#myTable').bootstrapTable('refresh');
+                        }
+                        else
+                        {
+                            alert(result.message);
+                        }
+                    }
 
+                })
+            }
+        }
+    })
+
+    //优化启动
+    $("#optimizationStart").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var len =selectContent.length;
+        if(selectContent == "") {
+            alert('请选择一列数据!');
+
+        }else{
+            if(confirm("是否启动优化?"))
+            {
+                $.ajax({
+                    type:"post",
+                    url:CTX+"/bill/billList/optimizationStart",
+                    data:{ selectContent:selectContent,length:len},
+                    success:function (result) {
+                        if(result.code==200)
+                        {
+                            alert(result.message);
+                            $('#myTable').bootstrapTable('refresh');
+                        }
+                        else
+                        {
+                            alert(result.message);
+                        }
+                    }
+
+                })
+            }
+        }
+    })
 })
-var website=null;
-var keywords=null;
-var searchName=null;
-var searchUserName=null;
-var searchState=null;
+
 
 $(function () {
 
@@ -394,7 +471,8 @@ var TableInit = function () {
             keywords:keywords,
             searchName:searchName,
             searchUserName:searchUserName,
-            state:searchState
+            state:searchState,
+            state2:searchState2
         };
         return temp;
     }

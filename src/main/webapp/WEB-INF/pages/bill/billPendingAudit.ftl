@@ -1,7 +1,7 @@
 <#import "/base/base.ftl" as base>
 <#import "/base/dict.ftl" as dict>
 
-<@base.html "待审核订单">
+<@base.html "审核订单">
 
 <script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
@@ -10,7 +10,7 @@
 
 <div class="Navs">
     <div class="nav_L left">
-        <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>待审核订单</span>
+        <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>审核订单</span>
     </div>
     <div class="nav_R right" id="divQx">
 
@@ -43,7 +43,7 @@
         <div class="panel panel-primary" id="list-panel">
             <div class="panel-body">
                 <div class="panel-nav">
-                    <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;待审核订单</div>
+                    <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;审核订单</div>
                     <div class="Nav_Right">
                     </div>
                     <div class="cls"></div>

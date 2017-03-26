@@ -74,4 +74,19 @@ public interface BillService {
      */
     int OptimizationUpdate(Map<String, String[]>  params,LoginUser user);
 
+    /**
+     * 优化停止
+     * @param params
+     * @param user
+     * @return
+     */
+    int optimizationStop(Map<String, String[]>  params,LoginUser user);
+    /**
+     * 优化启动
+     * @param params
+     * @param user
+     * @return
+     */
+    int optimizationStart(Map<String, String[]>  params,LoginUser user);
+
 }

@@ -356,6 +356,9 @@
     <if test="state != null">
       AND  a.state = #{state,jdbcType=INTEGER}
     </if>
+    <if test="state2 != null">
+      OR  state = #{state2,jdbcType=INTEGER}
+    </if>
     <if test="billAscription != null">
       AND  a.bill_ascription= #{billAscription,jdbcType=BIGINT}
     </if>
@@ -411,6 +414,9 @@
     </if>
     <if test="state != null">
       AND  state = #{state,jdbcType=INTEGER}
+    </if>
+    <if test="state2 != null">
+      OR  state = #{state2,jdbcType=INTEGER}
     </if>
     <if test="billAscription != null">
       AND  bill_ascription= #{billAscription,jdbcType=BIGINT}

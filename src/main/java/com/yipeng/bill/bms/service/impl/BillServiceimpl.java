@@ -864,6 +864,46 @@ public class BillServiceimpl implements BillService {
     }
 
     /**
+     * 优化停止
+     * @param params
+     * @param user
+     * @return
+     */
+    @Override
+    public int optimizationStop(Map<String, String[]> params, LoginUser user) {
+        String[] checkboxLength=params.get("length");
+        int  length=Integer.parseInt(checkboxLength[0]);
+        for(int i=0;i<length;i++)
+        {
+            String[] id=params.get("selectContent["+i+"][id]");
+            Long  billId=Long.parseLong(id[0]);
+            Bill  bill =new Bill();
+            bill.setId(billId);
+            bill.setState(3);
+            billMapper.updateByPrimaryKeySelective(bill);
+
+        }
+        return 0;
+    }
+
+    @Override
+    public int optimizationStart(Map<String, String[]> params, LoginUser user) {
+        String[] checkboxLength=params.get("length");
+        int  length=Integer.parseInt(checkboxLength[0]);
+        for(int i=0;i<length;i++)
+        {
+            String[] id=params.get("selectContent["+i+"][id]");
+            Long  billId=Long.parseLong(id[0]);
+            Bill  bill =new Bill();
+            bill.setId(billId);
+            bill.setState(2);
+            billMapper.updateByPrimaryKeySelective(bill);
+
+        }
+        return 0;
+    }
+
+    /**
      * 订单录入
      * @param params
      */

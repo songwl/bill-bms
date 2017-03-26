@@ -17,13 +17,13 @@
     <div class="nav_R right" id="divQx">
 
        <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("ADMIN")||bmsModel.user.hasRole("COMMISSIONER")> <#--如果是优化方-->
-        <div>
+        <div id="optimizationStart">
             <span>&nbsp;<i class="fa fa-play"></i>&nbsp;优化启动</span>
         </div>
-        <div>
+        <div id="optimizationStop">
             <span>&nbsp;<i class="fa fa-stop"></i>&nbsp;合作停止</span>
         </div>
-        <div>
+        <div id="billDelete">
             <span>&nbsp;<i class="fa fa-trash"></i>&nbsp;删除</span>
         </div>
        </#if>
@@ -54,10 +54,7 @@
         <select style="height: 35px;border: 1px solid #aaaaaa;" id="searchName">
                 <@dict.showOptions dictKey="search" dictType="DICT" haveBlank="Y" />
         </select>
-
-
         <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("ADMIN")||bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")>
-
            <span style="font-size:13px;text-align:center;cursor:pointer;font-weight:bold;margin-left: 10px;">
         客户:
         </span>
@@ -83,11 +80,11 @@
             状态:
         </span>
         <select style="height: 35px;border: none;border: 1px solid #aaaaaa;"  id="searchState">
-            <option>--请选择--</option>
+            <option  value="1">--请选择--</option>
             <option value="2">优化中</option>
             <option value="3">合作停</option>
         </select>
-
+         <input type="hidden" value="2" id="searchStatechange">
         <span id="searchButton">查询</span>
 
 
@@ -131,8 +128,7 @@
     </div>
 </div>
 
-<div id="pload" style="position:absolute;top:45%;left: 87%; z-index:2200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none;"></div>
-<!--不同价导入end-->
+
 
 <!--调价-->
 <div class="bootbox modal in changepriceDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">

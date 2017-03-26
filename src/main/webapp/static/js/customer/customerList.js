@@ -17,7 +17,7 @@ $(document).ready(function () {
     $(".addAGENT").click(function () {
         $(".modal-backdrop").show();
         $(".addMemberDiv").slideDown();
-        $(".modal-title").html("添加渠道商");
+        $(".modal-title").html("添加代理商");
         $("#addMemberId").val("2");
 
     })

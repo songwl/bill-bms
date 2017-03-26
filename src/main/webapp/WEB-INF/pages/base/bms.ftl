@@ -177,12 +177,17 @@
 					<#if bmsModel.user.hasRole("DISTRIBUTOR")>
                         <li class="">
                             <a href="javascript:;">
-                                <i class="fa fa-star-o"></i><span class="title"> 直系客户管理 </span><span class="arrow "></span>
+                                <i class="fa fa-star-o"></i><span class="title"> 客户管理 </span><span class="arrow "></span>
                             </a>
                             <ul class="sub-menu">
                                 <li>
                                     <a href="${ctx}/bill/billCustomer">
                                         关键词排名
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="${ctx}/bill/pendingAuditView">
+                                        待审核订单
                                     </a>
                                 </li>
                             </ul>
@@ -211,6 +216,11 @@
                                 <li>
                                     <a href="${ctx}/bill/billCustomer">
                                         关键词排名
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="${ctx}/bill/pendingAudit">
+                                        待审核订单
                                     </a>
                                 </li>
                             </ul>

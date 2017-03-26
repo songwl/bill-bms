@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd ">
+
+    <!-- 自动计算费用任务 -->
+    <bean id="callCostTask" class="com.yipeng.bill.bms.task.CallCostTask"></bean>
+
+    <bean id="CallCostTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="callCostTask"/>
+        <property name="targetMethod" value="execute"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+
+    <bean id="callCostTaskJobTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="CallCostTaskJob"/>
+        </property>
+        <property name="cronExpression">
+            <!--凌晨0点-->
+            <value>0 0 0 * * ?</value>
+        </property>
+    </bean>
+
+
+
+    <bean name="startQuertz" lazy-init="false" autowire="no"
+          class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="callCostTaskJobTrigger"/>
+            </list>
+        </property>
+    </bean>
+</beans>

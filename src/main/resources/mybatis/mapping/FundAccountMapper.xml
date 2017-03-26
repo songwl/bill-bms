@@ -155,4 +155,10 @@
     from t_fund_account
     where user_id = #{userId,jdbcType=BIGINT}
   </select>
+
+  <update id="reduceBalance">
+    UPDATE t_fund_account
+    SET balance = balance - #{price,jdbcType=DECIMAL}
+    WHERE id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>

@@ -2,7 +2,9 @@ package com.yipeng.bill.bms.dao;
 
 import com.yipeng.bill.bms.domain.FundAccount;
 import com.yipeng.bill.bms.vo.CustomerListDetails;
+import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -33,4 +35,6 @@ public interface FundAccountMapper {
      */
     int  selectOperatorByUserFundCount(Long userId);
     FundAccount selectByUserId(Long userId);
+
+    int reduceBalance(@Param("id") Long id,@Param("price") BigDecimal price);
 }

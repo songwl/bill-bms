@@ -14,4 +14,5 @@
     	</context:component-scan>
     	
        <import resource="classpath*:META-INF/spring/applicationContext-database.xml"/>
+       <import resource="classpath*:META-INF/spring/applicationContext-job.xml"/>
 </beans>

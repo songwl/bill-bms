@@ -32,4 +32,5 @@ public interface FundAccountMapper {
      * @return
      */
     int  selectOperatorByUserFundCount(Long userId);
+    FundAccount selectByUserId(Long userId);
 }

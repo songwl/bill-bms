@@ -149,4 +149,10 @@
     AND f.role_id=4
     AND a.bill_ascription=#{userId,jdbcType=BIGINT}
   </select>
+  <select id="selectByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_fund_account
+    where user_id = #{userId,jdbcType=BIGINT}
+  </select>
 </mapper>

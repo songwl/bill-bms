@@ -487,7 +487,6 @@ public class BillServiceimpl implements BillService {
         }
         return 0;
     }
-<<<<<<< 387637fc030981300cb4bd0b2ea9f830b376726d
 
     /**
      * 优化方录入价格
@@ -498,36 +497,15 @@ public class BillServiceimpl implements BillService {
     @Override
     public int adminPrice(Map<String, String[]> params, User user) {
 
-        String[] bill=params.get("rankend1");
-        String[] selectContent=params.get("selectContent[0][userName]");
-        String[] checkboxLength=params.get("checkboxLength");
-        String[] price1=params.get("price1");
-        String[] price2=params.get("price2");
-        String[] price3=params.get("price3");
-        String[] caozuoyuan=params.get("caozuoyuan");
-        Long caozuoyuanId=Long.parseLong(caozuoyuan[0]);
+        String[] bill = params.get("rankend1");
+        String[] selectContent = params.get("selectContent[0][userName]");
+        String[] checkboxLength = params.get("checkboxLength");
+        String[] price1 = params.get("price1");
+        String[] price2 = params.get("price2");
+        String[] price3 = params.get("price3");
+        String[] caozuoyuan = params.get("caozuoyuan");
+        Long caozuoyuanId = Long.parseLong(caozuoyuan[0]);
 
-=======
-
-    /**
-     * 优化方录入价格
-     * @param params
-     * @param user
-     * @return
-     */
-    @Override
-    public int adminPrice(Map<String, String[]> params, User user) {
-
-        String[] bill=params.get("rankend1");
-        String[] selectContent=params.get("selectContent[0][userName]");
-        String[] checkboxLength=params.get("checkboxLength");
-        String[] price1=params.get("price1");
-        String[] price2=params.get("price2");
-        String[] price3=params.get("price3");
-        String[] caozuoyuan=params.get("caozuoyuan");
-        Long caozuoyuanId=Long.parseLong(caozuoyuan[0]);
-
->>>>>>> e79d061990e95227e3967fafc3b134065783c6b4
         int  length=Integer.parseInt(checkboxLength[0]);
         for(int i=0;i<length;i++)
         {
@@ -622,6 +600,7 @@ public class BillServiceimpl implements BillService {
         }
         return 0;
     }
+
 
     /**
      * 订单列表

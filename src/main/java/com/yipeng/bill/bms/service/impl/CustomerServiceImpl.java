@@ -33,6 +33,8 @@ public class CustomerServiceImpl implements CustomerService{
     @Autowired
     private UserRoleMapper userRoleMapper;
     @Autowired
+    private RoleMapper roleMapper;
+    @Autowired
     private RoleService roleService;
     @Autowired
     private UserRoleService userRoleService;
@@ -41,7 +43,7 @@ public class CustomerServiceImpl implements CustomerService{
     @Autowired
     private BillPriceMapper billPriceMapper;
     @Override
-    public int savaUser(User user, int addMemberId, Long userId, BigDecimal balance) {
+    public int savaUser(User user, int addMemberId, Long userId,String realName,String contact,String phone,String qq, BigDecimal balance) {
 
         User user1=userMapper.selectByUserName(user.getUserName());
         if(user1!=null)
@@ -61,6 +63,10 @@ public class CustomerServiceImpl implements CustomerService{
                     user.setCreateTime(new Date());
                     user.setPassword(CryptoUtils.md5(user.getPassword()));
                     user.setCreateUserId(userId);
+                    user.setRealName(realName);
+                    user.setContact(contact);
+                    user.setPhone(phone);
+                    user.setQq(qq);
                     user.setLoginCount(0);
                     user.setStatus(true);
                     int num = userMapper.insert(user);
@@ -93,6 +99,10 @@ public class CustomerServiceImpl implements CustomerService{
                         user.setCreateTime(new Date());
                         user.setPassword(CryptoUtils.md5(user.getPassword()));
                         user.setCreateUserId(userId);
+                        user.setRealName(realName);
+                        user.setContact(contact);
+                        user.setPhone(phone);
+                        user.setQq(qq);
                         user.setLoginCount(0);
                         int num = userMapper.insert(user);
                         //资金余额
@@ -185,84 +195,144 @@ public class CustomerServiceImpl implements CustomerService{
 
         //模型对象
         List<CustomerListDetails> customerListDetailsList=new ArrayList<>();
-        params.put("userId",user.getId());
+
         int limit=Integer.parseInt(params.get("limit").toString()) ;
         int offset=Integer.parseInt(params.get("offset").toString()) ;
         int i=offset;
-        //操作员
-         if(user.hasRole("COMMISSIONER"))
-         {
+        //管理员
+        if(user.hasRole("SUPER_ADMIN"))
+        {
+            Role role=roleMapper.selectByRoleCode("DISTRIBUTOR");
+            params.put("roleId",role.getId());
+            params.put("userId",user.getId());
+             List<User> userList=userMapper.getUserRoleByCreateId(params);
+             Long total=userMapper.getUserRoleByCreateIdCount(params);
+            for (User user1: userList
+                 ) {
+                     i++;
+                     CustomerListDetails customerListDetails=new CustomerListDetails();
+                     customerListDetails.setId(i);
+                     customerListDetails.setCustomerId(user1.getId());
+                     customerListDetails.setUserName(user1.getUserName());
+                     customerListDetails.setRealName(user1.getRealName());
+                     customerListDetails.setContact(user1.getContact());
+                     customerListDetails.setPhone(user1.getPhone());
+                     customerListDetails.setQq(user1.getQq());
+                     customerListDetails.setStatus(user1.getStatus());
+                     customerListDetails.setCreateTime(DateUtils.formatDate(user1.getCreateTime()));
 
-             List<FundAccount>  fundAccountList=fundAccountMapper.selectOperatorByUserFund(params);
-             int total=fundAccountMapper.selectOperatorByUserFundCount(user.getId());
-             for (FundAccount fundAccount:fundAccountList
-                  ) {
-                 i++;
-                 User user1=userMapper.selectByPrimaryKey(fundAccount.getUserId());
-                 CustomerListDetails customerListDetails=new CustomerListDetails();
-                 customerListDetails.setId(i);
-                 customerListDetails.setCustomerId(user1.getId());
-                 customerListDetails.setUserName(user1.getUserName());
-                 customerListDetails.setRealName(user1.getRealName());
-                 customerListDetails.setContact(user1.getContact());
-                 customerListDetails.setStatus(user1.getStatus());
-                 customerListDetails.setCreateTime(DateUtils.formatDate(user1.getCreateTime()));
+                     if(user1.getLastLoginTime()!=null)
+                     {
+                         customerListDetails.setLastLoginTime(DateUtils.formatDate(user1.getLastLoginTime()));
+                     }
+                     customerListDetails.setLoginCount(user1.getLoginCount());
 
-                 if(user1.getLastLoginTime()!=null)
-                 {
-                     customerListDetails.setLastLoginTime(DateUtils.formatDate(user1.getLastLoginTime()));
-                 }
-                 customerListDetails.setLoginCount(user1.getLoginCount());
-                 int count=billPriceMapper.selectBillCount(user1.getId());
-                 customerListDetails.setBalance(fundAccount.getBalance());
-                 customerListDetails.setMissionCount(count);
-                 customerListDetailsList.add(customerListDetails);
+                     int count=billPriceMapper.selectBillCount(user1.getId());
 
+                     FundAccount fundAccount= fundAccountMapper.selectByUserId(user1.getId());
+                     if(fundAccount!=null)
+                     {
+                         customerListDetails.setBalance(fundAccount.getBalance());
+                     }
+                     customerListDetails.setMissionCount(count);
+                     customerListDetailsList.add(customerListDetails);
 
-
-             }
-             Map<String,Object> map=new HashMap<>();
-             map.put("rows",customerListDetailsList);
-             map.put("total",total);
+            }
+            Map<String,Object> map=new HashMap<>();
+            map.put("rows",customerListDetailsList);
+            map.put("total",total);
 
             return  map;
-         }
-         //其他
-         else
-         {
 
-             List<FundAccount>  fundAccountList=fundAccountMapper.selectByUserFund(params);
-             int total=fundAccountMapper.selectByUserFundCount(user.getId());
+        }
+        //操作员
+        else if(user.hasRole("COMMISSIONER"))
+        {
+            params.put("ascription",user.getId());
+            params.put("inMemberId",user.getCreateUserId());
+            List<User> userList=userMapper.getUserBillAscription(params);
+            Long total=userMapper.getUserBillAscriptionCount(params);
+            for (User user1: userList
+                 ) {
 
-             for (FundAccount fundAccount:fundAccountList
-                     ) {
-                 i++;
-                 User user1=userMapper.selectByPrimaryKey(fundAccount.getUserId());
+                i++;
+                CustomerListDetails customerListDetails=new CustomerListDetails();
+                customerListDetails.setId(i);
+                customerListDetails.setCustomerId(user1.getId());
+                customerListDetails.setUserName(user1.getUserName());
+                customerListDetails.setRealName(user1.getRealName());
+                customerListDetails.setContact(user1.getContact());
+                customerListDetails.setStatus(user1.getStatus());
+                customerListDetails.setPhone(user1.getPhone());
+                customerListDetails.setQq(user1.getQq());
+                customerListDetails.setCreateTime(DateUtils.formatDate(user1.getCreateTime()));
 
-                 CustomerListDetails customerListDetails=new CustomerListDetails();
-                 customerListDetails.setId(i);
-                 customerListDetails.setCustomerId(user1.getId());
-                 customerListDetails.setUserName(user1.getUserName());
-                 customerListDetails.setRealName(user1.getRealName());
-                 customerListDetails.setContact(user1.getContact());
-                 customerListDetails.setCreateTime(DateUtils.formatDate(user1.getCreateTime()));
-                 if(user1.getLastLoginTime()!=null)
-                 {
-                     customerListDetails.setLastLoginTime(DateUtils.formatDate(user1.getLastLoginTime()));
-                 }
+                if(user1.getLastLoginTime()!=null)
+                {
+                    customerListDetails.setLastLoginTime(DateUtils.formatDate(user1.getLastLoginTime()));
+                }
+                customerListDetails.setLoginCount(user1.getLoginCount());
 
-                 customerListDetails.setLoginCount(user1.getLoginCount());
-                 int count=billPriceMapper.selectBillCount(user1.getId());
-                 customerListDetails.setBalance(fundAccount.getBalance());
-                 customerListDetails.setMissionCount(count);
-                 customerListDetailsList.add(customerListDetails);
-             }
-             Map<String,Object> map=new HashMap<>();
-             map.put("rows",customerListDetailsList);
-             map.put("total",total);
+                int count=billPriceMapper.selectBillCount(user1.getId());
 
-             return  map;
-         }
+                FundAccount fundAccount= fundAccountMapper.selectByUserId(user1.getId());
+                if(fundAccount!=null)
+                {
+                    customerListDetails.setBalance(fundAccount.getBalance());
+                }
+                customerListDetails.setMissionCount(count);
+                customerListDetailsList.add(customerListDetails);
+            }
+            Map<String,Object> map=new HashMap<>();
+            map.put("rows",customerListDetailsList);
+            map.put("total",total);
+
+            return  map;
+        }
+        //其他
+        else
+        {
+
+            params.put("userId",user.getId());
+            List<User> userList=userMapper.getUserRoleByCreateId(params);
+            Long total=userMapper.getUserRoleByCreateIdCount(params);
+            for (User user1: userList
+                    ) {
+                i++;
+                CustomerListDetails customerListDetails=new CustomerListDetails();
+                customerListDetails.setId(i);
+                customerListDetails.setCustomerId(user1.getId());
+                customerListDetails.setUserName(user1.getUserName());
+                customerListDetails.setRealName(user1.getRealName());
+                customerListDetails.setContact(user1.getContact());
+                customerListDetails.setStatus(user1.getStatus());
+                customerListDetails.setPhone(user1.getPhone());
+                customerListDetails.setQq(user1.getQq());
+                customerListDetails.setCreateTime(DateUtils.formatDate(user1.getCreateTime()));
+
+                if(user1.getLastLoginTime()!=null)
+                {
+                    customerListDetails.setLastLoginTime(DateUtils.formatDate(user1.getLastLoginTime()));
+                }
+                customerListDetails.setLoginCount(user1.getLoginCount());
+
+                int count=billPriceMapper.selectBillCount(user1.getId());
+
+                FundAccount fundAccount= fundAccountMapper.selectByUserId(user1.getId());
+                if(fundAccount!=null)
+                {
+                    customerListDetails.setBalance(fundAccount.getBalance());
+                }
+                customerListDetails.setMissionCount(count);
+                customerListDetailsList.add(customerListDetails);
+
+            }
+            Map<String,Object> map=new HashMap<>();
+            map.put("rows",customerListDetailsList);
+            map.put("total",total);
+
+            return  map;
+        }
 
 
 

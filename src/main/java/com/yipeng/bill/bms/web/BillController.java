@@ -140,6 +140,34 @@ public class BillController extends BaseController {
         if(user!=null)
         {
 
+        offset=(offset-1)*limit;
+        // Page<Bill> page = this.getPageRequest();    //分页对象
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        LoginUser user=this.getCurrentAccount();
+        params.put("limit",limit);
+        params.put("offset",offset);
+        params.put("way",way);
+        params.put("userName",website);
+        params.put("state",state);
+        Map<String, Object> modelMap=billService.getBillDetails(params,user);
+        return  modelMap;
+    }
+
+    /**
+     * 调整优化
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/OptimizationUpdate",method = RequestMethod.POST)
+    @ResponseBody
+    public  ResultMessage OptimizationUpdate(HttpServletRequest request)
+    {
+        //getParameterMap()，获得请求参数map
+        Map<String,String[]> map= request.getParameterMap();
+        LoginUser user=this.getCurrentAccount();
+        if(user!=null)
+        {
+
           int a=  billService.OptimizationUpdate(map,user);
             return  this.ajaxDoneSuccess("调整成功");
 
@@ -183,8 +211,6 @@ public class BillController extends BaseController {
     @RequestMapping(value = "/getBillDetails")
     @ResponseBody
     public Map<String,Object> getBillDetails( int limit, int offset,int way,String website,String keywords,String searchName,String searchUserName, String state) throws UnsupportedEncodingException {
-
-
         offset=(offset-1)*limit;
        Map<String, Object> params = this.getSearchRequest(); //查询参数
         if(!keywords.isEmpty())
@@ -204,8 +230,16 @@ public class BillController extends BaseController {
         }
         if(!searchName.isEmpty())
         {
+            try{
+                searchName = new String(searchName.getBytes("ISO-8859-1"),"utf-8");
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+            }
             params.put("searchName",searchName);
         }
+
         if(!searchUserName.isEmpty())
         {
             params.put("searchUserNameId",searchUserName);
@@ -219,6 +253,22 @@ public class BillController extends BaseController {
         params.put("limit",limit);
         params.put("offset",offset);
         params.put("way",way);
+
+        Map<String, Object> modelMap=billService.getBillDetails(params,user);
+        return  modelMap;
+    }
+
+    /**
+     * 客户订单table表格获取数据
+     * @param limit
+     * @param offset
+     * @return
+     */
+    @RequestMapping(value = "/getCustomerBill")
+    @ResponseBody
+    public Map<String,Object> getCustomerBill( int limit, int offset, String website,String keywords,String searchName,String searchUserName, String state)
+    {
+        LoginUser user=this.getCurrentAccount();
 
         Map<String, Object> modelMap=billService.getBillDetails(params,user);
         return  modelMap;
@@ -308,7 +358,7 @@ public class BillController extends BaseController {
         return  modelMap;
     }
     /**
-     *  相同价提交(测试)
+     *  相同价提交
      * @return
      */
     @RequestMapping(value = "/list/sameprice",method = RequestMethod.POST)
@@ -317,7 +367,7 @@ public class BillController extends BaseController {
 
         //getParameterMap()，获得请求参数map
         Map<String,String[]> map= request.getParameterMap();
-        User user = this.getCurrentAccount();
+        LoginUser user = this.getCurrentAccount();
         String errorDetails=billService.saveSameBill(map,user);
         return this.ajaxDoneSuccess(errorDetails);
     }
@@ -332,10 +382,10 @@ public class BillController extends BaseController {
     {
         //getParameterMap()，获得请求参数map
         Map<String,String[]> map= request.getParameterMap();
-        User user = this.getCurrentAccount();
+        LoginUser user = this.getCurrentAccount();
        String  errorDetails= billService.savaDiffrentBill( map,user );
 
-        return this.ajaxDoneSuccess("");
+        return this.ajaxDoneSuccess(errorDetails);
     }
 
     /**

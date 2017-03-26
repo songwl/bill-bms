@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public interface UserMapper {
     int deleteByPrimaryKey(Long id);
@@ -42,4 +43,15 @@ public interface UserMapper {
     List<User> selectByReviewUser(Map<String,Object> params);
 
     Long  selectByReviewUserCount();
+ 
+
+
+    List<User> getUserRoleByCreateId(Map<String,Object> params);
+    Long getUserRoleByCreateIdCount(Map<String,Object> params);
+
+    List<User> getUserBillAscription(Map<String,Object> params);
+    Long getUserBillAscriptionCount(Map<String,Object> params);
+
+    List<User> getSearchUserBillAscription(Map<String,Object> params);
+ 
 }

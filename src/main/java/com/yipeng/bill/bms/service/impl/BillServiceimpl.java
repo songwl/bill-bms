@@ -35,26 +35,21 @@ public class BillServiceimpl implements BillService {
     private BillCostMapper billCostMapper;
     @Autowired
     private UserRoleMapper userRoleMapper;
+    @Autowired
+    private RoleMapper roleMapper;
     /**
      * 相同价导入
      * @param bill
      * @return
      */
     @Override
-    public String saveSameBill(Map<String, String[]>  params,User user ) {
+    public String saveSameBill(Map<String, String[]>  params,LoginUser user ) {
 
         int state=0;
-        UserRole userRole=new UserRole();
-        userRole.setUserId(user.getId());
-         List<UserRole> userRole1= userRoleMapper.selectByUserRole(userRole);
-         if(userRole1.size()>0)
-         {
-                if(userRole1.get(0).getRoleId()==4)
-                {
-                    state=1;
-                }
-         }
-
+        if(user.hasRole("DISTRIBUTOR"))
+        {
+            state=1;
+        }
         String[] urlsArr=params.get("url");
         String[] keywordsArr=params.get("keyword");
         String[] rankend=params.get("rankend");
@@ -130,9 +125,13 @@ public class BillServiceimpl implements BillService {
      * @return
      */
     @Override
-    public String savaDiffrentBill(Map<String, String[]>  params,User user) {
+    public String savaDiffrentBill(Map<String, String[]>  params,LoginUser user) {
 
-
+        int state=0;
+       if(user.hasRole("DISTRIBUTOR"))
+       {
+           state=1;
+       }
         String[] dfurlsArr=params.get("dfurl");
         String[] dfkeywordsArr=params.get("dfkeyword");
         String[] dfpricesArr=params.get("dfprice");
@@ -141,6 +140,7 @@ public class BillServiceimpl implements BillService {
         String[] dfprices=dfpricesArr[0].split("\n");
         String[] dfsearch=params.get("dfsearch");
         String[] dfrankend=params.get("dfrankend");
+        String[] customerId=params.get("customerId");
         String errorDetails="";
         if(dfurls.length==dfkeywords.length&&dfkeywords.length==dfprices.length)
         {
@@ -152,7 +152,7 @@ public class BillServiceimpl implements BillService {
                 params1.put("keywords",dfkeywords[i]);
                 List<Bill> billList=billMapper.selectAllSelective(params1);
             //还有else判断
-              if(billList!=null)
+              if(billList!=null&&billList.size()>0)
               {
                   Boolean bool=true;
                   for (Bill bill:billList
@@ -170,9 +170,19 @@ public class BillServiceimpl implements BillService {
                   {
 
                       Bill bill=new Bill();
-                      bill.setWebsite(dfurls[i]);
+                      if(dfsearch[0].equals("360")||dfsearch[0].equals("搜狗"))
+                      {
+                          String urls="http://"+dfurls[i];
+                          bill.setWebsite(urls);
+                      }
+                      else
+                      {
+                          bill.setWebsite(dfurls[i]);
+                      }
+
                       bill.setKeywords(dfkeywords[i]);
                       bill.setCreateUserId(user.getId());
+                      bill.setUpdateUserId(user.getId());
                       bill.setCreateTime(new Date());
                       bill.setFirstRanking(51);
                       bill.setNewRanking(51);
@@ -180,7 +190,7 @@ public class BillServiceimpl implements BillService {
                       bill.setStandardDays(0);
                       bill.setDayOptimization(1);
                       bill.setAllOptimization(1);
-                      bill.setState(0);
+                      bill.setState(state);
                       Long billId=billMapper.insert(bill);
                       //订单引擎表
                       BillSearchSupport billSearchSupport=new BillSearchSupport();
@@ -194,10 +204,52 @@ public class BillServiceimpl implements BillService {
                       billPrice.setPrice(bd);
                       billPrice.setBillRankingStandard(Long.parseLong(dfrankend[0]));
                       billPrice.setInMemberId(user.getId());
+                      billPrice.setOutMemberId(new Long(customerId[0]));
                       billPrice.setCreateTime(new Date());
                       billPriceMapper.insert(billPrice);
 
                   }
+              }
+              else
+              {
+
+
+                  Bill bill=new Bill();
+                  if(dfsearch[0].equals("360")||dfsearch[0].equals("搜狗"))
+                  {
+                      String urls="http://"+dfurls[i];
+                      bill.setWebsite(urls);
+                  }
+                  else
+                  {
+                      bill.setWebsite(dfurls[i]);
+                  }
+                  bill.setKeywords(dfkeywords[i]);
+                  bill.setCreateUserId(user.getId());
+                  bill.setUpdateUserId(user.getId());
+                  bill.setCreateTime(new Date());
+                  bill.setFirstRanking(51);
+                  bill.setNewRanking(51);
+                  bill.setWebAppId(123456);
+                  bill.setStandardDays(0);
+                  bill.setDayOptimization(1);
+                  bill.setAllOptimization(1);
+                  bill.setState(state);
+                  Long billId=billMapper.insert(bill);
+                  //订单引擎表
+                  BillSearchSupport billSearchSupport=new BillSearchSupport();
+                  billSearchSupport.setBillId(bill.getId());
+                  billSearchSupport.setSearchSupport(dfsearch[0]);
+                  billSearchSupportMapper.insert(billSearchSupport);
+                  //订单单价表
+                  BillPrice billPrice=new BillPrice();
+                  billPrice.setBillId(bill.getId());
+                  BigDecimal bd=new BigDecimal(dfprices[i]);
+                  billPrice.setPrice(bd);
+                  billPrice.setBillRankingStandard(Long.parseLong(dfrankend[0]));
+                  billPrice.setInMemberId(user.getId());
+                  billPrice.setCreateTime(new Date());
+                  billPriceMapper.insert(billPrice);
               }
 
             }
@@ -435,6 +487,7 @@ public class BillServiceimpl implements BillService {
         }
         return 0;
     }
+<<<<<<< 387637fc030981300cb4bd0b2ea9f830b376726d
 
     /**
      * 优化方录入价格
@@ -454,6 +507,27 @@ public class BillServiceimpl implements BillService {
         String[] caozuoyuan=params.get("caozuoyuan");
         Long caozuoyuanId=Long.parseLong(caozuoyuan[0]);
 
+=======
+
+    /**
+     * 优化方录入价格
+     * @param params
+     * @param user
+     * @return
+     */
+    @Override
+    public int adminPrice(Map<String, String[]> params, User user) {
+
+        String[] bill=params.get("rankend1");
+        String[] selectContent=params.get("selectContent[0][userName]");
+        String[] checkboxLength=params.get("checkboxLength");
+        String[] price1=params.get("price1");
+        String[] price2=params.get("price2");
+        String[] price3=params.get("price3");
+        String[] caozuoyuan=params.get("caozuoyuan");
+        Long caozuoyuanId=Long.parseLong(caozuoyuan[0]);
+
+>>>>>>> e79d061990e95227e3967fafc3b134065783c6b4
         int  length=Integer.parseInt(checkboxLength[0]);
         for(int i=0;i<length;i++)
         {

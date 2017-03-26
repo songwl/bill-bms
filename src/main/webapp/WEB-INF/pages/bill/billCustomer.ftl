@@ -89,9 +89,9 @@
                 <div class="panel-nav">
                     <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;关键词排名</div>
                     <div class="Nav_Right">
-                        <div>优化中</div>
-                        <div>合作停</div>
-                        <div>全部</div>
+                        <div id="continue">优化中</div>
+                        <div id="stop">合作停</div>
+                        <div id="all">全部</div>
                     </div>
                     <div class="cls"></div>
                 </div>
@@ -168,6 +168,8 @@
                             <div class="col-md-4 padding-left-5px">
                                 <textarea name="keyword" id="keyword" rows="15" class="form-control"  style="width: 296px; height: 297px;resize: none;"></textarea>
                             </div>
+                            <div class="pload" style="position:absolute;top:45%;left: 50%; z-index:2200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none;"></div>
+
                             <label class="col-md-1 control-label padding-right-0px">
                                 网址
                                 <span class="required">*</span>
@@ -280,7 +282,7 @@
                                     <@dict.showOptions dictKey="search" dictType="DICT" haveBlank="Y" />
                                 </select>
                             </div>
-                            <label class="col-md-2 control-label padding-right-0px">
+                            <label class="col-md-1 control-label padding-right-0px">
                                 客户：
                                 <span class="required">*</span>
                             </label>
@@ -288,13 +290,12 @@
                                 <select id="selectDiffrent" name="searchengineid" class="form-control input-width-small">
                                     <option>--请选择--</option>
                                     <#list userList as user>
-                                        <option>${user.userName}</option>
-
+                                        <option value="${user.id}">${user.userName}</option>
                                     </#list>
                                 </select>
                             </div>
 
-                            <label class="col-md-2 control-label padding-right-0px">
+                            <label class="col-md-1 control-label padding-right-0px">
                                 前
                                 <span class="red">N</span>名<span class="required">*</span>
                             </label>
@@ -310,6 +311,8 @@
                             <div class="col-md-3 padding-left-5px">
                                 <textarea name="keyword" rows="15" class="form-control" style="resize: none;" id="dfkeyword"></textarea>
                             </div>
+                            <div class="pload" style="position:absolute;top:45%;left: 50%; z-index:2200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none;"></div>
+
                             <label class="col-md-1 control-label padding-right-0px">
                                 网址
                                 <span class="required">*</span>
@@ -336,7 +339,6 @@
         </div>
     </div>
 </div>
-<div id="pload" style="position:absolute;top:45%;left: 87%; z-index:2200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none;"></div>
 <!--不同价导入end-->
 
 <!--调价-->

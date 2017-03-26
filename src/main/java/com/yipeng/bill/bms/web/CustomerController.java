@@ -78,10 +78,10 @@ public class CustomerController extends  BaseController{
      */
     @RequestMapping(value = "/customerList",method = RequestMethod.POST)
     @ResponseBody
-    public ResultMessage createUser(HttpServletRequest request, User user, int addMemberId, BigDecimal balance)
+    public ResultMessage createUser(HttpServletRequest request, User user, int addMemberId,String realName,String contact,String phone,String qq, BigDecimal balance)
     {
         User user1=this.getCurrentAccount();
-        int a=customerService.savaUser(user,addMemberId,user1.getId(),balance);
+        int a=customerService.savaUser(user,addMemberId,user1.getId(),realName,contact,phone,qq,balance);
         if (a==0)
         {
             return this.ajaxDoneError("系统错误,请稍后再试！");

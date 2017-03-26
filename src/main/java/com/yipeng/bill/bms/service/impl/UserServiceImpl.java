@@ -170,12 +170,12 @@ public class UserServiceImpl implements UserService {
             else if (loginUser.hasRole("COMMISSIONER"))
             {
                 Map<String,Object> params=new HashMap<>();
-                params.put("billAscription",loginUser.getId());
-                List<Bill> billList=billMapper.selectByInMemberId(params);
-                for (Bill bill: billList
+                params.put("ascription",loginUser.getId());
+                params.put("inMemberId",loginUser.getCreateUserId());
+                List<User> userList1=userMapper.getSearchUserBillAscription(params);
+                for (User user1: userList1
                         ) {
-                    List<BillPrice> billPriceList= billPriceMapper.selectByBillId(bill.getId());
-                    User user1=userMapper.selectByPrimaryKey(billPriceList.get(0).getOutMemberId());
+
                     userList.add(user1);
                 }
 

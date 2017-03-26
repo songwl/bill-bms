@@ -97,7 +97,14 @@ $(document).ready(function () {
         {
             $.ajax({
                 type: "post",
-                data:{userName: $("input[name='userName']").val(),password:$("input[name='password']").val(),addMemberId:  $("#addMemberId").val(),balance:$("#balance").val()},
+                data:{userName: $("input[name='userName']").val(),
+                    password:$("input[name='password']").val(),
+                    addMemberId:  $("#addMemberId").val(),
+                    realName:$("input[name='realName']").val(),
+                    contact:$("input[name='contact']").val(),
+                    phone:$("input[name='phone']").val(),
+                    qq:$("input[name='qq']").val(),
+                    balance:$("#balance").val()},
                 url:CTX+"/customer/customerList",
                 dataType:"json",
                 success:function (result) {
@@ -105,6 +112,9 @@ $(document).ready(function () {
                     {
                         $(".modal-backdrop").hide();
                         $(".addMemberDiv").slideUp();
+
+                        $('#myTable').bootstrapTable('refresh');
+
                         alert(result.message);
                     }
                     else
@@ -278,7 +288,11 @@ var TableInit = function () {
                     title: '操作',
                     align: 'center',
                     valign: 'middle',
+                    formatter:function (value,row,index) {
+                        var a="<span style='color:#4382CF;cursor:pointer;' id='details'>详情</span>";
 
+                        return a;
+                    }
 
                 },
 

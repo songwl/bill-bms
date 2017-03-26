@@ -18,7 +18,7 @@ public interface BillService {
      * @param bill
      * @return
      */
-    String saveSameBill(Map<String, String[]>  params,User user);
+    String saveSameBill(Map<String, String[]>  params,LoginUser user);
 
     /**
      * 不同价导入
@@ -26,7 +26,7 @@ public interface BillService {
      * @param user
      * @return
      */
-     String savaDiffrentBill(Map<String, String[]>  params,User user);
+     String savaDiffrentBill(Map<String, String[]>  params,LoginUser user);
     /**
      * 通过ID查询订单
      * @param id

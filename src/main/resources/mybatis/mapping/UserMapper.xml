@@ -231,6 +231,62 @@
     from t_user
     where create_user_id= #{userId,jdbcType=BIGINT}
   </select>
+
+  <select id="getUserRoleByCreateId" resultMap="BaseResultMap">
+    select a.*
+    from t_user as a ,t_user_role as b
+    where a.id=b.user_id
+    AND
+    a.create_user_id= #{userId,jdbcType=BIGINT}
+    <if test="roleId != null">
+     AND b.role_id = #{roleId,jdbcType=BIGINT}
+    </if>
+    limit #{offset},#{limit}
+  </select>
+
+  <select id="getUserRoleByCreateIdCount" resultType="java.lang.Long">
+    select count(a.id)
+    from t_user as a ,t_user_role as b
+    where a.id=b.user_id
+    AND
+    a.create_user_id= #{userId,jdbcType=BIGINT}
+    <if test="roleId != null">
+      AND b.role_id = #{roleId,jdbcType=BIGINT}
+    </if>
+    limit #{offset},#{limit}
+  </select>
+
+  <select id="getUserBillAscription" resultMap="BaseResultMap">
+    select DISTINCT a.*
+    from t_user as a ,t_bill as b,t_bill_price as d
+    where  b.id=d.bill_id and a.id= d.out_member_id
+    AND
+    b.bill_ascription= #{ascription,jdbcType=BIGINT}
+    AND
+    d.in_member_id= #{inMemberId,jdbcType=BIGINT}
+    limit #{offset},#{limit}
+  </select>
+
+  <select id="getUserBillAscriptionCount" resultType="java.lang.Long">
+    select  COUNT(DISTINCT (a.id))
+    from t_user as a ,t_bill as b,t_bill_price as d
+    where  b.id=d.bill_id and a.id= d.out_member_id
+    AND
+    b.bill_ascription= #{ascription,jdbcType=BIGINT}
+    AND
+    d.in_member_id= #{inMemberId,jdbcType=BIGINT}
+  </select>
+
+  <select id="getSearchUserBillAscription" resultMap="BaseResultMap">
+    select DISTINCT a.*
+    from t_user as a ,t_bill as b,t_bill_price as d
+    where  b.id=d.bill_id and a.id= d.out_member_id
+    AND
+    b.bill_ascription= #{ascription,jdbcType=BIGINT}
+    AND
+    d.in_member_id= #{inMemberId,jdbcType=BIGINT}
+  </select>
+
   <select id="selectByReviewUser"  resultMap="BaseResultMap">
     select b.* from t_user_role as a,t_user as b
     where 1=1

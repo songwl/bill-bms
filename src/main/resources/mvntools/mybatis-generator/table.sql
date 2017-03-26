@@ -103,7 +103,7 @@
   CREATE TABLE IF NOT EXISTS `t_bill_search_support` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
     `bill_id` BIGINT NOT NULL COMMENT '',
-    `search_support` VARCHAR(20) NULL COMMENT '搜索引擎名',
+    `search_support` VARCHAR(50) NULL COMMENT '搜索引擎名',
     PRIMARY KEY (`id`)  COMMENT '',
     INDEX `fk_t_bill_search_support_t_bill1_idx` (`bill_id` ASC)  COMMENT '',
     CONSTRAINT `fk_t_bill_search_support_t_bill1`

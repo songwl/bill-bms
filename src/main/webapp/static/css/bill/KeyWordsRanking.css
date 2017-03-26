@@ -103,7 +103,7 @@ float:right;
 display:inline-block;
 
 }
-.Nav_Right div {
+#continue,#stop,#all {
 float:left;
 border-right:1px solid #d9d9d9;
 width:90px;
@@ -116,6 +116,10 @@ display:inline-block;
   background:#eee;  
 
     }
+#continue
+{
+    background:#eee;
+}
 .samepriceDiv
 {
     display: none;

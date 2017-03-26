@@ -115,26 +115,9 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     sortable: true,
-                    title: '修改者ID'
+                    title: '修改者ID',
+                    visible:false
                 },
-
-                {
-                    field: 'priceOne',
-                    align: 'center',
-                    valign: 'middle',
-                    title: '价格1',
-
-                },
-
-                {
-                    field: 'priceTwo',
-                    align: 'center',
-                    valign: 'middle',
-                    sortable: true,
-                    title: '价格2',
-
-                },
-
                 {
                     field: "state",
                     align: 'center',
@@ -183,10 +166,6 @@ var TableInit = function () {
         'click #details': function (e, value, row, index) {
             $("#billCostDetail").show();
             $(".modal-backdrop").show();
-
-
-
-
 
         }
 

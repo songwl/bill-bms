@@ -2,7 +2,7 @@
 $(".samepricecmt").click(function () {
 
 
-    var search= $("#searchengineid ").val();
+    var search= $("#searchengineid option:selected").text();
     var keyword= $("#keyword").val();
     var url= $("#url").val();
 
@@ -82,11 +82,11 @@ $(".samepricecmt").click(function () {
 
                     },
                     beforeSend: function () {
-                        $("#pload").show();
+                        $(".pload").show();
                     },
 
                     success:function (result) {
-                        $("#pload").hide();
+                        $(".pload").hide();
                         if(result.code==200)
                         {
 

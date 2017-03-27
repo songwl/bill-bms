@@ -245,6 +245,7 @@ public class BillController extends BaseController {
     @ResponseBody
     public Map<String,Object> getCustomerBill( int limit, int offset, String website,String keywords,String searchName,String searchUserName, String state,String state2)
     {
+
         LoginUser user=this.getCurrentAccount();
 
 
@@ -485,20 +486,65 @@ public class BillController extends BaseController {
      */
     @RequestMapping(value = "/pendingAuditViewList")
     @ResponseBody
-    public Map<String,Object> pendingAuditViewList( int limit, int offset,String state)
+    public Map<String,Object> pendingAuditViewList( int limit, int offset, String website,String keywords,String searchName,String searchUserName, String state)
     {
 
+        LoginUser user=this.getCurrentAccount();
+
+
+        int way;
+        if(user.hasRole("DISTRIBUTOR"))
+        {
+            way=3;
+        }
+        else
+        {
+            way=2;
+        }
         offset=(offset-1)*limit;
         Map<String, Object> params = this.getSearchRequest(); //查询参数
-        LoginUser user=this.getCurrentAccount();
-        params.put("limit",limit);
-        params.put("offset",offset);
-        params.put("state",state);
+
+        if(!keywords.isEmpty())
+        {
+            try{
+                keywords = new String(keywords.getBytes("ISO-8859-1"),"utf-8");
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+            }
+            params.put("keywords",keywords);
+        }
+        if(!website.isEmpty())
+        {
+            params.put("website",website);
+        }
+        if(!searchName.isEmpty())
+        {
+            try{
+                searchName = new String(searchName.getBytes("ISO-8859-1"),"utf-8");
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+            }
+            params.put("searchName",searchName);
+        }
+        if(!searchUserName.isEmpty())
+        {
+            params.put("searchUserNameId",searchUserName);
+        }
+        if(!state.isEmpty())
+        {
+            params.put("state",state);
+        }
         if(user.hasRole("AGENT"))
         {
             params.put("state2",0);
         }
-
+        params.put("limit",limit);
+        params.put("offset",offset);
+        params.put("way",way);
 
         Map<String, Object> modelMap=billService.getBillDetails(params,user);
         return  modelMap;

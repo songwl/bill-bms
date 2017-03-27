@@ -58,7 +58,7 @@
                 <div id="toolbar" class="btn-group">
 
                 <#if  bmsModel.user.hasRole("SUPER_ADMIN")|| bmsModel.user.hasRole("DISTRIBUTOR")|| bmsModel.user.hasRole("AGENT")>
-                    <button id="btn_update" type="button" class="btn btn-default">
+                    <button   type="button" class="btn btn-default" id="Recharge">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 充值
                     </button>
                 </#if>
@@ -166,4 +166,39 @@
 </div>
 <!--添加客户end-->
 
+<!--优化调整-->
+<div class="bootbox modal in RechargeDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="bootbox-close-button close">×</button>
+                <h4 class="modal-title">客户充值</h4>
+            </div>
+            <div class="modal-body" style="max-height: 374px;">
+                <div class="bootbox-body">
+                    <style type="text/css">
+                        .modal-dialog {
+                            width: 400px;
+                        }
+                    </style>
+                    <form class="form-horizontal row-border" id="edt-form" action="#" novalidate="novalidate">
+                        <div class="form-group">
+                            <div style="margin-left:15px;">充值金额：</div>
+                            <div style="margin-left:10px;margin-top: 10px;">
+                             <input type="text" value="" id="RechargeSum">
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button data-bb-handler="success" type="button" class="btn wzgj-blue Rechargecmt">确定</button>
+                <button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--优化调整end-->
 </@base.html>

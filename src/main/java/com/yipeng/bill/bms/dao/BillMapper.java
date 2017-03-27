@@ -45,4 +45,12 @@ public interface BillMapper {
      * @return
      */
     List<Bill>  selectByOutMemberId(Map<String,Object> params);
+
+    /**
+     * 根据角色来获取订单
+     * @param params
+     * @return
+     */
+    List<Bill>  selectByCustomerId(Map<String,Object> params);
+    Long selectByCustomerIdCount(Map<String,Object> params);
 }

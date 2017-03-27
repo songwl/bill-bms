@@ -1,4 +1,81 @@
+.navbar> .container {
+	padding-left: 20px;
+	padding-right: 20px;
+	width: 100%;
+}
 
+.container {
+	max-width: none!important;
+	padding: 0 20px;
+	/*background: #C67605;*/
+}
+
+.navbar .navbar-brand {
+	padding: 0;
+	line-height: 48px;
+	color: #fff;
+	text-shadow: 0 1px 0 #000;
+	font-size: 18px;
+	width: 180px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow-x: hidden;
+	text-align: left;
+	padding-left: 0;
+	max-width: none;
+	position: absolute;
+	left: 50px;
+	margin-left: 0!important;
+	margin-right: 0;
+}
+
+* {
+	outline: none!important;
+}
+
+html,
+body {
+	height: 100%;
+}
+
+body {
+	font-family: '微软雅黑', "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif, 'Tahoma';
+	color: #555;
+	font-size: 13px;
+}
+
+#container {
+	position: relative;
+	height: 100%;
+}
+
+#container.fixed-header {
+	margin-top: 52px;
+}
+
+#container> #content> .container {
+	float: left;
+	width: 100%;
+}
+
+#content {
+	background: #fff;
+	margin-left: 200px;
+	overflow: visible;
+	/*padding-bottom: 30px;*/
+	position: relative;
+	top: 50px;
+	padding-top: 40px;
+	min-height: 100%;
+}
+
+#content> .wrapper {
+	-webkit-transition: margin ease-in-out .1s;
+	-moz-transition: margin ease-in-out .1s;
+	-o-transition: margin ease-in-out .1s;
+	transition: margin ease-in-out .1s;
+	position: relative;
+}
 
 .row-bg {
 	background-color: #f9f9f9;

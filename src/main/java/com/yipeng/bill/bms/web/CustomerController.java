@@ -130,6 +130,13 @@ public class CustomerController extends  BaseController{
         }
         return null;
     }
+
+    /**
+     * 审核订单
+     * @param request
+     * @param customerId
+     * @return
+     */
     @RequestMapping(value ="/customerAudit",method = RequestMethod.POST)
     @ResponseBody
     public  ResultMessage customerAudit(HttpServletRequest request, @RequestParam Long customerId)
@@ -166,4 +173,24 @@ public class CustomerController extends  BaseController{
         return "/customer/fundAccount";
     }
 
+    /**
+     * 客户充值
+     * @param request
+     * @return
+     */
+     @RequestMapping(value = "/Recharge",method = RequestMethod.POST)
+     @ResponseBody
+    public  ResultMessage Recharge(HttpServletRequest request)
+    {
+        LoginUser user=this.getCurrentAccount();
+        if(user!=null)
+        {
+            Map<String, String[]> params= request.getParameterMap();
+           int a= customerService.Recharge(params,user);
+            return  this.ajaxDoneSuccess("充值成功！");
+        }
+
+        return  this.ajaxDoneError("充值失败，请稍后再试!");
+
+    }
 }

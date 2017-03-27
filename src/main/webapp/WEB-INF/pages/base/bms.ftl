@@ -219,7 +219,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="${ctx}/bill/pendingAudit">
+                                    <a href="${ctx}/bill/pendingAuditView">
                                         待审核订单
                                     </a>
                                 </li>

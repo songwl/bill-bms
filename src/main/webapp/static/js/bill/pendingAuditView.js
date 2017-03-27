@@ -1,7 +1,83 @@
 /**
  * Created by Administrator on 2017/3/16.
  */
+var website=null;
+var keywords=null;
+var searchName=null;
+var searchUserName=null;
+var searchState=1;
 
+
+
+$(document).ready(function () {
+
+    //显示搜索内容
+    $(".search").click(function () {
+        if($(".Navs2").css("display")=="block"){
+            $(".Navs2").slideUp();
+
+        }
+        else
+        {
+            $(".Navs2").slideDown();
+            $(".samepriceDiv").slideUp();
+            $(".differentpriceDiv").slideUp();
+            $(".ImportPrice").slideUp();
+        }
+
+
+    })
+
+
+
+
+    //复选框
+    $("#btn_update").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        if(selectContent == "") {
+            alert('请选择一列数据!');
+
+        }else{
+            $(".modal-backdrop").show();
+            $(".changepriceDiv").slideDown();
+
+        }
+    })
+    $("#searchButton").click(function () {
+
+        if($("#website").val()!="")
+        {
+            website=$("#website").val();
+        }
+        else
+        {
+            website=null
+        }
+        if($("#keywords").val()!="")
+        {
+            keywords=$("#keywords").val();
+        }
+        else
+        {
+            keywords=null;
+        }
+        if($("#searchName option:selected").text()!="--请选择--")
+        {
+            searchName=$("#searchName option:selected").text();
+        }
+        else
+        {
+            searchName=null;
+        }
+
+
+
+        $('#myTable').bootstrapTable('refresh');
+    });
+
+
+
+})
 $(function () {
 
     //1.初始化Table
@@ -21,7 +97,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#myTable').bootstrapTable({
-            url: CTX+'/bill/pendingAuditViewList',         //请求后台的URL（*）
+            url: '/bill/bill/pendingAuditViewList',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
@@ -103,36 +179,65 @@ var TableInit = function () {
                     title: '搜索引擎'
                 },
                 {
-                    field: 'billPriceList',
-                    align: 'center',
-                    valign: 'middle',
-                    title: '价格1',
-
-
-                },
-                {
-                    field: 'billPriceList',
-                    align: 'center',
-                    valign: 'middle',
-                    sortable: true,
-                    title: '价格2',
-
-
-                },
-                {
                     field: 'createTime',
                     align: 'center',
                     valign: 'middle',
                     sortable: true,
                     title: '增加时间'
                 },
- ,
+                {
+                    field: 'billPriceList',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '价格1',
+                    formatter:function (value,row,index) {
+                        var a="";
+                        a=value[0]["price"];
+                        return a;
+                    }
+
+                },
+
+                {
+                    field: 'billPriceList',
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true,
+                    title: '价格2',
+                    formatter:function (value,row,index) {
+                        var a="";
+                        if(value[1]!=null)
+                        {
+                            a=value[1]["price"];
+                        }
+                        else
+                        {
+                            a="-";
+                        }
+
+                        return a;
+                    }
+
+                },
+
+                {
+                    field: 'updateUserId',
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true,
+                    title: '修改者ID',
+                    visible:false
+                },
                 {
                     field: "state",
                     align: 'center',
                     valign: 'middle',
                     title: '状态',
+                    formatter:function (value,row,index) {
+                        var  a="<span style='color:#94b86e;'>待审核</span>";
 
+                        return a;
+                    }
 
 
                 },
@@ -141,7 +246,12 @@ var TableInit = function () {
                     title: '操作',
                     align: 'center',
                     valign: 'middle',
+                    formatter:function (value,row,index) {
+                        var a="<span style='color:#4382CF;cursor:pointer;' id='details'>修改</span>";
 
+                        return a;
+                    },
+                    events:operateEvents
 
                 },
 
@@ -158,11 +268,23 @@ var TableInit = function () {
             offset: params.pageNumber,  //页码
             sortOrder: params.sortOrder,
             sortName: params.sortName,
+            website:website,
+            keywords:keywords,
+            searchName:searchName,
+            searchUserName:searchUserName,
+            state:searchState,
 
         };
         return temp;
     }
+    window.operateEvents = {
+        'click #details': function (e, value, row, index) {
+            $("#billCostDetail").show();
+            $(".modal-backdrop").show();
 
+        }
+
+    }
 
 
     return oTableInit;
@@ -179,3 +301,8 @@ $(function () {
     });
 
 });
+function detail( ) {
+    var bid=$("input[name='Bid']").val();
+
+
+}

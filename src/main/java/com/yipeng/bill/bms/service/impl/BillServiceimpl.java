@@ -140,7 +140,7 @@ public class BillServiceimpl implements BillService {
         String[] dfprices=dfpricesArr[0].split("\n");
         String[] dfsearch=params.get("dfsearch");
         String[] dfrankend=params.get("dfrankend");
-        String[] customerId=params.get("customerId");
+        String[] customerId=params.get("customerIds");
         String errorDetails="";
         if(dfurls.length==dfkeywords.length&&dfkeywords.length==dfprices.length)
         {
@@ -727,25 +727,18 @@ public class BillServiceimpl implements BillService {
            {
 
                //渠道商直属客户，先获取对应的订单
+               Role role=roleMapper.selectByRoleCode("CUSTOMER");
+               params.put("roleId",role.getId());
                params.put("userId",user.getId());
-               List<Bill> billList=billMapper.selectByInMemberId(params);
-               Long total=billMapper.getBillListCount(params);
+               List<Bill> billList=billMapper.selectByCustomerId(params);
+               Long total=billMapper.selectByCustomerIdCount(params);
                for (Bill bill: billList
                        ) {
-                   //调用方法  加入集合
-                   BillPrice billPrice=new BillPrice();
-                   billPrice.setBillId(bill.getId());
-                   billPrice.setInMemberId(user.getId());
-                   Long OutMemberId=  billPriceMapper.selectByBillPriceOutMemberId(billPrice);
-                   UserRole userRole=userRoleMapper.selectByUserId(OutMemberId);
-                   //查询渠道商的付款方是不是直接客户
-                   if(userRole.getRoleId()==6)
-                   {
                        i++;
                        BillDetails billDetails=this.insertBillDetails(bill, user,way);
                        billDetails.setdisplayId(i);
                        billDetailsList.add(billDetails);
-                   }
+
 
 
                }

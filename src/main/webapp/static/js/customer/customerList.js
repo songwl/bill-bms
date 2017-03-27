@@ -24,11 +24,13 @@ $(document).ready(function () {
     $(".close").click(function () {
         $(".addMemberDiv").slideUp();
         $(".modal-backdrop").hide();
+        $(".RechargeDiv").slideUp();
 
     })
     $(".cancel").click(function () {
         $(".addMemberDiv").slideUp();
         $(".modal-backdrop").hide();
+        $(".RechargeDiv").slideUp();
     })
 
     var userName=false;
@@ -92,6 +94,7 @@ $(document).ready(function () {
         userName = false;
 
     });
+    //添加客户
     $(".addOperatorcmt").click(function () {
         if(userName&&password)
         {
@@ -128,8 +131,50 @@ $(document).ready(function () {
         }
 
     })
+ // 充值框显示
+    $("#Recharge").click(function () {
 
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        if(selectContent == "") {
+            alert('请选择一列数据!');
 
+        }else{
+            $(".modal-backdrop").show();
+            $(".RechargeDiv").slideDown();
+        }
+    })
+   //充值确认
+    $(".Rechargecmt").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var len =selectContent.length;
+        var RechargeSum=$("#RechargeSum").val();
+        if(!isNaN(RechargeSum))
+        {
+            $.ajax({
+                type:"post",
+                url:CTX+"/customer/Recharge",
+                data:{selectContent:selectContent,length:len,RechargeSum:RechargeSum},
+                success:function (result) {
+                      if(result.code==200)
+                      {
+                          alert(result.message);
+                          $(".modal-backdrop").hide();
+                          $(".RechargeDiv").slideUp();
+                          $('#myTable').bootstrapTable('refresh');
+                      }
+                      else
+                      {
+                          alert(result.message);
+                      }
+                }
+
+            })
+        }
+        else
+        {
+         alert("请填入正确的充值金额！");
+        }
+    })
 })
 $(function () {
 
@@ -145,6 +190,7 @@ $(function () {
 
 
 });
+
 var TableInit = function () {
     var oTableInit = new Object();
     //初始化Table

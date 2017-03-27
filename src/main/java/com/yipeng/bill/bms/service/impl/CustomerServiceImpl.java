@@ -377,4 +377,47 @@ public class CustomerServiceImpl implements CustomerService{
 
         return 0;
     }
+
+    @Override
+    public int Recharge(Map<String, String[]> params, LoginUser user) {
+        String[] checkboxLength=params.get("length");
+        int  length=Integer.parseInt(checkboxLength[0]);
+        String[] RechargeSum=params.get("RechargeSum");
+        Double  nums=Double.parseDouble(RechargeSum[0]);
+        for (int i=0;i<length;i++)
+        {
+            String[] id=params.get("selectContent["+i+"][customerId]");
+            Long  customerId=Long.parseLong(id[0]);
+            FundAccount fundAccount=fundAccountMapper.selectByUserId(customerId);
+
+            if(fundAccount==null)
+            {
+                FundAccount fundAccount1=new FundAccount();
+                fundAccount1.setUserId(customerId);
+                fundAccount1.setBalance(new BigDecimal(nums));
+                fundAccount1.setCreateTime(new Date());
+                fundAccount1.setCreateUserId(user.getId());
+                fundAccount1.setUpdateTime(new Date());
+                fundAccount1.setUpdateUserId(user.getId());
+                fundAccountMapper.insert(fundAccount1);
+            }
+            else
+            {
+                Double sum;
+                sum=nums +Double.parseDouble(fundAccount.getBalance().toString());
+                FundAccount fundAccount1=new FundAccount();
+                String[] userName=params.get("selectContent["+i+"][userName]");
+                User user1=userMapper.selectByUserName(userName[0]);
+                fundAccount1.setId(fundAccount.getId());
+                fundAccount1.setUserId(user1.getId());
+                fundAccount1.setBalance(new BigDecimal(sum));
+                fundAccount1.setUpdateTime(new Date());
+                fundAccount1.setUpdateUserId(user.getId());
+                fundAccountMapper.updateByPrimaryKeySelective(fundAccount1);
+            }
+
+
+        }
+        return  1;
+    }
 }

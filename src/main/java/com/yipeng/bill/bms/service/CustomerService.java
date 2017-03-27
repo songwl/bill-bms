@@ -29,5 +29,13 @@ public interface CustomerService {
      */
     Map<String, Object> getCustomerReviewList(Map<String,Object> params);
 
+    /**
+     * 客户审核
+     * @param customerId
+     * @return
+     */
     int customerAudit(Long customerId);
+
+    int Recharge(Map<String,String[]> params,LoginUser user);
+
 }

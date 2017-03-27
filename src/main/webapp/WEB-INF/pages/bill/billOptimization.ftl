@@ -82,7 +82,7 @@
                     </style>
                     <form class="form-horizontal row-border" id="edt-form" action="#" novalidate="novalidate">
                         <div class="form-group">
-                            <div>优化指数：</div>
+                            <div style="margin-left:15px;">优化指数：</div>
                             <div style="margin-left:10px;margin-top: 10px;">
                             <select style="width: 80px;" id="OptimizationUpdateSelect">
                                 <option>--请选择--</option>

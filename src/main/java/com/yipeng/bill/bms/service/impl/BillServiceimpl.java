@@ -248,6 +248,7 @@ public class BillServiceimpl implements BillService {
                   billPrice.setPrice(bd);
                   billPrice.setBillRankingStandard(Long.parseLong(dfrankend[0]));
                   billPrice.setInMemberId(user.getId());
+                  billPrice.setOutMemberId(new Long(customerId[0]));
                   billPrice.setCreateTime(new Date());
                   billPriceMapper.insert(billPrice);
               }

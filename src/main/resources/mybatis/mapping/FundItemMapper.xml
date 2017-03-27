@@ -21,7 +21,7 @@
     delete from t_fund_item
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.FundItem">
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.FundItem" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
     insert into t_fund_item (id, fund_account_id, change_amount, 
       change_time, item_type)
     values (#{id,jdbcType=BIGINT}, #{fundAccountId,jdbcType=BIGINT}, #{changeAmount,jdbcType=DECIMAL}, 
@@ -90,4 +90,12 @@
       item_type = #{itemType,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
+  select a.* from t_fund_item as a,t_fund_account as b, t_user_role as c
+  where
+  a.fund_account_id=b.id
+   and b.user_id=c.user_id
+  and c.role_id=#{roleId,jdbcType=BIGINT}
+  </select>
 </mapper>

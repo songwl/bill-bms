@@ -5,6 +5,7 @@ import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.service.CustomerService;
 import com.yipeng.bill.bms.vo.LoginUser;
 import jdk.nashorn.internal.ir.RuntimeNode;
+import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -173,6 +174,28 @@ public class CustomerController extends  BaseController{
         return "/customer/fundAccount";
     }
 
+    /**
+     * 资金明细table
+     * @param limit
+     * @param offset
+     * @return
+     */
+    @RequestMapping(value="/fundAccountList")
+    @ResponseBody
+    public Map<String,Object> fundAccountList(int limit,int offset) {
+         LoginUser user=this.getCurrentAccount();
+         if(user!=null)
+         {
+             offset=(offset-1)*limit;
+             Map<String,Object> params=new HashMap<>();
+             params.put("limit",limit);
+             params.put("offset",offset);
+             Map<String, Object> modelMap=  customerService.fundAccountList(params,user);
+             return  modelMap;
+         }
+         return  null;
+
+    }
     /**
      * 客户充值
      * @param request

@@ -20,14 +20,14 @@
         </property>
         <property name="cronExpression">
             <!--凌晨0点-->
-            <value>0 0 0 * * ?</value>
+            <value>0 0/10 * * * ?</value>
         </property>
     </bean>
 
 
 
     <bean name="startQuertz" lazy-init="false" autowire="no"
-          class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+              class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
                 <ref bean="callCostTaskJobTrigger"/>

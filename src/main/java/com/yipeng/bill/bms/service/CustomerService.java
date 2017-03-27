@@ -37,5 +37,10 @@ public interface CustomerService {
     int customerAudit(Long customerId);
 
     int Recharge(Map<String,String[]> params,LoginUser user);
-
+    /**
+     * 获取资金明细列表
+     * @param params
+     * @return
+     */
+    Map<String, Object> fundAccountList(Map<String,Object> params,LoginUser user);
 }

@@ -3,10 +3,7 @@ package com.yipeng.bill.bms.service.impl;
 import com.yipeng.bill.bms.core.crypto.CryptoUtils;
 import com.yipeng.bill.bms.core.utils.DateUtils;
 import com.yipeng.bill.bms.dao.*;
-import com.yipeng.bill.bms.domain.FundAccount;
-import com.yipeng.bill.bms.domain.Role;
-import com.yipeng.bill.bms.domain.User;
-import com.yipeng.bill.bms.domain.UserRole;
+import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.service.CustomerService;
 import com.yipeng.bill.bms.service.RoleService;
 import com.yipeng.bill.bms.service.UserRoleService;
@@ -39,6 +36,8 @@ public class CustomerServiceImpl implements CustomerService{
     private FundAccountMapper fundAccountMapper;
     @Autowired
     private BillPriceMapper billPriceMapper;
+    @Autowired
+    private  FundItemMapper fundItemMapper;
     @Override
     public int savaUser(User user, int addMemberId, Long userId,String realName,String contact,String phone,String qq, BigDecimal balance) {
 
@@ -378,6 +377,12 @@ public class CustomerServiceImpl implements CustomerService{
         return 0;
     }
 
+    /**
+     * 充值
+     * @param params
+     * @param user
+     * @return
+     */
     @Override
     public int Recharge(Map<String, String[]> params, LoginUser user) {
         String[] checkboxLength=params.get("length");
@@ -400,6 +405,12 @@ public class CustomerServiceImpl implements CustomerService{
                 fundAccount1.setUpdateTime(new Date());
                 fundAccount1.setUpdateUserId(user.getId());
                 fundAccountMapper.insert(fundAccount1);
+                FundItem fundItem = new FundItem();
+                fundItem.setFundAccountId(fundAccount1.getId());
+                fundItem.setChangeAmount(new BigDecimal(nums));
+                fundItem.setChangeTime(new Date());
+                fundItem.setItemType("recharge"); //充值
+                fundItemMapper.insert(fundItem);
             }
             else
             {
@@ -414,10 +425,37 @@ public class CustomerServiceImpl implements CustomerService{
                 fundAccount1.setUpdateTime(new Date());
                 fundAccount1.setUpdateUserId(user.getId());
                 fundAccountMapper.updateByPrimaryKeySelective(fundAccount1);
+
+                FundItem fundItem = new FundItem();
+                fundItem.setFundAccountId(fundAccount.getId());
+                fundItem.setChangeAmount(new BigDecimal(nums));
+                fundItem.setChangeTime(new Date());
+                fundItem.setItemType("recharge"); //充值
+                fundItemMapper.insert(fundItem);
             }
 
 
         }
         return  1;
+    }
+    /**
+     * 获取资金明细列表
+     * @param params
+     * @return
+     */
+    @Override
+    public Map<String, Object> fundAccountList(Map<String, Object> params,LoginUser user) {
+       //判断角色获取对应的客户
+            if(user.hasRole("SUPER_ADMIN"))
+            {
+                  Role role=roleMapper.selectByRoleCode("DISTRIBUTOR");
+                  List<FundItem> fundItemList=fundItemMapper.getFundItemList(params);
+                for (FundItem funItem:fundItemList
+                     ) {
+                    
+                }
+            }
+
+        return null;
     }
 }

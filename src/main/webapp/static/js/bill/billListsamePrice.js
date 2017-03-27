@@ -78,7 +78,7 @@ $(".samepricecmt").click(function () {
                         price2:Aprice2,
                         rankend3:Arankend3,
                         price3:Aprice3,
-                        customerId:customerIds
+                        customerId:customerId
 
                     },
                     beforeSend: function () {

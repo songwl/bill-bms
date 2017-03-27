@@ -61,17 +61,31 @@ public class LoginController extends BaseController {
 		{
 			if(user.getUserName().equals(userName)&&user.getPassword().equals(CryptoUtils.md5(password)))
 			{
-				int loginCount=user.getLoginCount();
-				user.setLastLoginTime(new Date());
-				user.setLoginCount(loginCount+1);
-				userMapper.updateByPrimaryKey(user);
-				boolean flag = executeLogin(request, response, user);
-				return "redirect:/index";
+				if(user.getStatus())
+				{
+					int loginCount=user.getLoginCount();
+					user.setLastLoginTime(new Date());
+					user.setLoginCount(loginCount+1);
+					userMapper.updateByPrimaryKey(user);
+					boolean flag = executeLogin(request, response, user);
+					return "redirect:/index";
+				}
+				else
+				{
+					modelMap.addAttribute("loginFailureMessage", "您无权限登录系统,请联系管理!");
+					return "/user/login";
+
+				}
+
 			}
 		}
 
-		modelMap.addAttribute("loginFailureMessage", "用户名密码错误");
-		return "/user/login";
+
+			modelMap.addAttribute("loginFailureMessage", "用户名密码错误");
+			return "/user/login";
+
+
+
 	}
 
 

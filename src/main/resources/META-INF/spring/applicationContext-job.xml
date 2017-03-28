@@ -20,7 +20,7 @@
         </property>
         <property name="cronExpression">
             <!--凌晨0点-->
-            <value>0 0/3 * * * ?</value>
+            <value>0 0/50 * * * ?</value>
         </property>
     </bean>
 

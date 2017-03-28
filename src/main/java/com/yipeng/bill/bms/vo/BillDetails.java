@@ -25,6 +25,7 @@ public class BillDetails {
     private Integer dayOptimization;
     private Integer allOptimization;
     private BigDecimal   dayConsumption;
+    private Double   monthConsumption;
     private Integer   standardDays;
     private Integer state;
     private List<BillPrice> billPriceList;
@@ -60,6 +61,9 @@ public class BillDetails {
     public  Integer  setAllOptimization(Integer  allOptimization){return  this.allOptimization=allOptimization;}
     public  BigDecimal  getDayConsumption (){return  dayConsumption;}
     public  BigDecimal  setDayConsumption(BigDecimal  dayConsumption){return  this.dayConsumption=dayConsumption;}
+
+    public  Double  getMonthConsumption (){return  monthConsumption;}
+    public  Double  setMonthConsumption(Double  monthConsumption){return  this.monthConsumption=monthConsumption;}
     public  Integer  getStandardDays (){return  standardDays;}
     public  Integer  setStandardDays(Integer  standardDays){return  this.standardDays=standardDays;}
     public  Integer  getState(){return  state;}

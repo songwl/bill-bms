@@ -73,7 +73,16 @@ public class BillServiceimpl implements BillService {
                 params1.put("keywords", keywords[i]);
                 List<Bill> billList = billMapper.selectAllSelective(params1);
                 Map<String,Object> map=new HashMap<>();
-                map.put("url",urls[i]);
+                if(search[0].equals("360")||search[0].equals("搜狗"))
+                {
+                    String urlss="http://"+urls[i];
+                    map.put("url",urlss);
+                }
+                else
+                {
+                    map.put("url",urls[i]);
+                }
+
                 map.put("keywords",keywords[i]);
                 map.put("CreateUserId",user.getId());
                 map.put("search",search[0]);
@@ -836,9 +845,46 @@ public class BillServiceimpl implements BillService {
         billDetails.setBillPriceList(billPriceList);
         billDetails.setDayOptimization(bill.getDayOptimization());
         billDetails.setAllOptimization(bill.getAllOptimization());
-        //当天消费(缺)
+
+        //判断当前是否达标  当天消费
+        BillPrice billPrice1=new BillPrice();
+        billPrice1.setBillId(bill.getId());
+
+        if(way==1)
+        {
+            billPrice1.setOutMemberId(user.getId());
+        }
+        else
+        {
+            billPrice1.setInMemberId(user.getId());
+        }
+
+       List<BillPrice>  billPrice2= billPriceMapper.selectByBillPrice(billPrice1);
+       if(billPrice2.size()>0)
+       {
+           if(billPrice2.get(0).getBillRankingStandard()>bill.getNewRanking())
+           {
+               billDetails.setDayConsumption(billPrice2.get(0).getPrice());
+           }
+           Calendar now =Calendar.getInstance();
+           Map<String,Object> map=new HashMap<>();
+           map.put("year",now.get(Calendar.YEAR));
+           map.put("month",now.get(Calendar.MONTH)+1);
+           map.put("billId",bill.getId());
+           map.put("billPriceId",billPrice2.get(0).getId());
+           Double sum=billCostMapper.selectByPriceSum(map);
+           if(sum!=null)
+           {
+               billDetails.setMonthConsumption(sum);
+           }
+
+       }
+       Map<String,Object> map1=new HashMap<>();
+       map1.put("billId",bill.getId());
+       int count=billCostMapper.selectByPriceCount(map1);
+
         //本月消费（缺）
-        billDetails.setStandardDays(bill.getStandardDays());
+        billDetails.setStandardDays(count);
         billDetails.setState(bill.getState());
         return billDetails;
     }
@@ -909,6 +955,14 @@ public class BillServiceimpl implements BillService {
 
         }
         return 0;
+    }
+
+    @Override
+    public Map<String, Object> getPriceDetails(String billId, LoginUser user) {
+
+
+
+        return null;
     }
 
     /**

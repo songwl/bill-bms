@@ -20,4 +20,7 @@ public interface BillCostMapper {
     int updateByPrimaryKeySelective(BillCost record);
 
     int updateByPrimaryKey(BillCost record);
+
+    Double selectByPriceSum(Map<String, Object> modelMap);
+    int selectByPriceCount(Map<String, Object> modelMap);
 }

@@ -549,5 +549,14 @@ public class BillController extends BaseController {
         Map<String, Object> modelMap=billService.getBillDetails(params,user);
         return  modelMap;
     }
+    @RequestMapping(value = "/getPriceDetails",method = RequestMethod.GET)
+    public Map<String,Object> getPriceDetails(HttpServletRequest request)
+    {
+         LoginUser user=this.getCurrentAccount();
+         String billId=request.getParameter("billId");
+         Map<String,Object> map=billService.getPriceDetails(billId,user);
+        return map;
+
+    }
 
 }

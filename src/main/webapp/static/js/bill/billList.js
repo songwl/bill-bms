@@ -406,19 +406,38 @@ var TableInit = function () {
 
                 },
                 {
+                    field: "monthConsumption",
+                    align: 'center',
+                    valign: 'middle',
+                    title: '本月消费',
+                    formatter:function (value,row,index) {
+                        var a="";
+                        if(value==0)
+                        {
+                            a="<span style='color: #54728c'>-</span>";
+                        }
+                        else if(value==null)
+                        {
+                            a="<span style='color: #54728c'>-</span>";
+                        }
+                        else
+                        {
+                            a="<span style='color: #54728c'>¥ "+value+"</span>";
+                        }
+
+
+                        return a;
+                    }
+
+                },
+                {
                     field: "standardDays",
                     align: 'center',
                     valign: 'middle',
                     title: '达标天',
 
                 },
-                {
-                    field: "monthConsumption",
-                    align: 'center',
-                    valign: 'middle',
-                    title: '本月消费',
 
-                },
                 {
                     field: "state",
                     align: 'center',
@@ -486,8 +505,15 @@ var TableInit = function () {
             {
                str+="<tr><td>前<span class='red'>"+row.billPriceList[i]['billRankingStandard']+"</span>名</td><td>￥"+row.billPriceList[i]['price']+"</td></tr>";
             }
-
               $("#detailTable").append(str);
+            $.ajax({
+                type:'get',
+                url:CTX+"/bill/getPriceDetails",
+                data:{billId:row.id},
+                success:function () {
+
+                }
+            })
 
 
 

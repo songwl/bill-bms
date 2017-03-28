@@ -798,12 +798,26 @@ public class BillServiceimpl implements BillService {
         billDetails.setId(bill.getId());
         if(way==1)
         {
-            BillPrice billPrice1=new BillPrice();
-            billPrice1.setBillId(bill.getId());
-            billPrice1.setInMemberId(user.getId());
-           List<BillPrice> billPriceList1= billPriceMapper.selectByBillPrice(billPrice1);
-            User user2= userMapper.selectByPrimaryKey(billPriceList1.get(0).getOutMemberId());
-            billDetails.setUserName(user2.getUserName());
+            if(user.hasRole("CUSTOMER"))
+            {
+
+                BillPrice billPrice1=new BillPrice();
+                billPrice1.setBillId(bill.getId());
+                billPrice1.setOutMemberId(user.getId());
+                List<BillPrice> billPriceList1= billPriceMapper.selectByBillPrice(billPrice1);
+                User user2= userMapper.selectByPrimaryKey(billPriceList1.get(0).getOutMemberId());
+                billDetails.setUserName(user2.getUserName());
+            }
+            else
+            {
+
+                BillPrice billPrice1=new BillPrice();
+                billPrice1.setBillId(bill.getId());
+                billPrice1.setInMemberId(user.getId());
+                List<BillPrice> billPriceList1= billPriceMapper.selectByBillPrice(billPrice1);
+                User user2= userMapper.selectByPrimaryKey(billPriceList1.get(0).getOutMemberId());
+                billDetails.setUserName(user2.getUserName());
+            }
 
         }
         else

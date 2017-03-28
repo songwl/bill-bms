@@ -35,6 +35,7 @@ public class CallCostTask {
             if (!CollectionUtils.isEmpty(billList)) {
                 for (Bill bill : billList) {
                     billCallCostService.updateCallCost(bill);
+
                 }
             }
             if (CollectionUtils.isEmpty(billList) || billList.size()<limit) { //查询为空或者不足limit条,说明已查询结束
@@ -44,6 +45,9 @@ public class CallCostTask {
             offset += limit; //查询下一页
 
         }
+
+
+
     }
 
 }

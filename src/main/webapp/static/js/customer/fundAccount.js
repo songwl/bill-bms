@@ -20,7 +20,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#myTable').bootstrapTable({
-            url:CTX+ '/bill/fundAccountList',         //请求后台的URL（*）
+            url:CTX+ '/customer/fundAccountList',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
@@ -66,6 +66,15 @@ var TableInit = function () {
 
                 },
                 {
+                    field: 'fundItemId',
+                    sortable: true,
+                    align: 'center',
+                    valign: 'middle',
+                    title: 'sql序号',
+                    visible:false
+
+                },
+                {
                     field: 'userName',
                     sortable: true,
                     align: 'center',
@@ -74,31 +83,45 @@ var TableInit = function () {
 
                 },
                 {
-                    field: 'transactionType',
+                    field: 'itemType',
                     align: 'center',
                     valign: 'middle',
                     sortable: true,
-                    title: '交易类别'
+                    title: '交易类别',
+                    formatter:function (value,row,index) {
+                        var a="";
+                        if(value=='recharge')
+                        {
+                            a="<span>充值</span>";
+                        }
+                        else
+                        {
+                            a="<span>消费</span>";
+                        }
+                        return a;
+                    }
+
                 }, {
-                    field: 'change',
+                    field: 'changeAmount',
                     align: 'center',
                     valign: 'middle',
                     title: '变动',
 
-                }, {
+                },
+                {
+                    field: 'changeTime',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '变动时间',
+
+                },{
                     field: 'balance',
                     align: 'center',
                     sortable: true,
                     valign: 'middle',
                     title: '余额'
                 },
-                {
-                    field: 'remark',
-                    align: 'center',
-                    valign: 'middle',
-                    sortable: true,
-                    title: '备注'
-                },
+
 
 
 

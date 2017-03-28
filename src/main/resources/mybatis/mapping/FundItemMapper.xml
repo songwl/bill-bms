@@ -90,12 +90,46 @@
       item_type = #{itemType,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-
-  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
-  select a.* from t_fund_item as a,t_fund_account as b, t_user_role as c
+  <select id="getFundItemList"  resultMap="BaseResultMap">
+  select a.*
+  from
+  t_fund_item as a,t_fund_account as b, t_user_role as c
   where
   a.fund_account_id=b.id
    and b.user_id=c.user_id
   and c.role_id=#{roleId,jdbcType=BIGINT}
+    limit #{offset},#{limit}
+  </select>
+
+  <select id="getFundItemListCount"  resultType="java.lang.Long">
+    select COUNT(a.id)
+    from
+    t_fund_item as a,t_fund_account as b, t_user_role as c
+    where
+    a.fund_account_id=b.id
+    and b.user_id=c.user_id
+    and c.role_id=#{roleId,jdbcType=BIGINT}
+  </select>
+
+  <select id="getFundItemListByOther"  resultMap="BaseResultMap">
+   select a.*
+    from
+    t_fund_item as a,t_fund_account as b, t_user_role as c,t_user as d
+    where
+    a.fund_account_id=b.id
+    and b.user_id=c.user_id
+   and c.user_id=d.id
+    and d.create_user_id=#{userId,jdbcType=BIGINT}
+    limit #{offset},#{limit}
+  </select>
+  <select id="getFundItemListByOtherCount"  resultType="java.lang.Long">
+    select COUNT(a.id)
+    from
+    t_fund_item as a,t_fund_account as b, t_user_role as c,t_user as d
+    where
+    a.fund_account_id=b.id
+    and b.user_id=c.user_id
+     and c.user_id=d.id
+    AND  d.create_user_id=#{userId,jdbcType=BIGINT}
   </select>
 </mapper>

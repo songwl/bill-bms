@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -47,6 +48,7 @@ public class BillCallCostServiceImpl implements BillCallCostService {
 
         //3.根据最新的排名计算价钱,产生消费
         int newRanking = bill.getNewRanking().intValue();
+        //今日消费总额
         for (Long userId : userPriceMap.keySet()) { //对每个付款人进行计算
             List<BillPrice> billPriceList = userPriceMap.get(userId);
             //根据设置排名的数据进行排序,排名数据越小在前面
@@ -72,16 +74,25 @@ public class BillCallCostServiceImpl implements BillCallCostService {
 
                     //4.从资金账号扣减余额
                     FundAccount fundAccount = fundAccountMapper.selectByUserId(userId);
-                    fundAccountMapper.reduceBalance(fundAccount.getId(), billPrice.getPrice()); //扣减余额
-                    //创建资金消费流水
-                    FundItem fundItem = new FundItem();
-                    fundItem.setFundAccountId(fundAccount.getId());
-                    fundItem.setChangeAmount(billCost.getCostAmount());
-                    fundItem.setChangeTime(new Date());
-                    fundItem.setItemType("cost"); //消费
-                    fundItemMapper.insert(fundItem);
+                    if(fundAccount==null)
+                    {
+                        FundAccount fundAccount1=new FundAccount();
+                        fundAccount1.setUserId(userId);
+                        fundAccount1.setCreateUserId(userId);
+                        fundAccount1.setCreateTime(new Date());
+                        fundAccount1.setBalance(new BigDecimal(0));
+                        int a= fundAccountMapper.insert(fundAccount1);
+                        fundAccountMapper.reduceBalance(fundAccount1.getId(), billPrice.getPrice()); //扣减余额
 
-                    break; //不需要再往后
+                        break;
+
+                    }
+                    else
+                    {
+                        fundAccountMapper.reduceBalance(fundAccount.getId(), billPrice.getPrice()); //扣减余额
+                        break; //不需要再往后
+                    }
+
                 }
             }
         }

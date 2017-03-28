@@ -23,7 +23,7 @@
     delete from t_fund_account
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.FundAccount">
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.FundAccount" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
     insert into t_fund_account (id, user_id, balance, 
       create_time, create_user_id, update_time, 
       update_user_id)

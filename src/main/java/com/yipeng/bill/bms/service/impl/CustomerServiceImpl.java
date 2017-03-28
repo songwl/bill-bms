@@ -8,8 +8,10 @@ import com.yipeng.bill.bms.service.CustomerService;
 import com.yipeng.bill.bms.service.RoleService;
 import com.yipeng.bill.bms.service.UserRoleService;
 import com.yipeng.bill.bms.vo.CustomerListDetails;
+import com.yipeng.bill.bms.vo.FundAccountDetails;
 import com.yipeng.bill.bms.vo.LoginUser;
 import com.yipeng.bill.bms.vo.Roles;
+import freemarker.template.utility.DateUtil;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -446,16 +448,69 @@ public class CustomerServiceImpl implements CustomerService{
     @Override
     public Map<String, Object> fundAccountList(Map<String, Object> params,LoginUser user) {
        //判断角色获取对应的客户
+        int limit=Integer.parseInt(params.get("limit").toString()) ;
+        int offset=Integer.parseInt(params.get("offset").toString()) ;
+        int i=offset;
+        List<FundAccountDetails> fundAccountDetailsList=new ArrayList<>();
             if(user.hasRole("SUPER_ADMIN"))
             {
+
                   Role role=roleMapper.selectByRoleCode("DISTRIBUTOR");
+                params.put("roleId",role.getId());
                   List<FundItem> fundItemList=fundItemMapper.getFundItemList(params);
+                  Long total=fundItemMapper.getFundItemListCount(params);
                 for (FundItem funItem:fundItemList
                      ) {
-                    
+                    i++;
+                    //获取余额
+                    FundAccount fundAccount=fundAccountMapper.selectByPrimaryKey(funItem.getFundAccountId());
+                    //获取用户名
+                    User user1=userMapper.selectByPrimaryKey(fundAccount.getUserId());
+                    FundAccountDetails fundAccountDetails=new FundAccountDetails();
+                    fundAccountDetails.setId(i);
+                    fundAccountDetails.setFundItemId(funItem.getId());
+                    fundAccountDetails.setUserName(user1.getUserName());
+                    fundAccountDetails.setitemType(funItem.getItemType());
+                    fundAccountDetails.setChangeAmount(funItem.getChangeAmount());
+                    fundAccountDetails.setBalance(fundAccount.getBalance());
+                    fundAccountDetails.setChangeTime(DateUtils.formatDate(funItem.getChangeTime()));
+                    fundAccountDetailsList.add(fundAccountDetails);
+
                 }
+                Map<String,Object> map=new  HashMap<>();
+                map.put("total",total);
+                map.put("rows",fundAccountDetailsList);
+                return  map;
+            }
+            else
+            {
+
+                params.put("userId",user.getId());
+                List<FundItem> fundItemList=fundItemMapper.getFundItemListByOther(params);
+                Long total=fundItemMapper.getFundItemListByOtherCount(params);
+                for (FundItem funItem:fundItemList
+                        ) {
+                    i++;
+                    //获取余额
+                    FundAccount fundAccount=fundAccountMapper.selectByPrimaryKey(funItem.getFundAccountId());
+                    //获取用户名
+                    User user1=userMapper.selectByPrimaryKey(fundAccount.getUserId());
+                    FundAccountDetails fundAccountDetails=new FundAccountDetails();
+                    fundAccountDetails.setId(i);
+                    fundAccountDetails.setFundItemId(funItem.getId());
+                    fundAccountDetails.setUserName(user1.getUserName());
+                    fundAccountDetails.setitemType(funItem.getItemType());
+                    fundAccountDetails.setChangeAmount(funItem.getChangeAmount());
+                    fundAccountDetails.setBalance(fundAccount.getBalance());
+                    fundAccountDetails.setChangeTime(DateUtils.formatDate(funItem.getChangeTime()));
+                    fundAccountDetailsList.add(fundAccountDetails);
+
+                }
+                Map<String,Object> map=new  HashMap<>();
+                map.put("total",total);
+                map.put("rows",fundAccountDetailsList);
+                return  map;
             }
 
-        return null;
     }
 }

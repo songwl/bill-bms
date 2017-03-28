@@ -17,5 +17,10 @@ public interface FundItemMapper {
     int updateByPrimaryKeySelective(FundItem record);
 
     int updateByPrimaryKey(FundItem record);
+
     List<FundItem> getFundItemList(Map<String,Object> params);
+    Long getFundItemListCount(Map<String,Object> params);
+
+    List<FundItem> getFundItemListByOther(Map<String,Object> params);
+    Long getFundItemListByOtherCount(Map<String,Object> params);
 }

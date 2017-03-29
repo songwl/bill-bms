@@ -258,6 +258,7 @@
                                                 <th data-field="ranking">排名</th>
                                                 <th data-field="price">金额</th>
                                             </tr>
+
                                             </thead>
                                         </table>
                                         <div class="row">

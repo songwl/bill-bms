@@ -211,19 +211,37 @@ var TableInit = function () {
 
                 },
                 {
-                    field: 'priceOne',
+                    field: 'billPriceList',
                     align: 'center',
                     valign: 'middle',
                     title: '价格1',
+                    formatter:function (value,row,index) {
+                        var a="";
+                        a=value[0]["price"];
+                        return a;
+                    }
 
                 },
 
                 {
-                    field: 'priceTwo',
+                    field: 'billPriceList',
                     align: 'center',
                     valign: 'middle',
                     sortable: true,
                     title: '价格2',
+                    formatter:function (value,row,index) {
+                        var a="";
+                        if(value[1]!=null)
+                        {
+                            a=value[1]["price"];
+                        }
+                        else
+                        {
+                            a="-";
+                        }
+
+                        return a;
+                    }
 
                 },
 

@@ -42,7 +42,7 @@ public class OperatorController extends  BaseController {
         LoginUser users=this.getCurrentAccount();
         if(users.hasRole("SUPER_ADMIN"))
         {
-            int a=operatorService.saveOperator(user);
+            int a=operatorService.saveOperator(user,users);
             if(a==0)
             {
                 return this.ajaxDoneError("用户名已经存在！");

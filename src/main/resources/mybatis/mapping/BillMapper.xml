@@ -266,10 +266,10 @@
     from t_bill
     WHERE 1=1
     <if test="website != null">
-      AND website = #{website,jdbcType=VARCHAR}
+      AND website LIKE #{website,jdbcType=VARCHAR}
     </if>
     <if test="keywords != null">
-      AND keywords = #{keywords,jdbcType=VARCHAR}
+      AND keywords LIKE #{keywords,jdbcType=VARCHAR}
     </if>
     <if test="createTime != null">
       AND create_time = #{createTime,jdbcType=TIMESTAMP}
@@ -326,10 +326,10 @@
     </if>
     )
     <if test="website != null">
-      AND a.website = #{website,jdbcType=VARCHAR}
+      AND a.website LIKE CONCAT('%',#{website,jdbcType=VARCHAR},'%')
     </if>
     <if test="keywords != null">
-      AND a.keywords = #{keywords,jdbcType=VARCHAR}
+      AND a.keywords LIKE CONCAT('%',#{keywords,jdbcType=VARCHAR},'%')
     </if>
     <if test="createTime != null">
       AND a.create_time = #{createTime,jdbcType=TIMESTAMP}
@@ -379,10 +379,10 @@
     where a.id=b.bill_id
     AND b.out_member_id=#{userId,jdbcType=BIGINT}
     <if test="website != null">
-      AND website = #{website,jdbcType=VARCHAR}
+      AND a.website LIKE CONCAT('%',#{website,jdbcType=VARCHAR},'%')
     </if>
     <if test="keywords != null">
-      AND keywords = #{keywords,jdbcType=VARCHAR}
+      AND a.keywords LIKE CONCAT('%',#{keywords,jdbcType=VARCHAR},'%')
     </if>
     <if test="createTime != null">
       AND create_time = #{createTime,jdbcType=TIMESTAMP}
@@ -433,10 +433,10 @@
     where a.id=b.bill_id  AND  a.id=d.bill_id AND b.out_member_id=e.user_id
     AND b.in_member_id=#{userId,jdbcType=BIGINT}
     <if test="website != null">
-      AND a.website = #{website,jdbcType=VARCHAR}
+      AND a.website LIKE CONCAT('%',#{website,jdbcType=VARCHAR},'%')
     </if>
     <if test="keywords != null">
-      AND a.keywords = #{keywords,jdbcType=VARCHAR}
+      AND a.keywords LIKE CONCAT('%',#{keywords,jdbcType=VARCHAR},'%')
     </if>
     <if test="createTime != null">
       AND a.create_time = #{createTime,jdbcType=TIMESTAMP}
@@ -488,18 +488,16 @@
     </if>
     limit #{offset},#{limit}
   </select>
-
-
   <select id="selectByCustomerIdCount"  resultType="java.lang.Long">
     select COUNT(DISTINCT a.id)
     from t_bill as a,t_bill_price as b,t_bill_search_support as d,t_user_role as e
     where a.id=b.bill_id  AND  a.id=d.bill_id AND b.out_member_id=e.user_id
     AND b.in_member_id=#{userId,jdbcType=BIGINT}  AND  e.role_id= #{roleId,jdbcType=BIGINT}
     <if test="website != null">
-      AND a.website = #{website,jdbcType=VARCHAR}
+      AND a.website LIKE #{website,jdbcType=VARCHAR}
     </if>
     <if test="keywords != null">
-      AND a.keywords = #{keywords,jdbcType=VARCHAR}
+      AND a.keywords LIKE #{keywords,jdbcType=VARCHAR}
     </if>
     <if test="createTime != null">
       AND a.create_time = #{createTime,jdbcType=TIMESTAMP}
@@ -550,53 +548,61 @@
 
   <select id="getBillListCount" resultType="java.lang.Long">
     select COUNT(DISTINCT a.id)
-    from t_bill as a,t_bill_price as b
-    where a.id=b.bill_id
+    from t_bill as a,t_bill_price as b,t_bill_search_support as d
+    where a.id=b.bill_id  AND  a.id=d.bill_id
     AND b.in_member_id=#{userId,jdbcType=BIGINT}
-    <if test="website != null">
-      AND website = #{website,jdbcType=VARCHAR}
-    </if>
-    <if test="keywords != null">
-      AND keywords = #{keywords,jdbcType=VARCHAR}
-    </if>
-    <if test="createTime != null">
-      AND create_time = #{createTime,jdbcType=TIMESTAMP}
-    </if>
-    <if test="updateTime != null">
-      AND update_time = #{updateTime,jdbcType=TIMESTAMP}
-    </if>
-    <if test="createUserId != null">
-      AND  create_user_id = #{createUserId,jdbcType=BIGINT}
-    </if>
-    <if test="updateUserId != null">
-      AND update_user_id = #{updateUserId,jdbcType=BIGINT}
-    </if>
-    <if test="firstRanking != null">
-      AND first_ranking = #{firstRanking,jdbcType=INTEGER}
-    </if>
-    <if test="newRanking != null">
-      AND  new_ranking = #{newRanking,jdbcType=INTEGER}
-    </if>
-    <if test="webAppId != null">
-      AND  web_app_id = #{webAppId,jdbcType=INTEGER}
-    </if>
-    <if test="standardDays != null">
-      AND  standard_days = #{standardDays,jdbcType=INTEGER}
-    </if>
-    <if test="dayOptimization != null">
-      AND  day_optimization = #{dayOptimization,jdbcType=INTEGER}
-    </if>
-    <if test="allOptimization != null">
-      AND  all_optimization = #{allOptimization,jdbcType=INTEGER}
-    </if>
+    AND (
     <if test="state != null">
-      AND  state = #{state,jdbcType=INTEGER}
+      a.state = #{state,jdbcType=INTEGER}
     </if>
     <if test="state2 != null">
       OR  state = #{state2,jdbcType=INTEGER}
     </if>
+    )
+    <if test="website != null">
+      AND a.website LIKE CONCAT('%',#{website,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="keywords != null">
+      AND a.keywords LIKE CONCAT('%',#{keywords,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="createTime != null">
+      AND a.create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateTime != null">
+      AND a.update_time = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="createUserId != null">
+      AND  a.create_user_id = #{createUserId,jdbcType=BIGINT}
+    </if>
+    <if test="updateUserId != null">
+      AND a.update_user_id = #{updateUserId,jdbcType=BIGINT}
+    </if>
+    <if test="firstRanking != null">
+      AND a.first_ranking = #{firstRanking,jdbcType=INTEGER}
+    </if>
+    <if test="newRanking != null">
+      AND  a.new_ranking = #{newRanking,jdbcType=INTEGER}
+    </if>
+    <if test="webAppId != null">
+      AND  a.web_app_id = #{webAppId,jdbcType=INTEGER}
+    </if>
+    <if test="standardDays != null">
+      AND  a.standard_days = #{standardDays,jdbcType=INTEGER}
+    </if>
+    <if test="dayOptimization != null">
+      AND  a.day_optimization = #{dayOptimization,jdbcType=INTEGER}
+    </if>
+    <if test="allOptimization != null">
+      AND  a.all_optimization = #{allOptimization,jdbcType=INTEGER}
+    </if>
     <if test="billAscription != null">
-      AND  bill_ascription= #{billAscription,jdbcType=BIGINT}
+      AND  a.bill_ascription= #{billAscription,jdbcType=BIGINT}
+    </if>
+    <if test="searchName != null">
+      AND  d.search_support= #{searchName,jdbcType=VARCHAR}
+    </if>
+    <if test="searchUserNameId != null">
+      AND  b.out_member_id= #{searchUserNameId,jdbcType=VARCHAR}
     </if>
   </select>
 </mapper>

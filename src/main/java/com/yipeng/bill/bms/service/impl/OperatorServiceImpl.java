@@ -12,9 +12,11 @@ import com.yipeng.bill.bms.service.OperatorService;
 import com.yipeng.bill.bms.service.RoleService;
 import com.yipeng.bill.bms.service.UserRoleService;
 import com.yipeng.bill.bms.vo.CustomerListDetails;
+import com.yipeng.bill.bms.vo.LoginUser;
 import com.yipeng.bill.bms.vo.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.rmi.runtime.Log;
 
 import java.util.*;
 
@@ -35,7 +37,7 @@ public class OperatorServiceImpl implements OperatorService {
     private UserRoleService userRoleService;
 
     @Override
-    public int saveOperator(User user) {
+    public int saveOperator(User user, LoginUser users) {
 
         User user1=userMapper.selectByUserName(user.getUserName());
         if(user1!=null)
@@ -48,6 +50,11 @@ public class OperatorServiceImpl implements OperatorService {
             user.setCreateTime(new Date());
             user.setPassword(CryptoUtils.md5(user.getPassword()));
             user.setLoginCount(0);
+            user.setCreateUserId(users.getId());
+            user.setQq(user.getQq());
+            user.setPhone(user.getPhone());
+            user.setContact(user.getContact());
+            user.setRealName(user.getRealName());
             int num = userMapper.insert(user);
             Role role=roleService.getRoleByRoleCode(Roles.COMMISSIONER.name());
 

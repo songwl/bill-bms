@@ -1,6 +1,7 @@
 package com.yipeng.bill.bms.service;
 
 import com.yipeng.bill.bms.domain.User;
+import com.yipeng.bill.bms.vo.LoginUser;
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ public interface OperatorService {
      * @param user
      * @return
      */
-    int saveOperator(User user);
+    int saveOperator(User user, LoginUser users);
 
     /**
      * 获取操作员列表

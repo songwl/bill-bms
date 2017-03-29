@@ -86,7 +86,7 @@
             <div class="statbox widget box box-shadow">
                 <div class="widget-content">
                     <div class="visual red">
-                        <i class="icon-dollar"></i>
+                        <i class="fa fa-user"></i>
                     </div>
                     <div class="title">
                         客户数

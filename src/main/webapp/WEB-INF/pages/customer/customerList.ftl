@@ -49,9 +49,9 @@
                 <div class="panel-nav">
                     <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;客户列表</div>
                     <div class="Nav_Right">
-
-
-
+                        <div id="continue">正常</div>
+                        <div id="stop">冻结</div>
+                        <div id="all">全部</div>
                     </div>
                     <div class="cls"></div>
                 </div>

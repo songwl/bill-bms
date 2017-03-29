@@ -256,6 +256,14 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '客户',
+                    formatter:function (value,row,index) {
+                        var a="";
+
+                        a="<span style='color:#4382CF;cursor:pointer;' id='details'>"+value+"</span>";
+
+
+                        return a;
+                    }
 
                 },
                 {
@@ -335,7 +343,10 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     formatter:function (value,row,index) {
-                        var a="<span style='color:#4382CF;cursor:pointer;' id='details'>详情</span>";
+                        var a="<span style='color:#4382CF;cursor:pointer;' id='details'>充值</span>   " +
+                            "<span style='color:#4382CF;cursor:pointer;' id='details'>退款</span>   " +
+                            "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
+                            "<span style='color:#4382CF;cursor:pointer;' id='details'>改密</span>   ";
 
                         return a;
                     }

@@ -390,15 +390,15 @@ var TableInit = function () {
                         var a="";
                         if(value==0)
                         {
-                            a="<span style='color: #54728c'>-</span>";
+                            a="<span style='color: #4382CF'>-</span>";
                         }
                         else if(value==null)
                         {
-                            a="<span style='color: #54728c'>-</span>";
+                            a="<span style='color: #4382CF'>-</span>";
                         }
                         else
                         {
-                            a="<span style='color: #54728c'>¥ "+value+"</span>";
+                            a="<span style='color: #4382CF'>¥ "+value+"</span>";
                         }
 
                         return a;
@@ -414,15 +414,15 @@ var TableInit = function () {
                         var a="";
                         if(value==0)
                         {
-                            a="<span style='color: #54728c'>-</span>";
+                            a="<span style='color: #4382CF'>-</span>";
                         }
                         else if(value==null)
                         {
-                            a="<span style='color: #54728c'>-</span>";
+                            a="<span style='color: #4382CF'>-</span>";
                         }
                         else
                         {
-                            a="<span style='color: #54728c'>¥ "+value+"</span>";
+                            a="<span style='color: #4382CF'>¥ "+value+"</span>";
                         }
 
 

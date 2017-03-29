@@ -13,9 +13,6 @@
         <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>关键词优化</span>
     </div>
     <div class="nav_R right" id="divQx">
-
-
-
         <div class="search">
             <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
         </div>
@@ -25,7 +22,6 @@
     </div>
 </div>
 <div class="Navs2">
-
     <div class="nav_R2 right" >
         <input type="hidden" name="type" value="${way}">
         <div>
@@ -41,7 +37,7 @@
         <div class="panel panel-primary" id="list-panel">
             <div class="panel-body">
                 <div class="panel-nav">
-                    <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;关键词排名</div>
+                    <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;关键词优化</div>
                     <div class="Nav_Right">
                         <div id="continue">优化中</div>
                         <div id="stop">合作停</div>
@@ -54,14 +50,10 @@
                     <button id="OptimizationUpdate" type="button" class="btn btn-default">
                         <span class="glyphicon glyphicon-apple" aria-hidden="true" id=""></span> 优化调整
                     </button>
-
-
-
                 </div>
                 <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%">
                 </table>
             </div>
-
         </div>
     </div>
 </div>
@@ -112,6 +104,4 @@
     </div>
 </div>
 <!--优化调整end-->
-
-
 </@base.html>

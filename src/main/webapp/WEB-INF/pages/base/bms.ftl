@@ -290,7 +290,7 @@
                         </a>
                         <ul class="sub-menu">
                             <li>
-                                <a href="${ctx}/customer/customerList">
+                                <a href="${ctx}/achievement/achievementList">
                                     业绩详情
                                 </a>
                             </li>

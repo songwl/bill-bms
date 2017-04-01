@@ -464,7 +464,8 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     formatter:function (value,row,index) {
-                        var a="<span style='color:#4382CF;cursor:pointer;' id='details'>详情</span>";
+                        var a="<span style='color:#4382CF;cursor:pointer;' id='details'>详情</span>  " +
+                               "  <span style='color:#4382CF;cursor:pointer;' id='feedback'>反馈</span>";
 
                         return a;
                     },

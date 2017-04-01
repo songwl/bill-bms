@@ -5,7 +5,6 @@
 
 <script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
-<link href="${ctx}/static/css/public/pace.css" rel="stylesheet">
 <script src="${ctx}/static/js/public/pace.js"></script>
 <script src="${ctx}/static/js/bill/billOptimization.js"></script>
 <div class="Navs">

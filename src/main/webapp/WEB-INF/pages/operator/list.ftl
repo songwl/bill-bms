@@ -2,13 +2,8 @@
 <#import "/base/dict.ftl" as dict>
 
 <@base.html "操作员列表">
-
-
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <script src="${ctx}/static/js/operator/operatorList.js"></script>
-
-
-
 <div class="Navs">
     <div class="nav_L left">
         <i class="fa fa-home">&nbsp;</i><span>操作员管理</span> > <span>操作员列表</span>

@@ -22,18 +22,14 @@
 
 <@base.headcontent>
 	<!--icheck-->
-	<link href="${ctx}/static/js/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+	<link href="${ctx}/static/css/public/back.css" rel="stylesheet" type="text/css"/>
+	<link href="${ctx}/static/css/public/pace.css" rel="stylesheet" type="text/css"/>
+	<link href="${ctx}/static/css/public/common.css" rel="stylesheet" type="text/css"/>
 	<link href="${ctx}/static/js/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-	<link href="${ctx}/static/js/assets/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css"/>
-	<link href="${ctx}/static/js/assets/css/style-metronic.css" rel="stylesheet" type="text/css"/>
 	<link href="${ctx}/static/js/assets/css/style.css" rel="stylesheet" type="text/css"/>
 	<link href="${ctx}/static/js/assets/css/style-responsive.css" rel="stylesheet" type="text/css"/>
-	<link href="${ctx}/static/js/assets/css/plugins.css" rel="stylesheet" type="text/css"/>
-	<link href="${ctx}/static/js/assets/css/pages/tasks.css" rel="stylesheet" type="text/css"/>
-	<link href="${ctx}/static/js/assets/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color"/>
-	<link href="${ctx}/static/js/assets/css/custom.css" rel="stylesheet" type="text/css"/>
 	<link rel="shortcut icon" href="${ctx}/static/js/assets/img/favicon.ico"/>
-  
+
 	${bms_head_content!""}
 </@base.headcontent>
 
@@ -56,68 +52,136 @@
 	<script type="text/javascript" src="${ctx}/static/js/assets/plugins/select2/select2.min.js"></script>
 	<script src="${ctx}/static/js/assets/scripts/app.js" type="text/javascript"></script>
 	<script type="text/javascript" src="${ctx}/static/js/app/js/index.js"></script>
-	
+
 	${bms_js_content!""}
 </@base.jscontent>
 
 <@base.html title "page-header-fixed">
-	<div class="header navbar navbar-inverse navbar-fixed-top">
-		<div class="header-inner">
-			<a class="navbar-brand" href="javascript:;">
-				翊芃网络
-			</a>
-			<a href="javascript:;" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-				<img src="../static/js/assets/img/menu-toggler.png" alt=""/>
-			</a>
-			<ul class="nav navbar-nav pull-right">
-				<li class="dropdown user">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-						<img alt="" src="../static/js/assets/img/avatar1_small.jpg"/>
-						<span class="username">${bmsModel.user.userName}</span>
-						<i class="fa fa-angle-down"></i>
-					</a>
-					<ul class="dropdown-menu">
-						<li>
-							<a href="javascript:;" id="trigger_fullscreen">
-								<i class="fa fa-move"></i> 全屏
-							</a>
-						</li>
-						<li>
-							<a href="#">
-								<i class="fa fa-lock"></i>修改头像
-							</a>
-						</li>
-						<li>
-							<a href="${ctx}/logout">
-								<i class="fa fa-key"></i> 退出
-							</a>
-						</li>
-					</ul>
-				</li>
-			</ul>
-		</div>
-	</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#clickUser").click(function () {
+
+                 if($(".userDetails").css("display")=="block")
+                 {
+                     $(".userDetails").slideUp();
+                 }
+                 else
+                 {
+                     $(".userDetails").slideDown();
+                     $(".messageShow").slideUp();
+                 }
+        })
+        $("#clickMessage").click(function () {
+
+            if($(".messageShow").css("display")=="block")
+            {
+                $(".messageShow").slideUp();
+            }
+            else
+            {
+                $(".messageShow").slideDown();
+                $(".userDetails").slideUp();
+            }
+        })
+        $("#menuClick").click(function () {
+            $("#menuShow").css({"display":"none"});
+        })
+
+    })
+</script>
+<!--顶部导航栏     开始 -->
+<header class="header navbar navbar-fixed-top" role="banner">
+    <div class="container">
+
+        <a class="navbar-brand" href="#">
+            <strong>管理后台</strong>
+            <i class="fa fa-bars" id="menuClick"></i>
+        </a>
+        <ul class="nav navbar-right" style="height:50px;">
+            <li class="dropdown user" style="height:48px;" >
+                <a class="dropdown-toggle" data-toggle="dropdown" id="clickUser">
+                    <i class="fa fa-user"></i>
+                        <span class="username">用戶中心</span>
+                    <i class="icon-caret-down small"></i>
+                </a>
+                <ul class="dropdown-menu userDetails">
+                    <li>
+                        <a class="dlg-user-edit-info">
+                            <i class="icon-user"></i> 基本资料
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dlg-user-edit-pwd">
+                            <i class="icon-pencil"></i> 修改密码
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            <i class="icon-tasks"></i> 任务列表
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="${ctx}/logout">
+                            <i class="icon-key"></i> 退出
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="nav navbar-right"  style="height:50px;">
+            <li class="dropdown user" style="height:48px;" >
+                <a class="dropdown-toggle" data-toggle="dropdown"  id="clickMessage">
+                    <i class="fa fa-bell"></i>
+                    <span class="username">消息中心</span>
+                    <i class="icon-caret-down small"></i>
+                </a>
+            </li>
+            <ul class="dropdown-menu messageShow" style="margin-top: 2px!important;position: absolute!important;	float: left!important;	background-color: #fff!important;
+                border: 1px solid #ccc!important;
+                border: 1px solid rgba(0, 0, 0, 0.15)!important;
+                -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175)!important;
+                -moz-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175)!important;
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175)!important;
+                right: 100px;
+                left: auto;
+                display: none;">
+                <li>
+                    <a class="dlg-user-edit-info">
+                        <i class="icon-user"></i> 新的订单
+                    </a>
+                </li>
+                <li>
+                    <a class="dlg-user-edit-pwd">
+                        <i class="icon-pencil"></i> 订单反馈
+                    </a>
+                </li>
+
+            </ul>
+        </ul>
+    </div>
+</header>
 	<div class="clearfix">
 	</div>
 	<div class="page-container">
-		<div class="page-sidebar-wrapper">
-			<div class="page-sidebar navbar-collapse collapse">
+		<div class="page-sidebar-wrapper" id="menuShow">
+			<div class="page-sidebar navbar-collapse collapse" style="border-right:1px solid #eee; " >
 				<ul class="page-sidebar-menu" id="page-sidebar-menu">
 					<li class="sidebar-toggler-wrapper">
 						<div class="sidebar-toggler hidden-phone">
 						</div>
 					</li>
-					<li class="start active">
+					<li class="start active" style="border-bottom: 1px solid #eee;">
 						<a href="javascript:;"  >
 							<i class="fa fa-home"></i><span class="title"> 首页 </span><span class="selected"></span>
 						</a>
 					</li>
 					<#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("ADMIN")||bmsModel.user.hasRole("COMMISSIONER")>
-					<li class="">
+					<li class="current" style="border-bottom: 1px solid #eee;">
 						<a href="javascript:;">
 							<i class="fa fa-star-o"></i><span class="title"> 优化管理 </span><span class="arrow "></span>
 						</a>
-						<ul class="sub-menu">
+						<ul class="sub-menu" style="background: #eee;">
                             <li>
                                 <a href="${ctx}/bill/list?way=2">
                                     关键词排名
@@ -142,11 +206,11 @@
 						</li>
 					</#if>
 					<#if bmsModel.user.hasRole("DISTRIBUTOR")>
-                        <li class="">
+                        <li class="" style="border-bottom: 1px solid #eee;">
                             <a href="javascript:;">
                                 <i class="fa fa-star-o"></i><span class="title"> 优化方管理 </span><span class="arrow "></span>
                             </a>
-                            <ul class="sub-menu">
+                            <ul class="sub-menu" style="background: #eee;">
                                 <li>
                                     <a href="${ctx}/bill/list?way=1">
                                         关键词排名
@@ -156,11 +220,11 @@
                         </li>
 					</#if>
 					<#if bmsModel.user.hasRole("DISTRIBUTOR")>
-                    <li class="">
+                    <li class="" style="border-bottom: 1px solid #eee;">
                         <a href="javascript:;">
                             <i class="fa fa-star-o"></i><span class="title"> 代理商管理 </span><span class="arrow "></span>
                         </a>
-                        <ul class="sub-menu">
+                        <ul class="sub-menu" style="background: #eee;">
                             <li>
                                 <a href="${ctx}/bill/list?way=2">
                                     关键词排名
@@ -175,11 +239,11 @@
                     </li>
 				</#if>
 					<#if bmsModel.user.hasRole("DISTRIBUTOR")>
-                        <li class="">
+                        <li class="" style="border-bottom: 1px solid #eee;">
                             <a href="javascript:;">
                                 <i class="fa fa-star-o"></i><span class="title"> 客户管理 </span><span class="arrow "></span>
                             </a>
-                            <ul class="sub-menu">
+                            <ul class="sub-menu" style="background: #eee;">
                                 <li>
                                     <a href="${ctx}/bill/billCustomer">
                                         关键词排名
@@ -194,11 +258,11 @@
                         </li>
 					</#if>
 					<#if bmsModel.user.hasRole("AGENT")>
-                        <li class="">
+                        <li class="" style="border-bottom: 1px solid #eee;">
                             <a href="javascript:;">
                                 <i class="fa fa-star-o"></i><span class="title"> 渠道商管理 </span><span class="arrow "></span>
                             </a>
-                            <ul class="sub-menu">
+                            <ul class="sub-menu" style="background: #eee;">
                                 <li>
                                     <a href="${ctx}/bill/list?way=1">
                                         关键词排名
@@ -208,11 +272,11 @@
                         </li>
 					</#if>
 					<#if bmsModel.user.hasRole("AGENT")>
-                        <li class="">
+                        <li class="" style="border-bottom: 1px solid #eee;">
                             <a href="javascript:;">
                                 <i class="fa fa-star-o"></i><span class="title"> 客户管理 </span><span class="arrow "></span>
                             </a>
-                            <ul class="sub-menu">
+                            <ul class="sub-menu" style="background: #eee;">
                                 <li>
                                     <a href="${ctx}/bill/billCustomer">
                                         关键词排名
@@ -227,11 +291,11 @@
                         </li>
 					</#if>
 					<#if bmsModel.user.hasRole("CUSTOMER")>
-                        <li class="">
+                        <li class="" style="border-bottom: 1px solid #eee;">
                             <a href="javascript:;">
                                 <i class="fa fa-star-o"></i><span class="title"> 优化管理 </span><span class="arrow "></span>
                             </a>
-                            <ul class="sub-menu">
+                            <ul class="sub-menu"  style="background: #eee;">
                                 <li>
                                     <a href="${ctx}/bill/list?way=1">
                                         关键词排名
@@ -242,11 +306,11 @@
 					</#if>
 
 					<#if bmsModel.user.hasRole("SUPER_ADMIN") >
-					<li class="">
+					<li class="" style="border-bottom: 1px solid #eee;">
 						<a href="javascript:;">
 							<i class="fa fa-paperclip"></i><span class="title"> 操作员管理 </span><span class="arrow "></span>
 						</a>
-						<ul class="sub-menu">
+						<ul class="sub-menu"  style="background: #eee;">
 							<li>
 								<a href="${ctx}/operator/list">
 									操作员列表
@@ -258,11 +322,11 @@
 		    		</#if>
 
 		<#if bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")>
-       			 <li class="">
+       			 <li class="" style="border-bottom: 1px solid #eee;">
 						<a href="javascript:;">
 							<i class="fa fa-magic"></i><span class="title"> 资金管理 </span><span class="arrow "></span>
 						</a>
-						<ul class="sub-menu">
+						<ul class="sub-menu"  style="background: #eee;">
 							<li>
                                 <a href="${ctx}/customer/customerList">
 									客户列表
@@ -284,11 +348,11 @@
 					</li>
 			</#if>
 				<#if bmsModel.user.hasRole("COMMISSIONER") >
-                    <li class="">
+                    <li class="" style="border-bottom: 1px solid #eee;">
                         <a href="javascript:;">
                             <i class="fa fa-line-chart"></i><span class="title"> 业绩管理 </span><span class="arrow "></span>
                         </a>
-                        <ul class="sub-menu">
+                        <ul class="sub-menu"  style="background: #eee;">
                             <li>
                                 <a href="${ctx}/achievement/achievementList">
                                     业绩详情
@@ -298,11 +362,11 @@
                         </ul>
                     </li>
                  </#if>
-					<li class="">
+					<li class="" style="border-bottom: 1px solid #eee;">
 						<a href="javascript:;">
 							<i class="fa fa-magnet"></i><span class="title"> 个人中心 </span><span class="arrow "></span>
 						</a>
-						<ul class="sub-menu">
+						<ul class="sub-menu"  style="background: #eee;">
 							<li>
 								<a href="javascript:;">
 									信息修改

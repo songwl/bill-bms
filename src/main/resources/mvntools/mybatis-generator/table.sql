@@ -114,6 +114,25 @@
   ENGINE = InnoDB
   COMMENT = '搜索引擎支持对象表';
 
+  CREATE TABLE IF NOT EXISTS `t_bill_feedback` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
+    `bill_id` BIGINT NOT NULL COMMENT '',
+    `bill_feedback_title` VARCHAR(200) NULL COMMENT '反馈标题',
+    `bill_feedback_content` TEXT NULL COMMENT '反馈内容',
+     `create_user_id` BIGINT NULL COMMENT '创建人id',
+    `create_time` DATETIME NULL COMMENT '创建时间',
+    `update_user_id` BIGINT NULL COMMENT '修改人id',
+    `update_time` DATETIME NULL COMMENT '修改时间',
+    PRIMARY KEY (`id`)  COMMENT '',
+    INDEX `fk_t_bill_feedback_t_bill1_idx` (`bill_id` ASC)  COMMENT '',
+    CONSTRAINT `fk_t_bill_feedback_t_bill1`
+      FOREIGN KEY (`bill_id`)
+      REFERENCES `t_bill` (`id`)
+      ON DELETE NO ACTION
+      ON UPDATE NO ACTION)
+  ENGINE = InnoDB
+  COMMENT = '订单反馈信息表';
+
   CREATE TABLE IF NOT EXISTS `t_bill_price` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
     `bill_id` BIGINT NOT NULL COMMENT '',

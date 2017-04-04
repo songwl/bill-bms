@@ -7,10 +7,7 @@ import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.service.CustomerService;
 import com.yipeng.bill.bms.service.RoleService;
 import com.yipeng.bill.bms.service.UserRoleService;
-import com.yipeng.bill.bms.vo.CustomerListDetails;
-import com.yipeng.bill.bms.vo.FundAccountDetails;
-import com.yipeng.bill.bms.vo.LoginUser;
-import com.yipeng.bill.bms.vo.Roles;
+import com.yipeng.bill.bms.vo.*;
 import freemarker.template.utility.DateUtil;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -410,6 +407,8 @@ public class CustomerServiceImpl implements CustomerService{
                 FundItem fundItem = new FundItem();
                 fundItem.setFundAccountId(fundAccount1.getId());
                 fundItem.setChangeAmount(new BigDecimal(nums));
+                FundAccount fundAccount2=fundAccountMapper.selectByPrimaryKey(fundAccount1.getId());
+                fundItem.setBalance(fundAccount2.getBalance());
                 fundItem.setChangeTime(new Date());
                 fundItem.setItemType("recharge"); //充值
                 fundItemMapper.insert(fundItem);
@@ -431,6 +430,8 @@ public class CustomerServiceImpl implements CustomerService{
                 FundItem fundItem = new FundItem();
                 fundItem.setFundAccountId(fundAccount.getId());
                 fundItem.setChangeAmount(new BigDecimal(nums));
+                FundAccount fundAccount2=fundAccountMapper.selectByPrimaryKey(fundAccount1.getId());
+                fundItem.setBalance(fundAccount2.getBalance());
                 fundItem.setChangeTime(new Date());
                 fundItem.setItemType("recharge"); //充值
                 fundItemMapper.insert(fundItem);
@@ -456,10 +457,10 @@ public class CustomerServiceImpl implements CustomerService{
             {
 
                   Role role=roleMapper.selectByRoleCode("DISTRIBUTOR");
-                params.put("roleId",role.getId());
-                  List<FundItem> fundItemList=fundItemMapper.getFundItemList(params);
+                  params.put("roleId",role.getId());
+                  List<FundAccountSumMp> fundItemList=fundItemMapper.getFundItemList(params);
                   Long total=fundItemMapper.getFundItemListCount(params);
-                for (FundItem funItem:fundItemList
+                for (FundAccountSumMp funItem:fundItemList
                      ) {
                     i++;
                     //获取余额
@@ -471,8 +472,8 @@ public class CustomerServiceImpl implements CustomerService{
                     fundAccountDetails.setFundItemId(funItem.getId());
                     fundAccountDetails.setUserName(user1.getUserName());
                     fundAccountDetails.setitemType(funItem.getItemType());
-                    fundAccountDetails.setChangeAmount(funItem.getChangeAmount());
-                    fundAccountDetails.setBalance(fundAccount.getBalance());
+                    fundAccountDetails.setChangeAmount(funItem.getfundItemSum());
+                    fundAccountDetails.setBalance(funItem.getBalance());
                     fundAccountDetails.setChangeTime(DateUtils.formatDate(funItem.getChangeTime()));
                     fundAccountDetailsList.add(fundAccountDetails);
 
@@ -486,9 +487,9 @@ public class CustomerServiceImpl implements CustomerService{
             {
 
                 params.put("userId",user.getId());
-                List<FundItem> fundItemList=fundItemMapper.getFundItemListByOther(params);
+                List<FundAccountSumMp> fundItemList=fundItemMapper.getFundItemListByOther(params);
                 Long total=fundItemMapper.getFundItemListByOtherCount(params);
-                for (FundItem funItem:fundItemList
+                for (FundAccountSumMp funItem:fundItemList
                         ) {
                     i++;
                     //获取余额
@@ -500,8 +501,8 @@ public class CustomerServiceImpl implements CustomerService{
                     fundAccountDetails.setFundItemId(funItem.getId());
                     fundAccountDetails.setUserName(user1.getUserName());
                     fundAccountDetails.setitemType(funItem.getItemType());
-                    fundAccountDetails.setChangeAmount(funItem.getChangeAmount());
-                    fundAccountDetails.setBalance(fundAccount.getBalance());
+                    fundAccountDetails.setChangeAmount(funItem.getfundItemSum());
+                    fundAccountDetails.setBalance(funItem.getBalance());
                     fundAccountDetails.setChangeTime(DateUtils.formatDate(funItem.getChangeTime()));
                     fundAccountDetailsList.add(fundAccountDetails);
 

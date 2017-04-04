@@ -620,8 +620,6 @@ public class BillServiceimpl implements BillService {
     @Override
     public Map<String, Object> getBillDetails(Map<String, Object> params, LoginUser user) {
         //判断查询条件
-
-
         //视图模型
         List<BillDetails> billDetailsList = new ArrayList<BillDetails>();
 
@@ -862,10 +860,15 @@ public class BillServiceimpl implements BillService {
        List<BillPrice>  billPrice2= billPriceMapper.selectByBillPrice(billPrice1);
        if(billPrice2.size()>0)
        {
-           if(billPrice2.get(0).getBillRankingStandard()>bill.getNewRanking())
-           {
-               billDetails.setDayConsumption(billPrice2.get(0).getPrice());
+           for (BillPrice item:billPrice2
+                ) {
+               if(item.getBillRankingStandard()>=bill.getNewRanking())
+               {
+                   billDetails.setDayConsumption(item.getPrice());
+                   break;
+               }
            }
+
            Calendar now =Calendar.getInstance();
            Map<String,Object> map=new HashMap<>();
            map.put("year",now.get(Calendar.YEAR));
@@ -883,7 +886,6 @@ public class BillServiceimpl implements BillService {
        map1.put("billId",bill.getId());
        int count=billCostMapper.selectByPriceCount(map1);
 
-        //本月消费（缺）
         billDetails.setStandardDays(count);
         billDetails.setState(bill.getState());
         return billDetails;

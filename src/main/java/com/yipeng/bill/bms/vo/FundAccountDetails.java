@@ -10,7 +10,7 @@ public class FundAccountDetails {
     private  Long fundItemId;
     private  String userName;
     private  String itemType;
-    private BigDecimal changeAmount;
+    private  BigDecimal changeAmount;
     private  String changeTime;
     private  BigDecimal balance;
 

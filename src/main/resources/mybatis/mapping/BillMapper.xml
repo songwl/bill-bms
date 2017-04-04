@@ -370,6 +370,9 @@
     <if test="searchUserNameId != null">
       AND  b.out_member_id= #{searchUserNameId,jdbcType=VARCHAR}
     </if>
+    <if test="searchStandard != null">
+      AND a.new_ranking &lt;= b.bill_ranking_standard
+    </if>
     limit #{offset},#{limit}
   </select>
 
@@ -422,6 +425,9 @@
     </if>
     <if test="billAscription != null">
       AND  bill_ascription= #{billAscription,jdbcType=BIGINT}
+    </if>
+    <if test="searchStandard != null">
+      AND a.new_ranking &lt;= b.bill_ranking_standard
     </if>
     limit #{offset},#{limit}
   </select>

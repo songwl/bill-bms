@@ -70,10 +70,10 @@
         <span style="font-size:13px;text-align:center;cursor:pointer;font-weight:bold;margin-left: 10px;">
             今日达标:
         </span>
-        <select style="height: 35px;border: 1px solid #aaaaaa;">
+        <select style="height: 35px;border: 1px solid #aaaaaa;" id="searchStandard">
             <option>--请选择--</option>
-            <option>是</option>
-            <option>否</option>
+            <option value="1">是</option>
+            <option value="0">否</option>
         </select>
         <span style="font-size:13px;text-align:center;cursor:pointer;font-weight:bold;margin-left: 10px;" id="state">
             状态:

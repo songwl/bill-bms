@@ -7,6 +7,7 @@ var searchName=null;
 var searchUserName=null;
 var searchState=2;
 var searchState2=null;
+var searchStandard=null;
 
 $(document).ready(function () {
     //显示导入价格内容
@@ -129,16 +130,22 @@ $(document).ready(function () {
         {
             searchName=null;
         }
-
-        if($("#searchState").val()!="--请选择--")
+        if($("#searchUserName").val()!="--请选择--")
         {
-            searchState=  $("#searchState").val();
+            searchUserName=  $("#searchUserName").val();
         }
         else
         {
-            searchState=null;
+            searchUserName=null;
         }
-
+        if($("#searchStandard option:selected").val()!="--请选择--"&&$("#searchStandard option:selected").val()!="0")
+        {
+            searchStandard=  $("#searchStandard").val();
+        }
+        else
+        {
+            searchStandard=null;
+        }
         $('#myTable').bootstrapTable('refresh');
     });
     $("#searchState").change(function () {
@@ -397,18 +404,19 @@ var TableInit = function () {
                     }
 
                 },
-                {
-                    field: "standardDays",
-                    align: 'center',
-                    valign: 'middle',
-                    title: '达标天',
 
-                },
                 {
                     field: "monthConsumption",
                     align: 'center',
                     valign: 'middle',
                     title: '本月消费',
+
+                },
+                {
+                    field: "standardDays",
+                    align: 'center',
+                    valign: 'middle',
+                    title: '达标天',
 
                 },
                 {
@@ -463,7 +471,8 @@ var TableInit = function () {
             searchName:searchName,
             searchUserName:searchUserName,
             state:searchState,
-            state2:searchState2
+            state2:searchState2,
+            searchStandard:searchStandard
 
         };
         return temp;

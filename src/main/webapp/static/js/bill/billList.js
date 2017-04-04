@@ -4,6 +4,7 @@ var searchName=null;
 var searchUserName=null;
 var searchState=2;
 var searchState2=null;
+var searchStandard=null;
 
 $(document).ready(function () {
 
@@ -67,6 +68,7 @@ $(document).ready(function () {
 
         }
     })
+    //搜索按钮
     $("#searchButton").click(function () {
 
 
@@ -102,11 +104,17 @@ $(document).ready(function () {
         {
             searchUserName=null;
         }
-
-
-
+        if($("#searchStandard option:selected").val()!="--请选择--"&&$("#searchStandard option:selected").val()!="0")
+        {
+            searchStandard=  $("#searchStandard").val();
+        }
+        else
+        {
+            searchStandard=null;
+        }
         $('#myTable').bootstrapTable('refresh');
     });
+
    $("#continue").click(function () {
        $("#continue").css({"background":"#eee"});
        $("#stop").css({"background":"#fff"});
@@ -492,7 +500,8 @@ var TableInit = function () {
             searchName:searchName,
             searchUserName:searchUserName,
             state:searchState,
-            state2:searchState2
+            state2:searchState2,
+            searchStandard:searchStandard
         };
         return temp;
     }

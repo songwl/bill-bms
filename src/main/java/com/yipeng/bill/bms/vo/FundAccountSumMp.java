@@ -1,10 +1,12 @@
-package com.yipeng.bill.bms.domain;
+package com.yipeng.bill.bms.vo;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class FundItem implements Serializable {
+/**
+ * Created by Administrator on 2017/4/4.
+ */
+public class FundAccountSumMp {
     private Long id;
 
     private Long fundAccountId;
@@ -16,6 +18,8 @@ public class FundItem implements Serializable {
     private Date changeTime;
 
     private String itemType;
+
+    private BigDecimal fundItemSum;
 
     private static final long serialVersionUID = 1L;
 
@@ -65,5 +69,13 @@ public class FundItem implements Serializable {
 
     public void setItemType(String itemType) {
         this.itemType = itemType == null ? null : itemType.trim();
+    }
+
+    public BigDecimal getfundItemSum() {
+        return fundItemSum;
+    }
+
+    public void setfundItemSum(BigDecimal fundItemSum) {
+        this.fundItemSum = fundItemSum;
     }
 }

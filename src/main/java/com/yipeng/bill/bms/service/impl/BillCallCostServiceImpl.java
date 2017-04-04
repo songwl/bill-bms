@@ -83,13 +83,30 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                         fundAccount1.setBalance(new BigDecimal(0));
                         int a= fundAccountMapper.insert(fundAccount1);
                         fundAccountMapper.reduceBalance(fundAccount1.getId(), billPrice.getPrice()); //扣减余额
-
+                        //创建资金消费流水
+                        FundItem fundItem = new FundItem();
+                        fundItem.setFundAccountId(fundAccount.getId());
+                        fundItem.setChangeAmount(billCost.getCostAmount());
+                        FundAccount fundAccount2 = fundAccountMapper.selectByPrimaryKey(fundAccount1.getId());
+                        fundItem.setBalance(fundAccount2.getBalance());
+                        fundItem.setChangeTime(new Date());
+                        fundItem.setItemType("cost"); //消费
+                        fundItemMapper.insert(fundItem);
                         break;
 
                     }
                     else
                     {
                         fundAccountMapper.reduceBalance(fundAccount.getId(), billPrice.getPrice()); //扣减余额
+                        //创建资金消费流水
+                        FundItem fundItem = new FundItem();
+                        fundItem.setFundAccountId(fundAccount.getId());
+                        fundItem.setChangeAmount(billCost.getCostAmount());
+                        FundAccount fundAccount2 = fundAccountMapper.selectByPrimaryKey(fundAccount.getId());
+                        fundItem.setBalance(fundAccount2.getBalance());
+                        fundItem.setChangeTime(new Date());
+                        fundItem.setItemType("cost"); //消费
+                        fundItemMapper.insert(fundItem);
                         break; //不需要再往后
                     }
 

@@ -68,6 +68,7 @@
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
     `fund_account_id` BIGINT NOT NULL COMMENT '',
     `change_amount` DECIMAL NULL COMMENT '变动金额',
+    `balance` DECIMAL NULL COMMENT '余额',
     `change_time` DATETIME NULL COMMENT '变动时间',
     `item_type` VARCHAR(64) NULL COMMENT '消费形式',
     PRIMARY KEY (`id`)  COMMENT '',

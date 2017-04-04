@@ -125,7 +125,7 @@
    AND t_bill_price_id=#{billPriceId,jdbcType=BIGINT}
   </select>
   <select id="selectByPriceCount" resultType="java.lang.Integer">
-    select COUNT(DISTINCT cost_amount)
+    select COUNT(DISTINCT cost_date)
     from t_bill_cost
     where
      t_bill_id = #{billId,jdbcType=BIGINT}

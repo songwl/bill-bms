@@ -8,8 +8,17 @@
     <result column="change_time" jdbcType="TIMESTAMP" property="changeTime" />
     <result column="item_type" jdbcType="VARCHAR" property="itemType" />
   </resultMap>
+
+  <resultMap id="BaseResultMap1" type="com.yipeng.bill.bms.vo.FundAccountSumMp">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="fund_account_id" jdbcType="BIGINT" property="fundAccountId" />
+    <result column="change_amount" jdbcType="DECIMAL" property="changeAmount" />
+    <result column="change_time" jdbcType="TIMESTAMP" property="changeTime" />
+    <result column="item_type" jdbcType="VARCHAR" property="itemType" />
+    <result column="fund_item_sum" jdbcType="DECIMAL" property="fundItemSum" />
+  </resultMap>
   <sql id="Base_Column_List">
-    id, fund_account_id, change_amount, change_time, item_type
+    id, fund_account_id, change_amount,balance, change_time, item_type
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -22,9 +31,9 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.yipeng.bill.bms.domain.FundItem" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
-    insert into t_fund_item (id, fund_account_id, change_amount, 
+    insert into t_fund_item (id, fund_account_id, change_amount,balance,
       change_time, item_type)
-    values (#{id,jdbcType=BIGINT}, #{fundAccountId,jdbcType=BIGINT}, #{changeAmount,jdbcType=DECIMAL}, 
+    values (#{id,jdbcType=BIGINT}, #{fundAccountId,jdbcType=BIGINT}, #{changeAmount,jdbcType=DECIMAL},#{balance,jdbcType=DECIMAL},
       #{changeTime,jdbcType=TIMESTAMP}, #{itemType,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.FundItem">
@@ -38,6 +47,9 @@
       </if>
       <if test="changeAmount != null">
         change_amount,
+      </if>
+      <if test="balance != null">
+        balance,
       </if>
       <if test="changeTime != null">
         change_time,
@@ -56,6 +68,9 @@
       <if test="changeAmount != null">
         #{changeAmount,jdbcType=DECIMAL},
       </if>
+      <if test="balance != null">
+        #{balance,jdbcType=DECIMAL},
+      </if>
       <if test="changeTime != null">
         #{changeTime,jdbcType=TIMESTAMP},
       </if>
@@ -73,6 +88,9 @@
       <if test="changeAmount != null">
         change_amount = #{changeAmount,jdbcType=DECIMAL},
       </if>
+      <if test="balance != null">
+        balance= #{balance,jdbcType=DECIMAL},
+      </if>
       <if test="changeTime != null">
         change_time = #{changeTime,jdbcType=TIMESTAMP},
       </if>
@@ -86,18 +104,20 @@
     update t_fund_item
     set fund_account_id = #{fundAccountId,jdbcType=BIGINT},
       change_amount = #{changeAmount,jdbcType=DECIMAL},
+       balance= #{balance,jdbcType=DECIMAL},
       change_time = #{changeTime,jdbcType=TIMESTAMP},
       item_type = #{itemType,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="getFundItemList"  resultMap="BaseResultMap">
-  select a.*
+  <select id="getFundItemList"  resultMap="BaseResultMap1">
+  select a.*,SUM(a.change_amount) as fundItemSum
   from
   t_fund_item as a,t_fund_account as b, t_user_role as c
   where
   a.fund_account_id=b.id
    and b.user_id=c.user_id
   and c.role_id=#{roleId,jdbcType=BIGINT}
+    GROUP BY(year(a.change_time) and month(a.change_time) and DAY(a.change_time)),a.item_type
     limit #{offset},#{limit}
   </select>
 
@@ -111,15 +131,16 @@
     and c.role_id=#{roleId,jdbcType=BIGINT}
   </select>
 
-  <select id="getFundItemListByOther"  resultMap="BaseResultMap">
-   select a.*
+  <select id="getFundItemListByOther"  resultMap="BaseResultMap1">
+   select a.*,SUM(a.change_amount) as fundItemSum
     from
     t_fund_item as a,t_fund_account as b, t_user_role as c,t_user as d
     where
     a.fund_account_id=b.id
     and b.user_id=c.user_id
-   and c.user_id=d.id
+    and c.user_id=d.id
     and d.create_user_id=#{userId,jdbcType=BIGINT}
+     GROUP BY(year(a.change_time) and month(a.change_time) and DAY(a.change_time)),a.item_type
     limit #{offset},#{limit}
   </select>
   <select id="getFundItemListByOtherCount"  resultType="java.lang.Long">

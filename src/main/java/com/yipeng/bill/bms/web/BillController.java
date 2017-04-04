@@ -182,7 +182,7 @@ public class BillController extends BaseController {
      */
     @RequestMapping(value = "/getBillDetails")
     @ResponseBody
-    public Map<String,Object> getBillDetails( int limit, int offset,int way,String website,String keywords,String searchName,String searchUserName, String state,String state2) throws UnsupportedEncodingException {
+    public Map<String,Object> getBillDetails( int limit, int offset,int way,String website,String keywords,String searchName,String searchUserName, String state,String state2,String searchStandard) throws UnsupportedEncodingException {
         offset=(offset-1)*limit;
        Map<String, Object> params = this.getSearchRequest(); //查询参数
         if(!keywords.isEmpty())
@@ -224,6 +224,10 @@ public class BillController extends BaseController {
         {
             params.put("state2",state2);
         }
+        if(!searchStandard.isEmpty())
+        {
+            params.put("searchStandard",searchStandard);
+        }
 
         LoginUser user=this.getCurrentAccount();
         params.put("limit",limit);
@@ -243,7 +247,8 @@ public class BillController extends BaseController {
      */
     @RequestMapping(value = "/getCustomerBill")
     @ResponseBody
-    public Map<String,Object> getCustomerBill( int limit, int offset, String website,String keywords,String searchName,String searchUserName, String state,String state2)
+    public Map<String,Object> getCustomerBill( int limit, int offset,
+     String website,String keywords,String searchName,String searchUserName, String state,String state2)
     {
 
         LoginUser user=this.getCurrentAccount();

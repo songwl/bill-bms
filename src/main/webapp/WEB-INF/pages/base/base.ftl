@@ -38,7 +38,6 @@
         <link href="${ctx}/static/css/public/font-awesome.min.css" rel="stylesheet">
         <link href="${ctx}/static/css/public/bootstrap.min.css" rel="stylesheet">
         <link href="${ctx}/static/css/public/bootstrap-table.css" rel="stylesheet">
-        <link href="${ctx}/static/css/public/pace.css" rel="stylesheet">
         <script type="text/javascript">
             var CTX = "${ctx}";
         </script>

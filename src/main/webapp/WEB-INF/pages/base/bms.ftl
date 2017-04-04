@@ -22,7 +22,6 @@
 
 <@base.headcontent>
 	<!--icheck-->
-	<link href="${ctx}/static/css/public/back.css" rel="stylesheet" type="text/css"/>
 	<link href="${ctx}/static/css/public/pace.css" rel="stylesheet" type="text/css"/>
 	<link href="${ctx}/static/css/public/common.css" rel="stylesheet" type="text/css"/>
 	<link href="${ctx}/static/js/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
@@ -92,11 +91,20 @@
 <!--顶部导航栏     开始 -->
 <header class="header navbar navbar-fixed-top" role="banner">
     <div class="container">
-
-        <a class="navbar-brand" href="#">
+    <div>
+        <a class="navbar-brand" href="#" >
             <strong>管理后台</strong>
-            <i class="fa fa-bars" id="menuClick"></i>
+
         </a>
+        <ul   style="border: none;float: left;display: inline-block;margin-left: 130px;margin-top: 13px;">
+            <li class="sidebar-toggler-wrapper">
+                <div class="sidebar-toggler hidden-phone fa fa-bars">
+                </div>
+            </li>
+        </ul>
+    </div>
+
+
         <ul class="nav navbar-right" style="height:50px;">
             <li class="dropdown user" style="height:48px;" >
                 <a class="dropdown-toggle" data-toggle="dropdown" id="clickUser">
@@ -105,11 +113,13 @@
                     <i class="icon-caret-down small"></i>
                 </a>
                 <ul class="dropdown-menu userDetails">
+
                     <li>
                         <a class="dlg-user-edit-info">
                             <i class="icon-user"></i> 基本资料
                         </a>
                     </li>
+
                     <li>
                         <a class="dlg-user-edit-pwd">
                             <i class="icon-pencil"></i> 修改密码
@@ -165,8 +175,8 @@
 	</div>
 	<div class="page-container">
 		<div class="page-sidebar-wrapper" id="menuShow">
-			<div class="page-sidebar navbar-collapse collapse" style="border-right:1px solid #eee; " >
-				<ul class="page-sidebar-menu" id="page-sidebar-menu">
+			<div class="page-sidebar navbar-collapse collapse" style="border-right:1px solid #eee;background: #fff; " >
+				<ul class="page-sidebar-menu" id="page-sidebar-menu"  style="background: #fff; " >
 					<li class="sidebar-toggler-wrapper">
 						<div class="sidebar-toggler hidden-phone">
 						</div>

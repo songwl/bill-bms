@@ -245,20 +245,7 @@
                                         <h4><i class="icon-reorder"></i>(0条记录)</h4>
                                     </div>
                                     <div class="widget-content">
-                                        <table id="teacher_table" data-toggle="table" data-url="./data.php" data-method="post"
-                                               data-query-params="queryParams"
-                                               data-toolbar="#toolbar"
-                                               data-pagination="true"
-                                               data-page-size="5">
-                                            <thead>
-                                            <tr>
-                                                <th data-field="id">序号</th>
-                                                <th data-field="costDate">消费日期</th>
-                                                <th data-field="ranking">排名</th>
-                                                <th data-field="price">金额</th>
-                                            </tr>
-
-                                            </thead>
+                                        <table id="pricetable"  class="table table-striped  table-condensed table-responsive" >
                                         </table>
                                         <div class="row">
                                             <div class="table-footer">

@@ -100,6 +100,8 @@ public class OperatorServiceImpl implements OperatorService {
             customerListDetails.setRealName(user.getRealName());
             customerListDetails.setContact(user.getContact());
             customerListDetails.setStatus(user.getStatus());
+            customerListDetails.setQq(user.getQq());
+            customerListDetails.setPhone(user.getPhone());
             customerListDetails.setCreateTime(DateUtils.formatDate(user.getCreateTime()));
             if(user.getLastLoginTime()!=null)
             {

@@ -68,7 +68,13 @@ $(".addOperatorcmt").click(function () {
     {
         $.ajax({
             type: "post",
-            data:{userName:$("#userName1").val(),password:$("input[name='password']").val()},
+            data:{userName:$("#userName1").val(),
+                password:$("input[name='password']").val(),
+                realName:$("input[name='realName']").val(),
+                contact:$("input[name='contact']").val(),
+                phone:$("input[name='phone']").val(),
+                qq:$("input[name='qq']").val(),
+            },
             url:CTX+"/operator/list",
             dataType:"json",
             success:function (result) {
@@ -89,7 +95,10 @@ $(".addOperatorcmt").click(function () {
 
         })
     }
-
+  else
+    {
+        alert("填写信息有误，请重新输入！");
+    }
 })
 
 
@@ -99,6 +108,16 @@ $(".addOperatorcmt").click(function () {
 
         $(".modal-backdrop").show();
         $(".addOperatorDiv").slideDown();
+        $(".modal-title").html("添加操作员");
+       $(".addOperatorcmt").show();
+        $(".updateOperatorcmt").hide();
+        $("#viewpwd").show();
+        $("#viewstate").hide();
+        $("input[name='userName']").empty();
+        $("input[name='realName']").empty();
+        $("input[name='contact']").empty();
+        $("input[name='phone']").empty();
+        $("input[name='qq']").empty();
 
 
     })
@@ -173,7 +192,7 @@ var TableInit = function () {
 
                 },
                 {
-                    field: 'customerCount',
+                    field: 'customerId',
                     sortable: true,
                     align: 'center',
                     valign: 'middle',
@@ -278,7 +297,7 @@ var TableInit = function () {
                     valign: 'middle',
                     formatter:function (value,row,index) {
                         var a="<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
-                            "<span style='color:#4382CF;cursor:pointer;' id='details'>改密</span>   "
+                            "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   "
 
                         return a;
                     },
@@ -305,30 +324,32 @@ var TableInit = function () {
         return temp;
     }
     window.operateEvents = {
-        'click #operate': function (e, value, row, index) {
-
-            if(confirm("是否冻结此账户？"))
+        'click #details': function (e, value, row, index) {
+            $(".modal-backdrop").show();
+            $(".addOperatorDiv").slideDown();
+            $("#viewpwd").hide();
+            $("#viewstate").show();
+            $(".updateOperatorcmt").show();
+            $(".addOperatorcmt").hide();
+            $(".modal-title").html("操作员详情");
+            $("input[name='userName']").val(row.userName);
+            $("input[name='realName']").val(row.realName);
+            $("input[name='contact']").val(row.contact);
+            $("input[name='phone']").val(row.phone);
+            $("input[name='qq']").val(row.qq);
+            $("#viewstatus").empty();
+            if(row.status=="1")
             {
-
-                $.ajax({
-                    type:'post',
-                    url:CTX+"/operator/updateUserState",
-                    data:{userId:row.customerId},
-                    success:function (result) {
-                        if(result.code==200)
-                        {
-                            alert(result.message);
-                            $('#myTable').bootstrapTable('refresh');
-                        }
-                        else
-                        {
-                            alert(result.message);
-                        }
-                    }
-                })
+                $("#viewstatus").append("<option value='1'>正常</option>");
+                $("#viewstatus").append("<option value='0'>冻结</option>");
+            }
+            else {
+                $("#viewstatus").append("<option value='0'>冻结</option>");
+                $("#viewstatus").append("<option value='1'>正常</option>");
             }
         }
     }
+1
 
 
     return oTableInit;

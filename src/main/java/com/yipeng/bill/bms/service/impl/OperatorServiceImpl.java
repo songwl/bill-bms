@@ -128,12 +128,27 @@ public class OperatorServiceImpl implements OperatorService {
         return modelMap;
 
     }
-
+    /**
+     * 修改信息
+     * @return
+     */
     @Override
-    public int updateUserState(Long userId) {
-        User user=new User();
-        user.setId(userId);
-        user.setStatus(false);
+    public int updateOperator(User user,LoginUser loginUser) {
+
+        user.setUpdateUserId(loginUser.getId());
+        user.setUpdateTime(new Date());
+        userMapper.updateByPrimaryKeySelective(user);
+        return 1;
+    }
+    /**
+     * 重置密码
+     * @return
+     */
+    @Override
+    public int updatePwd(User user, LoginUser loginUser) {
+        user.setUpdateUserId(loginUser.getId());
+        user.setUpdateTime(new Date());
+        user.setPassword(CryptoUtils.md5("123456"));
         userMapper.updateByPrimaryKeySelective(user);
         return 1;
     }

@@ -182,7 +182,9 @@ public class BillController extends BaseController {
      */
     @RequestMapping(value = "/getBillDetails")
     @ResponseBody
-    public Map<String,Object> getBillDetails( int limit, int offset,int way,String website,String keywords,String searchName,String searchUserName, String state,String state2,String searchStandard) throws UnsupportedEncodingException {
+    public Map<String,Object> getBillDetails( int limit, int offset,int way, String sortOrder, String sortName,
+     String website,String keywords,String searchName,String searchUserName,
+      String state,String state2,String searchStandard) throws UnsupportedEncodingException {
         offset=(offset-1)*limit;
        Map<String, Object> params = this.getSearchRequest(); //查询参数
         if(!keywords.isEmpty())
@@ -228,6 +230,11 @@ public class BillController extends BaseController {
         {
             params.put("searchStandard",searchStandard);
         }
+        if(sortName!=null)
+        {
+            params.put("sortName",sortName);
+            params.put("sortOrder",sortOrder);
+        }
 
         LoginUser user=this.getCurrentAccount();
         params.put("limit",limit);
@@ -247,13 +254,11 @@ public class BillController extends BaseController {
      */
     @RequestMapping(value = "/getCustomerBill")
     @ResponseBody
-    public Map<String,Object> getCustomerBill( int limit, int offset,
-     String website,String keywords,String searchName,String searchUserName, String state,String state2)
+    public Map<String,Object> getCustomerBill( int limit, int offset,String sortOrder, String sortName,
+     String website,String keywords,String searchName,String searchUserName,
+     String state,String state2,String searchStandard)
     {
-
         LoginUser user=this.getCurrentAccount();
-
-
         int way;
         if(user.hasRole("DISTRIBUTOR"))
         {
@@ -263,12 +268,9 @@ public class BillController extends BaseController {
         {
             way=2;
         }
-
-
         offset=(offset-1)*limit;
         // Page<Bill> page = this.getPageRequest();    //分页对象
         Map<String, Object> params = this.getSearchRequest(); //查询参数
-
         if(!keywords.isEmpty())
         {
             try{
@@ -286,6 +288,13 @@ public class BillController extends BaseController {
         }
         if(!searchName.isEmpty())
         {
+            try{
+                searchName = new String(searchName.getBytes("ISO-8859-1"),"utf-8");
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+            }
             params.put("searchName",searchName);
         }
         if(!searchUserName.isEmpty())
@@ -298,9 +307,17 @@ public class BillController extends BaseController {
         }
         if(!state2.isEmpty())
         {
-            params.put("state2",state);
+            params.put("state2",state2);
         }
-
+        if(!searchStandard.isEmpty())
+        {
+            params.put("searchStandard",searchStandard);
+        }
+        if(sortName!=null)
+        {
+            params.put("sortName",sortName);
+            params.put("sortOrder",sortOrder);
+        }
         params.put("limit",limit);
         params.put("offset",offset);
         params.put("way",way);
@@ -554,14 +571,24 @@ public class BillController extends BaseController {
         Map<String, Object> modelMap=billService.getBillDetails(params,user);
         return  modelMap;
     }
+
     @RequestMapping(value = "/getPriceDetails",method = RequestMethod.GET)
+    @ResponseBody
     public Map<String,Object> getPriceDetails(HttpServletRequest request)
     {
+
          LoginUser user=this.getCurrentAccount();
          String billId=request.getParameter("billId");
-         Map<String,Object> map=billService.getPriceDetails(billId,user);
-        return map;
+         if(!billId.isEmpty())
+         {
+             Map<String,Object> map=billService.getPriceDetails(billId,user);
+             return map;
+         }
+        else
+         {
+             return  null;
 
+         }
     }
 
 }

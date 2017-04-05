@@ -2,10 +2,25 @@
 /**
  * Created by Administrator on 2017/3/16.
  */
+//显示搜索内容
+$(".search").click(function () {
+    if($(".Navs2").css("display")=="block"){
+        $(".Navs2").slideUp();
+
+    }
+    else
+    {
+        $(".Navs2").slideDown();
+
+    }
+
+
+})
 
 var userName=false;
 var password=false;
-
+var searchUserName=null;
+var searchState=null;
 //用户名
 $("input[name='userName']").blur(function () {
 
@@ -43,6 +58,7 @@ $("input[name='userName']").blur(function () {
     }
 });
 //密码
+
 $("input[name='password']").blur(function () {
 
     if ($("input[name='password']").val()!= "")
@@ -58,11 +74,14 @@ $("input[name='password']").blur(function () {
         }
     }
 });
+
 $("input[name='userName']").focus(function () {
     $(".pdlogid").css({ "color": "#ff0000" }).text("");
     userName = false;
 
 });
+
+//添加操作员确认
 $(".addOperatorcmt").click(function () {
     if(userName&&password)
     {
@@ -103,11 +122,50 @@ $(".addOperatorcmt").click(function () {
 
 
 
+//更改操作员信息
+$(".updateOperatorcmt").click(function () {
+    if(/^[A-Za-z]\w{5,12}$/.test($("input[name='userName1']").val()))
+    {
+          $.ajax({
+              type:'post',
+              url:CTX+"/operator/updateOperator",
+              data:{
+                  id:$("input[name='operator']").val(),
+                  userName:  $("input[name='userName1']").val(),
+                  realName:$("input[name='realName']").val(),
+                  contact:$("input[name='contact']").val(),
+                  phone:$("input[name='phone']").val(),
+                  qq:$("input[name='qq']").val(),
+                  status:$("#viewstatus option:selected").val()
+              },
+              success:function (result) {
+                  if(result.code==200)
+                  {
+                      alert(result.message);
+                      $(".addOperatorDiv").slideUp();
+                      $(".modal-backdrop").hide();
+                      $('#myTable').bootstrapTable('refresh');
+                  }
+                  else
+                  {
+                      alert(result.Message);
+                  }
+              }
+          })
+    }
+    else
+    {
+        alert("用户名不能为空或格式错误!");
+    }
+})
+
 //添加操作员
     $("#addOperator").click(function () {
 
         $(".modal-backdrop").show();
         $(".addOperatorDiv").slideDown();
+        $("#nameDiv").show();
+        $("#nameDiv1").hide();
         $(".modal-title").html("添加操作员");
        $(".addOperatorcmt").show();
         $(".updateOperatorcmt").hide();
@@ -319,6 +377,8 @@ var TableInit = function () {
             offset: params.pageNumber,  //页码
             sortOrder: params.sortOrder,
             sortName: params.sortName,
+            searchUserName :searchUserName,
+            searchState:searchState,
 
         };
         return temp;
@@ -329,10 +389,12 @@ var TableInit = function () {
             $(".addOperatorDiv").slideDown();
             $("#viewpwd").hide();
             $("#viewstate").show();
+            $("#nameDiv1").show();
+            $("#nameDiv").hide();
             $(".updateOperatorcmt").show();
             $(".addOperatorcmt").hide();
             $(".modal-title").html("操作员详情");
-            $("input[name='userName']").val(row.userName);
+            $("input[name='userName1']").val(row.userName);
             $("input[name='realName']").val(row.realName);
             $("input[name='contact']").val(row.contact);
             $("input[name='phone']").val(row.phone);
@@ -347,14 +409,57 @@ var TableInit = function () {
                 $("#viewstatus").append("<option value='0'>冻结</option>");
                 $("#viewstatus").append("<option value='1'>正常</option>");
             }
+            $("input[name='operator']").empty();
+            $("input[name='operator']").val(row.customerId);
+        },
+        'click #changepwd': function (e, value, row, index)
+        {
+            if(confirm("是否重置密码？"))
+            {
+                $.ajax({
+                    type:'post',
+                    url:CTX+ "/operator/updatePwd",
+                    data:{id:row.customerId},
+                    success:function (result) {
+                        if(result.code==200)
+                        {
+                            alert(result.message);
+                            $('#myTable').bootstrapTable('refresh');
+                        }
+                        else
+                        {
+                            alert(result.Message);
+                        }
+                    }
+                })
+            }
         }
     }
-1
+
 
 
     return oTableInit;
 };
-
+//搜索按钮
+$("#searchButton").click(function () {
+    if($("#searchUserName").val()!="")
+    {
+        searchUserName=$("#searchUserName").val();
+    }
+    else
+    {
+        searchUserName=null;
+    }
+    if($("#searchState option:selected").text()!="--请选择--")
+    {
+        searchState=$("#searchState option:selected").val();
+    }
+    else
+    {
+        searchState=null;
+    }
+    $('#myTable').bootstrapTable('refresh');
+});
 $(function () {
     $("#queren").click(function () {
 

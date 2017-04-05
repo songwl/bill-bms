@@ -882,6 +882,7 @@ public class BillServiceimpl implements BillService {
            }
 
        }
+       //有问题 不需要查询 订单表里面有达标天数 最后一次查询排名 增加达标天数
        Map<String,Object> map1=new HashMap<>();
        map1.put("billId",bill.getId());
        int count=billCostMapper.selectByPriceCount(map1);
@@ -962,9 +963,10 @@ public class BillServiceimpl implements BillService {
     @Override
     public Map<String, Object> getPriceDetails(String billId, LoginUser user) {
 
-
-
-        return null;
+       Map<String,Object> map=new HashMap<>();
+        List<BillCost> billCostList=billCostMapper.selectByBillId(Long.parseLong(billId));
+        map.put("rows", billCostList);
+        return map;
     }
 
     /**

@@ -223,7 +223,6 @@
                         <div class="row" style="margin-top: -5px;">
                             <div class="col-md-12">
                                 <label>价格配置</label>
-                                <table class="table table-hover table-striped table-bordered">
                                     <table class="table table-hover table-striped table-bordered" >
                                         <thead>
                                         <tr>
@@ -238,11 +237,11 @@
 
                                         </tbody>
                                     </table>
-                                </table>
+
                                 <label>任务消费记录</label>
                                 <div class="widget box">
                                     <div class="widget-header">
-                                        <h4><i class="icon-reorder"></i>(0条记录)</h4>
+                                        <h4>(0条记录)</h4>
                                     </div>
                                     <div class="widget-content">
                                         <table id="pricetable"  class="table table-striped  table-condensed table-responsive" >

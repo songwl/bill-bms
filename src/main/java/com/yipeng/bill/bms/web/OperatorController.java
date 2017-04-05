@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 /**
@@ -64,34 +65,53 @@ public class OperatorController extends  BaseController {
      */
     @RequestMapping(value = "/getOperator")
     @ResponseBody
-    public Map<String,Object> getCustomerBill(int limit, int offset)
+    public Map<String,Object> getCustomerBill(int limit, int offset,String searchUserName,String searchState)
     {
 
 
         Long roleId=new Long(3);
         offset=(offset-1)*limit;
-        // Page<Bill> page = this.getPageRequest();    //分页对象
         Map<String, Object> params = this.getSearchRequest(); //查询参数
         User user=this.getCurrentAccount();
         params.put("limit",limit);
         params.put("offset",offset);
         params.put("roleId",roleId);
         params.put("user",user);
+        if(!searchUserName.isEmpty())
+        {
+            try{
+                searchUserName = new String(searchUserName.getBytes("ISO-8859-1"),"utf-8");
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+            }
+            params.put("searchUserName",searchUserName);
+        }
+        if(!searchState.isEmpty())
+        {
+            params.put("searchState",searchState);
+        }
         Map<String, Object> modelMap= operatorService.getOperator(params);
 
         return  modelMap;
     }
-    @RequestMapping(value = "/updateUserState",method =RequestMethod.POST)
+
+    /**
+     * 修改信息
+     * @param request
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "/updateOperator",method =RequestMethod.POST)
     @ResponseBody
-    public ResultMessage updateUserState(HttpServletRequest request)
+    public ResultMessage updateOperator(HttpServletRequest request,User user)
     {
-        User user=this.getCurrentAccount();
-        if(user!=null)
+        LoginUser user1=this.getCurrentAccount();
+        if(user1!=null)
         {
-            Map<String, String[]> params = request.getParameterMap();
-            String[] users=params.get("userId");
-            Long userId=Long.parseLong(users[0]);
-              int a=operatorService.updateUserState(userId);
+
+            int a=operatorService.updateOperator(user,user1);
             return this.ajaxDoneSuccess("操作成功!");
         }
         else
@@ -100,6 +120,32 @@ public class OperatorController extends  BaseController {
         }
 
     }
+    /**
+     * 重置密码
+     * @param request
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "/updatePwd",method =RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage updatePwd(HttpServletRequest request,User user)
+    {
+        LoginUser user1=this.getCurrentAccount();
+        if(user1!=null)
+        {
+
+            int a=operatorService.updatePwd(user,user1);
+            return this.ajaxDoneSuccess("重置成功!");
+        }
+        else
+        {
+            return  this.ajaxDoneError("重置失败！");
+        }
+
+    }
+
+
+
 
 }
 

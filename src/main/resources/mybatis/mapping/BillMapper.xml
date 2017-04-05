@@ -310,12 +310,10 @@
     limit #{offset},#{limit}
   </select>
 
-
-
   <select id="selectByInMemberId"  resultMap="BaseResultMap">
     select DISTINCT a.*
-    from t_bill as a,t_bill_price as b,t_bill_search_support as d
-    where a.id=b.bill_id  AND  a.id=d.bill_id
+    from t_bill as a,t_bill_price as b,t_bill_search_support as d,t_user as e
+    where a.id=b.bill_id  AND  a.id=d.bill_id and b.out_member_id=e.id
     AND b.in_member_id=#{userId,jdbcType=BIGINT}
     AND (
     <if test="state != null">
@@ -373,13 +371,42 @@
     <if test="searchStandard != null">
       AND a.new_ranking &lt;= b.bill_ranking_standard
     </if>
+    <if test="sortName != null">
+      <if test="sortName =='userName'">
+        ORDER BY e.user_name ${sortOrder}
+      </if>
+      <if test="sortName =='keywords'">
+        ORDER BY a.keywords ${sortOrder}
+      </if>
+      <if test="sortName =='website'">
+        ORDER BY a.website ${sortOrder}
+      </if>
+      <if test="sortName =='searchName'">
+        ORDER BY d.search_support ${sortOrder}
+      </if>
+      <if test="sortName =='createTime'">
+        ORDER BY a.create_time ${sortOrder}
+      </if>
+      <if test="sortName =='firstRanking'">
+        ORDER BY a.first_ranking ${sortOrder}
+      </if>
+      <if test="sortName =='newRanking'">
+        ORDER BY a.new_ranking ${sortOrder}
+      </if>
+      <if test="sortName =='standardDays'">
+        ORDER BY a.standard_days ${sortOrder}
+      </if>
+      <if test="sortName =='state'">
+        ORDER BY a.state ${sortOrder}
+      </if>
+    </if>
     limit #{offset},#{limit}
   </select>
 
   <select id="selectByOutMemberId"  resultMap="BaseResultMap">
     select DISTINCT a.*
-    from t_bill as a,t_bill_price as b
-    where a.id=b.bill_id
+    from t_bill as a,t_bill_price as b,t_bill_search_support as d,t_user as e
+    where a.id=b.bill_id AND  a.id=d.bill_id and b.out_member_id=e.id
     AND b.out_member_id=#{userId,jdbcType=BIGINT}
     <if test="website != null">
       AND a.website LIKE CONCAT('%',#{website,jdbcType=VARCHAR},'%')
@@ -428,6 +455,44 @@
     </if>
     <if test="searchStandard != null">
       AND a.new_ranking &lt;= b.bill_ranking_standard
+    </if>
+    <if test="searchName != null">
+      AND  d.search_support= #{searchName,jdbcType=VARCHAR}
+    </if>
+    <if test="searchUserNameId != null">
+      AND  b.out_member_id= #{searchUserNameId,jdbcType=VARCHAR}
+    </if>
+    <if test="searchStandard != null">
+      AND a.new_ranking &lt;= b.bill_ranking_standard
+    </if>
+    <if test="sortName != null">
+      <if test="sortName =='userName'">
+        ORDER BY e.user_name ${sortOrder}
+      </if>
+      <if test="sortName =='keywords'">
+        ORDER BY a.keywords ${sortOrder}
+      </if>
+      <if test="sortName =='website'">
+        ORDER BY a.website ${sortOrder}
+      </if>
+      <if test="sortName =='searchName'">
+        ORDER BY d.search_support ${sortOrder}
+      </if>
+      <if test="sortName =='createTime'">
+        ORDER BY a.create_time ${sortOrder}
+      </if>
+      <if test="sortName =='firstRanking'">
+        ORDER BY a.first_ranking ${sortOrder}
+      </if>
+      <if test="sortName =='newRanking'">
+        ORDER BY a.new_ranking ${sortOrder}
+      </if>
+      <if test="sortName =='standardDays'">
+        ORDER BY a.standard_days ${sortOrder}
+      </if>
+      <if test="sortName =='state'">
+        ORDER BY a.state ${sortOrder}
+      </if>
     </if>
     limit #{offset},#{limit}
   </select>
@@ -492,6 +557,9 @@
     <if test="roleId != null">
       AND  e.role_id= #{roleId,jdbcType=BIGINT}
     </if>
+    <if test="searchStandard != null">
+      AND a.new_ranking &lt;= b.bill_ranking_standard
+    </if>
     limit #{offset},#{limit}
   </select>
   <select id="selectByCustomerIdCount"  resultType="java.lang.Long">
@@ -548,7 +616,13 @@
       AND  d.search_support= #{searchName,jdbcType=VARCHAR}
     </if>
     <if test="searchUserNameId != null">
-      AND  b.out_member_id= #{searchUserNameId,jdbcType=BIGINT}
+      AND  b.out_member_id= #{searchUserNameId,jdbcType=VARCHAR}
+    </if>
+    <if test="roleId != null">
+      AND  e.role_id= #{roleId,jdbcType=BIGINT}
+    </if>
+    <if test="searchStandard != null">
+      AND a.new_ranking &lt;= b.bill_ranking_standard
     </if>
   </select>
 
@@ -609,6 +683,9 @@
     </if>
     <if test="searchUserNameId != null">
       AND  b.out_member_id= #{searchUserNameId,jdbcType=VARCHAR}
+    </if>
+    <if test="searchStandard != null">
+      AND a.new_ranking &lt;= b.bill_ranking_standard
     </if>
   </select>
 </mapper>

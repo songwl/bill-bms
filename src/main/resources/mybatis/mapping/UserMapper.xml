@@ -223,6 +223,12 @@
     from t_user a ,t_user_role b
     where a.id=b.user_id
     and b.role_id= #{roleId,jdbcType=BIGINT}
+    <if test="searchUserName != null">
+      AND a.user_name LIKE CONCAT('%',#{searchUserName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="searchState != null">
+      AND a.status = #{searchState,jdbcType=BIT}
+    </if>
     limit #{offset},#{limit}
   </select>
   <select id="getUserByCreateId" resultMap="BaseResultMap">

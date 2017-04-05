@@ -25,10 +25,15 @@ public interface OperatorService {
      */
     Map<String, Object> getOperator(Map<String, Object> params);
     /**
-     * 冻结账户
+     * 修改信息
      * @param params
      * @return
      */
-    int updateUserState(Long userId);
-
+    int updateOperator(User user,LoginUser loginUser);
+    /**
+     * 重置密码
+     * @param params
+     * @return
+     */
+    int updatePwd(User user,LoginUser loginUser);
 }

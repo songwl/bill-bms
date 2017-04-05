@@ -24,12 +24,20 @@
 </div>
 </div>
 <div class="Navs2">
-
-    <div class="nav_R2 right" >
+    <div class="nav_R2 right col-md-11" >
         <div>
-            客户ID:
+            用户名:
         </div>
-        <input name="acid" class="form-control" value="" style="width: 60px;" type="text">
+        <input id="searchUserName" name="keywords" class="form-control" value="" style="width: 150px;" type="text">
+        <span style="font-size:13px;text-align:center;cursor:pointer;font-weight:bold;margin-left: 10px;" id="state">
+            状态:
+        </span>
+        <select style="height: 35px;border: none;border: 1px solid #aaaaaa;"  id="searchState">
+            <option  value="2">--请选择--</option>
+            <option value="1">正常</option>
+            <option value="0">冻结</option>
+        </select>
+        <span id="searchButton">查询</span>
     </div>
     <div class="cls">
     </div>
@@ -74,7 +82,7 @@
                         }
                     </style>
                     <form class="form-horizontal row-border" id="addOperatorform" action="#" novalidate="novalidate">
-                        <div class="form-group">
+                        <div class="form-group" style="display:none;" id="nameDiv">
                             <label class="col-md-3 control-label">
                                 登录名<span class="required">* </span>
                             </label>
@@ -82,6 +90,14 @@
                                 <input name="userName" class="form-control input-width-large" type="text" id="userName1">
                             </div>
                             <div class="pdlogid"></div>
+                        </div>
+                        <div class="form-group" style="display:none;" id="nameDiv1">
+                            <label class="col-md-3 control-label">
+                                登录名<span class="required">* </span>
+                            </label>
+                            <div class="col-md-9">
+                                <input name="userName1" class="form-control input-width-large" type="text" >
+                            </div>
                         </div>
                         <div class="form-group" id="viewpwd">
                             <label class="col-md-3 control-label">
@@ -131,11 +147,12 @@
                                 状态<span class="required">* </span>
                             </label>
                             <div class="col-md-9">
-                               <select id="viewstatus">
+                               <select id="viewstatus" name="status">
 
                                </select>
                             </div>
                         </div>
+                        <input type="hidden" value="" name="operator">
                     </form>
 
                 </div>

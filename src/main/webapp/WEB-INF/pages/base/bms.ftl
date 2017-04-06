@@ -28,7 +28,7 @@
 	<link href="${ctx}/static/js/assets/css/style.css" rel="stylesheet" type="text/css"/>
 	<link href="${ctx}/static/js/assets/css/style-responsive.css" rel="stylesheet" type="text/css"/>
 	<link rel="shortcut icon" href="${ctx}/static/js/assets/img/favicon.ico"/>
-
+    <link href="${ctx}/static/css/public/back.css" rel="stylesheet">
 	${bms_head_content!""}
 </@base.headcontent>
 
@@ -37,18 +37,10 @@
 </@base.headjscontent>
 
 <@base.jscontent>
-	<script src="${ctx}/static/js/assets/plugins/respond.min.js"></script>
-	<script src="${ctx}/static/js/assets/plugins/excanvas.min.js"></script>
-	<script src="${ctx}/static/js/assets/plugins/jquery-migrate-1.2.1.min.js" type="text/javascript"></script>
-	<script src="${ctx}/static/js/assets/plugins/jquery-ui/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
 	<script src="${ctx}/static/js/assets/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-	<script src="${ctx}/static/js/assets/plugins/bootstrap-hover-dropdown/twitter-bootstrap-hover-dropdown.min.js" type="text/javascript"></script>
 	<script src="${ctx}/static/js/assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
 	<script src="${ctx}/static/js/assets/plugins/jquery.blockui.min.js" type="text/javascript"></script>
 	<script src="${ctx}/static/js/assets/plugins/jquery.cokie.min.js" type="text/javascript"></script>
-	<script src="${ctx}/static/js/assets/plugins/uniform/jquery.uniform.min.js" type="text/javascript"></script>
-	<script src="${ctx}/static/js/assets/plugins/jquery-validation/dist/jquery.validate.min.js" type="text/javascript"></script>
-	<script type="text/javascript" src="${ctx}/static/js/assets/plugins/select2/select2.min.js"></script>
 	<script src="${ctx}/static/js/assets/scripts/app.js" type="text/javascript"></script>
 	<script type="text/javascript" src="${ctx}/static/js/app/js/index.js"></script>
 
@@ -92,11 +84,11 @@
 <header class="header navbar navbar-fixed-top" role="banner">
     <div class="container">
     <div>
-        <a class="navbar-brand" href="#" >
+            <a class="navbar-brand" >
             <strong>管理后台</strong>
 
         </a>
-        <ul   style="border: none;float: left;display: inline-block;margin-left: 130px;margin-top: 13px;">
+        <ul   style="border: none;float: left;display: inline-block;margin-left: 150px;margin-top: 13px;">
             <li class="sidebar-toggler-wrapper">
                 <div class="sidebar-toggler hidden-phone fa fa-bars">
                 </div>

@@ -36,7 +36,22 @@ public interface CustomerService {
      */
     int customerAudit(Long customerId);
 
-    int Recharge(Map<String,String[]> params,LoginUser user);
+    /**
+     * 客户充值
+     * @param customerId
+     * @param RechargeSum
+     * @param user
+     * @return
+     */
+    int Recharge(String customerId,String RechargeSum,LoginUser user);
+    /**
+     * 客户退款
+     * @param customerId
+     * @param RechargeSum
+     * @param user
+     * @return
+     */
+    int Refound(String customerId,String RechargeSum,LoginUser user);
     /**
      * 获取资金明细列表
      * @param params

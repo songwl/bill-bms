@@ -199,12 +199,9 @@ $(function () {
     //1.初始化Table
     var oTable = new TableInit();
     oTable.Init();
-    var oTable1 = new TableInit();
+    var oTable1 = new TableInit1();
     oTable1.Init();
 
-    //2.初始化Button的点击事件
-    var oButtonInit = new ButtonInit();
-    oButtonInit.Init();
 
 
 });
@@ -479,13 +476,18 @@ var TableInit = function () {
     }
     window.operateEvents = {
         'click #details': function (e, value, row, index) {
+            $("#detailTable").empty();
             $("#billCostDetail").show();
             $(".modal-backdrop").show();
+            var str="";
+            for(var i=0;i<row.billPriceList.length;i++)
+            {
+                str+="<tr><td>前<span class='red'>"+row.billPriceList[i]['billRankingStandard']+"</span>名</td><td>￥"+row.billPriceList[i]['price']+"</td></tr>";
+            }
+            $("#detailTable").append(str);
+            $("input[name='Bid']").val(row.id);
 
-
-
-
-
+            $('#pricetable').bootstrapTable('refresh');
         }
 
     }
@@ -493,7 +495,85 @@ var TableInit = function () {
 
     return oTableInit;
 };
+var TableInit1 = function () {
+    var oTableInit1 = new Object();
+    //初始化Table
+    oTableInit1.Init = function () {
+        $('#pricetable').bootstrapTable({
+            url: CTX+'/bill/getPriceDetails',         //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，
+            pagination: true,                   //是否显示分页（*）
+            pageNumber: 1,                       //初始化加载第一页，默认第一页
+            pageSize: 20,                       //每页的记录行数（*）
+            pageList: [20, 50, 100],        //可供选择的每页的行数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            queryParams: oTableInit1.queryParams,//传递参数（*）
+            queryParamsType: "",
+            minimumCountColumns: 2,             //最少允许的列数
+            clickToSelect: true,                //是否启用点击选中行
+            height: 330,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+            rowStyle: function (row, index) {
+                //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
+                var strclass = "";
+                if ((row.id)%2==0){
+                    strclass = '';
+                }
+                else {
+                    strclass = 'active';
+                }
+                return { classes: strclass }
+            },
+            columns: [
+                {
+                    field: 'id',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '序号',
 
+                },
+
+                {
+                    field: 'ranking',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '名次',
+
+                },
+                {
+                    field: 'costAmount',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '金额',
+
+                }, {
+                    field: 'costDate',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '消费日期',
+
+                },
+            ],
+
+        });
+    };
+
+    //得到查询的参数
+    oTableInit1.queryParams = function (params) {
+        var temp1 = {
+            limit: params.pageSize,   //页面大小
+            offset: params.pageNumber,  //页码
+            way:3,//上下游
+            billId: $("input[name='Bid']").val()
+
+        };
+        return temp1;
+    }
+
+    return oTableInit1;
+};
 
 
 
@@ -505,11 +585,15 @@ $(function () {
     });
 
 });
-function detail( ) {
-    var bid=$("input[name='Bid']").val();
+$(function () {
+    $("#queren").click(function () {
+
+        $('#pricetable').bootstrapTable('refresh');
+    });
+
+});
 
 
-}
 
 
 

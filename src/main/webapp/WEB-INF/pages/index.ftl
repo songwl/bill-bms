@@ -1,7 +1,6 @@
 <#import "/base/bms.ftl" as bms>
 
 <@bms.bmshtml bmsModel "主页">
-<link href="${ctx}/static/css/public/back.css" rel="stylesheet">
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <div class="theme-panel hidden-xs hidden-sm">
 

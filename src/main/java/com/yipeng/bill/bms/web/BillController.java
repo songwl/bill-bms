@@ -579,9 +579,10 @@ public class BillController extends BaseController {
 
          LoginUser user=this.getCurrentAccount();
          String billId=request.getParameter("billId");
+         String way=request.getParameter("way");
          if(!billId.isEmpty())
          {
-             Map<String,Object> map=billService.getPriceDetails(billId,user);
+             Map<String,Object> map=billService.getPriceDetails(billId,user,way);
              return map;
          }
         else
@@ -589,6 +590,14 @@ public class BillController extends BaseController {
              return  null;
 
          }
+    }
+
+
+    @RequestMapping(value = "/billFeedback")
+    public  String billFeedback(HttpServletRequest request)
+    {
+
+        return "/bill/billFeedback";
     }
 
 }

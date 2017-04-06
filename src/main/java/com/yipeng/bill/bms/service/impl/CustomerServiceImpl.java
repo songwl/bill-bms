@@ -383,21 +383,14 @@ public class CustomerServiceImpl implements CustomerService{
      * @return
      */
     @Override
-    public int Recharge(Map<String, String[]> params, LoginUser user) {
-        String[] checkboxLength=params.get("length");
-        int  length=Integer.parseInt(checkboxLength[0]);
-        String[] RechargeSum=params.get("RechargeSum");
-        Double  nums=Double.parseDouble(RechargeSum[0]);
-        for (int i=0;i<length;i++)
-        {
-            String[] id=params.get("selectContent["+i+"][customerId]");
-            Long  customerId=Long.parseLong(id[0]);
-            FundAccount fundAccount=fundAccountMapper.selectByUserId(customerId);
+    public int Recharge(String customerId,String RechargeSum,LoginUser user) {
 
+            Double  nums=Double.parseDouble(RechargeSum);
+            FundAccount fundAccount=fundAccountMapper.selectByUserId(Long.parseLong(customerId));
             if(fundAccount==null)
             {
                 FundAccount fundAccount1=new FundAccount();
-                fundAccount1.setUserId(customerId);
+                fundAccount1.setUserId(Long.parseLong(customerId));
                 fundAccount1.setBalance(new BigDecimal(nums));
                 fundAccount1.setCreateTime(new Date());
                 fundAccount1.setCreateUserId(user.getId());
@@ -412,14 +405,14 @@ public class CustomerServiceImpl implements CustomerService{
                 fundItem.setChangeTime(new Date());
                 fundItem.setItemType("recharge"); //充值
                 fundItemMapper.insert(fundItem);
+                return  1;
             }
             else
             {
                 Double sum;
                 sum=nums +Double.parseDouble(fundAccount.getBalance().toString());
                 FundAccount fundAccount1=new FundAccount();
-                String[] userName=params.get("selectContent["+i+"][userName]");
-                User user1=userMapper.selectByUserName(userName[0]);
+                User user1=userMapper.selectByPrimaryKey(Long.parseLong(customerId));
                 fundAccount1.setId(fundAccount.getId());
                 fundAccount1.setUserId(user1.getId());
                 fundAccount1.setBalance(new BigDecimal(sum));
@@ -435,12 +428,60 @@ public class CustomerServiceImpl implements CustomerService{
                 fundItem.setChangeTime(new Date());
                 fundItem.setItemType("recharge"); //充值
                 fundItemMapper.insert(fundItem);
+                return  1;
             }
 
 
-        }
-        return  1;
+
+
     }
+
+    @Override
+    public int Refound(String customerId, String RechargeSum, LoginUser user) {
+        Double  nums=Double.parseDouble(RechargeSum);
+        FundAccount fundAccount=fundAccountMapper.selectByUserId(Long.parseLong(customerId));
+        if(fundAccount!=null)
+        {
+            Double sum;
+            if(nums<=Double.parseDouble(fundAccount.getBalance().toString()))
+            {
+                sum=Double.parseDouble(fundAccount.getBalance().toString())-nums ;
+                FundAccount fundAccount1=new FundAccount();
+                User user1=userMapper.selectByPrimaryKey(Long.parseLong(customerId));
+                fundAccount1.setId(fundAccount.getId());
+                fundAccount1.setUserId(user1.getId());
+                fundAccount1.setBalance(new BigDecimal(sum));
+                fundAccount1.setUpdateTime(new Date());
+                fundAccount1.setUpdateUserId(user.getId());
+                fundAccountMapper.updateByPrimaryKeySelective(fundAccount1);
+
+                FundItem fundItem = new FundItem();
+                fundItem.setFundAccountId(fundAccount.getId());
+                fundItem.setChangeAmount(new BigDecimal(nums));
+                FundAccount fundAccount2=fundAccountMapper.selectByPrimaryKey(fundAccount1.getId());
+                fundItem.setBalance(fundAccount2.getBalance());
+                fundItem.setChangeTime(new Date());
+                fundItem.setItemType("refund"); //退款
+                fundItemMapper.insert(fundItem);
+                return  1;
+
+            }
+            else
+            {
+                return  2;
+            }
+
+        }
+        else
+        {
+            return  0;
+        }
+
+
+
+
+    }
+
     /**
      * 获取资金明细列表
      * @param params

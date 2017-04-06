@@ -49,9 +49,7 @@
                 <div class="panel-nav">
                     <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;客户列表</div>
                     <div class="Nav_Right">
-                        <div id="continue">正常</div>
-                        <div id="stop">冻结</div>
-                        <div id="all">全部</div>
+
                     </div>
                     <div class="cls"></div>
                 </div>
@@ -76,8 +74,6 @@
 
 <div class="modal-backdrop in" style="display: none">
 </div>
-
-
 <!--添加客户-->
 <div class="bootbox modal in addMemberDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
     <div class="modal-dialog">
@@ -166,13 +162,13 @@
 </div>
 <!--添加客户end-->
 
-<!--优化调整-->
+<!--客户充值-->
 <div class="bootbox modal in RechargeDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="bootbox-close-button close">×</button>
-                <h4 class="modal-title">客户充值</h4>
+                <h4 class="modal-title"></h4>
             </div>
             <div class="modal-body" style="max-height: 374px;">
                 <div class="bootbox-body">
@@ -183,18 +179,19 @@
                     </style>
                     <form class="form-horizontal row-border" id="edt-form" action="#" novalidate="novalidate">
                         <div class="form-group">
-                            <div style="margin-left:15px;">充值金额：</div>
+                            <div style="margin-left:15px;" class="Amount">充值金额：</div>
                             <div style="margin-left:10px;margin-top: 10px;">
                              <input type="text" value="" id="RechargeSum">
                             </div>
                         </div>
-
+                         <input type="hidden" value="" id="customerId">
                     </form>
 
                 </div>
             </div>
             <div class="modal-footer">
-                <button data-bb-handler="success" type="button" class="btn wzgj-blue Rechargecmt">确定</button>
+                <button data-bb-handler="success" type="button" class="btn wzgj-blue Rechargecmt" style="display: none;">确定</button>
+                <button data-bb-handler="success" type="button" class="btn wzgj-blue Refoundcmt" style="display: none;">确定</button>
                 <button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
             </div>
         </div>

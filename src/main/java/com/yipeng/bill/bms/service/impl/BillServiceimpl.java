@@ -5,6 +5,7 @@ import com.yipeng.bill.bms.core.utils.DateUtils;
 import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.service.BillService;
+import com.yipeng.bill.bms.vo.BillCostDetails;
 import com.yipeng.bill.bms.vo.BillDetails;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.hamcrest.text.IsEmptyString;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import javax.xml.crypto.Data;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -738,8 +740,7 @@ public class BillServiceimpl implements BillService {
                Role role=roleMapper.selectByRoleCode("CUSTOMER");
                params.put("roleId",role.getId());
                params.put("userId",user.getId());
-               List<Bill> billList=billMapper.selectByCustomerId(params);
-               Long total=billMapper.selectByCustomerIdCount(params);
+               List<Bill> billList=billMapper.selectByCustomerId(params);Long total=billMapper.selectByCustomerIdCount(params);
                for (Bill bill: billList
                        ) {
                        i++;
@@ -865,23 +866,31 @@ public class BillServiceimpl implements BillService {
                if(item.getBillRankingStandard()>=bill.getNewRanking())
                {
                    billDetails.setDayConsumption(item.getPrice());
+
                    break;
                }
            }
-
-           Calendar now =Calendar.getInstance();
-           Map<String,Object> map=new HashMap<>();
-           map.put("year",now.get(Calendar.YEAR));
-           map.put("month",now.get(Calendar.MONTH)+1);
-           map.put("billId",bill.getId());
-           map.put("billPriceId",billPrice2.get(0).getId());
-           Double sum=billCostMapper.selectByPriceSum(map);
-           if(sum!=null)
-           {
-               billDetails.setMonthConsumption(sum);
-           }
-
        }
+        Calendar now =Calendar.getInstance();
+        Map<String,Object> map=new HashMap<>();
+        map.put("year",now.get(Calendar.YEAR));
+        map.put("month",now.get(Calendar.MONTH)+1);
+        map.put("billId",bill.getId());
+        if(way==1)
+        {
+            map.put("userId",user.getCreateUserId());
+        }
+        else
+        {
+            map.put("userId",user.getId());
+        }
+
+        Double sum=billCostMapper.selectByPriceSum(map);
+        if(sum!=null)
+        {
+            billDetails.setMonthConsumption(sum);
+        }
+
        //有问题 不需要查询 订单表里面有达标天数 最后一次查询排名 增加达标天数
        Map<String,Object> map1=new HashMap<>();
        map1.put("billId",bill.getId());
@@ -961,12 +970,59 @@ public class BillServiceimpl implements BillService {
     }
 
     @Override
-    public Map<String, Object> getPriceDetails(String billId, LoginUser user) {
+    public Map<String, Object> getPriceDetails(String billId, LoginUser user,String way) {
 
-       Map<String,Object> map=new HashMap<>();
-        List<BillCost> billCostList=billCostMapper.selectByBillId(Long.parseLong(billId));
-        map.put("rows", billCostList);
-        return map;
+       Map<String,Object> params=new HashMap<>();
+        List<BillCostDetails> billCostDetailsList=new ArrayList<>();
+
+        if(way.equals("1"))//上游
+        {
+            Map<String,Object> map=new HashMap<>();
+            map.put("userId",user.getCreateUserId());
+            map.put("billId",billId);
+            List<BillCost> billCostList=billCostMapper.getPriceByMap(map);
+            for (BillCost item :billCostList
+                    ) {
+                BillCostDetails billCostDetails=new BillCostDetails();
+                billCostDetails.setId(item.getId());
+                billCostDetails.setCostAmount(item.getCostAmount());
+                billCostDetails.setRanking(item.getRanking());
+                billCostDetails.setCostDate(DateUtils.formatDate(item.getCostDate()));
+                billCostDetailsList.add(billCostDetails);
+            }
+            params.put("rows", billCostDetailsList);
+            return params;
+        }
+
+        else
+        {
+            Map<String,Object> map=new HashMap<>();
+            map.put("userId",user.getId());
+            map.put("billId",billId);
+            if(user.hasRole("SUPER_ADMIN")||user.hasRole("DISTRIBUTOR")||user.hasRole("AGENT"))
+            {
+                List<BillCost> billCostList=billCostMapper.getPriceByMap(map);
+                for (BillCost item :billCostList
+                        ) {
+                    BillCostDetails billCostDetails=new BillCostDetails();
+                    billCostDetails.setId(item.getId());
+                    billCostDetails.setCostAmount(item.getCostAmount());
+                    billCostDetails.setRanking(item.getRanking());
+                    billCostDetails.setCostDate(DateUtils.formatDate(item.getCostDate()));
+                    billCostDetailsList.add(billCostDetails);
+                }
+                params.put("rows", billCostDetailsList);
+                return params;
+            }
+
+            else
+            {
+                return  null;
+            }
+        }
+
+
+
     }
 
     /**

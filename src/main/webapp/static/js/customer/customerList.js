@@ -131,29 +131,17 @@ $(document).ready(function () {
         }
 
     })
- // 充值框显示
-    $("#Recharge").click(function () {
 
-        var selectContent = $('#myTable').bootstrapTable('getSelections');
-        if(selectContent == "") {
-            alert('请选择一列数据!');
-
-        }else{
-            $(".modal-backdrop").show();
-            $(".RechargeDiv").slideDown();
-        }
-    })
    //充值确认
     $(".Rechargecmt").click(function () {
-        var selectContent = $('#myTable').bootstrapTable('getSelections');
-        var len =selectContent.length;
         var RechargeSum=$("#RechargeSum").val();
-        if(!isNaN(RechargeSum))
+        var customerId= $("#customerId").val();
+        if(!isNaN(RechargeSum)&&RechargeSum>0)
         {
             $.ajax({
                 type:"post",
                 url:CTX+"/customer/Recharge",
-                data:{selectContent:selectContent,length:len,RechargeSum:RechargeSum},
+                data:{customerId:customerId, RechargeSum:RechargeSum},
                 success:function (result) {
                       if(result.code==200)
                       {
@@ -173,6 +161,38 @@ $(document).ready(function () {
         else
         {
          alert("请填入正确的充值金额！");
+        }
+    })
+
+    //退款确认
+    $(".Refoundcmt").click(function () {
+        var RechargeSum=$("#RechargeSum").val();
+        var customerId= $("#customerId").val();
+        if(!isNaN(RechargeSum)&&RechargeSum>0)
+        {
+            $.ajax({
+                type:"post",
+                url:CTX+"/customer/Refound",
+                data:{customerId:customerId, RechargeSum:RechargeSum},
+                success:function (result) {
+                    if(result.code==200)
+                    {
+                        alert(result.message);
+                        $(".modal-backdrop").hide();
+                        $(".RechargeDiv").slideUp();
+                        $('#myTable').bootstrapTable('refresh');
+                    }
+                    else
+                    {
+                        alert(result.message);
+                    }
+                }
+
+            })
+        }
+        else
+        {
+            alert("请填入正确的退款金额！");
         }
     })
 })
@@ -338,18 +358,41 @@ var TableInit = function () {
 
                 },
                 {
+                    field: "status",
+                    align: 'center',
+                    valign: 'middle',
+                    title: '状态',
+                    formatter:function (value,row,index) {
+                        var a="";
+                        if(value==1)
+                        {
+                            a="<span style='color:#4382CF;cursor:pointer;' id='details'>正常</span>";
+                        }
+                        else
+                        {
+                            a="<span>冻结中</span>";
+                        }
+                        return a;
+                    }
+
+
+
+                },
+                {
                     field: 'operate',
                     title: '操作',
                     align: 'center',
                     valign: 'middle',
                     formatter:function (value,row,index) {
-                        var a="<span style='color:#4382CF;cursor:pointer;' id='details'>充值</span>   " +
-                            "<span style='color:#4382CF;cursor:pointer;' id='details'>退款</span>   " +
+                        var a="<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
+                            "<span style='color:#4382CF;cursor:pointer;' id='refund'>退款</span>   " +
                             "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
-                            "<span style='color:#4382CF;cursor:pointer;' id='details'>改密</span>   ";
+                            "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   ";
 
                         return a;
-                    }
+                    },
+                   events:operateEvents
+
 
                 },
 
@@ -370,7 +413,48 @@ var TableInit = function () {
         };
         return temp;
     }
-
+    window.operateEvents = {
+        'click #recharge': function (e, value, row, index) {
+            $(".modal-backdrop").show();
+            $(".RechargeDiv").slideDown();
+            $(".modal-title").html("客户充值");
+            $(".Amount").html("充值金额");
+            $(".Rechargecmt").show();
+            $(".Refoundcmt").hide();
+            $("#customerId").val(row.customerId);
+        },
+        'click #refund': function (e, value, row, index) {
+            $(".modal-backdrop").show();
+            $(".RechargeDiv").slideDown();
+            $(".modal-title").html("客户退款");
+            $(".Amount").html("退款金额");
+            $(".Rechargecmt").hide();
+            $(".Refoundcmt").show();
+            $("#customerId").val(row.customerId);
+        },
+        'click #changepwd': function (e, value, row, index)
+        {
+            if(confirm("是否重置密码？"))
+            {
+                $.ajax({
+                    type:'post',
+                    url:CTX+ "/operator/updatePwd",
+                    data:{id:row.customerId},
+                    success:function (result) {
+                        if(result.code==200)
+                        {
+                            alert(result.message);
+                            $('#myTable').bootstrapTable('refresh');
+                        }
+                        else
+                        {
+                            alert(result.Message);
+                        }
+                    }
+                })
+            }
+        }
+    }
 
 
     return oTableInit;

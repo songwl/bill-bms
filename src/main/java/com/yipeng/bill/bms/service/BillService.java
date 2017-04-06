@@ -89,6 +89,6 @@ public interface BillService {
      */
     int optimizationStart(Map<String, String[]>  params,LoginUser user);
 
-    Map<String,Object> getPriceDetails(String billId,LoginUser user);
+    Map<String,Object> getPriceDetails(String billId,LoginUser user,String way);
 
 }

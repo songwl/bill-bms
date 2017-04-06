@@ -34,7 +34,7 @@
 .nav_L 
 {
    float:left;
-   width:200px;
+   width:250px;
    text-indent:10px;
    display:inline-block;
 }
@@ -156,3 +156,38 @@ border-bottom:1px solid #d9d9d9;
 {
     opacity: 0.8;
 }
+
+
+/*站点基本信息*/
+
+.info_mk .u1 .bg_f9{ background: #f9f9f9;}
+.info_mk{ overflow: hidden; padding-bottom: 9px;}
+.info_mk .u1{ width: 100%; border: 1px solid #cccccc;  border-bottom: 0px none;}
+.info_mk .u1 li{ border-bottom: 1px solid #cccccc; height: 40px; line-height: 40px;}
+.info_mk .u1 div{  border-right: 1px solid #cccccc; height: 40px; float: left; line-height: 40px;}
+.info_mk .u1 .d1{width: 104px; border-right: 1px solid #cccccc;}
+.info_mk .u1 .d2{ width: 410px;}
+.info_mk .u1 .d3{ width: 104px; text-align: center;}
+.info_mk .u1 .d4{ width: 258px; padding-left: 9px; border: 0 none;}
+.info_mk .u1 .d5{ width: 782px; border: 0 none;}
+.info_mk .u1 p{ display: inline-block; float: left; color: #666; font-size: 12px;}
+.info_mk .u1 .d1 p,.info_mk .u1 .d2 p,.info_mk .u1 .d5 p{ margin-left: 20px;}
+.info_mk .u1 .d1 p,.info_mk .u1 .d3 p{ color: #333;}
+.info_mk .u1 .d3 p{ width: 100%;}
+.info_mk .u1 .d4 .logo{ width: 20px;  height: 20px;  float: left; background: url(../images/cpd_tb.jpg) no-repeat; margin-top: 10px; margin-right: 4px;}
+.info_mk .u1 .d4 .logo1{ background-position: 0px 0px;}
+.info_mk .u1 .d4 .logo2{ background-position: -20px 0px;}
+.info_mk .u1 .d4 .logo3{ background-position: -40px 0px;}
+.info_mk .u1 .d4 .logo4{ background-position: -60px 0px;}
+.info_mk .u1 .d4 .logo5{ background-position: -80px 0px;}
+.info_mk .u1 .d4 .logo6{ background-position: -100px 0px;}
+.info_mk .u1 .d4 em{ color: #c60000; font-size: 24px;}
+.info_mk .u1 .d5 span{ font-size: 16px; color: #c60000;}
+.info_mk .u1 .d5 em{ color: #c60000;}
+
+.main_mk{ margin-top: 20px;}
+.info_mk .u1 .gjcdv{ border-bottom: 1px solid #cccccc; height: 100px; line-height: 100px;}
+.info_mk .u1 .gjcdv .gj1{   height: 100px; float: left; line-height: 100px;}
+.info_mk .u1 .gj1{width: 104px; border-right: 1px solid #cccccc;text-align: center;}
+.info_mk .u1 .gj2{ width: 773px; border: none;}
+.info_mk .u1 .gj1 p{margin-left: 20px;}

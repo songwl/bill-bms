@@ -471,7 +471,7 @@ var TableInit = function () {
                     valign: 'middle',
                     formatter:function (value,row,index) {
                         var a="<span style='color:#4382CF;cursor:pointer;' id='details'>详情</span>  " +
-                               "  <span style='color:#4382CF;cursor:pointer;' id='feedback'>反馈</span>";
+                               "  <a href='/bill/bill/billFeedback' style='color:#4382CF;cursor:pointer;' id='feedback'>反馈</a>";
 
                         return a;
                     },
@@ -517,13 +517,23 @@ var TableInit = function () {
             $("input[name='Bid']").val(row.id);
 
             $('#pricetable').bootstrapTable('refresh');
-        }
+        },
+        'click #feedback': function (e, value, row, index) {
 
+                        e.preventDefault();
+                        var url = this.href;
+                        if (url != null && url != 'javascript:;') {
+                            $.get(url, function(data) {
+                                $('.page-content').html(data);
+                            });
+                        }
+
+        }
     }
     return oTableInit;
 };
 
-    var TableInit1 = function () {
+var TableInit1 = function () {
         var oTableInit1 = new Object();
         //初始化Table
         oTableInit1.Init = function () {
@@ -593,6 +603,7 @@ var TableInit = function () {
             var temp1 = {
                 limit: params.pageSize,   //页面大小
                 offset: params.pageNumber,  //页码
+                way:$("#way").val(),//上下游
                 billId: $("input[name='Bid']").val()
 
             };

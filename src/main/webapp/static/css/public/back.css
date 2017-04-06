@@ -16,7 +16,7 @@
 	color: #fff;
 	text-shadow: 0 1px 0 #000;
 	font-size: 18px;
-	width: 180px;
+	width: 100px;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow-x: hidden;
@@ -24,7 +24,7 @@
 	padding-left: 0;
 	max-width: none;
 	position: absolute;
-	left: 50px;
+	left: 30px;
 	margin-left: 0!important;
 	margin-right: 0;
 }
@@ -152,22 +152,6 @@ header {
 	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-.navbar .navbar-brand {
-	padding: 0;
-	line-height: 48px;
-	color: #fff;
-	text-shadow: 0 1px 0 #000;
-	font-size: 18px;
-	width: 180px;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	overflow-x: hidden;
-	text-align: left;
-	padding-left: 0;
-	max-width: none;
-	margin-left: 0!important;
-	margin-right: 0;
-}
 
 .navbar .navbar-nav {
 	padding-top: 0;

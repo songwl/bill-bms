@@ -79,7 +79,8 @@ public class CustomerController extends  BaseController{
      */
     @RequestMapping(value = "/customerList",method = RequestMethod.POST)
     @ResponseBody
-    public ResultMessage createUser(HttpServletRequest request, User user, int addMemberId,String realName,String contact,String phone,String qq, BigDecimal balance)
+    public ResultMessage createUser(HttpServletRequest request, User user, int addMemberId,
+                                    String realName,String contact,String phone,String qq, BigDecimal balance)
     {
         User user1=this.getCurrentAccount();
         int a=customerService.savaUser(user,addMemberId,user1.getId(),realName,contact,phone,qq,balance);
@@ -208,12 +209,46 @@ public class CustomerController extends  BaseController{
         LoginUser user=this.getCurrentAccount();
         if(user!=null)
         {
-            Map<String, String[]> params= request.getParameterMap();
-           int a= customerService.Recharge(params,user);
-            return  this.ajaxDoneSuccess("充值成功！");
+            String customerId=request.getParameter("customerId");
+            String RechargeSum=request.getParameter("RechargeSum");
+           int a= customerService.Recharge(customerId,RechargeSum,user);
+           return  this.ajaxDoneSuccess("充值成功！");
         }
 
         return  this.ajaxDoneError("充值失败，请稍后再试!");
+
+    }
+    /**
+     * 客户退款
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/Refound",method = RequestMethod.POST)
+    @ResponseBody
+    public  ResultMessage Refound(HttpServletRequest request)
+    {
+        LoginUser user=this.getCurrentAccount();
+        if(user!=null)
+        {
+            String customerId=request.getParameter("customerId");
+            String RechargeSum=request.getParameter("RechargeSum");
+            int a= customerService.Refound(customerId,RechargeSum,user);
+            if(a==1)
+            {
+                return  this.ajaxDoneSuccess("退款成功！");
+            }
+            else if(a==2)
+            {
+                return  this.ajaxDoneError("退款金额不能大于余额!");
+            }
+            else
+            {
+                return  this.ajaxDoneError("退款失败，请稍后再试!");
+            }
+
+        }
+
+        return  this.ajaxDoneError("退款失败，请稍后再试!");
 
     }
 }

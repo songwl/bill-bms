@@ -116,18 +116,24 @@
     where t_bill_id = #{BillId,jdbcType=BIGINT} AND cost_date=#{date,jdbcType=DATE}
   </select>
   <select id="selectByPriceSum" resultType="java.lang.Double">
- select SUM(cost_amount)
-  from t_bill_cost
-   where
+ select SUM(a.cost_amount)
+  from t_bill_cost as a,t_bill_price as b
+   where a.t_bill_price_id=b.id and
    year(cost_date) =#{year,jdbcType=INTEGER}
     and month(cost_date) =#{month,jdbcType=INTEGER}
    AND t_bill_id = #{billId,jdbcType=BIGINT}
-   AND t_bill_price_id=#{billPriceId,jdbcType=BIGINT}
+   AND  b.in_member_id=#{userId,jdbcType=BIGINT}
   </select>
   <select id="selectByPriceCount" resultType="java.lang.Integer">
     select COUNT(DISTINCT cost_date)
     from t_bill_cost
     where
      t_bill_id = #{billId,jdbcType=BIGINT}
+  </select>
+
+  <select id="getPriceByMap"  resultMap="BaseResultMap">
+  select a.* from t_bill_cost as a,t_bill_price as b
+  WHERE a.t_bill_price_id = b.id
+  AND b.in_member_id=#{userId,jdbcType=BIGINT} AND a.t_bill_id=#{billId,jdbcType=BIGINT}
   </select>
 </mapper>

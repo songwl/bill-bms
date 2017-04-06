@@ -5,6 +5,7 @@ import com.yipeng.bill.bms.domain.BillCost;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public interface BillCostMapper {
     int deleteByPrimaryKey(Long id);
@@ -23,4 +24,5 @@ public interface BillCostMapper {
 
     Double selectByPriceSum(Map<String, Object> modelMap);
     int selectByPriceCount(Map<String, Object> modelMap);
+    List<BillCost> getPriceByMap(Map<String,Object> params);
 }

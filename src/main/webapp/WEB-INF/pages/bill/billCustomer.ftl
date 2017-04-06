@@ -433,32 +433,19 @@
                     <div class="row" style="margin-top: -5px;">
                         <div class="col-md-12">
                             <label>价格配置</label>
-                            <table class="table table-hover table-striped table-bordered">
-                                <table class="table table-hover table-striped table-bordered">
-                                    <thead>
-                                    <tr>
-                                        <th style="width: 100px;">达标位置
-                                        </th>
-                                        <th>收费标准<span>(元/天)</span>
-                                        </th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>前<span class="red">10</span>名
-                                        </td>
-                                        <td>￥1.25
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>前<span class="red">20</span>名
-                                        </td>
-                                        <td>￥0.47
-                                        </td>
-                                    </tr>
+                            <table class="table table-hover table-striped table-bordered" >
+                                <thead>
+                                <tr>
+                                    <th style="width: 100px;">达标位置
+                                    </th>
+                                    <th>收费标准<span>(元/天)</span>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody id="detailTable">
 
-                                    </tbody>
-                                </table>
+
+                                </tbody>
                             </table>
                             <label>任务消费记录</label>
                             <div class="widget box">
@@ -466,19 +453,7 @@
                                     <h4><i class="icon-reorder"></i>(17条记录)</h4>
                                 </div>
                                 <div class="widget-content">
-                                    <table id="teacher_table" data-toggle="table" data-url="./data.php" data-method="post"
-                                           data-query-params="queryParams"
-                                           data-toolbar="#toolbar"
-                                           data-pagination="true"
-                                           data-page-size="5">
-                                        <thead>
-                                        <tr>
-                                            <th data-field="id">序号</th>
-                                            <th data-field="costDate">消费日期</th>
-                                            <th data-field="ranking">排名</th>
-                                            <th data-field="price">金额</th>
-                                        </tr>
-                                        </thead>
+                                    <table id="pricetable"  class="table table-striped  table-condensed table-responsive" >
                                     </table>
                                     <div class="row">
                                         <div class="table-footer">

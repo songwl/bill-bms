@@ -10,7 +10,11 @@ $(document).ready(function () {
         $(".addMemberDiv").slideDown();
         $(".modal-title").html("添加客户");
         $("#addMemberId").val("1");
-
+        $("#nameDiv1").hide();
+        $("#nameDiv").show();
+        $("#viewbalance").show();
+        $("#viewstate").hide();
+        $("#viewpwd").show();
 
     })
     //添加渠道商
@@ -19,6 +23,11 @@ $(document).ready(function () {
         $(".addMemberDiv").slideDown();
         $(".modal-title").html("添加代理商");
         $("#addMemberId").val("2");
+        $("#nameDiv1").hide();
+        $("#nameDiv").show();
+        $("#viewbalance").show();
+        $("#viewstate").hide();
+        $("#viewpwd").show();
 
     })
     $(".close").click(function () {
@@ -431,6 +440,33 @@ var TableInit = function () {
             $(".Rechargecmt").hide();
             $(".Refoundcmt").show();
             $("#customerId").val(row.customerId);
+        },
+        'click #details': function (e, value, row, index) {
+            $(".modal-backdrop").show();
+            $(".addMemberDiv").slideDown();
+
+            $("#viewpwd").hide();
+            $("#nameDiv1").show();
+            $("#viewstate").show();
+            $("#nameDiv").hide();
+            $("#viewbalance").hide();
+            $(".modal-title").html("客户信息");
+            $("#customerId").val(row.customerId);
+            $("input[name='userName1']").val(row.userName);
+            $("input[name='realName']").val(row.realName);
+            $("input[name='contact']").val(row.contact);
+            $("input[name='phone']").val(row.phone);
+            $("input[name='qq']").val(row.qq);
+            $("#viewstatus").empty();
+            if(row.status=="1")
+            {
+                $("#viewstatus").append("<option value='1'>正常</option>");
+                $("#viewstatus").append("<option value='0'>冻结</option>");
+            }
+            else {
+                $("#viewstatus").append("<option value='0'>冻结</option>");
+                $("#viewstatus").append("<option value='1'>正常</option>");
+            }
         },
         'click #changepwd': function (e, value, row, index)
         {

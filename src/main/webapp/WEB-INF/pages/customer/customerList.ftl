@@ -90,16 +90,24 @@
                         }
                     </style>
                     <form class="form-horizontal row-border" id="addOperatorform" action="#" novalidate="novalidate">
-                        <div class="form-group">
+                        <div class="form-group" style="display:none;" id="nameDiv">
                             <label class="col-md-3 control-label">
                                 登录名<span class="required">* </span>
                             </label>
                             <div class="col-md-9">
-                                <input name="userName" class="form-control input-width-large" type="text">
+                                <input name="userName" class="form-control input-width-large" type="text" id="userName1">
                             </div>
                             <div class="pdlogid"></div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" style="display:none;" id="nameDiv1">
+                            <label class="col-md-3 control-label">
+                                登录名<span class="required">* </span>
+                            </label>
+                            <div class="col-md-9">
+                                <input name="userName1" class="form-control input-width-large" type="text" >
+                            </div>
+                        </div>
+                        <div class="form-group" id="viewpwd">
                             <label class="col-md-3 control-label">
                                 密码<span class="required">* </span>
                             </label>
@@ -141,12 +149,22 @@
                                 <input name="qq" class="form-control input-width-large" type="text">
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="viewbalance">
                             <label class="col-md-3 control-label">
                                 充值金额<span class="required">*</span>
                             </label>
                             <div class="col-md-9">
                                 <input name="balance" id="balance" class="form-control input-width-large" type="text" value="0">
+                            </div>
+                        </div>
+                        <div class="form-group" id="viewstate"  style="display: none;">
+                            <label class="col-md-3 control-label">
+                                状态<span class="required">* </span>
+                            </label>
+                            <div class="col-md-9">
+                                <select id="viewstatus" name="status">
+
+                                </select>
                             </div>
                         </div>
                     </form>
@@ -155,6 +173,7 @@
             </div>
             <div class="modal-footer">
                 <button data-bb-handler="success" type="button" class="btn wzgj-blue addOperatorcmt">确定</button>
+                <button data-bb-handler="success" type="button" class="btn wzgj-blue updateOperatorcmt" style="display: none">确定</button>
                 <button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
             </div>
         </div>

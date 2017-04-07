@@ -508,7 +508,9 @@ public class BillController extends BaseController {
      */
     @RequestMapping(value = "/pendingAuditViewList")
     @ResponseBody
-    public Map<String,Object> pendingAuditViewList( int limit, int offset, String website,String keywords,String searchName,String searchUserName, String state)
+    public Map<String,Object> pendingAuditViewList(HttpServletRequest request,@RequestParam(required = true) int limit,
+                                                   @RequestParam(required = true)int offset,String website,String keywords,
+                                                   String searchName,String searchUserName, String state)
     {
 
         LoginUser user=this.getCurrentAccount();
@@ -572,17 +574,26 @@ public class BillController extends BaseController {
         return  modelMap;
     }
 
+    /**
+     * 价格详情
+     * @param request
+     * @param limit
+     * @param offset
+     * @param billId
+     * @param way
+     * @return
+     */
     @RequestMapping(value = "/getPriceDetails",method = RequestMethod.GET)
     @ResponseBody
-    public Map<String,Object> getPriceDetails(HttpServletRequest request)
+    public Map<String,Object> getPriceDetails(HttpServletRequest request,@RequestParam(required = true) int limit,
+                                              @RequestParam(required = true) int offset, @RequestParam(required = true) String billId,
+                                              @RequestParam(required = true) String way)
     {
-
          LoginUser user=this.getCurrentAccount();
-         String billId=request.getParameter("billId");
-         String way=request.getParameter("way");
          if(!billId.isEmpty())
          {
-             Map<String,Object> map=billService.getPriceDetails(billId,user,way);
+             offset=(offset-1)*limit;
+             Map<String,Object> map=billService.getPriceDetails(limit,offset,billId,user,way);
              return map;
          }
         else
@@ -593,7 +604,7 @@ public class BillController extends BaseController {
     }
 
 
-    @RequestMapping(value = "/billFeedback")
+    @RequestMapping(value = "/billFeedback/{id}")
     public  String billFeedback(HttpServletRequest request)
     {
 

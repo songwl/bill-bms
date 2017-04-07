@@ -169,10 +169,11 @@
                         </div>
                     </form>
                    <input type="hidden" value="1" id="addMemberId">
+                    <input type="hidden" value="" name="customerId">
                 </div>
             </div>
             <div class="modal-footer">
-                <button data-bb-handler="success" type="button" class="btn wzgj-blue addOperatorcmt">确定</button>
+                <button data-bb-handler="success" type="button" class="btn wzgj-blue addOperatorcmt" style="display: none">确定</button>
                 <button data-bb-handler="success" type="button" class="btn wzgj-blue updateOperatorcmt" style="display: none">确定</button>
                 <button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
             </div>

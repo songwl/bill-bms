@@ -135,5 +135,11 @@
   select a.* from t_bill_cost as a,t_bill_price as b
   WHERE a.t_bill_price_id = b.id
   AND b.in_member_id=#{userId,jdbcType=BIGINT} AND a.t_bill_id=#{billId,jdbcType=BIGINT}
+  limit #{offset},#{limit}
+  </select>
+  <select id="getPriceByMapCount"  resultType="java.lang.Long">
+    select COUNT(a.id) from t_bill_cost as a,t_bill_price as b
+    WHERE a.t_bill_price_id = b.id
+    AND b.in_member_id=#{userId,jdbcType=BIGINT} AND a.t_bill_id=#{billId,jdbcType=BIGINT}
   </select>
 </mapper>

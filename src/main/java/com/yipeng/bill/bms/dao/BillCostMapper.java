@@ -25,4 +25,5 @@ public interface BillCostMapper {
     Double selectByPriceSum(Map<String, Object> modelMap);
     int selectByPriceCount(Map<String, Object> modelMap);
     List<BillCost> getPriceByMap(Map<String,Object> params);
+    Long getPriceByMapCount(Map<String,Object> params);
 }

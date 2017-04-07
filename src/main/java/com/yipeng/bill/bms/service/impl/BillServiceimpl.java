@@ -970,7 +970,7 @@ public class BillServiceimpl implements BillService {
     }
 
     @Override
-    public Map<String, Object> getPriceDetails(String billId, LoginUser user,String way) {
+    public Map<String, Object> getPriceDetails(int limit,int offset,String billId, LoginUser user,String way) {
 
        Map<String,Object> params=new HashMap<>();
         List<BillCostDetails> billCostDetailsList=new ArrayList<>();
@@ -978,9 +978,12 @@ public class BillServiceimpl implements BillService {
         if(way.equals("1"))//上游
         {
             Map<String,Object> map=new HashMap<>();
+            map.put("limit",limit);
+            map.put("offset",offset);
             map.put("userId",user.getCreateUserId());
-            map.put("billId",billId);
+            map.put("offset",offset);
             List<BillCost> billCostList=billCostMapper.getPriceByMap(map);
+            Long total=billCostMapper.getPriceByMapCount(map);
             for (BillCost item :billCostList
                     ) {
                 BillCostDetails billCostDetails=new BillCostDetails();
@@ -991,6 +994,7 @@ public class BillServiceimpl implements BillService {
                 billCostDetailsList.add(billCostDetails);
             }
             params.put("rows", billCostDetailsList);
+            params.put("total", total);
             return params;
         }
 
@@ -999,9 +1003,12 @@ public class BillServiceimpl implements BillService {
             Map<String,Object> map=new HashMap<>();
             map.put("userId",user.getId());
             map.put("billId",billId);
+            map.put("limit",limit);
+            map.put("offset",offset);
             if(user.hasRole("SUPER_ADMIN")||user.hasRole("DISTRIBUTOR")||user.hasRole("AGENT"))
             {
                 List<BillCost> billCostList=billCostMapper.getPriceByMap(map);
+                Long total=billCostMapper.getPriceByMapCount(map);
                 for (BillCost item :billCostList
                         ) {
                     BillCostDetails billCostDetails=new BillCostDetails();
@@ -1012,6 +1019,7 @@ public class BillServiceimpl implements BillService {
                     billCostDetailsList.add(billCostDetails);
                 }
                 params.put("rows", billCostDetailsList);
+                params.put("total", total);
                 return params;
             }
 

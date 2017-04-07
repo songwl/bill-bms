@@ -101,7 +101,7 @@
             <li class="dropdown user" style="height:48px;" >
                 <a class="dropdown-toggle" data-toggle="dropdown" id="clickUser">
                     <i class="fa fa-user"></i>
-                        <span class="username">用戶中心</span>
+                        <span class="username">${bmsModel.user.userName}</span>
                     <i class="icon-caret-down small"></i>
                 </a>
                 <ul class="dropdown-menu userDetails">
@@ -174,7 +174,7 @@
 						</div>
 					</li>
 					<li class="start active" style="border-bottom: 1px solid #eee;">
-						<a href="javascript:;"  >
+						<a href="${ctx}/home"  >
 							<i class="fa fa-home"></i><span class="title"> 首页 </span><span class="selected"></span>
 						</a>
 					</li>

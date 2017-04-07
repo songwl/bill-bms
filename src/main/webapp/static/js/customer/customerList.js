@@ -15,6 +15,12 @@ $(document).ready(function () {
         $("#viewbalance").show();
         $("#viewstate").hide();
         $("#viewpwd").show();
+        $("input[name='realName']").val("");
+        $("input[name='contact']").val("");
+        $("input[name='phone']").val("");
+        $("input[name='qq']").val("");
+        $(".addOperatorcmt").show();
+        $(".updateOperatorcmt").hide();
 
     })
     //添加渠道商
@@ -28,7 +34,12 @@ $(document).ready(function () {
         $("#viewbalance").show();
         $("#viewstate").hide();
         $("#viewpwd").show();
-
+        $("input[name='realName']").val("");
+        $("input[name='contact']").val("");
+        $("input[name='phone']").val("");
+        $("input[name='qq']").val("");
+        $(".addOperatorcmt").show();
+        $(".updateOperatorcmt").hide();
     })
     $(".close").click(function () {
         $(".addMemberDiv").slideUp();
@@ -202,6 +213,43 @@ $(document).ready(function () {
         else
         {
             alert("请填入正确的退款金额！");
+        }
+    })
+
+    //更改客户信息
+    $(".updateOperatorcmt").click(function () {
+        if(/^[A-Za-z]\w{5,12}$/.test($("input[name='userName1']").val()))
+        {
+            $.ajax({
+                type:'post',
+                url:CTX+"/operator/updateOperator",
+                data:{
+                    id:$("#customerId").val(),
+                    userName:  $("input[name='userName1']").val(),
+                    realName:$("input[name='realName']").val(),
+                    contact:$("input[name='contact']").val(),
+                    phone:$("input[name='phone']").val(),
+                    qq:$("input[name='qq']").val(),
+                    status:$("#viewstatus option:selected").val()
+                },
+                success:function (result) {
+                    if(result.code==200)
+                    {
+                        alert(result.message);
+                        $(".addOperatorDiv").slideUp();
+                        $(".modal-backdrop").hide();
+                        $('#myTable').bootstrapTable('refresh');
+                    }
+                    else
+                    {
+                        alert(result.Message);
+                    }
+                }
+            })
+        }
+        else
+        {
+            alert("用户名不能为空或格式错误!");
         }
     })
 })
@@ -444,12 +492,13 @@ var TableInit = function () {
         'click #details': function (e, value, row, index) {
             $(".modal-backdrop").show();
             $(".addMemberDiv").slideDown();
-
             $("#viewpwd").hide();
             $("#nameDiv1").show();
             $("#viewstate").show();
             $("#nameDiv").hide();
             $("#viewbalance").hide();
+            $(".addOperatorcmt").hide();
+            $(".updateOperatorcmt").show();
             $(".modal-title").html("客户信息");
             $("#customerId").val(row.customerId);
             $("input[name='userName1']").val(row.userName);

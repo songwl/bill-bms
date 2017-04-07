@@ -471,7 +471,7 @@ var TableInit = function () {
                     valign: 'middle',
                     formatter:function (value,row,index) {
                         var a="<span style='color:#4382CF;cursor:pointer;' id='details'>详情</span>  " +
-                               "  <a href='/bill/bill/billFeedback' style='color:#4382CF;cursor:pointer;' id='feedback'>反馈</a>";
+                               "  <a href='/bill/bill/billFeedback/"+row.id+" style='color:#4382CF;cursor:pointer;' id='feedback'>反馈</a>";
 
                         return a;
                     },
@@ -519,7 +519,6 @@ var TableInit = function () {
             $('#pricetable').bootstrapTable('refresh');
         },
         'click #feedback': function (e, value, row, index) {
-
                         e.preventDefault();
                         var url = this.href;
                         if (url != null && url != 'javascript:;') {
@@ -527,7 +526,6 @@ var TableInit = function () {
                                 $('.page-content').html(data);
                             });
                         }
-
         }
     }
     return oTableInit;

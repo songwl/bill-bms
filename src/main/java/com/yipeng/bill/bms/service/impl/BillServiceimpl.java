@@ -1117,10 +1117,45 @@ public class BillServiceimpl implements BillService {
         }
     }
 
+
     /**
-     * 查询订单
+     * 订单反馈
      * @param params
+     * @param user
      * @return
      */
+    @Override
+    public Map<String,Object> billFeedback(String website) {
+        Map<String,Object> param=new HashMap<>();
+        param.put("website",website);
+        List<Bill> billList=billMapper.selectAllSelective(param);
+        if(billList.size()>0)
+        {
+            List<String> searchList=new ArrayList<>();
+            List<String> keywordList=new ArrayList<>();
+            for (Bill item:billList
+                 ) {
+                BillSearchSupport billSearchSupport=billSearchSupportMapper.selectByBillId(item.getId());
+                if(searchList.size()>0)
+                {
+                    for (String str: searchList
+                         ) {
+                        if(!billSearchSupport.getSearchSupport().equals(str))
+                        {
+                            searchList.add(billSearchSupport.getSearchSupport());
+                        }
+                    }
+                }
+                else
+                {
+                    searchList.add(billSearchSupport.getSearchSupport());
+                }
+                keywordList.add(item.getKeywords());
+            }
 
+        ;
+
+        }
+        return null;
+    }
 }

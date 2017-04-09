@@ -91,4 +91,6 @@ public interface BillService {
 
     Map<String,Object> getPriceDetails( int limit,int offset,String billId,LoginUser user,String way);
 
+    Map<String,Object> billFeedback(String website);
+
 }

@@ -604,10 +604,15 @@ public class BillController extends BaseController {
     }
 
 
-    @RequestMapping(value = "/billFeedback/{id}")
-    public  String billFeedback(HttpServletRequest request)
+    @RequestMapping(value = "/billFeedback",method = RequestMethod.GET)
+    public  String billFeedback(HttpServletRequest request,ModelMap modelMap)
     {
-
+        String website=request.getParameter("website");
+         LoginUser loginUser=this.getCurrentAccount();
+        if(loginUser!=null)
+        {
+            billService.billFeedback(website);
+        }
         return "/bill/billFeedback";
     }
 

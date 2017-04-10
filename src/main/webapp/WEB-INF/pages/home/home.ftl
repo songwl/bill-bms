@@ -65,7 +65,7 @@
                     当前任务数
                 </div>
                 <div class="value">
-                    0
+                    ${bmsModel.billCount}
                 </div>
             </div>
         </div>

@@ -37,4 +37,5 @@ public interface BillCostMapper {
      * @return
      */
     Double MonthConsumption(Map<String,Object> params);
+    Double MonthConsumptionCommissioner(Map<String,Object> params);
 }

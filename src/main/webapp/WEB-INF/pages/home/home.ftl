@@ -13,14 +13,14 @@
     <div class="col-sm-6 col-md-2 hidden-xs">
         <div class="statbox widget box box-shadow">
             <div class="widget-content">
-                <div class="visual red">
+                <div class="visual cyan">
                     <i class="fa fa-user"></i>
                 </div>
                 <div class="title">
                     客户数
                 </div>
                 <div class="value">
-                    0
+                ${bmsModel.UserCount}
                 </div>
             </div>
         </div>
@@ -29,13 +29,13 @@
         <div class="statbox widget box box-shadow">
             <div class="widget-content">
                 <div class="visual red">
-                    <i class="icon-dollar"></i>
+                    <i class="fa fa-dollar"></i>
                 </div>
                 <div class="title">
                     本月总消费
                 </div>
                 <div class="value">
-                    ¥0.00
+                    ¥${bmsModel.MonthConsumption}
                 </div>
             </div>
         </div>
@@ -44,7 +44,7 @@
         <div class="statbox widget box box-shadow">
             <div class="widget-content">
                 <div class="visual green">
-                    <i class="icon-tasks"></i>
+                    <i class="fa fa-tasks"></i>
                 </div>
                 <div class="title">
                     累计任务数
@@ -59,7 +59,7 @@
         <div class="statbox widget box box-shadow">
             <div class="widget-content">
                 <div class="visual cyan">
-                    <i class="icon-tasks"></i>
+                    <i class="fa fa-tasks"></i>
                 </div>
                 <div class="title">
                     当前任务数
@@ -74,7 +74,7 @@
         <div class="statbox widget box box-shadow">
             <div class="widget-content">
                 <div class="visual red">
-                    <i class="icon-dollar"></i>
+                    <i class="fa fa-dollar"></i>
                 </div>
                 <div class="title">
                     今日消费
@@ -89,7 +89,7 @@
         <div class="statbox widget box box-shadow">
             <div class="widget-content">
                 <div class="visual green">
-                    <i class="icon-tasks"></i>
+                    <i class="fa fa-tasks"></i>
                 </div>
                 <div class="title">
                     今日达标任务
@@ -105,14 +105,14 @@
     <div class="col-sm-6 col-md-2 hidden-xs">
         <div class="statbox widget box box-shadow">
             <div class="widget-content">
-                <div class="visual red">
-                    <i class="icon-dollar"></i>
+                <div class="visual cyan">
+                    <i class="fa fa-tasks"></i>
                 </div>
                 <div class="title">
-                    客户数
+                    总完成率
                 </div>
                 <div class="value">
-                    0
+                    0.0%
                 </div>
             </div>
         </div>
@@ -121,13 +121,13 @@
         <div class="statbox widget box box-shadow">
             <div class="widget-content">
                 <div class="visual red">
-                    <i class="icon-dollar"></i>
+                    <i class="fa fa-tasks"></i>
                 </div>
                 <div class="title">
-                    本月总消费
+                    百度完成率
                 </div>
                 <div class="value">
-                    ¥0.00
+                   0.0%
                 </div>
             </div>
         </div>
@@ -136,13 +136,13 @@
         <div class="statbox widget box box-shadow">
             <div class="widget-content">
                 <div class="visual green">
-                    <i class="icon-tasks"></i>
+                    <i class="fa fa-tasks"></i>
                 </div>
                 <div class="title">
-                    累计任务数
+                    百度手机完成率
                 </div>
                 <div class="value">
-                    0
+                    0.0%
                 </div>
             </div>
         </div>
@@ -151,13 +151,13 @@
         <div class="statbox widget box box-shadow">
             <div class="widget-content">
                 <div class="visual cyan">
-                    <i class="icon-tasks"></i>
+                    <i class="fa fa-tasks"></i>
                 </div>
                 <div class="title">
-                    当前任务数
+                    360完成率
                 </div>
                 <div class="value">
-                    0
+                    0.0%
                 </div>
             </div>
         </div>
@@ -166,13 +166,13 @@
         <div class="statbox widget box box-shadow">
             <div class="widget-content">
                 <div class="visual red">
-                    <i class="icon-dollar"></i>
+                    <i class="fa fa-tasks"></i>
                 </div>
                 <div class="title">
-                    今日消费
+                    搜狗完成率
                 </div>
                 <div class="value">
-                    ¥0.00
+                    0.0%
                 </div>
             </div>
         </div>
@@ -181,110 +181,19 @@
         <div class="statbox widget box box-shadow">
             <div class="widget-content">
                 <div class="visual green">
-                    <i class="icon-tasks"></i>
+                    <i class="fa fa-tasks"></i>
                 </div>
                 <div class="title">
-                    今日达标任务
+                    神马完成率
                 </div>
                 <div class="value">
-                    0
+                    0.0%
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="row row-bg">
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual red">
-                    <i class="icon-dollar"></i>
-                </div>
-                <div class="title">
-                    客户数
-                </div>
-                <div class="value">
-                    0
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual red">
-                    <i class="icon-dollar"></i>
-                </div>
-                <div class="title">
-                    本月总消费
-                </div>
-                <div class="value">
-                    ¥0.00
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual green">
-                    <i class="icon-tasks"></i>
-                </div>
-                <div class="title">
-                    累计任务数
-                </div>
-                <div class="value">
-                    0
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual cyan">
-                    <i class="icon-tasks"></i>
-                </div>
-                <div class="title">
-                    当前任务数
-                </div>
-                <div class="value">
-                    0
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual red">
-                    <i class="icon-dollar"></i>
-                </div>
-                <div class="title">
-                    今日消费
-                </div>
-                <div class="value">
-                    ¥0.00
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual green">
-                    <i class="icon-tasks"></i>
-                </div>
-                <div class="title">
-                    今日达标任务
-                </div>
-                <div class="value">
-                    0
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 
 </@base.html>

@@ -22,16 +22,28 @@
     update_time, contact, qq, phone, last_login_time, login_count
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from t_user
-    where id = #{id,jdbcType=BIGINT}
-  </select>
+  select
+  <include refid="Base_Column_List" />
+  from t_user
+  where id = #{id,jdbcType=BIGINT}
+</select>
   <select id="selectByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from t_user
     where user_name = #{userName,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.User" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user
+    where
+    <if test="id != null">
+      id = #{id,jdbcType=BIGINT}
+    </if>
+    <if test="password != null">
+     AND    password = #{password,jdbcType=VARCHAR}
+    </if>
   </select>
   <select id="userCreater" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
@@ -261,7 +273,6 @@
     <if test="roleId != null">
       AND b.role_id = #{roleId,jdbcType=BIGINT}
     </if>
-    limit #{offset},#{limit}
   </select>
 
   <select id="getUserBillAscription" resultMap="BaseResultMap">

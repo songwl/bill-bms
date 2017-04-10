@@ -46,11 +46,13 @@ $(document).ready(function () {
         $(".modal-backdrop").hide();
         $(".RechargeDiv").slideUp();
 
+
     })
     $(".cancel").click(function () {
         $(".addMemberDiv").slideUp();
         $(".modal-backdrop").hide();
         $(".RechargeDiv").slideUp();
+
     })
 
     var userName=false;
@@ -500,6 +502,12 @@ var TableInit = function () {
             $(".addOperatorcmt").hide();
             $(".updateOperatorcmt").show();
             $(".modal-title").html("客户信息");
+            $("#customerId").val("");
+            $("input[name='userName1']").val("");
+            $("input[name='realName']").val("");
+            $("input[name='contact']").val("");
+            $("input[name='phone']").val("");
+            $("input[name='qq']").val("");
             $("#customerId").val(row.customerId);
             $("input[name='userName1']").val(row.userName);
             $("input[name='realName']").val(row.realName);

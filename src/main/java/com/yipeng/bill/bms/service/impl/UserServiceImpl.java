@@ -208,4 +208,44 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    /**
+     * 修改信息
+     * @param user
+     * @return
+     */
+    @Override
+    public int updateByPrimaryKeySelective(User user) {
+        if(user!=null)
+        {
+            user.setUpdateTime(new Date());
+            user.setUpdateUserId(user.getId());
+            int a=userMapper.updateByPrimaryKeySelective(user);
+             return  1;
+        }
+        else
+        {
+            return 0;
+        }
+
+    }
+
+    /**
+     * 查询密码
+     * @param password
+     * @return
+     */
+    @Override
+    public Boolean checkPwd(User user) {
+        User user1=userMapper.selectByPrimaryKeySelective(user);
+        if(user1!=null)
+        {
+            return  true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
 }

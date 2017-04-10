@@ -57,4 +57,13 @@ public interface UserService {
     List<User> getUserAll(Map<String,Long> params);
 
     List<User> getSearchUser(LoginUser loginUser,String way);
+
+    /**
+     * 修改信息
+     * @param user
+     * @return
+     */
+    int updateByPrimaryKeySelective(User user);
+
+    Boolean checkPwd(User user);
 }

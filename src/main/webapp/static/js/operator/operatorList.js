@@ -171,11 +171,11 @@ $(".updateOperatorcmt").click(function () {
         $(".updateOperatorcmt").hide();
         $("#viewpwd").show();
         $("#viewstate").hide();
-        $("input[name='userName']").empty();
-        $("input[name='realName']").empty();
-        $("input[name='contact']").empty();
-        $("input[name='phone']").empty();
-        $("input[name='qq']").empty();
+        $("input[name='userName']").val("");
+        $("input[name='realName']").val("");
+        $("input[name='contact']").val("");
+        $("input[name='phone']").val("");
+        $("input[name='qq']").val("");
 
 
     })
@@ -183,10 +183,12 @@ $(".updateOperatorcmt").click(function () {
         $(".addOperatorDiv").slideUp();
         $(".modal-backdrop").hide();
 
+
     })
     $(".cancel").click(function () {
         $(".addOperatorDiv").slideUp();
         $(".modal-backdrop").hide();
+
     })
 
 $(function () {
@@ -394,6 +396,11 @@ var TableInit = function () {
             $(".updateOperatorcmt").show();
             $(".addOperatorcmt").hide();
             $(".modal-title").html("操作员详情");
+            $("input[name='userName1']").val("");
+            $("input[name='realName']").val("");
+            $("input[name='contact']").val("");
+            $("input[name='phone']").val("");
+            $("input[name='qq']").val("");
             $("input[name='userName1']").val(row.userName);
             $("input[name='realName']").val(row.realName);
             $("input[name='contact']").val(row.contact);
@@ -435,9 +442,6 @@ var TableInit = function () {
             }
         }
     }
-
-
-
     return oTableInit;
 };
 //搜索按钮

@@ -15,7 +15,9 @@ public interface BillCostMapper {
     int insertSelective(BillCost record);
 
     BillCost selectByPrimaryKey(Long id);
+
     List<BillCost> selectByBillId(Long BillId);
+
     BillCost selectByBillIdAndDate(Map<String, Object> modelMap);
 
     int updateByPrimaryKeySelective(BillCost record);
@@ -23,7 +25,16 @@ public interface BillCostMapper {
     int updateByPrimaryKey(BillCost record);
 
     Double selectByPriceSum(Map<String, Object> modelMap);
+
     int selectByPriceCount(Map<String, Object> modelMap);
+
     List<BillCost> getPriceByMap(Map<String,Object> params);
+
     Long getPriceByMapCount(Map<String,Object> params);
+
+    /**
+     * @param params
+     * @return
+     */
+    Double MonthConsumption(Map<String,Object> params);
 }

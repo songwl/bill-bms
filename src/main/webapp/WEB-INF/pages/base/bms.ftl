@@ -48,38 +48,7 @@
 </@base.jscontent>
 
 <@base.html title "page-header-fixed">
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#clickUser").click(function () {
-
-                 if($(".userDetails").css("display")=="block")
-                 {
-                     $(".userDetails").slideUp();
-                 }
-                 else
-                 {
-                     $(".userDetails").slideDown();
-                     $(".messageShow").slideUp();
-                 }
-        })
-        $("#clickMessage").click(function () {
-
-            if($(".messageShow").css("display")=="block")
-            {
-                $(".messageShow").slideUp();
-            }
-            else
-            {
-                $(".messageShow").slideDown();
-                $(".userDetails").slideUp();
-            }
-        })
-        $("#menuClick").click(function () {
-            $("#menuShow").css({"display":"none"});
-        })
-
-    })
-</script>
+<script src="${ctx}/static/js/home/bms.js"></script>
 <!--顶部导航栏     开始 -->
 <header class="header navbar navbar-fixed-top" role="banner">
     <div class="container">
@@ -369,12 +338,12 @@
 							<i class="fa fa-magnet"></i><span class="title"> 个人中心 </span><span class="arrow "></span>
 						</a>
 						<ul class="sub-menu"  style="background: #eee;">
-							<li>
+							<li class="updateUser">
 								<a href="javascript:;">
 									信息修改
 								</a>
 							</li>
-							<li>
+							<li class="updatePwd">
 								<a href="javascript:;">
 									密码修改
 								</a>
@@ -399,6 +368,122 @@
 			<span class="go-top"><i class="fa fa-angle-up"></i></span>
 		</div>
 	</div>
+
+<div class="modal-backdrop in" style="display: none"></div>
+<!--信息修改-->
+<div class="bootbox modal in updateUserDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">信息修改</h4>
+            </div>
+            <div class="modal-body" style="max-height: 574px;">
+                <div class="bootbox-body">
+                    <style type="text/css">
+                        .modal-dialog {
+                            width: 500px;
+                        }
+                    </style>
+                    <form class="form-horizontal row-border" id="addOperatorform" action="#" novalidate="novalidate">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">
+                                登录名<span class="required">* </span>
+                            </label>
+                            <div class="col-md-9">
+                                <input name="userNameBms" class="form-control input-width-large" type="text" value="${bmsModel.user.userName}" readonly="readonly">
+                            </div>
+                            <div class="pdlogid"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">
+                                真实姓名<span class="required">* </span>
+                            </label>
+                            <div class="col-md-9">
+                                <input name="realNameBms" class="form-control input-width-large" type="text" value="${bmsModel.user.realName}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">
+                                联系人<span class="required">* </span>
+                            </label>
+                            <div class="col-md-9">
+                                <input name="contactBms" class="form-control input-width-large" type="text"  value="${bmsModel.user.contact}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">
+                                联系电话<span class="required">* </span>
+                            </label>
+                            <div class="col-md-9">
+                                <input name="phoneBms" class="form-control input-width-large" type="text"  value="${bmsModel.user.phone}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">
+                                QQ<span class="required">* </span>
+                            </label>
+                            <div class="col-md-9">
+                                <input name="qqBms" class="form-control input-width-large" type="text" value="${bmsModel.user.qq}">
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button data-bb-handler="success" type="button" class="btn wzgj-blue updateUserCmt"  >确定</button>
+                <button data-bb-handler="cancel" type="button" class="btn wzgj-btn bmscancel">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--信息修改end-->
+
+<!--修改密码-->
+<div class="bootbox modal in updatePwdDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="bootbox-close-button close">×</button>
+            <h4 class="modal-title">修改密码</h4></div>
+        <div class="modal-body" style="max-height: 372px;">
+            <div class="bootbox-body">
+                <style type="text/css">.modal-dialog { width: 560px; }</style>
+                <form class="form-horizontal row-border" id="edt-form" action="#" novalidate="novalidate">
+                    <div class="alert alert-info fade in">
+                        <i class="icon-remove close" data-dismiss="alert"></i>系统对密码采用不可逆多重加密技术，如有遗忘，请联系客服随机生成！</div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">原始密码:</label>
+                        <div class="col-md-10">
+                            <input class="form-control input-width-large" name="passold" id="passold" placeholder="原始密码" type="password" style="width:210px;">
+                           <div class="passoldDiv" style="display: none;color: #ff0000;"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">新密码:</label>
+                        <div class="col-md-10">
+                            <input class="form-control input-width-large" name="passnew" id="passnew" placeholder="新密码" type="password" style="width:210px;">
+                            <div class="passnewDiv"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">确认密码:</label>
+                        <div class="col-md-10">
+                            <input class="form-control input-width-large" name="passok" id="passok" placeholder="确认密码" type="password" style="width:210px;">
+                            <div class="passokDiv"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button data-bb-handler="success" type="button" class="btn wzgj-blue updatePwdcmt">确定</button>
+            <button data-bb-handler="cancel" type="button" class="btn wzgj-btn bmscancel">取消</button>
+        </div>
+    </div>
+</div>
+</div>
+<!--修改密码end-->
 </@base.html>
 
 </#macro>

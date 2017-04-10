@@ -212,9 +212,6 @@ $(function () {
     var oTable1 = new TableInit1();
     oTable1.Init();
 
-
-
-
 });
 var TableInit = function () {
     var oTableInit = new Object();

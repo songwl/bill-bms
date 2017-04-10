@@ -61,8 +61,7 @@
     </div>
 </div>
 
-<div class="modal-backdrop in" style="display: none">
-</div>
+<div class="modal-backdrop in" style="display: none"></div>
 
 
 <!--添加操作员-->
@@ -96,7 +95,7 @@
                                 登录名<span class="required">* </span>
                             </label>
                             <div class="col-md-9">
-                                <input name="userName1" class="form-control input-width-large" type="text" >
+                                <input name="userName1" class="form-control input-width-large" type="text" readonly="readonly" >
                             </div>
                         </div>
                         <div class="form-group" id="viewpwd">

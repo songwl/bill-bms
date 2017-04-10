@@ -115,15 +115,17 @@
     from t_bill_cost
     where t_bill_id = #{BillId,jdbcType=BIGINT} AND cost_date=#{date,jdbcType=DATE}
   </select>
+
   <select id="selectByPriceSum" resultType="java.lang.Double">
- select SUM(a.cost_amount)
+  select SUM(a.cost_amount)
   from t_bill_cost as a,t_bill_price as b
    where a.t_bill_price_id=b.id and
-   year(cost_date) =#{year,jdbcType=INTEGER}
-    and month(cost_date) =#{month,jdbcType=INTEGER}
+   year(a.cost_date) =#{year,jdbcType=INTEGER}
+    and month(a.cost_date) =#{month,jdbcType=INTEGER}
    AND t_bill_id = #{billId,jdbcType=BIGINT}
    AND  b.in_member_id=#{userId,jdbcType=BIGINT}
   </select>
+
   <select id="selectByPriceCount" resultType="java.lang.Integer">
     select COUNT(DISTINCT cost_date)
     from t_bill_cost
@@ -141,5 +143,14 @@
     select COUNT(a.id) from t_bill_cost as a,t_bill_price as b
     WHERE a.t_bill_price_id = b.id
     AND b.in_member_id=#{userId,jdbcType=BIGINT} AND a.t_bill_id=#{billId,jdbcType=BIGINT}
+  </select>
+
+  <select id="MonthConsumption"  resultType="java.lang.Double">
+    SELECT SUM(b.cost_amount) from t_bill_price as a,t_bill_cost as b
+    where a.bill_id=b.t_bill_id
+    AND a.id=b.t_bill_price_id
+    AND a.in_member_id=#{userId,jdbcType=BIGINT}
+    and year(b.cost_date)=#{year,jdbcType=INTEGER}
+    and month(b.cost_date)=#{month,jdbcType=INTEGER}
   </select>
 </mapper>

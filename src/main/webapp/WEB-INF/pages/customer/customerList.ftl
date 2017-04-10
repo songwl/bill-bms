@@ -104,7 +104,7 @@
                                 登录名<span class="required">* </span>
                             </label>
                             <div class="col-md-9">
-                                <input name="userName1" class="form-control input-width-large" type="text" >
+                                <input name="userName1" class="form-control input-width-large" type="text"  readonly="readonly">
                             </div>
                         </div>
                         <div class="form-group" id="viewpwd">
@@ -217,5 +217,5 @@
         </div>
     </div>
 </div>
-<!--优化调整end-->
+<!--客户充值end-->
 </@base.html>

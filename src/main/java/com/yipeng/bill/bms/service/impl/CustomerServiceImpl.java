@@ -496,12 +496,11 @@ public class CustomerServiceImpl implements CustomerService{
         List<FundAccountDetails> fundAccountDetailsList=new ArrayList<>();
             if(user.hasRole("SUPER_ADMIN"))
             {
-
                   Role role=roleMapper.selectByRoleCode("DISTRIBUTOR");
                   params.put("roleId",role.getId());
                   List<FundAccountSumMp> fundItemList=fundItemMapper.getFundItemList(params);
                   Long total=fundItemMapper.getFundItemListCount(params);
-                for (FundAccountSumMp funItem:fundItemList
+                 for (FundAccountSumMp funItem:fundItemList
                      ) {
                     i++;
                     //获取余额

@@ -3,6 +3,9 @@ package com.yipeng.bill.bms.service;
 import com.yipeng.bill.bms.vo.CustomerRankingParam;
 import com.yipeng.bill.bms.vo.CustomerRankingResult;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+
 /**
  * Created by song on 17/4/11.
  * 第三方远程服务
@@ -14,5 +17,5 @@ public interface RemoteService {
      * @param customerRankingParam
      * @return
      */
-    CustomerRankingResult getCustomerRanking(CustomerRankingParam customerRankingParam);
+    CustomerRankingResult getCustomerRanking(CustomerRankingParam customerRankingParam) throws IOException, NoSuchAlgorithmException;
 }

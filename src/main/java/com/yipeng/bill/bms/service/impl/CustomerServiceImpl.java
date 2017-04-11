@@ -513,7 +513,6 @@ public class CustomerServiceImpl implements CustomerService{
                     fundAccountDetails.setUserName(user1.getUserName());
                     fundAccountDetails.setitemType(funItem.getItemType());
                     fundAccountDetails.setChangeAmount(funItem.getfundItemSum());
-                    fundAccountDetails.setBalance(funItem.getBalance());
                     fundAccountDetails.setChangeTime(DateUtils.formatDate(funItem.getChangeTime()));
                     fundAccountDetailsList.add(fundAccountDetails);
 
@@ -542,7 +541,6 @@ public class CustomerServiceImpl implements CustomerService{
                     fundAccountDetails.setUserName(user1.getUserName());
                     fundAccountDetails.setitemType(funItem.getItemType());
                     fundAccountDetails.setChangeAmount(funItem.getfundItemSum());
-                    fundAccountDetails.setBalance(funItem.getBalance());
                     fundAccountDetails.setChangeTime(DateUtils.formatDate(funItem.getChangeTime()));
                     fundAccountDetailsList.add(fundAccountDetails);
 

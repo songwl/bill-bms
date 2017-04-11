@@ -117,7 +117,7 @@
   a.fund_account_id=b.id
    and b.user_id=c.user_id
   and c.role_id=#{roleId,jdbcType=BIGINT}
-    GROUP BY(year(a.change_time) and month(a.change_time) and DAY(a.change_time)),a.item_type
+    GROUP BY a.item_type
     limit #{offset},#{limit}
   </select>
 

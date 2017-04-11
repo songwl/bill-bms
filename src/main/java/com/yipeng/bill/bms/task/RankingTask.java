@@ -5,6 +5,9 @@ import com.yipeng.bill.bms.vo.CustomerRankingParam;
 import com.yipeng.bill.bms.vo.CustomerRankingResult;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+
 /**
  * Created by song on 17/4/11.
  * 排名更新任务
@@ -14,7 +17,7 @@ public class RankingTask {
     @Autowired
     private RemoteService remoteService;
 
-    public void execute(){
+    public void execute() throws IOException, NoSuchAlgorithmException {
         //1.获取自己数据库数据（需要同步排名的记录）
 
         //2.根据数据作为参数 customerRankingParam，httpclient请求这个别人的接口

@@ -152,6 +152,9 @@
     AND a.in_member_id=#{userId,jdbcType=BIGINT}
     and year(b.cost_date)=#{year,jdbcType=INTEGER}
     and month(b.cost_date)=#{month,jdbcType=INTEGER}
+    <if test="day != null">
+    and DAY(b.cost_date) = #{day,jdbcType=INTEGER}
+    </if>
   </select>
 
   <select id="MonthConsumptionCommissioner"  resultType="java.lang.Double">
@@ -162,5 +165,20 @@
      AND a.in_member_id=#{createId,jdbcType=BIGINT}
     and year(b.cost_date)=#{year,jdbcType=INTEGER}
     and month(b.cost_date)=#{month,jdbcType=INTEGER}
+    <if test="day != null">
+      and DAY(b.cost_date) = #{day,jdbcType=INTEGER}
+    </if>
+  </select>
+
+  <select id="MonthConsumptionCustomer"  resultType="java.lang.Double">
+    SELECT SUM(b.cost_amount) from t_bill_price as a,t_bill_cost as b
+    where a.bill_id=b.t_bill_id
+    AND a.id=b.t_bill_price_id
+    AND a.out_member_id=#{userId,jdbcType=BIGINT}
+    and year(b.cost_date)=#{year,jdbcType=INTEGER}
+    and month(b.cost_date)=#{month,jdbcType=INTEGER}
+    <if test="day != null">
+      and DAY(b.cost_date) = #{day,jdbcType=INTEGER}
+    </if>
   </select>
 </mapper>

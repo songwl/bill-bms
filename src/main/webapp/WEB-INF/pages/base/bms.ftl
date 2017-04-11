@@ -142,8 +142,8 @@
 						<div class="sidebar-toggler hidden-phone">
 						</div>
 					</li>
-					<li class="start active" style="border-bottom: 1px solid #eee;">
-						<a href="${ctx}/home"  >
+					<li class="start active" style="border-bottom: 1px solid #eee;" onclick="location.reload();">
+						<a href="#"  >
 							<i class="fa fa-home"></i><span class="title"> 首页 </span><span class="selected"></span>
 						</a>
 					</li>
@@ -360,14 +360,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="footer">
-		<div class="footer-inner">
-			2017 &copy; 鱼在我这里。
-		</div>
-		<div class="footer-tools">
-			<span class="go-top"><i class="fa fa-angle-up"></i></span>
-		</div>
-	</div>
+
 
 <div class="modal-backdrop in" style="display: none"></div>
 <!--信息修改-->

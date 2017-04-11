@@ -114,13 +114,7 @@ var TableInit = function () {
                     valign: 'middle',
                     title: '变动时间',
 
-                },{
-                    field: 'balance',
-                    align: 'center',
-                    sortable: true,
-                    valign: 'middle',
-                    title: '余额'
-                },
+                }
 
 
 

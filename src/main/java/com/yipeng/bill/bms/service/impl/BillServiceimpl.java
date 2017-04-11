@@ -855,7 +855,15 @@ public class BillServiceimpl implements BillService {
         }
         else
         {
-            billPrice1.setInMemberId(user.getId());
+            if(user.hasRole("COMMISSIONER"))
+            {
+                billPrice1.setInMemberId(user.getCreateUserId());
+            }
+            else
+            {
+                billPrice1.setInMemberId(user.getId());
+            }
+
         }
 
        List<BillPrice>  billPrice2= billPriceMapper.selectByBillPrice(billPrice1);
@@ -882,7 +890,15 @@ public class BillServiceimpl implements BillService {
         }
         else
         {
-            map.put("userId",user.getId());
+            if(user.hasRole("COMMISSIONER"))
+            {
+                map.put("userId",user.getCreateUserId());
+            }
+            else
+            {
+                map.put("userId",user.getId());
+            }
+
         }
 
         Double sum=billCostMapper.selectByPriceSum(map);
@@ -980,6 +996,7 @@ public class BillServiceimpl implements BillService {
             Map<String,Object> map=new HashMap<>();
             map.put("limit",limit);
             map.put("offset",offset);
+            map.put("billId",billId);
             map.put("userId",user.getCreateUserId());
             map.put("offset",offset);
             List<BillCost> billCostList=billCostMapper.getPriceByMap(map);
@@ -1001,12 +1018,12 @@ public class BillServiceimpl implements BillService {
         else
         {
             Map<String,Object> map=new HashMap<>();
-            map.put("userId",user.getId());
             map.put("billId",billId);
             map.put("limit",limit);
             map.put("offset",offset);
             if(user.hasRole("SUPER_ADMIN")||user.hasRole("DISTRIBUTOR")||user.hasRole("AGENT"))
             {
+                map.put("userId",user.getId());
                 List<BillCost> billCostList=billCostMapper.getPriceByMap(map);
                 Long total=billCostMapper.getPriceByMapCount(map);
                 for (BillCost item :billCostList
@@ -1025,7 +1042,21 @@ public class BillServiceimpl implements BillService {
 
             else
             {
-                return  null;
+                map.put("userId",user.getCreateUserId());
+                List<BillCost> billCostList=billCostMapper.getPriceByMap(map);
+                Long total=billCostMapper.getPriceByMapCount(map);
+                for (BillCost item :billCostList
+                        ) {
+                    BillCostDetails billCostDetails=new BillCostDetails();
+                    billCostDetails.setId(item.getId());
+                    billCostDetails.setCostAmount(item.getCostAmount());
+                    billCostDetails.setRanking(item.getRanking());
+                    billCostDetails.setCostDate(DateUtils.formatDate(item.getCostDate()));
+                    billCostDetailsList.add(billCostDetails);
+                }
+                params.put("rows", billCostDetailsList);
+                params.put("total", total);
+                return params;
             }
         }
 

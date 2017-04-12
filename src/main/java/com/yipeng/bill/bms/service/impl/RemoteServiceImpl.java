@@ -1,9 +1,5 @@
 package com.yipeng.bill.bms.service.impl;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 import com.yipeng.bill.bms.service.RemoteService;
 import com.yipeng.bill.bms.vo.CustomerRankingParam;
@@ -57,10 +53,15 @@ public class RemoteServiceImpl implements RemoteService {
     {
         //设置传入参数
         String wAction = "AddSearchTask";
-        String[] qkeyword = {"QQ"};
-        String[] qurl = {"www.qq.com"};
+
+
+        String aa=getURLEncoderString("上海婚纱");
+        String[] qkeyword = {aa};
+        String[] qurl = {"www.hunsha.com"};
         int[] timeSet = { 12 };
         JSONObject jsonObj = new JSONObject();
+
+
         jsonObj.put("keyword", qkeyword);
         jsonObj.put("url", qurl);
         jsonObj.put("time", System.currentTimeMillis());

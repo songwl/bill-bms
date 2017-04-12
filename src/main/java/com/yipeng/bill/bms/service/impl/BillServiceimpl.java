@@ -525,6 +525,11 @@ public class BillServiceimpl implements BillService {
             String[] price=params.get("price");
             String[] rankend=params.get("rankend");
             Long billId=Long.parseLong(id[0]);
+
+
+
+
+
             //判断渠道商订单价格是否已经存在(有BUG 如果管理员录入价格 bool会变成true)
             List<BillPrice> billPriceList= billPriceMapper.selectByBillId(billId);
             Boolean bool=true;

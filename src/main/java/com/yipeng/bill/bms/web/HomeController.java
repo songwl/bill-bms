@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.yipeng.bill.bms.service.HomeService;
 import com.yipeng.bill.bms.service.RemoteService;
-import com.yipeng.bill.bms.vo.CustomerRankingParam;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HomeController extends BaseController {
 	@Autowired
 	private HomeService homeService;
+	@Autowired
+	private RemoteService remoteService;
 	//@Autowired
 	//private AuthorityService authorityService;
 
@@ -40,7 +41,6 @@ public class HomeController extends BaseController {
 		Map<String, Object> bms=homeService.homeDetails(loginUser);
 		bms.put("user", loginUser);
 		model.addAttribute("bmsModel", bms);
-		CustomerRankingParam customerRankingParam=new CustomerRankingParam();
 
 		return "/home/home";
 	}

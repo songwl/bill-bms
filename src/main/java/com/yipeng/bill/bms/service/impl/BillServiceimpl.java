@@ -4,17 +4,23 @@ import com.yipeng.bill.bms.core.model.Page;
 import com.yipeng.bill.bms.core.utils.DateUtils;
 import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
+import com.yipeng.bill.bms.model.Define;
+import com.yipeng.bill.bms.model.Md5_UrlEncode;
 import com.yipeng.bill.bms.service.BillService;
-import com.yipeng.bill.bms.vo.BillCostDetails;
-import com.yipeng.bill.bms.vo.BillDetails;
-import com.yipeng.bill.bms.vo.LoginUser;
+import com.yipeng.bill.bms.service.RemoteService;
+import com.yipeng.bill.bms.vo.*;
 import org.hamcrest.text.IsEmptyString;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import javax.xml.crypto.Data;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -39,6 +45,8 @@ public class BillServiceimpl implements BillService {
     private UserRoleMapper userRoleMapper;
     @Autowired
     private RoleMapper roleMapper;
+    @Autowired
+    private RemoteService remoteService;
     /**
      * 相同价导入
      * @param bill
@@ -195,9 +203,8 @@ public class BillServiceimpl implements BillService {
                       bill.setCreateUserId(user.getId());
                       bill.setUpdateUserId(user.getId());
                       bill.setCreateTime(new Date());
-                      bill.setFirstRanking(51);
-                      bill.setNewRanking(51);
-                      bill.setWebAppId(123456);
+                      bill.setFirstRanking(102);
+                      bill.setNewRanking(102);
                       bill.setStandardDays(0);
                       bill.setDayOptimization(1);
                       bill.setAllOptimization(1);
@@ -239,9 +246,8 @@ public class BillServiceimpl implements BillService {
                   bill.setCreateUserId(user.getId());
                   bill.setUpdateUserId(user.getId());
                   bill.setCreateTime(new Date());
-                  bill.setFirstRanking(51);
-                  bill.setNewRanking(51);
-                  bill.setWebAppId(123456);
+                  bill.setFirstRanking(102);
+                  bill.setNewRanking(102);
                   bill.setStandardDays(0);
                   bill.setDayOptimization(1);
                   bill.setAllOptimization(1);
@@ -517,7 +523,7 @@ public class BillServiceimpl implements BillService {
         String[] price3 = params.get("price3");
         String[] caozuoyuan = params.get("caozuoyuan");
         Long caozuoyuanId = Long.parseLong(caozuoyuan[0]);
-
+        Md5_UrlEncode md5_urlEncode=new Md5_UrlEncode();
         int  length=Integer.parseInt(checkboxLength[0]);
         for(int i=0;i<length;i++)
         {
@@ -525,11 +531,6 @@ public class BillServiceimpl implements BillService {
             String[] price=params.get("price");
             String[] rankend=params.get("rankend");
             Long billId=Long.parseLong(id[0]);
-
-
-
-
-
             //判断渠道商订单价格是否已经存在(有BUG 如果管理员录入价格 bool会变成true)
             List<BillPrice> billPriceList= billPriceMapper.selectByBillId(billId);
             Boolean bool=true;
@@ -546,71 +547,184 @@ public class BillServiceimpl implements BillService {
             }
             if(bool)
             {
-                BillPrice billPrice=new BillPrice();
-                billPrice.setBillId(billId);
-                BigDecimal ret = null;
-                ret= new BigDecimal((String)price[0]);
-                billPrice.setPrice(ret);
-                billPrice.setBillRankingStandard(Long.parseLong(rankend[0]));
-                billPrice.setInMemberId(user.getId()); ;
-                String[] updateUserId=params.get("selectContent["+i+"][updateUserId]");
-                billPrice.setOutMemberId(Long.parseLong(updateUserId[0]));
-                billPrice.setCreateTime(new Date());
-                billPriceMapper.insert(billPrice);
-                Bill bill1=new Bill();
-                bill1.setId(billId);
-                bill1.setUpdateUserId(user.getId());
-                bill1.setBillAscription(caozuoyuanId);
-                bill1.setState(2);
-                billMapper.updateByPrimaryKeySelective(bill1);
-                if (!"NaN".equals(price1[0])) {
-                    String[] id1=params.get("selectContent["+i+"][id]");
-                    String[] rankend1=params.get("rankend1");
-                    Long billId1=Long.parseLong(id1[0]);
-                    BillPrice billPrice1=new BillPrice();
-                    billPrice1.setBillId(billId1);
-                    BigDecimal ret1 = null;
-                    ret1= new BigDecimal((String)price1[0]);
-                    billPrice1.setPrice(ret1);
-                    billPrice1.setBillRankingStandard(Long.parseLong(rankend1[0]));
-                    billPrice1.setInMemberId(user.getId());
-                    String[] updateUserId1=params.get("selectContent["+i+"][updateUserId]");
-                    billPrice1.setOutMemberId(Long.parseLong(updateUserId1[0]));
-                    billPrice1.setCreateTime(new Date());
-                    billPriceMapper.insert(billPrice1);
-                    if (!"NaN".equals(price2[0])) {
-                        String[] id2=params.get("selectContent["+i+"][id]");
-                        String[] rankend2=params.get("rankend2");
-                        Long billId2=Long.parseLong(id2[0]);
-                        BillPrice billPrice2=new BillPrice();
-                        billPrice2.setBillId(billId2);
-                        BigDecimal ret2 = null;
-                        ret2= new BigDecimal((String)price2[0]);
-                        billPrice2.setPrice(ret2);
-                        billPrice2.setBillRankingStandard(Long.parseLong(rankend2[0]));
-                        billPrice2.setInMemberId(user.getId());
-                        String[] updateUserId2=params.get("selectContent["+i+"][updateUserId]");
-                        billPrice2.setOutMemberId(Long.parseLong(updateUserId2[0]));
-                        billPrice2.setCreateTime(new Date());
-                        billPriceMapper.insert(billPrice2);
-                        if (!"NaN".equals(price3[0])) {
-                            String[] id3=params.get("selectContent["+i+"][id]");
-                            String[] rankend3=params.get("rankend3");
-                            Long billId3=Long.parseLong(id3[0]);
-                            BillPrice billPrice3=new BillPrice();
-                            billPrice3.setBillId(billId3);
-                            BigDecimal ret3 = null;
-                            ret3= new BigDecimal((String)price3[0]);
-                            billPrice3.setPrice(ret3);
-                            billPrice3.setBillRankingStandard(Long.parseLong(rankend3[0]));
-                            billPrice3.setInMemberId(user.getId());
-                            String[] updateUserId3=params.get("selectContent["+i+"][updateUserId]");
-                            billPrice3.setOutMemberId(Long.parseLong(updateUserId3[0]));
-                            billPrice3.setCreateTime(new Date());
-                            billPriceMapper.insert(billPrice3);
+                CustomerRankingParam customerRankingParam=new CustomerRankingParam();
+                Bill billA=billMapper.selectByPrimaryKey(billId);
+                BillSearchSupport billSearchSupport=billSearchSupportMapper.selectByBillId(billId);
+                int ApiId;
+                String wAction = "AddSearchTask";
+                String[] qkeyword = {billA.getKeywords()};
+
+                String[] qurl = {billA.getWebsite()};
+                int[] timeSet = { 12 };
+                JSONObject jsonObj = new JSONObject();
+                jsonObj.put("keyword", qkeyword);
+                jsonObj.put("url", qurl);
+                jsonObj.put("time", System.currentTimeMillis());
+                jsonObj.put("timeSet", timeSet);
+                jsonObj.put("userId", Define.userId);
+                jsonObj.put("businessType", 2006);
+                 if (billSearchSupport.getSearchSupport().equals("百度"))
+                 {
+                     jsonObj.put("searchType", 1010);
+                 }
+                else if (billSearchSupport.getSearchSupport().equals("360"))
+                {
+                    jsonObj.put("searchType", 1015);
+                }
+                 else if (billSearchSupport.getSearchSupport().equals("搜狗"))
+                 {
+                     jsonObj.put("searchType", 1030);
+                 }
+                 else if (billSearchSupport.getSearchSupport().equals("手机百度"))
+                 {
+                     jsonObj.put("searchType", 7010);
+                 }
+                 else if (billSearchSupport.getSearchSupport().equals("手机360"))
+                 {
+                     jsonObj.put("searchType", 7015);
+                 }
+                 else if (billSearchSupport.getSearchSupport().equals("手机搜狗"))
+                 {
+                     jsonObj.put("searchType", 7030);
+                 }
+                 else
+                 {
+                     jsonObj.put("searchType", 7070);
+                 }
+                jsonObj.put("searchOnce", false);
+                String wParam = jsonObj.toString();
+                String wSign = null;
+                try {
+                    wSign = md5_urlEncode.EncoderByMd5(wAction + Define.token + jsonObj.toString());
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                customerRankingParam.setwAction("AddSearchTask");
+                customerRankingParam.setwParam(wParam);
+                customerRankingParam.setwSign(wSign);
+                try {
+                    //查询taskID
+                    CustomerRankingResult customerRankingResult= remoteService.getCustomerRanking(customerRankingParam);
+                    if(customerRankingResult!=null)
+                    {
+                        if(customerRankingResult.getMessage().equals("success."))
+                        {
+                           JSONArray value=customerRankingResult.getValue();
+                           JSONArray valueJSONArray= value.getJSONArray(0);
+                           ApiId=Integer.parseInt(valueJSONArray.get(0).toString());
+                           //启动线程抓取排名
+                            Thread thread=new Thread()
+                            {
+                                public  void Run()
+                                {
+                                       for (int i=0;i<200;i++)//约1个小时左右查询不到数据，销毁线程
+                                       {
+                                            try
+                                            {
+                                                //延时
+                                                  Thread.currentThread().sleep(20000);
+                                            }
+                                            catch (InterruptedException e)
+                                            {}
+                                            Long xp=null;
+                                            try {
+                                                //调用方法获取排名
+
+                                            }catch (Exception e)
+                                            {
+
+                                            }
+                                            if(xp!=null||"".equals(xp))
+                                            {
+                                                //更新排名到数据库
+                                            }
+                                       }
+                                }
+                            };
+                           //录入价格
+                            BillPrice billPrice=new BillPrice();
+                            billPrice.setBillId(billId);
+                            BigDecimal ret = null;
+                            ret= new BigDecimal((String)price[0]);
+                            billPrice.setPrice(ret);
+                            billPrice.setBillRankingStandard(Long.parseLong(rankend[0]));
+                            billPrice.setInMemberId(user.getId()); ;
+                            String[] updateUserId=params.get("selectContent["+i+"][updateUserId]");
+                            billPrice.setOutMemberId(Long.parseLong(updateUserId[0]));
+                            billPrice.setCreateTime(new Date());
+                            billPriceMapper.insert(billPrice);
+                            Bill bill1=new Bill();
+                            bill1.setId(billId);
+                            bill1.setUpdateUserId(user.getId());
+                            bill1.setWebAppId(ApiId);
+                            bill1.setBillAscription(caozuoyuanId);
+                            bill1.setState(2);
+                            billMapper.updateByPrimaryKeySelective(bill1);
+                            if (!"NaN".equals(price1[0])) {
+                                String[] id1=params.get("selectContent["+i+"][id]");
+                                String[] rankend1=params.get("rankend1");
+                                Long billId1=Long.parseLong(id1[0]);
+                                BillPrice billPrice1=new BillPrice();
+                                billPrice1.setBillId(billId1);
+                                BigDecimal ret1 = null;
+                                ret1= new BigDecimal((String)price1[0]);
+                                billPrice1.setPrice(ret1);
+                                billPrice1.setBillRankingStandard(Long.parseLong(rankend1[0]));
+                                billPrice1.setInMemberId(user.getId());
+                                String[] updateUserId1=params.get("selectContent["+i+"][updateUserId]");
+                                billPrice1.setOutMemberId(Long.parseLong(updateUserId1[0]));
+                                billPrice1.setCreateTime(new Date());
+                                billPriceMapper.insert(billPrice1);
+                                if (!"NaN".equals(price2[0])) {
+                                    String[] id2=params.get("selectContent["+i+"][id]");
+                                    String[] rankend2=params.get("rankend2");
+                                    Long billId2=Long.parseLong(id2[0]);
+                                    BillPrice billPrice2=new BillPrice();
+                                    billPrice2.setBillId(billId2);
+                                    BigDecimal ret2 = null;
+                                    ret2= new BigDecimal((String)price2[0]);
+                                    billPrice2.setPrice(ret2);
+                                    billPrice2.setBillRankingStandard(Long.parseLong(rankend2[0]));
+                                    billPrice2.setInMemberId(user.getId());
+                                    String[] updateUserId2=params.get("selectContent["+i+"][updateUserId]");
+                                    billPrice2.setOutMemberId(Long.parseLong(updateUserId2[0]));
+                                    billPrice2.setCreateTime(new Date());
+                                    billPriceMapper.insert(billPrice2);
+                                    if (!"NaN".equals(price3[0])) {
+                                        String[] id3=params.get("selectContent["+i+"][id]");
+                                        String[] rankend3=params.get("rankend3");
+                                        Long billId3=Long.parseLong(id3[0]);
+                                        BillPrice billPrice3=new BillPrice();
+                                        billPrice3.setBillId(billId3);
+                                        BigDecimal ret3 = null;
+                                        ret3= new BigDecimal((String)price3[0]);
+                                        billPrice3.setPrice(ret3);
+                                        billPrice3.setBillRankingStandard(Long.parseLong(rankend3[0]));
+                                        billPrice3.setInMemberId(user.getId());
+                                        String[] updateUserId3=params.get("selectContent["+i+"][updateUserId]");
+                                        billPrice3.setOutMemberId(Long.parseLong(updateUserId3[0]));
+                                        billPrice3.setCreateTime(new Date());
+                                        billPriceMapper.insert(billPrice3);
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            continue;
                         }
                     }
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
                 }
+
+
             }
 
 
@@ -1083,9 +1197,8 @@ public class BillServiceimpl implements BillService {
         bill.setCreateUserId((Long)params.get("CreateUserId"));
         bill.setUpdateUserId((Long)params.get("CreateUserId"));
         bill.setCreateTime(new Date());
-        bill.setFirstRanking(51);
-        bill.setNewRanking(51);
-        bill.setWebAppId(123456);
+        bill.setFirstRanking(102);
+        bill.setNewRanking(102);
         bill.setStandardDays(0);
         bill.setDayOptimization(0);
         bill.setAllOptimization(0);

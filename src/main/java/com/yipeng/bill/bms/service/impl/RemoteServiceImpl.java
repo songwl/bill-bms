@@ -1,6 +1,8 @@
 package com.yipeng.bill.bms.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
+import com.yipeng.bill.bms.model.Md5_UrlEncode;
 import com.yipeng.bill.bms.service.RemoteService;
 import com.yipeng.bill.bms.vo.CustomerRankingParam;
 import com.yipeng.bill.bms.vo.CustomerRankingResult;
@@ -13,6 +15,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -35,90 +38,36 @@ public class RemoteServiceImpl implements RemoteService {
 
     //请求查询网关Url
     private static String url="http://api.youbangyun.com/api/customerapi.aspx";
-    //平台token
-    private static String token = "72F2D590D16463A5B6C1D5C0E37056BD";
-    //平台uid
-    private static String userId = "104982";
 
+    Md5_UrlEncode md5_urlEncode=new Md5_UrlEncode();
     @Override
     public CustomerRankingResult getCustomerRanking(CustomerRankingParam customerRankingParam)throws IOException, NoSuchAlgorithmException  {
-
+         //返回对象
         CustomerRankingResult result = new CustomerRankingResult();
-        String aa=getTaskId();
+        //请求返回
+        String json=getTaskId(customerRankingParam);
+        //转换返回数据
+        JSONObject myJsonObject = new JSONObject(json);
+        JSONArray  value =myJsonObject.getJSONArray("xValue") ;
+        result.setCode(Integer.parseInt(myJsonObject.get("xCode").toString()));
+        result.setMessage(myJsonObject.get("xMessage").toString());
+        result.setValue(value);
+
         return result;
     }
 
-
-    public  String getTaskId()throws ParseException, IOException, NoSuchAlgorithmException, JSONException
+   // 获取TASKID
+    public  String getTaskId(CustomerRankingParam params )throws ParseException, IOException, NoSuchAlgorithmException, JSONException
     {
-        //设置传入参数
-        String wAction = "AddSearchTask";
 
-
-        String aa=getURLEncoderString("上海婚纱");
-        String[] qkeyword = {aa};
-        String[] qurl = {"www.hunsha.com"};
-        int[] timeSet = { 12 };
-        JSONObject jsonObj = new JSONObject();
-
-
-        jsonObj.put("keyword", qkeyword);
-        jsonObj.put("url", qurl);
-        jsonObj.put("time", System.currentTimeMillis());
-        jsonObj.put("timeSet", timeSet);
-        jsonObj.put("userId", userId);
-        jsonObj.put("businessType", 2006);
-        jsonObj.put("searchType", 1010);
-        jsonObj.put("searchOnce", true);
-        //生成传入参数
-        String wParam = jsonObj.toString();
-        String wSign = EncoderByMd5(wAction + token + jsonObj.toString());
         Map<String, String> map = new HashMap<String, String>();
-        map.put("wAction", wAction);
-        map.put("wParam", wParam);
-        map.put("wSign", wSign);
+        map.put("wAction", params.getwAction());
+        map.put("wParam", params.getwParam());
+        map.put("wSign", params.getwSign());
         String body = send(url, map,"utf-8");
         return  body;
     }
-    /**
-     * URL 转码
-     *
-     * @return String
-     */
-    public  String getURLEncoderString(String str) {
-        String result = "";
-        if (null == str) {
-            return "";
-        }
-        try {
-            result = java.net.URLEncoder.encode(str, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-    /**利用MD5进行加密
-     * @param str  待加密的字符串
-     * @return  加密后的字符串
-     * @throws NoSuchAlgorithmException  没有这种产生消息摘要的算法
-     * @throws UnsupportedEncodingException
-     */
-    public  String EncoderByMd5(String str) throws NoSuchAlgorithmException, UnsupportedEncodingException{
-        //确定计算方法
-        MessageDigest md5=MessageDigest.getInstance("MD5");
-        BASE64Encoder base64en = new BASE64Encoder();
-        //加密后的字符串
-        return  toHexString(md5.digest(str.getBytes("utf-8")));
-    }
-    private  String toHexString(byte[] b) {
-        char HEX_DIGITS[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
-        StringBuilder sb = new StringBuilder(b.length * 2);
-        for (int i = 0; i < b.length; i++) {
-            sb.append(HEX_DIGITS[(b[i] & 0xf0) >>> 4]);
-            sb.append(HEX_DIGITS[b[i] & 0x0f]);
-        }
-        return sb.toString();
-    }
+
     /**
      * 模拟请求
      *

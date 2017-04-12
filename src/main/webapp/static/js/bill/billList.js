@@ -318,6 +318,10 @@ var TableInit = function () {
                         {
                             a="<span>" +">50"+"</span>";
                         }
+                        else
+                        {
+                            a="<span>" +value+"</span>";
+                        }
                         return a;
                     }
 

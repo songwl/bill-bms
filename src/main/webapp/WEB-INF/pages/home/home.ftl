@@ -2,7 +2,7 @@
 <#import "/base/dict.ftl" as dict>
 
 <@base.html "操作员列表">
-<link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet"> >
+<link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <script src="${ctx}/static/js/public/highcharts.js"></script>
 <div class="Navs">
     <div class="nav_L left">

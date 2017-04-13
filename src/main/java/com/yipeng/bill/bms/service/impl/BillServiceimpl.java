@@ -203,8 +203,9 @@ public class BillServiceimpl implements BillService {
                       bill.setCreateUserId(user.getId());
                       bill.setUpdateUserId(user.getId());
                       bill.setCreateTime(new Date());
-                      bill.setFirstRanking(102);
-                      bill.setNewRanking(102);
+                      //默认排名为200（无排名）
+                      bill.setFirstRanking(200);
+                      bill.setNewRanking(200);
                       bill.setStandardDays(0);
                       bill.setDayOptimization(1);
                       bill.setAllOptimization(1);
@@ -246,8 +247,9 @@ public class BillServiceimpl implements BillService {
                   bill.setCreateUserId(user.getId());
                   bill.setUpdateUserId(user.getId());
                   bill.setCreateTime(new Date());
-                  bill.setFirstRanking(102);
-                  bill.setNewRanking(102);
+                  //默认排名为200（无排名）
+                  bill.setFirstRanking(200);
+                  bill.setNewRanking(200);
                   bill.setStandardDays(0);
                   bill.setDayOptimization(1);
                   bill.setAllOptimization(1);
@@ -614,35 +616,6 @@ public class BillServiceimpl implements BillService {
                            JSONArray value=customerRankingResult.getValue();
                            JSONArray valueJSONArray= value.getJSONArray(0);
                            ApiId=Integer.parseInt(valueJSONArray.get(0).toString());
-                           //启动线程抓取排名
-                            Thread thread=new Thread()
-                            {
-                                public  void Run()
-                                {
-                                       for (int i=0;i<200;i++)//约1个小时左右查询不到数据，销毁线程
-                                       {
-                                            try
-                                            {
-                                                //延时
-                                                  Thread.currentThread().sleep(20000);
-                                            }
-                                            catch (InterruptedException e)
-                                            {}
-                                            Long xp=null;
-                                            try {
-                                                //调用方法获取排名
-
-                                            }catch (Exception e)
-                                            {
-
-                                            }
-                                            if(xp!=null||"".equals(xp))
-                                            {
-                                                //更新排名到数据库
-                                            }
-                                       }
-                                }
-                            };
                            //录入价格
                             BillPrice billPrice=new BillPrice();
                             billPrice.setBillId(billId);
@@ -1197,8 +1170,9 @@ public class BillServiceimpl implements BillService {
         bill.setCreateUserId((Long)params.get("CreateUserId"));
         bill.setUpdateUserId((Long)params.get("CreateUserId"));
         bill.setCreateTime(new Date());
-        bill.setFirstRanking(102);
-        bill.setNewRanking(102);
+        //默认排名为200（无排名）
+        bill.setFirstRanking(200);
+        bill.setNewRanking(200);
         bill.setStandardDays(0);
         bill.setDayOptimization(0);
         bill.setAllOptimization(0);

@@ -9,14 +9,6 @@
     <result column="item_type" jdbcType="VARCHAR" property="itemType" />
   </resultMap>
 
-  <resultMap id="BaseResultMap1" type="com.yipeng.bill.bms.vo.FundAccountSumMp">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="fund_account_id" jdbcType="BIGINT" property="fundAccountId" />
-    <result column="change_amount" jdbcType="DECIMAL" property="changeAmount" />
-    <result column="change_time" jdbcType="TIMESTAMP" property="changeTime" />
-    <result column="item_type" jdbcType="VARCHAR" property="itemType" />
-    <result column="fund_item_sum" jdbcType="DECIMAL" property="fundItemSum" />
-  </resultMap>
   <sql id="Base_Column_List">
     id, fund_account_id, change_amount,balance, change_time, item_type
   </sql>
@@ -110,47 +102,14 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="getFundItemList"  resultMap="BaseResultMap1">
-  select a.*,SUM(a.change_amount) as fundItemSum
+  select a.*, as fundItemSum
   from
   t_fund_item as a,t_fund_account as b, t_user_role as c
   where
   a.fund_account_id=b.id
    and b.user_id=c.user_id
-  and c.role_id=#{roleId,jdbcType=BIGINT}
-    GROUP BY a.item_type
+  and c.role_id=#{roleId,jdbcType=BIGINT}　
     limit #{offset},#{limit}
   </select>
 
-  <select id="getFundItemListCount"  resultType="java.lang.Long">
-    select COUNT(a.id)
-    from
-    t_fund_item as a,t_fund_account as b, t_user_role as c
-    where
-    a.fund_account_id=b.id
-    and b.user_id=c.user_id
-    and c.role_id=#{roleId,jdbcType=BIGINT}
-  </select>
-
-  <select id="getFundItemListByOther"  resultMap="BaseResultMap1">
-   select a.*,SUM(a.change_amount) as fundItemSum
-    from
-    t_fund_item as a,t_fund_account as b, t_user_role as c,t_user as d
-    where
-    a.fund_account_id=b.id
-    and b.user_id=c.user_id
-    and c.user_id=d.id
-    and d.create_user_id=#{userId,jdbcType=BIGINT}
-     GROUP BY(year(a.change_time) and month(a.change_time) and DAY(a.change_time)),a.item_type
-    limit #{offset},#{limit}
-  </select>
-  <select id="getFundItemListByOtherCount"  resultType="java.lang.Long">
-    select COUNT(a.id)
-    from
-    t_fund_item as a,t_fund_account as b, t_user_role as c,t_user as d
-    where
-    a.fund_account_id=b.id
-    and b.user_id=c.user_id
-     and c.user_id=d.id
-    AND  d.create_user_id=#{userId,jdbcType=BIGINT}
-  </select>
 </mapper>

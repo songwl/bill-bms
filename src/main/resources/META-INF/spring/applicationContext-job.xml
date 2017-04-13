@@ -17,7 +17,7 @@
             <ref bean="CallCostTaskJob"/>
         </property>
         <property name="cronExpression">
-            <!--每1分钟-->
+            <!--每30分钟-->
             <value>0 0/30 * * * ?</value>
         </property>
     </bean>
@@ -39,12 +39,30 @@
         </property>
     </bean>
 
+    <!--查询初始排名-->
+    <bean id="newRankingTask" class="com.yipeng.bill.bms.task.NewRankingTask"></bean>
+    <bean id="NewRankingTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="newRankingTask"/>
+        <property name="targetMethod" value="execute"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="newRankingTaskJobTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="NewRankingTaskJob"/>
+        </property>
+        <property name="cronExpression">
+            <!--每1分钟-->
+            <value>0 0/1 * * * ?</value>
+        </property>
+    </bean>
     <bean name="startQuertz" lazy-init="false" autowire="no"
               class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
                 <ref bean="callCostTaskJobTrigger"/>
                 <ref bean="rankingTaskJobTrigger"/>
+                <ref bean="newRankingTaskJobTrigger"/>
             </list>
         </property>
     </bean>

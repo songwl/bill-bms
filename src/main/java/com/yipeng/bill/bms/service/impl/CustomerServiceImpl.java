@@ -492,8 +492,6 @@ public class CustomerServiceImpl implements CustomerService{
     @Override
     public Map<String, Object> fundAccountList(Map<String, Object> params,LoginUser user) {
        //判断角色获取对应的客户
-
-
           //管理员
             if(user.hasRole("SUPER_ADMIN"))
             {
@@ -510,14 +508,56 @@ public class CustomerServiceImpl implements CustomerService{
                         item.setUserName(user1.getUserName());
                     }
                 }
-
                 Map<String,Object> map=new HashMap<>();
                 map.put("rows",fundItemSumList);
                 return map;
             }
+            //操作员
+            else if(user.hasRole("COMMISSIONER"))
+            {
+
+                return  null;
+            }
+            //渠道商和代理商
+            else if(user.hasRole("DISTRIBUTOR")||user.hasRole("AGENT"))
+            {
+               params.put("createId",user.getId());
+
+                List<FundItemSum> fundItemSumList= fundItemMapper.selectByDAgent(params);
+
+                for (FundItemSum item :fundItemSumList
+                        ) {
+                    FundAccount fundAccount=fundAccountMapper.selectByPrimaryKey(item.getFundAccountId());
+                    if(fundAccount!=null)
+                    {
+                        User user1=userMapper.selectByPrimaryKey(fundAccount.getUserId());
+                        item.setUserName(user1.getUserName());
+                    }
+                }
+                Map<String,Object> map=new HashMap<>();
+                map.put("rows",fundItemSumList);
+                return map;
+
+            }
+            //客户
             else
             {
-                return  null;
+                params.put("userId",user.getId());
+
+                List<FundItemSum> fundItemSumList= fundItemMapper.selectByCustomer(params);
+
+                for (FundItemSum item :fundItemSumList
+                        ) {
+                    FundAccount fundAccount=fundAccountMapper.selectByPrimaryKey(item.getFundAccountId());
+                    if(fundAccount!=null)
+                    {
+                        User user1=userMapper.selectByPrimaryKey(fundAccount.getUserId());
+                        item.setUserName(user1.getUserName());
+                    }
+                }
+                Map<String,Object> map=new HashMap<>();
+                map.put("rows",fundItemSumList);
+                return map;
             }
 
     }

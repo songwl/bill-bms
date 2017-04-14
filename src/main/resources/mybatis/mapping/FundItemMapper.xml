@@ -118,6 +118,26 @@
      and c.role_id=#{roleId,jdbcType=BIGINT}
       GROUP BY a.change_time,a.fund_account_id,a.item_type
   </select>
-
   <!--end管理员查看资金流水-->
+
+  <!--渠道商和代理商查看资金流水-->
+  <select id="selectByDAgent"   resultMap="BaseResultMap1">
+    SELECT a.*,sum(a.change_amount) as dayAccountSum from
+     t_fund_item as a,t_fund_account as b,t_user as c
+    where a.fund_account_id=b.id
+    and b.user_id=c.id
+    and c.create_user_id=#{createId,jdbcType=BIGINT}
+    GROUP BY a.change_time,a.fund_account_id,a.item_type
+  </select>
+  <!--end渠道商和代理商查看资金流水-->
+
+  <!--客户查看资金流水-->
+  <select id="selectByCustomer"   resultMap="BaseResultMap1">
+    SELECT a.*,sum(a.change_amount) as dayAccountSum from
+    t_fund_item as a,t_fund_account as b
+    where a.fund_account_id=b.id
+    and b.user_id=#{userId,jdbcType=BIGINT}
+    GROUP BY a.change_time,a.fund_account_id,a.item_type
+  </select>
+  <!--end客户查看资金流水-->
 </mapper>

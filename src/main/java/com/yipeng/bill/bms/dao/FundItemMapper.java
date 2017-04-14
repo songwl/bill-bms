@@ -25,4 +25,11 @@ public interface FundItemMapper {
     //管理员
     List<FundItemSum> selectByAdmin(Map<String,Object> params);
 
+    //渠道商和代理商
+    List<FundItemSum> selectByDAgent(Map<String,Object> params);
+
+    //客户
+    List<FundItemSum> selectByCustomer(Map<String,Object> params);
+
+
 }

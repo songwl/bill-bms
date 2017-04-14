@@ -4,6 +4,7 @@ import com.yipeng.bill.bms.core.crypto.CryptoUtils;
 import com.yipeng.bill.bms.core.utils.DateUtils;
 import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
+import com.yipeng.bill.bms.model.FundItemSum;
 import com.yipeng.bill.bms.service.CustomerService;
 import com.yipeng.bill.bms.service.RoleService;
 import com.yipeng.bill.bms.service.UserRoleService;
@@ -12,6 +13,7 @@ import freemarker.template.utility.DateUtil;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -490,20 +492,31 @@ public class CustomerServiceImpl implements CustomerService{
     @Override
     public Map<String, Object> fundAccountList(Map<String, Object> params,LoginUser user) {
        //判断角色获取对应的客户
-        int limit=Integer.parseInt(params.get("limit").toString()) ;
-        int offset=Integer.parseInt(params.get("offset").toString()) ;
-        int i=offset;
 
+
+          //管理员
             if(user.hasRole("SUPER_ADMIN"))
             {
                   Role role=roleMapper.selectByRoleCode("DISTRIBUTOR");
                   params.put("roleId",role.getId());
-                return  null;
+                  List<FundItemSum> fundItemSumList= fundItemMapper.selectByAdmin(params);
+
+                for (FundItemSum item :fundItemSumList
+                     ) {
+                    FundAccount fundAccount=fundAccountMapper.selectByPrimaryKey(item.getFundAccountId());
+                    if(fundAccount!=null)
+                    {
+                        User user1=userMapper.selectByPrimaryKey(fundAccount.getUserId());
+                        item.setUserName(user1.getUserName());
+                    }
+                }
+
+                Map<String,Object> map=new HashMap<>();
+                map.put("rows",fundItemSumList);
+                return map;
             }
             else
             {
-
-
                 return  null;
             }
 

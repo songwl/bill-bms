@@ -1,7 +1,7 @@
 package com.yipeng.bill.bms.dao;
 
 import com.yipeng.bill.bms.domain.FundItem;
-import com.yipeng.bill.bms.vo.FundAccountSumMp;
+import com.yipeng.bill.bms.model.FundItemSum;
 
 import java.util.List;
 import java.util.Map;
@@ -19,9 +19,10 @@ public interface FundItemMapper {
 
     int updateByPrimaryKey(FundItem record);
 
-    List<FundAccountSumMp> getFundItemList(Map<String,Object> params);
     Long getFundItemListCount(Map<String,Object> params);
 
-    List<FundAccountSumMp> getFundItemListByOther(Map<String,Object> params);
     Long getFundItemListByOtherCount(Map<String,Object> params);
+    //管理员
+    List<FundItemSum> selectByAdmin(Map<String,Object> params);
+
 }

@@ -28,7 +28,6 @@
     </div>
 </div>
 <div class="Navs2">
-
     <div class="nav_R2 right" >
         <div>
             客户ID:
@@ -69,7 +68,7 @@
 <!--管理员审核-->
 <#if  bmsModel.user.hasRole("SUPER_ADMIN")>
 <div class="bootbox modal in billExamineDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="width: 990px;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="bootbox-close-button close">×</button>
@@ -147,7 +146,9 @@
                             <div class="col-md-1 padding-left-5px padding-right-0px" style="width: 35px;">
                                 <input name="adminprice3"   style="width: 35px;">
                             </div>
-                </div>
+                            <div class="pload" style="position:absolute;top:45%;left: 50%; z-index:2200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none;"></div>
+
+                        </div>
             </div>
             <div class="modal-footer" style="height:50px;">
                 <button data-bb-handler="success" type="button" class="btn wzgj-blue adminshenhe">确定</button>

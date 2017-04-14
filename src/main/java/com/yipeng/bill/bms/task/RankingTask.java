@@ -34,6 +34,7 @@ public class RankingTask {
 
         //2.根据数据作为参数 customerRankingParam，httpclient接口
 
+
         int offset = 0;
         int limit = 50; //每次查询50条
         Md5_UrlEncode md5_urlEncode=new Md5_UrlEncode();
@@ -81,9 +82,11 @@ public class RankingTask {
                             JSONArray value1= value.getJSONArray(0);
                             JSONObject str=value1.getJSONObject(1);
                             Object RankFirst=str.get("RankFirst");
+                            Object RankLast=str.get("RankLast");
                             if (Integer.parseInt(RankFirst.toString())!=0)
                             {
                                 bill.setFirstRanking(Integer.parseInt(RankFirst.toString()));
+                                bill.setNewRanking(Integer.parseInt(RankLast.toString()));
                                 billMapper.updateByPrimaryKeySelective(bill);
                             }
                         }

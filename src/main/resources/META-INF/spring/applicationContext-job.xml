@@ -18,7 +18,7 @@
         </property>
         <property name="cronExpression">
             <!--每30分钟-->
-            <value>0 0/30 * * * ?</value>
+            <value>0 0/50 * * * ?</value>
         </property>
     </bean>
     <!--查询初始排名-->
@@ -39,7 +39,7 @@
         </property>
     </bean>
 
-    <!--查询初始排名-->
+    <!--查询新排名-->
     <bean id="newRankingTask" class="com.yipeng.bill.bms.task.NewRankingTask"></bean>
     <bean id="NewRankingTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="newRankingTask"/>
@@ -53,7 +53,7 @@
         </property>
         <property name="cronExpression">
             <!--每1分钟-->
-            <value>0 0/1 * * * ?</value>
+            <value>0 6 * * * ?</value>
         </property>
     </bean>
     <bean name="startQuertz" lazy-init="false" autowire="no"

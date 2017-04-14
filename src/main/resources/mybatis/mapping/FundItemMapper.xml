@@ -9,6 +9,15 @@
     <result column="item_type" jdbcType="VARCHAR" property="itemType" />
   </resultMap>
 
+  <resultMap id="BaseResultMap1" type="com.yipeng.bill.bms.model.FundItemSum">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="fund_account_id" jdbcType="BIGINT" property="fundAccountId" />
+    <result column="change_amount" jdbcType="DECIMAL" property="changeAmount" />
+    <result column="change_time" jdbcType="TIMESTAMP" property="changeTime" />
+    <result column="item_type" jdbcType="VARCHAR" property="itemType" />
+    <result column="dayAccountSum" jdbcType="DECIMAL" property="dayAccountSum" />
+  </resultMap>
+
   <sql id="Base_Column_List">
     id, fund_account_id, change_amount,balance, change_time, item_type
   </sql>
@@ -101,15 +110,14 @@
       item_type = #{itemType,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select id="getFundItemList"  resultMap="BaseResultMap1">
-  select a.*, as fundItemSum
-  from
-  t_fund_item as a,t_fund_account as b, t_user_role as c
-  where
-  a.fund_account_id=b.id
-   and b.user_id=c.user_id
-  and c.role_id=#{roleId,jdbcType=BIGINT}　
-    limit #{offset},#{limit}
+  <!--管理员查看资金流水-->
+  <select id="selectByAdmin"   resultMap="BaseResultMap1">
+   SELECT a.*,sum(a.change_amount) as dayAccountSum from t_fund_item as a,t_fund_account as b,t_user_role as c
+    where a.fund_account_id=b.id
+     and b.user_id=c.user_id
+     and c.role_id=#{roleId,jdbcType=BIGINT}
+      GROUP BY a.change_time,a.fund_account_id,a.item_type
   </select>
 
+  <!--end管理员查看资金流水-->
 </mapper>

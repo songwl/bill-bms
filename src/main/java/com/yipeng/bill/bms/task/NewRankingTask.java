@@ -1,5 +1,6 @@
 package com.yipeng.bill.bms.task;
 
+import com.yipeng.bill.bms.core.utils.DateUtils;
 import com.yipeng.bill.bms.dao.BillMapper;
 import com.yipeng.bill.bms.domain.Bill;
 import com.yipeng.bill.bms.model.Define;
@@ -15,6 +16,9 @@ import org.springframework.util.CollectionUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -73,19 +77,44 @@ public class NewRankingTask {
                     CustomerRankingResult customerRankingResult=  remoteService.getCustomerRanking(customerRankingParam);
                     if(customerRankingResult!=null)
                     {
+                        //判断接口是否成功
                         if(customerRankingResult.getMessage().equals("success.")) {
                             JSONArray value = customerRankingResult.getValue();
                             JSONArray value1= value.getJSONArray(0);
                             JSONObject str=value1.getJSONObject(1);
-                            Object RankFirst=str.get("RankLast");
-                            Object UpdateTime=str.get("UpdateTime");
-                            Date date=new Date();
-                            String dateTime=date.toString();
-                            if (Integer.parseInt(RankFirst.toString())!=0)
+                            Object RankLast=str.get("RankLast");
+                            String UpdateTime=str.get("UpdateTime").toString();
+
+
+                            //字符串中的日期格式
+                            DateFormat from_type = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            //想要得到的日期显示格式
+                            DateFormat to_type   = new SimpleDateFormat("yyyy/MM/dd");
+                            //用来做中间转换的Date
+                            Date   date= null;
+
+                                //将字符串转换成日期格式
+                            try {
+                                date = from_type.parse(UpdateTime);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            //将日期格式转换成字符串
+                            String str1 = to_type.format(date);
+                            SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy/MM/dd");
+
+                            //时间转化
+                            Date now = new Date();
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                            String  now1=dateFormat.format(now);
+
+
+                            //判断是否获取到排名
+                            if (Integer.parseInt(RankLast.toString())!=0)
                             {
-                                if(dateTime.equals(UpdateTime.toString()))
+                                if(now1.equals(str1))
                                 {
-                                    bill.setFirstRanking(Integer.parseInt(RankFirst.toString()));
+                                    bill.setNewRanking(Integer.parseInt(RankLast.toString()));
                                     billMapper.updateByPrimaryKeySelective(bill);
                                 }
 

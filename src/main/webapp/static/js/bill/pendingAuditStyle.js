@@ -81,6 +81,9 @@ $(".cancel").click(function () {
                         selectContent:selectContent,
                         checkboxLength:len
                     },
+                    beforeSend: function () {
+                        $(".pload").show();
+                    },
                     success:function (result) {
                         if(result.code==200)
                         {
@@ -168,6 +171,9 @@ $(".adminshenhe").click(function () {
                 selectContent:selectContent,
                 checkboxLength:len,
                 caozuoyuan:caozuoyuan1
+            },
+            beforeSend: function () {
+                $(".pload").show();
             },
             success:function (result) {
                 if(result.code==200)

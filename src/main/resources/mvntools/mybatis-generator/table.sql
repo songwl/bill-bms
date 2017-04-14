@@ -69,7 +69,7 @@
     `fund_account_id` BIGINT NOT NULL COMMENT '',
     `change_amount` DECIMAL NULL COMMENT '变动金额',
     `balance` DECIMAL NULL COMMENT '余额',
-    `change_time` DATETIME NULL COMMENT '变动时间',
+    `change_time` DATE NULL COMMENT '变动时间',
     `item_type` VARCHAR(64) NULL COMMENT '消费形式',
     PRIMARY KEY (`id`)  COMMENT '',
     INDEX `fk_t_fund_item_t_fund_account1_idx` (`fund_account_id` ASC)  COMMENT '',

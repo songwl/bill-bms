@@ -43,7 +43,6 @@
 	<script src="${ctx}/static/js/assets/plugins/jquery.cokie.min.js" type="text/javascript"></script>
 	<script src="${ctx}/static/js/assets/scripts/app.js" type="text/javascript"></script>
 	<script type="text/javascript" src="${ctx}/static/js/app/js/index.js"></script>
-
 	${bms_js_content!""}
 </@base.jscontent>
 

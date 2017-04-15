@@ -2,13 +2,12 @@
 <#import "/base/dict.ftl" as dict>
 
 <@base.html "关键词优化">
-
-<script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <script src="${ctx}/static/js/public/pace.js"></script>
 <script src="${ctx}/static/js/bill/billList.js"></script>
 <script src="${ctx}/static/js/bill/billListchangePrice.js"></script>
 <script src="${ctx}/static/js/bill/billListsamePrice.js"></script>
+<script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
 <div class="Navs">
     <div class="nav_L left">
         <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>关键词排名</span>
@@ -25,8 +24,10 @@
         <div id="billDelete">
             <span>&nbsp;<i class="fa fa-trash"></i>&nbsp;删除</span>
         </div>
+           <div id="updatePrice">
+               <span>&nbsp;<i class="fa fa-cny"></i>&nbsp;调价</span>
+           </div>
        </#if>
-
         <div class="search">
             <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
         </div>
@@ -64,8 +65,6 @@
                    <option value="${user.id}">${user.userName}</option>
                </#list>
            </select>
-
-
     </#if>
         <span style="font-size:13px;text-align:center;cursor:pointer;font-weight:bold;margin-left: 10px;">
             今日达标:
@@ -106,18 +105,6 @@
 
                     </div>
                     <div class="cls"></div>
-                </div>
-                <div id="toolbar" class="btn-group">
-
-
-                    <button id="btn_update" type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 调价
-                    </button>
-
-                    <button id="testpm" type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-leaf" aria-hidden="true" id=""></span> 查排名
-                    </button>
-
                 </div>
                 <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%">
                 </table>

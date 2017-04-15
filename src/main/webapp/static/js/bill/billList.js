@@ -70,24 +70,23 @@ $(document).ready(function () {
     })
     //搜索按钮
     $("#searchButton").click(function () {
-
-
-        if($("#website").val()!="")
+        if($("#website").val()!="")//网址
         {
-            website=$("#website").val();
+            website=$.trim($("#website").val());
         }
         else
         {
             website=null
         }
-        if($("#keywords").val()!="")
+        if($("#keywords").val()!="")//关键词
         {
-            keywords=$("#keywords").val();
+            keywords=$.trim($("#keywords").val())
         }
         else
         {
             keywords=null;
         }
+
         if($("#searchName option:selected").text()!="--请选择--")
         {
             searchName=$("#searchName option:selected").text();
@@ -211,6 +210,9 @@ $(function () {
     oTable.Init();
     var oTable1 = new TableInit1();
     oTable1.Init();
+    //2.初始化Button的点击事件
+    var oButtonInit = new ButtonInit();
+    oButtonInit.Init();
 
 });
 var TableInit = function () {
@@ -230,7 +232,7 @@ var TableInit = function () {
             sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
             queryParams: oTableInit.queryParams,//传递参数（*）
             queryParamsType: "",
-            showColumns: true,                  //是否显示所有的列
+            showColumns: false,                  //是否显示所有的列
             showRefresh: true,                  //是否显示刷新按钮
             minimumCountColumns: 2,             //最少允许的列数
             clickToSelect: true,                //是否启用点击选中行

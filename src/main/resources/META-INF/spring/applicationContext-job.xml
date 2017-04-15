@@ -17,8 +17,8 @@
             <ref bean="CallCostTaskJob"/>
         </property>
         <property name="cronExpression">
-            <!--每30分钟-->
-            <value>0 0/50 * * * ?</value>
+            <!--晚8点15分计费-->
+            <value>0 5 11 * * ? *</value>
         </property>
     </bean>
     <!--查询初始排名-->

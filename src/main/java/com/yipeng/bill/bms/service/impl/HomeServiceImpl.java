@@ -62,6 +62,12 @@ public class HomeServiceImpl implements HomeService {
             params.put("state2",3);
             Long AllbillCount=billMapper.getBillListCount(params);
             map.put("AllbillCount",AllbillCount);
+            //总完成率
+            int state=2;
+            Map<String,Object> AllCompleteness=new HashMap<>();
+           // AllCompleteness.put("state",)
+
+
             return map;
         }
         else if(loginUser.hasRole("DISTRIBUTOR"))

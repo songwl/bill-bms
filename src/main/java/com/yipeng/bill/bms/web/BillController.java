@@ -63,7 +63,7 @@ public class BillController extends BaseController {
         bms.put("user", user);
         //type 1代表 查询上游的订单   2代表 查询提交到下游的订单
         model.put("way",way);
-            List<User> userList=  userService.getSearchUser(user,way);
+           List<User> userList=  userService.getSearchUser(user,way);
             model.put("userList",userList);
              model.addAttribute("bmsModel", bms);
 
@@ -92,8 +92,17 @@ public class BillController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/billOptimization")
-    public  String billOptimization(HttpServletRequest request)
+    public  String billOptimization(ModelMap model,@RequestParam(defaultValue = "1") String way)
     {
+        LoginUser user = this.getCurrentAccount();
+        if(user!=null)
+        {
+            way="2";
+            Map<String, Object> bms = new HashMap<>();
+            List<User> userList=  userService.getSearchUser(user,way);
+            model.put("userList",userList);
+            model.addAttribute("bmsModel", bms);
+        }
 
         return "/bill/billOptimization";
     }
@@ -109,18 +118,66 @@ public class BillController extends BaseController {
      */
     @RequestMapping(value = "/getBillOptimization")
     @ResponseBody
-    public Map<String,Object> getBillOptimization( int limit, int offset,int way,String website,int state)
+    public Map<String,Object> getBillOptimization( int limit, int offset,int way, String sortOrder, String sortName,
+                                                   String website,String keywords,String searchName,String searchUserName,
+                                                   String state,String searchStandard)
     {
-
         offset=(offset-1)*limit;
-        // Page<Bill> page = this.getPageRequest();    //分页对象
         Map<String, Object> params = this.getSearchRequest(); //查询参数
+        LoginUser loginUser=this.getCurrentAccount();
+        if(!keywords.isEmpty())
+        {
+            try{
+                keywords = new String(keywords.getBytes("ISO-8859-1"),"utf-8");
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+            }
+            params.put("keywords",keywords);
+        }
+        if(!website.isEmpty())
+        {
+            params.put("website",website);
+        }
+        if(!searchName.isEmpty())
+        {
+            try{
+                searchName = new String(searchName.getBytes("ISO-8859-1"),"utf-8");
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+            }
+            params.put("searchName",searchName);
+        }
+        if(!loginUser.hasRole("CUSTOMER"))
+        {
+            if(!searchUserName.isEmpty())
+            {
+                params.put("searchUserNameId",searchUserName);
+            }
+        }
+        if(!state.isEmpty())
+        {
+            params.put("state",state);
+        }
+
+        if(!searchStandard.isEmpty())
+        {
+            params.put("searchStandard",searchStandard);
+        }
+        if(sortName!=null)
+        {
+            params.put("sortName",sortName);
+            params.put("sortOrder",sortOrder);
+        }
+
         LoginUser user=this.getCurrentAccount();
         params.put("limit",limit);
         params.put("offset",offset);
         params.put("way",way);
-        params.put("userName",website);
-        params.put("state",state);
+
         Map<String, Object> modelMap=billService.getBillDetails(params,user);
         return  modelMap;
     }
@@ -187,6 +244,7 @@ public class BillController extends BaseController {
       String state,String state2,String searchStandard) throws UnsupportedEncodingException {
         offset=(offset-1)*limit;
        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        LoginUser loginUser=this.getCurrentAccount();
         if(!keywords.isEmpty())
         {
             try{
@@ -213,10 +271,12 @@ public class BillController extends BaseController {
             }
             params.put("searchName",searchName);
         }
-
-        if(!searchUserName.isEmpty())
+        if(!loginUser.hasRole("CUSTOMER"))
         {
-            params.put("searchUserNameId",searchUserName);
+            if(!searchUserName.isEmpty())
+            {
+                params.put("searchUserNameId",searchUserName);
+            }
         }
         if(!state.isEmpty())
         {

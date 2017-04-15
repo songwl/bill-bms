@@ -1,9 +1,6 @@
 package com.yipeng.bill.bms.service.impl;
 
-import com.yipeng.bill.bms.dao.BillCostMapper;
-import com.yipeng.bill.bms.dao.BillPriceMapper;
-import com.yipeng.bill.bms.dao.FundAccountMapper;
-import com.yipeng.bill.bms.dao.FundItemMapper;
+import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.service.BillCallCostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +21,9 @@ public class BillCallCostServiceImpl implements BillCallCostService {
 
     @Autowired
     private BillCostMapper billCostMapper;
+
+    @Autowired
+    private BillMapper billMapper;
 
     @Autowired
     private FundAccountMapper fundAccountMapper;
@@ -71,6 +71,10 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                     billCost.setCostDate(new Date()); //消费日期
                     billCost.setRanking(newRanking);
                     billCostMapper.insert(billCost);
+
+                    //新增达标天数
+                    bill.setStandardDays(bill.getStandardDays()+1);
+                    billMapper.updateByPrimaryKeySelective(bill);
 
                     //4.从资金账号扣减余额
                     FundAccount fundAccount = fundAccountMapper.selectByUserId(userId);

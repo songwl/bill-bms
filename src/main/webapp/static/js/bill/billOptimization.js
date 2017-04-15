@@ -1,8 +1,13 @@
 /**
  * Created by 鱼在我这里。 on 2017/3/19.
  */
+var website=null;
+var keywords=null;
+var searchName=null;
+var searchUserName=null;
+var searchState=2;
+var searchStandard=null;
 $(document).ready(function () {
-
 
     //复选框
     $("#OptimizationUpdate").click(function () {
@@ -54,13 +59,66 @@ $(document).ready(function () {
 
     })
 
+    //显示搜索内容
+    $(".search").click(function () {
+        if($(".Navs2").css("display")=="block"){
+            $(".Navs2").slideUp();
+
+        }
+        else
+        {
+            $(".Navs2").slideDown();
+
+        }
+    })
+    //搜索按钮
+    $("#searchButton").click(function () {
+
+        if($("#website").val()!="")//网址
+        {
+            website=$.trim($("#website").val());
+        }
+        else
+        {
+            website=null
+        }
+        if($("#keywords").val()!="")//关键词
+        {
+            keywords=$.trim($("#keywords").val())
+        }
+        else
+        {
+            keywords=null;
+        }
+        if($("#searchName option:selected").text()!="--请选择--")//搜索引擎
+        {
+            searchName=$("#searchName option:selected").text();
+        }
+        else
+        {
+            searchName=null;
+        }
+        if($("#searchUserName").val()!="--请选择--")//客户名称
+        {
+            searchUserName=  $("#searchUserName").val();
+        }
+        else
+        {
+            searchUserName=null;
+        }
+        if($("#searchStandard option:selected").val()!="--请选择--"&&$("#searchStandard option:selected").val()!="0")//是否达标
+        {
+            searchStandard=  $("#searchStandard").val();
+        }
+        else
+        {
+            searchStandard=null;
+        }
+        $('#myTable').bootstrapTable('refresh');
+    });
 
 
 })
-
-
-
-
 $(function () {
 
     //1.初始化Table
@@ -180,6 +238,11 @@ var TableInit = function () {
                         {
                             a="<span>" +">50"+"</span>";
                         }
+                        else
+                        {
+
+                            a="<span>"+value+"</span>";
+                        }
                         return a;
                     }
 
@@ -244,8 +307,6 @@ var TableInit = function () {
                     }
 
                 },
-
-
                 {
                     field: "standardDays",
                     align: 'center',
@@ -317,8 +378,12 @@ var TableInit = function () {
             sortName: params.sortName,
             website:$("#website").val(),
             way:2,
-            state:2
-
+            website:website,
+            keywords:keywords,
+            searchName:searchName,
+            searchUserName:searchUserName,
+            state:searchState,
+            searchStandard:searchStandard
         };
         return temp;
     }
@@ -326,10 +391,6 @@ var TableInit = function () {
         'click #details': function (e, value, row, index) {
             $("#billCostDetail").show();
             $(".modal-backdrop").show();
-
-
-
-
 
         }
 

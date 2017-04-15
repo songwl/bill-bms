@@ -29,15 +29,16 @@
 	
 	  	<title>${title}</title>
 	  	<!--common-->
-        <script src="${ctx}/static/js/public/jquery.js"></script>
-        <script src="${ctx}/static/js/public/bootstrap.min.js"></script>
-        <script src="${ctx}/static/js/public/bootstrap-table.js"></script>
-        <script src="${ctx}/static/js/public/bootstrap-table-zh-CN.js"></script>
-        <script src="${ctx}/static/js/public/bootstrap-table-export.js"></script>
-        <script src="${ctx}/static/js/public/pace.js"></script>
         <link href="${ctx}/static/css/public/font-awesome.min.css" rel="stylesheet">
         <link href="${ctx}/static/css/public/bootstrap.min.css" rel="stylesheet">
         <link href="${ctx}/static/css/public/bootstrap-table.css" rel="stylesheet">
+        <script src="${ctx}/static/js/public/jquery.js"></script>
+        <script src="${ctx}/static/js/public/bootstrap.min.js"></script>
+        <script src="${ctx}/static/js/public/bootstrap-table.js"></script>
+        <script src="${ctx}/static/js/public/bootstrap-table-export.js"></script>
+        <script src="${ctx}/static/js/public/bootstrap-table-zh-CN.js"></script>
+        <script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
+        <script src="${ctx}/static/js/public/pace.js"></script>
         <script type="text/javascript">
             var CTX = "${ctx}";
         </script>

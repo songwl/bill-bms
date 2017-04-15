@@ -6,9 +6,9 @@
 $(".dfpricecmt").click(function () {
     var search = $("#dfsearch option:selected").text();
     var rankend = $("#dfrankend").val();
-    var keyword = $("#dfkeyword").val();
-    var url = $("#dfurl").val();
-    var price = $("#dfprice").val();
+    var keyword = $.trim($("#dfkeyword").val());
+    var url = $.trim($("#dfurl").val());
+    var price = $.trim($("#dfprice").val());
     var customerIds = $("#selectDiffrent option:selected").val();
     var keywordarr = keyword.split('\n');
     var urlarr = url.split('\n');

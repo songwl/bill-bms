@@ -888,10 +888,6 @@ public class BillServiceimpl implements BillService {
             }
 
         }
-
-
-
-
         //查出搜索引擎
         BillSearchSupport billSearchSupport=  billSearchSupportMapper.selectByBillId(bill.getId());
         BillDetails billDetails=new BillDetails();
@@ -900,7 +896,6 @@ public class BillServiceimpl implements BillService {
         {
             if(user.hasRole("CUSTOMER"))
             {
-
                 BillPrice billPrice1=new BillPrice();
                 billPrice1.setBillId(bill.getId());
                 billPrice1.setOutMemberId(user.getId());
@@ -918,15 +913,12 @@ public class BillServiceimpl implements BillService {
                 User user2= userMapper.selectByPrimaryKey(billPriceList1.get(0).getOutMemberId());
                 billDetails.setUserName(user2.getUserName());
             }
-
         }
         else
         {
             User user1= userMapper.selectByPrimaryKey(billPriceList.get(0).getOutMemberId());
             billDetails.setUserName(user1.getUserName());
         }
-
-
         billDetails.setKeywords(bill.getKeywords());
         billDetails.setWebsite(bill.getWebsite());
         billDetails.setSearchName(billSearchSupport.getSearchSupport());
@@ -992,19 +984,12 @@ public class BillServiceimpl implements BillService {
             }
 
         }
-
         Double sum=billCostMapper.selectByPriceSum(map);
         if(sum!=null)
         {
             billDetails.setMonthConsumption(sum);
         }
-
-       //有问题 不需要查询 订单表里面有达标天数 最后一次查询排名 增加达标天数
-       Map<String,Object> map1=new HashMap<>();
-       map1.put("billId",bill.getId());
-       int count=billCostMapper.selectByPriceCount(map1);
-
-        billDetails.setStandardDays(count);
+        billDetails.setStandardDays(bill.getStandardDays());
         billDetails.setState(bill.getState());
         return billDetails;
     }
@@ -1060,6 +1045,12 @@ public class BillServiceimpl implements BillService {
         return 0;
     }
 
+    /**
+     * 优化启动
+     * @param params
+     * @param user
+     * @return
+     */
     @Override
     public int optimizationStart(Map<String, String[]> params, LoginUser user) {
         String[] checkboxLength=params.get("length");
@@ -1077,6 +1068,15 @@ public class BillServiceimpl implements BillService {
         return 0;
     }
 
+    /**
+     * 获取价格
+     * @param limit
+     * @param offset
+     * @param billId
+     * @param user
+     * @param way
+     * @return
+     */
     @Override
     public Map<String, Object> getPriceDetails(int limit,int offset,String billId, LoginUser user,String way) {
 

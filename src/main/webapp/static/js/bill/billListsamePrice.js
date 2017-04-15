@@ -3,18 +3,18 @@ $(".samepricecmt").click(function () {
 
 
     var search= $("#searchengineid option:selected").text();
-    var keyword= $("#keyword").val();
-    var url= $("#url").val();
+    var keyword= $.trim($("#keyword").val());
+    var url=$.trim($("#url").val());
 
 
-    var rankend = parseInt(jQuery("input[name='samePricerankend']").val());
-    var price = parseFloat(jQuery("input[name='samePriceprice']").val());
-    var rankend1 = parseInt(jQuery("input[name='samePricerankend1']").val());
-    var price1 = parseFloat(jQuery("input[name='samePriceprice1']").val());
-    var rankend2 = parseInt(jQuery("input[name='samePricerankend2']").val());
-    var price2 = parseFloat(jQuery("input[name='samePriceprice2']").val());
-    var rankend3 = parseInt(jQuery("input[name='samePricerankend3']").val());
-    var price3 = parseFloat(jQuery("input[name='samePriceprice3']").val());
+    var rankend = parseInt($.trim(jQuery("input[name='samePricerankend']").val()));
+    var price = parseFloat($.trim(jQuery("input[name='samePriceprice']").val()));
+    var rankend1 = parseInt($.trim(jQuery("input[name='samePricerankend1']").val()));
+    var price1 = parseFloat($.trim(jQuery("input[name='samePriceprice1']").val()));
+    var rankend2 = parseInt($.trim(jQuery("input[name='samePricerankend2']").val()));
+    var price2 = parseFloat($.trim(jQuery("input[name='samePriceprice2']").val()));
+    var rankend3 = parseInt($.trim(jQuery("input[name='samePricerankend3']").val()));
+    var price3 = parseFloat($.trim(jQuery("input[name='samePriceprice3']").val()));
     var customerIds=$("#sameSelect  option:selected").val();
 
     if (!isNaN(rankend) && !isNaN(rankend1) && !isNaN(rankend2) && !isNaN(rankend3)
@@ -52,14 +52,14 @@ $(".samepricecmt").click(function () {
             }
             else
             {
-                var Arankend = jQuery("input[name='samePricerankend']").val();
-                var Aprice = jQuery("input[name='samePriceprice']").val();
-                var Arankend1 = jQuery("input[name='samePricerankend1']").val();
-                var Aprice1 = jQuery("input[name='samePriceprice1']").val();
-                var Arankend2 = jQuery("input[name='samePricerankend2']").val();
-                var Aprice2 = jQuery("input[name='samePriceprice2']").val();
-                var Arankend3 =jQuery("input[name='samePricerankend3']").val();
-                var Aprice3 = jQuery("input[name='samePriceprice3']").val();
+                var Arankend = $("input[name='samePricerankend']").val();
+                var Aprice = $("input[name='samePriceprice']").val();
+                var Arankend1 = $("input[name='samePricerankend1']").val();
+                var Aprice1 = $("input[name='samePriceprice1']").val();
+                var Arankend2 = $("input[name='samePricerankend2']").val();
+                var Aprice2 = $("input[name='samePriceprice2']").val();
+                var Arankend3 =$("input[name='samePricerankend3']").val();
+                var Aprice3 = $("input[name='samePriceprice3']").val();
                 var customerId=$("#sameSelect  option:selected").val();
                 $.ajax({
                     type:"post",
@@ -122,9 +122,4 @@ $(".samepricecmt").click(function () {
         alert("前N名依次增大，并且值介于1-50之间，收费依次减小，并且值大于0小于1000；前N名和收费必须同时提供");
 
     }
-
-
-
-
-
 })

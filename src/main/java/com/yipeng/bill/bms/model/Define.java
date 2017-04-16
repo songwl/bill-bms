@@ -5,7 +5,7 @@ package com.yipeng.bill.bms.model;
  */
 public class Define {
     //平台token
-    public  static String token = "72F2D590D16463A5B6C1D5C0E37056BD";
+    public  static String token = "91A684A075E4EEFB359C08059B9677F5";
     //平台uid
     public   static String userId = "104982";
 }

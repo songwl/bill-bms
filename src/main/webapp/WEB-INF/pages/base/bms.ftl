@@ -136,22 +136,22 @@
 	<div class="page-container">
 		<div class="page-sidebar-wrapper" id="menuShow">
 			<div class="page-sidebar navbar-collapse collapse" style="border-right:1px solid #eee;background: #fff; " >
-				<ul class="page-sidebar-menu" id="page-sidebar-menu"  style="background: #fff; " >
+				<ul class="page-sidebar-menu" id="page-sidebar-menu"  style="background: #293038; " >
 					<li class="sidebar-toggler-wrapper">
 						<div class="sidebar-toggler hidden-phone">
 						</div>
 					</li>
-					<li class="start active" style="border-bottom: 1px solid #eee;" onclick="location.reload();">
+					<li class="start active" style="border-bottom: 1px solid #3d3d3d;" onclick="location.reload();">
 						<a href="#"  >
 							<i class="fa fa-home"></i><span class="title"> 首页 </span><span class="selected"></span>
 						</a>
 					</li>
 					<#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("ADMIN")||bmsModel.user.hasRole("COMMISSIONER")>
-					<li class="current" style="border-bottom: 1px solid #eee;">
+					<li class="current" style="border-bottom: 1px solid #3d3d3d;">
 						<a href="javascript:;">
 							<i class="fa fa-star-o"></i><span class="title"> 优化管理 </span><span class="arrow "></span>
 						</a>
-						<ul class="sub-menu" style="background: #eee;">
+						<ul class="sub-menu" style="background: #293038;">
                             <li>
                                 <a href="${ctx}/bill/list?way=2">
                                     关键词排名
@@ -176,7 +176,7 @@
 						</li>
 					</#if>
 					<#if bmsModel.user.hasRole("DISTRIBUTOR")>
-                        <li class="" style="border-bottom: 1px solid #eee;">
+                        <li class="" style="border-bottom: 1px solid #3d3d3d;">
                             <a href="javascript:;">
                                 <i class="fa fa-star-o"></i><span class="title"> 优化方管理 </span><span class="arrow "></span>
                             </a>
@@ -190,11 +190,11 @@
                         </li>
 					</#if>
 					<#if bmsModel.user.hasRole("DISTRIBUTOR")>
-                    <li class="" style="border-bottom: 1px solid #eee;">
+                    <li class="" style="border-bottom: 1px solid #3d3d3d;">
                         <a href="javascript:;">
                             <i class="fa fa-star-o"></i><span class="title"> 代理商管理 </span><span class="arrow "></span>
                         </a>
-                        <ul class="sub-menu" style="background: #eee;">
+                        <ul class="sub-menu" style="background: #293038;">
                             <li>
                                 <a href="${ctx}/bill/list?way=2">
                                     关键词排名
@@ -209,11 +209,11 @@
                     </li>
 				</#if>
 					<#if bmsModel.user.hasRole("DISTRIBUTOR")>
-                        <li class="" style="border-bottom: 1px solid #eee;">
+                        <li class="" style="border-bottom: 1px solid #3d3d3d;">
                             <a href="javascript:;">
                                 <i class="fa fa-star-o"></i><span class="title"> 客户管理 </span><span class="arrow "></span>
                             </a>
-                            <ul class="sub-menu" style="background: #eee;">
+                            <ul class="sub-menu" style="background: #293038;">
                                 <li>
                                     <a href="${ctx}/bill/billCustomer">
                                         关键词排名
@@ -228,11 +228,11 @@
                         </li>
 					</#if>
 					<#if bmsModel.user.hasRole("AGENT")>
-                        <li class="" style="border-bottom: 1px solid #eee;">
+                        <li class="" style="border-bottom: 1px solid #3d3d3d;">
                             <a href="javascript:;">
                                 <i class="fa fa-star-o"></i><span class="title"> 渠道商管理 </span><span class="arrow "></span>
                             </a>
-                            <ul class="sub-menu" style="background: #eee;">
+                            <ul class="sub-menu" style="background: #293038;">
                                 <li>
                                     <a href="${ctx}/bill/list?way=1">
                                         关键词排名
@@ -242,11 +242,11 @@
                         </li>
 					</#if>
 					<#if bmsModel.user.hasRole("AGENT")>
-                        <li class="" style="border-bottom: 1px solid #eee;">
+                        <li class="" style="border-bottom: 1px solid #3d3d3d;">
                             <a href="javascript:;">
                                 <i class="fa fa-star-o"></i><span class="title"> 客户管理 </span><span class="arrow "></span>
                             </a>
-                            <ul class="sub-menu" style="background: #eee;">
+                            <ul class="sub-menu" style="background: #293038;">
                                 <li>
                                     <a href="${ctx}/bill/billCustomer">
                                         关键词排名
@@ -261,11 +261,11 @@
                         </li>
 					</#if>
 					<#if bmsModel.user.hasRole("CUSTOMER")>
-                        <li class="" style="border-bottom: 1px solid #eee;">
+                        <li class="" style="border-bottom: 1px solid #3d3d3d;">
                             <a href="javascript:;">
                                 <i class="fa fa-star-o"></i><span class="title"> 优化管理 </span><span class="arrow "></span>
                             </a>
-                            <ul class="sub-menu"  style="background: #eee;">
+                            <ul class="sub-menu"  style="background: #293038;">
                                 <li>
                                     <a href="${ctx}/bill/list?way=1">
                                         关键词排名
@@ -276,11 +276,11 @@
 					</#if>
 
 					<#if bmsModel.user.hasRole("SUPER_ADMIN") >
-					<li class="" style="border-bottom: 1px solid #eee;">
+					<li class="" style="border-bottom: 1px solid #3d3d3d;">
 						<a href="javascript:;">
 							<i class="fa fa-paperclip"></i><span class="title"> 操作员管理 </span><span class="arrow "></span>
 						</a>
-						<ul class="sub-menu"  style="background: #eee;">
+						<ul class="sub-menu"  style="background: #293038;">
 							<li>
 								<a href="${ctx}/operator/list">
 									操作员列表
@@ -292,11 +292,11 @@
 		    		</#if>
 
 		<#if bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")>
-       			 <li class="" style="border-bottom: 1px solid #eee;">
+       			 <li class="" style="border-bottom: 1px solid #3d3d3d;">
 						<a href="javascript:;">
 							<i class="fa fa-magic"></i><span class="title"> 资金管理 </span><span class="arrow "></span>
 						</a>
-						<ul class="sub-menu"  style="background: #eee;">
+						<ul class="sub-menu"  style="background: #293038;">
 							<li>
                                 <a href="${ctx}/customer/customerList">
 									客户列表
@@ -318,11 +318,11 @@
 					</li>
 			</#if>
 				<#if bmsModel.user.hasRole("COMMISSIONER") >
-                    <li class="" style="border-bottom: 1px solid #eee;">
+                    <li class="" style="border-bottom: 1px solid #3d3d3d;">
                         <a href="javascript:;">
                             <i class="fa fa-line-chart"></i><span class="title"> 业绩管理 </span><span class="arrow "></span>
                         </a>
-                        <ul class="sub-menu"  style="background: #eee;">
+                        <ul class="sub-menu"  style="background: #293038;">
                             <li>
                                 <a href="${ctx}/achievement/achievementList">
                                     业绩详情
@@ -332,11 +332,11 @@
                         </ul>
                     </li>
                  </#if>
-					<li class="" style="border-bottom: 1px solid #eee;">
+					<li class="" style="border-bottom: 1px solid #3d3d3d;">
 						<a href="javascript:;">
 							<i class="fa fa-magnet"></i><span class="title"> 个人中心 </span><span class="arrow "></span>
 						</a>
-						<ul class="sub-menu"  style="background: #eee;">
+						<ul class="sub-menu"  style="background: #293038;">
 							<li class="updateUser">
 								<a href="javascript:;">
 									信息修改

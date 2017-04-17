@@ -56,7 +56,19 @@ public class RemoteServiceImpl implements RemoteService {
         return result;
     }
 
-   // 获取TASKID
+    @Override
+    public String insertYby(Map<String, String> params) {
+
+        try {
+            String body = send("http://yhapi.youbangyun.com/api/public/taskapi.aspx", params,"utf-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    // 获取TASKID
     public  String getTaskId(CustomerRankingParam params )throws ParseException, IOException, NoSuchAlgorithmException, JSONException
     {
 
@@ -118,4 +130,5 @@ public class RemoteServiceImpl implements RemoteService {
         response.close();
         return body;
     }
+
 }

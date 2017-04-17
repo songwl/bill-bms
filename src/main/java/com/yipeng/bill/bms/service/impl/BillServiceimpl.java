@@ -1,24 +1,31 @@
 package com.yipeng.bill.bms.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.google.gson.Gson;
 import com.yipeng.bill.bms.core.model.Page;
 import com.yipeng.bill.bms.core.utils.DateUtils;
 import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.model.Define;
 import com.yipeng.bill.bms.model.Md5_UrlEncode;
+import com.yipeng.bill.bms.model.Yby;
 import com.yipeng.bill.bms.service.BillService;
 import com.yipeng.bill.bms.service.RemoteService;
 import com.yipeng.bill.bms.vo.*;
+import net.minidev.json.JSONValue;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.hamcrest.text.IsEmptyString;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 import javax.servlet.http.HttpSession;
 import javax.xml.crypto.Data;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.beans.Encoder;
+import java.io.*;
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -606,6 +613,50 @@ public class BillServiceimpl implements BillService {
                 customerRankingParam.setwAction("AddSearchTask");
                 customerRankingParam.setwParam(wParam);
                 customerRankingParam.setwSign(wSign);
+
+                //调整点击录入订单
+                JSONObject jsonObject=new JSONObject();
+                int agid=100086;
+               jsonObject.put("agid",agid);
+                Date currentTime = new Date();
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+                String dateString = formatter.format(currentTime);
+               jsonObject.put("stamp",dateString);
+               String action="importkw";
+               jsonObject.put("action",action);
+               List<Yby> ybyList=new ArrayList<>();
+               Yby yby=new Yby();
+               yby.setKw("上海婚纱");
+               yby.setUrl("www.baidu.com");
+               yby.setSe(1);
+               yby.setMcpd(1);
+               ybyList.add(yby);
+               jsonObject.put("args",ybyList);
+               String md5Key="05FEF02A7833380DC7E3354E9DB37F08";
+               String str="";
+                str=str.concat(JSON.toJSONString(dateString));
+                str=str.concat(JSON.toJSONString(action));
+                str=str.concat(JSON.toJSONString(ybyList));
+                str=str.concat(JSON.toJSONString(md5Key));
+                str=str.concat(JSON.toJSONString(agid));
+                String sign=null;
+                try {
+                      sign=md5_urlEncode.EncoderByMd5Utf(str).toLowerCase();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+                jsonObject.put("sign",sign);
+                BASE64Encoder base64Encoder=new BASE64Encoder();
+                //1、使用JSONObject
+                JSONArray array=new JSONArray();
+
+               String data= base64Encoder.encode(jsonObject.toString().getBytes());
+                Map<String,String> map=new HashMap<>();
+                map.put("data",data);
+                remoteService.insertYby(map);
+
                 try {
                     //查询taskID
                     CustomerRankingResult customerRankingResult= remoteService.getCustomerRanking(customerRankingParam);

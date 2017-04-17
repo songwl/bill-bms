@@ -53,16 +53,11 @@
             <option value="1">是</option>
             <option value="0">否</option>
         </select>
-
         <span id="searchButton">查询</span>
-
-
-
     </div>
     <div class="cls">
     </div>
 </div>
-
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-primary" id="list-panel">

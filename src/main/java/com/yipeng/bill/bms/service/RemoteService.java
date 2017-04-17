@@ -5,6 +5,7 @@ import com.yipeng.bill.bms.vo.CustomerRankingResult;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 
 /**
  * Created by song on 17/4/11.
@@ -18,4 +19,6 @@ public interface RemoteService {
      * @return
      */
     CustomerRankingResult getCustomerRanking(CustomerRankingParam customerRankingParam) throws IOException, NoSuchAlgorithmException;
+
+    String insertYby(Map<String,String> params);
 }

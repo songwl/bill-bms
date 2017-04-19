@@ -58,13 +58,13 @@ public class RemoteServiceImpl implements RemoteService {
 
     @Override
     public String insertYby(Map<String, String> params) {
-
+        String body = null;
         try {
-            String body = send("http://yhapi.youbangyun.com/api/public/taskapi.aspx", params,"utf-8");
+            body = send("http://yhapi.youbangyun.com/api/public/taskapi.aspx", params,"utf-8");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return body;
     }
 
 

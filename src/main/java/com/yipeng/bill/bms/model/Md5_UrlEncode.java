@@ -46,7 +46,7 @@ public class Md5_UrlEncode {
      * @throws NoSuchAlgorithmException  没有这种产生消息摘要的算法
      * @throws UnsupportedEncodingException
      */
-    public  String EncoderByMd51(String source) throws NoSuchAlgorithmException, UnsupportedEncodingException{
+    public static String EncoderByMd51(String source) throws NoSuchAlgorithmException, UnsupportedEncodingException{
         String s = null;
         char [] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8',
                 '9', 'A', 'B', 'C', 'D', 'E', 'F'};

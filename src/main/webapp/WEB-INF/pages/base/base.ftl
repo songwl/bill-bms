@@ -37,7 +37,6 @@
         <script src="${ctx}/static/js/public/bootstrap-table.js"></script>
         <script src="${ctx}/static/js/public/bootstrap-table-export.js"></script>
         <script src="${ctx}/static/js/public/bootstrap-table-zh-CN.js"></script>
-        <script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
         <script src="${ctx}/static/js/public/pace.js"></script>
         <script type="text/javascript">
             var CTX = "${ctx}";

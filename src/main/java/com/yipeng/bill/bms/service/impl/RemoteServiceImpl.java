@@ -55,7 +55,7 @@ public class RemoteServiceImpl implements RemoteService {
 
         return result;
     }
-
+   //导入优帮云订单
     @Override
     public String insertYby(Map<String, String> params) {
         String body = null;
@@ -82,7 +82,6 @@ public class RemoteServiceImpl implements RemoteService {
 
     /**
      * 模拟请求
-     *
      * @param url       资源地址
      * @param map   参数列表
      * @param encoding  编码

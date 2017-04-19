@@ -1,8 +1,11 @@
 package com.yipeng.bill.bms.model;
 
+import com.alibaba.fastjson.annotation.JSONType;
+
 /**
  * Created by Administrator on 2017/4/17.
  */
+@JSONType(orders={"kw","url","se","mcpd"})
 public class Yby {
 
     /// <summary>

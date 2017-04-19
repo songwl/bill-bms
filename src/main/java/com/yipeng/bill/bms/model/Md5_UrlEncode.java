@@ -46,31 +46,25 @@ public class Md5_UrlEncode {
      * @throws NoSuchAlgorithmException  没有这种产生消息摘要的算法
      * @throws UnsupportedEncodingException
      */
-    public static String EncoderByMd51(String source) throws NoSuchAlgorithmException, UnsupportedEncodingException{
-        String s = null;
-        char [] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8',
-                '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-        final int temp = 0xf;
-        final int arraySize = 32;
-        final int strLen = 16;
-        final int offset = 4;
+
+    public  String EncoderByMd51(String origin) throws NoSuchAlgorithmException, UnsupportedEncodingException{
+        StringBuffer sb = new StringBuffer();
         try {
-            java.security.MessageDigest md = java.security.MessageDigest
-                    .getInstance("MD5");
-            md.update(source.getBytes("utf-8"));
-            byte [] tmp = md.digest();
-            char [] str = new char[arraySize];
-            int k = 0;
-            for (int i = 0; i < strLen; i++) {
-                byte byte0 = tmp[i];
-                str[k++] = hexDigits[byte0 >>> offset & temp];
-                str[k++] = hexDigits[byte0 & temp];
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(origin.getBytes("utf8"));
+            byte[] result = md.digest();
+            for (int i = 0; i < result.length; i++) {
+                //int val = result[i] & 0xff;
+                //sb.append(Integer.toHexString(val));
+                int val = (result[i] & 0x000000ff) | 0xffffff00;
+                sb.append(Integer.toHexString(val).substring(6));
             }
-            s = new String(str);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return s;
+
+        return sb.toString();
+
     }
 
     private  String toHexString(byte[] b) {

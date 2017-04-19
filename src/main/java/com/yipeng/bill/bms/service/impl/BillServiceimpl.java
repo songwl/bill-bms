@@ -2,6 +2,9 @@ package com.yipeng.bill.bms.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.google.gson.Gson;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.yipeng.bill.bms.core.model.Page;
 import com.yipeng.bill.bms.core.utils.DateUtils;
 import com.yipeng.bill.bms.dao.*;
@@ -12,10 +15,14 @@ import com.yipeng.bill.bms.model.Yby;
 import com.yipeng.bill.bms.service.BillService;
 import com.yipeng.bill.bms.service.RemoteService;
 import com.yipeng.bill.bms.vo.*;
+import net.minidev.json.JSONValue;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.http.HttpEntity;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.hamcrest.text.IsEmptyString;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sun.misc.BASE64Decoder;
@@ -623,7 +630,7 @@ public class BillServiceimpl implements BillService {
                 String md5Key="05FEF02A7833380DC7E3354E9DB37F08";
 
                 //取现在时间
-                String dateString = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+                String dateString ="20170419132110";
                 //填充实体类
                 List<Yby> ybyList=new ArrayList<Yby>();
                 //加密sign
@@ -632,6 +639,7 @@ public class BillServiceimpl implements BillService {
                 yby.setUrl("www.hunsha.com");
                 yby.setSe(1);
                 yby.setMcpd(1);
+
                 ybyList.add(yby);
                 //组包
                 String str="";
@@ -640,29 +648,46 @@ public class BillServiceimpl implements BillService {
                 str=str.concat(JSON.toJSONString(ybyList));
                 str=str.concat(JSON.toJSONString(md5Key));
                 str=str.concat(JSON.toJSONString(agid));
-
                 //加密sign
-                String sign=null;
+               String sign= null;
                 try {
-                     sign=md5_urlEncode.EncoderByMd51(str).toLowerCase();
+                    sign = md5_urlEncode.EncoderByMd51(str);
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
                 //创建JSON
-                JSONObject jsonObject=new JSONObject();
+                JSONObject jsonObject=new JSONObject(true);
+                jsonObject.put("action",action);
                 jsonObject.put("agid",agid);
                 jsonObject.put("stamp",dateString);
-                jsonObject.put("action",action);
                 jsonObject.put("args",JSON.toJSONString(ybyList).toString());
                 jsonObject.put("sign",sign);
 
                 BASE64Encoder base64Encoder=new BASE64Encoder();
-                String data= base64Encoder.encode(jsonObject.toString().replace("\\", "").replace("\"[", "[").replace("]\"", "]").replace("+", "%2B").getBytes());
+                String data= null;
+                try {
+                    data = base64Encoder.encode(jsonObject.toString().getBytes("UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                String dwqdq=null;
+                try {
+                    HttpResponse<String> jsonResponse = Unirest.post("http://yhapi.youbangyun.com/api/public/taskapi.aspx")
+                    .header("Content-type", "application/x-www-form-urlencoded")
+                    .header("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)")
+                   .field("data",data)
+                   .asString();
+                    dwqdq=  jsonResponse.getBody();
+                } catch (UnirestException e) {
+                    e.printStackTrace();
+                }
                 Map<String,String> map=new HashMap<String,String>();
+
                 map.put("data",data);
-                remoteService.insertYby(map);
+
+               // remoteService.insertYby(map);
 
                 try {
                     //查询taskID

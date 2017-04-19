@@ -15,7 +15,6 @@ import com.yipeng.bill.bms.model.Yby;
 import com.yipeng.bill.bms.service.BillService;
 import com.yipeng.bill.bms.service.RemoteService;
 import com.yipeng.bill.bms.vo.*;
-import net.minidev.json.JSONValue;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpEntity;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -658,17 +657,27 @@ public class BillServiceimpl implements BillService {
                     e.printStackTrace();
                 }
                 //创建JSON
-                JSONObject jsonObject=new JSONObject(true);
-                jsonObject.put("action",action);
-                jsonObject.put("agid",agid);
-                jsonObject.put("stamp",dateString);
-                jsonObject.put("args",JSON.toJSONString(ybyList).toString());
-                jsonObject.put("sign",sign);
+                JSONObject jaction=new JSONObject();
+                jaction.put("action",action);
+
+                JSONObject jagid=new JSONObject();
+                jagid.put("agid",agid);
+                JSONObject jstamp=new JSONObject();
+                jstamp.put("stamp",dateString);
+                JSONObject jargs=new JSONObject();
+                jargs.put("args",JSON.toJSONString(ybyList));
+                JSONObject jsign=new JSONObject();
+                jsign.put("sign",sign);
+                //拼接字符串
+                StringBuffer sb= new StringBuffer();
+               String str11= "{"+jagid.toString().replace("{","").replace("}","")+","+jstamp.toString().replace("{","").replace("}","")+","+
+                       jaction.toString().replace("{","").replace("}","")+","+jsign.toString().replace("{","").replace("}","")+","+
+                       jargs.toString().replace("\"[", "[").replace("]\"", "]").replace("\\","").replace("{\"args\"","\"args\"");
 
                 BASE64Encoder base64Encoder=new BASE64Encoder();
                 String data= null;
-                try {
-                    data = base64Encoder.encode(jsonObject.toString().getBytes("UTF-8"));
+                 try {
+                    data = base64Encoder.encode(str11.getBytes("UTF-8"));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }

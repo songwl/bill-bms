@@ -47,11 +47,11 @@ public class Md5_UrlEncode {
      * @throws UnsupportedEncodingException
      */
 
-    public  String EncoderByMd51(String origin) throws NoSuchAlgorithmException, UnsupportedEncodingException{
+    public  String EncoderByMd51(String origin1) throws NoSuchAlgorithmException, UnsupportedEncodingException{
         StringBuffer sb = new StringBuffer();
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(origin.getBytes("utf8"));
+            md.update(origin1.getBytes("utf8"));
             byte[] result = md.digest();
             for (int i = 0; i < result.length; i++) {
                 //int val = result[i] & 0xff;

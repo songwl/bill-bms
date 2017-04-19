@@ -12,7 +12,6 @@ import com.yipeng.bill.bms.model.Yby;
 import com.yipeng.bill.bms.service.BillService;
 import com.yipeng.bill.bms.service.RemoteService;
 import com.yipeng.bill.bms.vo.*;
-import net.minidev.json.JSONValue;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.hamcrest.text.IsEmptyString;
 import org.json.JSONArray;
@@ -617,43 +616,43 @@ public class BillServiceimpl implements BillService {
                 //调整点击录入订单
                 JSONObject jsonObject=new JSONObject();
                 int agid=100086;
+                String md5Key="05FEF02A7833380DC7E3354E9DB37F08";
+                String action="importkw";
+
                jsonObject.put("agid",agid);
                 Date currentTime = new Date();
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-                String dateString = formatter.format(currentTime);
-               jsonObject.put("stamp",dateString);
-               String action="importkw";
-               jsonObject.put("action",action);
-               List<Yby> ybyList=new ArrayList<>();
-               Yby yby=new Yby();
-               yby.setKw("上海婚纱");
-               yby.setUrl("www.baidu.com");
-               yby.setSe(1);
-               yby.setMcpd(1);
-               ybyList.add(yby);
-               jsonObject.put("args",ybyList);
-               String md5Key="05FEF02A7833380DC7E3354E9DB37F08";
-               String str="";
+                //取现在时间
+                String dateString = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+                //填充实体类
+                List<Yby> ybyList=new ArrayList<Yby>();
+                //加密sign
+                Yby yby=new Yby();
+                yby.setKw("xxx");
+                yby.setUrl("www.xxx.com");
+                yby.setSe(1);
+                yby.setMcpd(1);
+                ybyList.add(yby);
+                //组包
+                String str="";
                 str=str.concat(JSON.toJSONString(dateString));
                 str=str.concat(JSON.toJSONString(action));
                 str=str.concat(JSON.toJSONString(ybyList));
                 str=str.concat(JSON.toJSONString(md5Key));
                 str=str.concat(JSON.toJSONString(agid));
-                String sign=null;
-                try {
-                      sign=md5_urlEncode.EncoderByMd5Utf(str).toLowerCase();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                }
-                jsonObject.put("sign",sign);
-                BASE64Encoder base64Encoder=new BASE64Encoder();
-                //1、使用JSONObject
-                JSONArray array=new JSONArray();
+               // String sign=EncoderByMd5(str,"utf-8").toLowerCase();
 
-               String data= base64Encoder.encode(jsonObject.toString().getBytes());
-                Map<String,String> map=new HashMap<>();
+                //JSONArray jsonArray = JSONArray.optJSONObject(yby);
+                //创建JSON
+                JSONObject jsonObject1=new JSONObject();
+                jsonObject1.put("agid",agid);
+                jsonObject1.put("stamp",dateString);
+                jsonObject1.put("action",action);
+                jsonObject1.put("args",JSON.toJSONString(ybyList).toString());
+                //jsonObject1.put("sign",sign);
+
+                BASE64Encoder base64Encoder=new BASE64Encoder();
+                String data= base64Encoder.encode(jsonObject.toString().replace("\\", "").replace("\"[", "[").replace("]\"", "]").replace("+", "%2B").getBytes());
+                Map<String,String> map=new HashMap<String,String>();
                 map.put("data",data);
                 remoteService.insertYby(map);
 

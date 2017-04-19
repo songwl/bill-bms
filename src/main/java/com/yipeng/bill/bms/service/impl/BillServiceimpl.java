@@ -563,6 +563,7 @@ public class BillServiceimpl implements BillService {
                 String[] qkeyword = {billA.getKeywords()};
 
                 String[] qurl = {billA.getWebsite()};
+                //组合参数
                 int[] timeSet = { 9,12,15,19, };
                 JSONObject jsonObj = new JSONObject();
                 jsonObj.put("keyword", qkeyword);
@@ -571,6 +572,7 @@ public class BillServiceimpl implements BillService {
                 jsonObj.put("timeSet", timeSet);
                 jsonObj.put("userId", Define.userId);
                 jsonObj.put("businessType", 2006);
+                //判断搜索引擎
                  if (billSearchSupport.getSearchSupport().equals("百度"))
                  {
                      jsonObj.put("searchType", 1010);
@@ -613,22 +615,21 @@ public class BillServiceimpl implements BillService {
                 customerRankingParam.setwParam(wParam);
                 customerRankingParam.setwSign(wSign);
 
-                //调整点击录入订单
-                JSONObject jsonObject=new JSONObject();
-                int agid=100086;
-                String md5Key="05FEF02A7833380DC7E3354E9DB37F08";
-                String action="importkw";
 
-               jsonObject.put("agid",agid);
-                Date currentTime = new Date();
+
+                //调整点击录入订单
+                int agid=100086;
+                String action="importkw";
+                String md5Key="05FEF02A7833380DC7E3354E9DB37F08";
+
                 //取现在时间
                 String dateString = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
                 //填充实体类
                 List<Yby> ybyList=new ArrayList<Yby>();
                 //加密sign
                 Yby yby=new Yby();
-                yby.setKw("xxx");
-                yby.setUrl("www.xxx.com");
+                yby.setKw("上海婚纱");
+                yby.setUrl("www.hunsha.com");
                 yby.setSe(1);
                 yby.setMcpd(1);
                 ybyList.add(yby);
@@ -639,16 +640,23 @@ public class BillServiceimpl implements BillService {
                 str=str.concat(JSON.toJSONString(ybyList));
                 str=str.concat(JSON.toJSONString(md5Key));
                 str=str.concat(JSON.toJSONString(agid));
-               // String sign=EncoderByMd5(str,"utf-8").toLowerCase();
 
-                //JSONArray jsonArray = JSONArray.optJSONObject(yby);
+                //加密sign
+                String sign=null;
+                try {
+                     sign=md5_urlEncode.EncoderByMd51(str).toLowerCase();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
                 //创建JSON
-                JSONObject jsonObject1=new JSONObject();
-                jsonObject1.put("agid",agid);
-                jsonObject1.put("stamp",dateString);
-                jsonObject1.put("action",action);
-                jsonObject1.put("args",JSON.toJSONString(ybyList).toString());
-                //jsonObject1.put("sign",sign);
+                JSONObject jsonObject=new JSONObject();
+                jsonObject.put("agid",agid);
+                jsonObject.put("stamp",dateString);
+                jsonObject.put("action",action);
+                jsonObject.put("args",JSON.toJSONString(ybyList).toString());
+                jsonObject.put("sign",sign);
 
                 BASE64Encoder base64Encoder=new BASE64Encoder();
                 String data= base64Encoder.encode(jsonObject.toString().replace("\\", "").replace("\"[", "[").replace("]\"", "]").replace("+", "%2B").getBytes());
@@ -659,7 +667,7 @@ public class BillServiceimpl implements BillService {
                 try {
                     //查询taskID
                     CustomerRankingResult customerRankingResult= remoteService.getCustomerRanking(customerRankingParam);
-                    if(customerRankingResult!=null)
+                    if(customerRankingResult==null)
                     {
                         if(customerRankingResult.getMessage().equals("success."))
                         {

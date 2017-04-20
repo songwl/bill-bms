@@ -1,5 +1,6 @@
 package com.yipeng.bill.bms.service;
 
+import com.yipeng.bill.bms.vo.CustomerOptimizationResult;
 import com.yipeng.bill.bms.vo.CustomerRankingParam;
 import com.yipeng.bill.bms.vo.CustomerRankingResult;
 
@@ -20,5 +21,5 @@ public interface RemoteService {
      */
     CustomerRankingResult getCustomerRanking(CustomerRankingParam customerRankingParam) throws IOException, NoSuchAlgorithmException;
 
-    String insertYby(Map<String,String> params);
+    CustomerOptimizationResult insertYby(Map<String,String> params);
 }

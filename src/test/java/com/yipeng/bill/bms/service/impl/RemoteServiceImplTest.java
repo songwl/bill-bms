@@ -65,13 +65,7 @@ public class RemoteServiceImplTest {
 
         //加密sign
         String sign=null;
-        try {
-            sign= Md5_UrlEncode.EncoderByMd51(sb.toString()).toLowerCase();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+
         //创建JSON
         JSONObject jsonObject=new JSONObject();
         jsonObject.put("agid",agid);

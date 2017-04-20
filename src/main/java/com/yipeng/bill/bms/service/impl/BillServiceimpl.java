@@ -83,7 +83,7 @@ public class BillServiceimpl implements BillService {
         String[] rankend3=params.get("rankend3");
         String[] price3=params.get("price3");
         String[] urls=urlsArr[0].split("\n");
-        String[] keywords=keywordsArr[0].split("\n");
+        String[] keywords=keywordsArr[0].split("\t\n");
         String[] search=params.get("search");
         String[] customerId=params.get("customerId");
         String errorDetails="";
@@ -167,7 +167,7 @@ public class BillServiceimpl implements BillService {
         String[] dfkeywordsArr=params.get("dfkeyword");
         String[] dfpricesArr=params.get("dfprice");
         String[] dfurls=dfurlsArr[0].split("\n");
-        String[] dfkeywords=dfkeywordsArr[0].split("\n");
+        String[] dfkeywords=dfkeywordsArr[0].split("\t\n");
         String[] dfprices=dfpricesArr[0].split("\n");
         String[] dfsearch=params.get("dfsearch");
         String[] dfrankend=params.get("dfrankend");
@@ -190,11 +190,11 @@ public class BillServiceimpl implements BillService {
                           ) {
                      //查询每个订单对应的搜索引擎名
                       BillSearchSupport billSearchSupport=billSearchSupportMapper.selectByBillId(bill.getId());
-                      if (billSearchSupport.getSearchSupport().equals(dfsearch))
+                      if (billSearchSupport.getSearchSupport().equals(dfsearch[0]))
                       {
                           bool=false;
                           errorDetails+=+(i+1)+"网址："+dfurls[i]+"  关键词："+dfkeywords[i]+" ";
-
+                           break;
                       }
                   }
                   if(bool)
@@ -219,8 +219,8 @@ public class BillServiceimpl implements BillService {
                       bill.setFirstRanking(200);
                       bill.setNewRanking(200);
                       bill.setStandardDays(0);
-                      bill.setDayOptimization(1);
-                      bill.setAllOptimization(1);
+                      bill.setDayOptimization(0);
+                      bill.setAllOptimization(0);
                       bill.setState(state);
                       Long billId=billMapper.insert(bill);
                       //订单引擎表
@@ -263,8 +263,8 @@ public class BillServiceimpl implements BillService {
                   bill.setFirstRanking(200);
                   bill.setNewRanking(200);
                   bill.setStandardDays(0);
-                  bill.setDayOptimization(1);
-                  bill.setAllOptimization(1);
+                  bill.setDayOptimization(0);
+                  bill.setAllOptimization(0);
                   bill.setState(state);
                   Long billId=billMapper.insert(bill);
                   //订单引擎表
@@ -404,9 +404,6 @@ public class BillServiceimpl implements BillService {
      */
     @Override
     public int updateBillPrice(Map<String, String[]>  params,User user) {
-
-
-
         return 0;
     }
 
@@ -528,7 +525,7 @@ public class BillServiceimpl implements BillService {
      */
     @Override
     public int adminPrice(Map<String, String[]> params, User user) {
-
+       //获取参数
         String[] bill = params.get("rankend1");
         String[] selectContent = params.get("selectContent[0][userName]");
         String[] checkboxLength = params.get("checkboxLength");
@@ -629,13 +626,13 @@ public class BillServiceimpl implements BillService {
                 String md5Key="05FEF02A7833380DC7E3354E9DB37F08";
 
                 //取现在时间
-                String dateString ="20170419132110";
+                String dateString =new  SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
                 //填充实体类
                 List<Yby> ybyList=new ArrayList<Yby>();
                 //加密sign
                 Yby yby=new Yby();
-                yby.setKw("上海婚纱");
-                yby.setUrl("www.hunsha.com");
+                yby.setKw(billA.getKeywords());
+                yby.setUrl(billA.getWebsite());
                 yby.setSe(1);
                 yby.setMcpd(1);
 
@@ -659,7 +656,6 @@ public class BillServiceimpl implements BillService {
                 //创建JSON
                 JSONObject jaction=new JSONObject();
                 jaction.put("action",action);
-
                 JSONObject jagid=new JSONObject();
                 jagid.put("agid",agid);
                 JSONObject jstamp=new JSONObject();
@@ -669,11 +665,11 @@ public class BillServiceimpl implements BillService {
                 JSONObject jsign=new JSONObject();
                 jsign.put("sign",sign);
                 //拼接字符串
-                StringBuffer sb= new StringBuffer();
                String str11= "{"+jagid.toString().replace("{","").replace("}","")+","+jstamp.toString().replace("{","").replace("}","")+","+
                        jaction.toString().replace("{","").replace("}","")+","+jsign.toString().replace("{","").replace("}","")+","+
                        jargs.toString().replace("\"[", "[").replace("]\"", "]").replace("\\","").replace("{\"args\"","\"args\"");
 
+                //Base64  编码
                 BASE64Encoder base64Encoder=new BASE64Encoder();
                 String data= null;
                  try {
@@ -681,33 +677,28 @@ public class BillServiceimpl implements BillService {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-                String dwqdq=null;
-                try {
-                    HttpResponse<String> jsonResponse = Unirest.post("http://yhapi.youbangyun.com/api/public/taskapi.aspx")
-                    .header("Content-type", "application/x-www-form-urlencoded")
-                    .header("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)")
-                   .field("data",data)
-                   .asString();
-                    dwqdq=  jsonResponse.getBody();
-                } catch (UnirestException e) {
-                    e.printStackTrace();
-                }
                 Map<String,String> map=new HashMap<String,String>();
-
                 map.put("data",data);
-
-               // remoteService.insertYby(map);
-
                 try {
-                    //查询taskID
+                    //查排名返回对象（导入订单）
                     CustomerRankingResult customerRankingResult= remoteService.getCustomerRanking(customerRankingParam);
-                    if(customerRankingResult==null)
+                    //调点击返回对象（导入订单）
+                    CustomerOptimizationResult customerOptimizationResult=remoteService.insertYby(map);
+                    //判断两个返回结果是否为空
+                    if(customerRankingResult!=null&&customerOptimizationResult!=null)
                     {
-                        if(customerRankingResult.getMessage().equals("success."))
+                        //判断两个返回结果是否成功
+                        JSONObject jsonObject=customerOptimizationResult.getArgs();
+                        String  code=jsonObject.get("code").toString();
+                        JSONArray OptimizationValue=jsonObject.getJSONArray("value");
+                        String message= OptimizationValue.getJSONArray(0).get(1).toString();
+
+                        if(customerRankingResult.getMessage().equals("success.")&&("success").equals(code)&&("").equals(message))
                         {
                            JSONArray value=customerRankingResult.getValue();
                            JSONArray valueJSONArray= value.getJSONArray(0);
                            ApiId=Integer.parseInt(valueJSONArray.get(0).toString());
+                           int ApiId1=Integer.parseInt(OptimizationValue.getJSONArray(0).get(0).toString());
                            //录入价格
                             BillPrice billPrice=new BillPrice();
                             billPrice.setBillId(billId);
@@ -724,6 +715,8 @@ public class BillServiceimpl implements BillService {
                             bill1.setId(billId);
                             bill1.setUpdateUserId(user.getId());
                             bill1.setWebAppId(ApiId);
+                            bill1.setWebAppId1(ApiId1);
+                            bill1.setDayOptimization(1);
                             bill1.setBillAscription(caozuoyuanId);
                             bill1.setState(2);
                             billMapper.updateByPrimaryKeySelective(bill1);

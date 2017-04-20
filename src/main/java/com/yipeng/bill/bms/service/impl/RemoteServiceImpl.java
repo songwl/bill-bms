@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 import com.yipeng.bill.bms.model.Md5_UrlEncode;
 import com.yipeng.bill.bms.service.RemoteService;
+import com.yipeng.bill.bms.vo.CustomerOptimizationResult;
 import com.yipeng.bill.bms.vo.CustomerRankingParam;
 import com.yipeng.bill.bms.vo.CustomerRankingResult;
 import org.apache.http.HttpEntity;
@@ -57,14 +58,25 @@ public class RemoteServiceImpl implements RemoteService {
     }
    //导入优帮云订单
     @Override
-    public String insertYby(Map<String, String> params) {
-        String body = null;
+    public CustomerOptimizationResult insertYby(Map<String, String> params) {
+        //返回对象
+        CustomerOptimizationResult customerOptimizationResult=new CustomerOptimizationResult();
+
         try {
-            body = send("http://yhapi.youbangyun.com/api/public/taskapi.aspx", params,"utf-8");
+            String body  = send("http://yhapi.youbangyun.com/api/public/taskapi.aspx", params,"utf-8");
+            //填充实体
+            JSONObject myJsonObject = new JSONObject(body);
+            JSONObject  value =myJsonObject.getJSONObject("args") ;
+            customerOptimizationResult.setAgid(Integer.parseInt(myJsonObject.get("agid").toString()));
+            customerOptimizationResult.setStamp(myJsonObject.get("stamp").toString());
+            customerOptimizationResult.setAction(myJsonObject.get("action").toString());
+            customerOptimizationResult.setSign(myJsonObject.get("sign").toString());
+            customerOptimizationResult.setArgs(value);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return body;
+        return customerOptimizationResult;
     }
 
 

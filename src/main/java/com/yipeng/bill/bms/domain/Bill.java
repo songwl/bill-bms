@@ -23,6 +23,7 @@ public class Bill implements Serializable {
     private Integer newRanking;
 
     private Integer webAppId;
+    private Integer webAppId1;
     private Integer standardDays;
 
     private Integer dayOptimization;
@@ -112,6 +113,15 @@ public class Bill implements Serializable {
 
     public void setWebAppId(Integer webAppId) {
         this.webAppId = webAppId;
+    }
+
+
+    public Integer getWebAppId1() {
+        return webAppId1;
+    }
+
+    public void setWebAppId1(Integer webAppId1) {
+        this.webAppId1 = webAppId1;
     }
 
     public Integer getStandardDays() {

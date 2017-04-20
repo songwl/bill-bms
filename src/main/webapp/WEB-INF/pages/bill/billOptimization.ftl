@@ -10,6 +10,12 @@
         <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>关键词优化</span>
     </div>
     <div class="nav_R right" id="divQx">
+        <div id="OptimizationUpdate">
+            <span>&nbsp;<i class="fa fa-apple"></i>&nbsp;优化调整</span>
+        </div>
+        <div id="OptimizationUpdate">
+            <span>&nbsp;<i class="fa fa-stop"></i>&nbsp;优化停止</span>
+        </div>
         <div class="search">
             <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
         </div>
@@ -73,12 +79,7 @@
                     </div>
                     <div class="cls"></div>
                 </div>
-                <div id="toolbar" class="btn-group">
 
-                    <button id="OptimizationUpdate" type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-apple" aria-hidden="true" id=""></span> 优化调整
-                    </button>
-                </div>
                 <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%">
                 </table>
             </div>

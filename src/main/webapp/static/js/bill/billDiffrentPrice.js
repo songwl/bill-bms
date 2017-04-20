@@ -5,7 +5,7 @@
 //不同价订单导入
 $(".dfpricecmt").click(function () {
     var search = $("#dfsearch option:selected").text();
-    var rankend = $("#dfrankend").val();
+    var rankend = $.trim($("#dfrankend").val());
     var keyword = $.trim($("#dfkeyword").val());
     var url = $.trim($("#dfurl").val());
     var price = $.trim($("#dfprice").val());

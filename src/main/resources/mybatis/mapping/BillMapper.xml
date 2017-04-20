@@ -12,13 +12,14 @@
     <result column="first_ranking" jdbcType="INTEGER" property="firstRanking" />
     <result column="new_ranking" jdbcType="INTEGER" property="newRanking" />
     <result column="web_app_id" jdbcType="INTEGER" property="webAppId" />
+    <result column="web_app_id1" jdbcType="INTEGER" property="webAppId1" />
     <result column="day_optimization" jdbcType="INTEGER" property="dayOptimization" />
     <result column="all_optimization" jdbcType="INTEGER" property="allOptimization" />
     <result column="state" jdbcType="INTEGER" property="state" />
   </resultMap>
   <sql id="Base_Column_List">
     id, website, keywords, create_time, update_time, create_user_id, update_user_id, 
-    first_ranking, new_ranking, web_app_id,standard_days, day_optimization, all_optimization, state,bill_ascription
+    first_ranking, new_ranking, web_app_id,web_app_id1,standard_days, day_optimization, all_optimization, state,bill_ascription
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -34,12 +35,12 @@
     insert into t_bill (id, website, keywords, 
       create_time, update_time, create_user_id, 
       update_user_id, first_ranking, new_ranking, 
-      web_app_id,standard_days, day_optimization, all_optimization,
+      web_app_id,web_app_id1,standard_days, day_optimization, all_optimization,
       state,bill_ascription)
     values (#{id,jdbcType=BIGINT}, #{website,jdbcType=VARCHAR}, #{keywords,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=BIGINT}, 
       #{updateUserId,jdbcType=BIGINT}, #{firstRanking,jdbcType=INTEGER}, #{newRanking,jdbcType=INTEGER}, 
-      #{webAppId,jdbcType=INTEGER}, #{standardDays,jdbcType=INTEGER}, #{dayOptimization,jdbcType=INTEGER}, #{allOptimization,jdbcType=INTEGER},
+      #{webAppId,jdbcType=INTEGER},#{webAppId1,jdbcType=INTEGER}, #{standardDays,jdbcType=INTEGER}, #{dayOptimization,jdbcType=INTEGER}, #{allOptimization,jdbcType=INTEGER},
       #{state,jdbcType=INTEGER},#{billAscription,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.Bill">
@@ -74,6 +75,9 @@
       </if>
       <if test="webAppId != null">
         web_app_id,
+      </if>
+      <if test="webAppId1 != null">
+        web_app_id1,
       </if>
       <if test="standardDays != null">
         standard_days,
@@ -122,6 +126,9 @@
       <if test="webAppId != null">
         #{webAppId,jdbcType=INTEGER},
       </if>
+      <if test="webAppId1 != null">
+        #{webAppId1,jdbcType=INTEGER},
+      </if>
       <if test="standardDays != null">
         #{standardDays,jdbcType=INTEGER},
       </if>
@@ -169,6 +176,9 @@
       <if test="webAppId != null">
         web_app_id = #{webAppId,jdbcType=INTEGER},
       </if>
+      <if test="webAppId1 != null">
+        web_app_id1 = #{webAppId1,jdbcType=INTEGER},
+      </if>
       <if test="standardDays != null">
         standard_days = #{standardDays,jdbcType=INTEGER},
       </if>
@@ -198,6 +208,7 @@
       first_ranking = #{firstRanking,jdbcType=INTEGER},
       new_ranking = #{newRanking,jdbcType=INTEGER},
       web_app_id = #{webAppId,jdbcType=INTEGER},
+      web_app_id1 = #{webAppId1,jdbcType=INTEGER},
        standard_days = #{standardDays,jdbcType=INTEGER},
       day_optimization = #{dayOptimization,jdbcType=INTEGER},
       all_optimization = #{allOptimization,jdbcType=INTEGER},
@@ -292,6 +303,9 @@
      <if test="webAppId != null">
       AND  web_app_id = #{webAppId,jdbcType=INTEGER}
     </if>
+    <if test="webAppId1 != null">
+      AND  web_app_id1 = #{webAppId1,jdbcType=INTEGER}
+    </if>
      <if test="standardDays != null">
        AND  standard_days = #{standardDays,jdbcType=INTEGER}
     </if>
@@ -349,6 +363,9 @@
     </if>
     <if test="webAppId != null">
       AND  a.web_app_id = #{webAppId,jdbcType=INTEGER}
+    </if>
+    <if test="webAppId1 != null">
+      AND  web_app_id1 = #{webAppId1,jdbcType=INTEGER}
     </if>
     <if test="standardDays != null">
       AND  a.standard_days = #{standardDays,jdbcType=INTEGER}
@@ -434,6 +451,9 @@
     </if>
     <if test="webAppId != null">
       AND  web_app_id = #{webAppId,jdbcType=INTEGER}
+    </if>
+    <if test="webAppId1 != null">
+      AND  web_app_id1 = #{webAppId1,jdbcType=INTEGER}
     </if>
     <if test="standardDays != null">
       AND  standard_days = #{standardDays,jdbcType=INTEGER}
@@ -530,6 +550,9 @@
     <if test="webAppId != null">
       AND  a.web_app_id = #{webAppId,jdbcType=INTEGER}
     </if>
+    <if test="webAppId1 != null">
+      AND  web_app_id1 = #{webAppId1,jdbcType=INTEGER}
+    </if>
     <if test="standardDays != null">
       AND  a.standard_days = #{standardDays,jdbcType=INTEGER}
     </if>
@@ -593,6 +616,9 @@
     </if>
     <if test="webAppId != null">
       AND  a.web_app_id = #{webAppId,jdbcType=INTEGER}
+    </if>
+    <if test="webAppId1 != null">
+      AND  web_app_id1 = #{webAppId1,jdbcType=INTEGER}
     </if>
     <if test="standardDays != null">
       AND  a.standard_days = #{standardDays,jdbcType=INTEGER}
@@ -665,6 +691,9 @@
     </if>
     <if test="webAppId != null">
       AND  a.web_app_id = #{webAppId,jdbcType=INTEGER}
+    </if>
+    <if test="webAppId1 != null">
+      AND  web_app_id1 = #{webAppId1,jdbcType=INTEGER}
     </if>
     <if test="standardDays != null">
       AND  a.standard_days = #{standardDays,jdbcType=INTEGER}

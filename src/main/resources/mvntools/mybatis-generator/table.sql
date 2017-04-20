@@ -92,6 +92,7 @@
     `first_ranking` INT NULL COMMENT '初始排名',
     `new_ranking` INT NULL COMMENT '新的排名',
     `web_app_id` INT NULL COMMENT '订单接口调用查询ID',
+    `web_app_id1` INT NULL COMMENT '调点击接口调用查询ID',
     `standard_days` INT NULL COMMENT '达标天数',
     `day_optimization` INT NULL COMMENT '日优化（初始值为1）可以调整数值，调整参数时，调用接口传入参数',
     `all_optimization` INT NULL COMMENT '总优化（计算总优化数）',
@@ -186,3 +187,29 @@
     PRIMARY KEY (`id`)  COMMENT '')
   ENGINE = InnoDB
   COMMENT = '数据字典表';
+
+ CREATE TABLE IF NOT EXISTS `t_notice` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
+    `title` VARCHAR(256) NULL COMMENT '标题',
+    `content` VARCHAR(128) NULL COMMENT '内容',
+    `create_time` DATETIME NULL COMMENT '发布时间',
+    `update_time` DATETIME NULL COMMENT '',
+    `create_user_id` BIGINT NULL COMMENT '发布对象',
+    `update_user_id` BIGINT NULL COMMENT '',
+    PRIMARY KEY (`id`)  COMMENT '')
+  ENGINE = InnoDB
+  COMMENT = '通知表';
+
+
+ CREATE TABLE IF NOT EXISTS `t_notice_user` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
+    `t_notice_id`  BIGINT NOT NULL COMMENT '通知表ID',
+    `user_id`  BIGINT NOT NULL COMMENT '用户编号',
+    `status` TINYINT(1) NOT NULL DEFAULT 0 COMMENT '1：已阅读；0：未阅读 ',
+    `create_time` DATETIME NULL COMMENT '发布时间',
+    `update_time` DATETIME NULL COMMENT '',
+    `create_user_id` BIGINT NULL COMMENT '发布对象',
+    `update_user_id` BIGINT NULL COMMENT '',
+    PRIMARY KEY (`id`)  COMMENT '')
+  ENGINE = InnoDB
+  COMMENT = '通知表';

@@ -332,6 +332,37 @@
                         </ul>
                     </li>
                  </#if>
+
+                    <#if bmsModel.user.hasRole("SUPER_ADMIN") || bmsModel.user.hasRole("COMMISSIONER") >
+                        <li class="" style="border-bottom: 1px solid #3d3d3d;">
+                            <a href="javascript:;">
+                                <i class="fa fa-line-chart"></i><span class="title"> 优化工具 </span><span class="arrow "></span>
+                            </a>
+                            <ul class="sub-menu"  style="background: #293038;">
+                                <li>
+                                    <a href="#">
+                                        关键词排名查询
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        关键词指数查询
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        关键词价格查询
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        网址收录查询
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </li>
+                    </#if>
 					<li class="" style="border-bottom: 1px solid #3d3d3d;">
 						<a href="javascript:;">
 							<i class="fa fa-magnet"></i><span class="title"> 个人中心 </span><span class="arrow "></span>

@@ -9,7 +9,7 @@ var searchState=2;
 var searchStandard=null;
 $(document).ready(function () {
 
-    //复选框
+    //优化调整（显示）
     $("#OptimizationUpdate").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
         if(selectContent == "") {
@@ -18,9 +18,78 @@ $(document).ready(function () {
         }else{
             $(".modal-backdrop").show();
             $(".OptimizationUpdateDiv").slideDown();
+           $("#OptimizationUpdateSelect").empty();
+            $("#OptimizationUpdateSelect").append("<option value=''>--请选择--</option>")
+           for(var i=1;i<=100;i++)
+           {
 
+               $("#OptimizationUpdateSelect").append( "<option value='"+i+"'>"+i+"</option>");
+           }
         }
     })
+    //优化上线
+    $("#OptimizationStart").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        if(selectContent == "") {
+            alert('请选择一列数据!');
+
+        }else{
+            if(confirm("是否上线优化？"))
+            {
+                var len =selectContent.length;
+                var state=1;
+                $.ajax({
+                    type:"post",
+                    url:CTX+"/bill/OptimizationStop",
+                    data:{selectContent:selectContent,length:len,state:state},
+                    success:function (result) {
+                        if(result.code==200)
+                        {
+                            alert(result.message);
+                            $('#myTable').bootstrapTable('refresh');
+                        }
+                        else
+                        {
+                            alert(result.message);
+                        }
+
+                    }
+                })
+            }
+        }
+    })
+    //优化离线
+    $("#OptimizationStop").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        if(selectContent == "") {
+            alert('请选择一列数据!');
+
+        }else{
+          if(confirm("是否离线优化？"))
+          {
+              var len =selectContent.length;
+              var state=100;
+              $.ajax({
+                  type:"post",
+                  url:CTX+"/bill/OptimizationStop",
+                  data:{selectContent:selectContent,length:len,state:state},
+                  success:function (result) {
+                      if(result.code==200)
+                      {
+                          alert(result.message);
+                          $('#myTable').bootstrapTable('refresh');
+                      }
+                      else
+                      {
+                          alert(result.message);
+                      }
+
+                  }
+              })
+          }
+        }
+    })
+
     $(".close").click(function () {
         $(".modal-backdrop").hide();
         $(".OptimizationUpdateDiv").slideUp();
@@ -330,19 +399,19 @@ var TableInit = function () {
 
                 },
                 {
-                    field: "state",
+                    field: "opstate",
                     align: 'center',
                     valign: 'middle',
-                    title: '合作状态',
+                    title: '优化状态',
                     formatter:function (value,row,index) {
                         var a="";
-                        if(value==2)
+                        if(value==1)
                         {
                             a="<span style='color:#94b86e;'>优化中</span>";
                         }
                         else
                         {
-                            a="<span>合作停</span>";
+                            a="<span>离线</span>";
                         }
                         return a;
                     }

@@ -2,23 +2,86 @@
 <#import "/base/func.ftl" as func>
 <@base.html "用户登录">
 <link href="${ctx}/static/css/user/login.css" rel="stylesheet">
-<form action="${rc.contextPath}/login" method="post">
-<div class="login">
-    <div class="message">翊芃网络科技有限公司</div>
-    <div id="darkbannerwrap"></div>
+<link href="${ctx}/static/css/user/index.css" rel="stylesheet">
+<link href="${ctx}/static/css/user/style.css" rel="stylesheet">
+<link href="${ctx}/static/css/user/account_common.css" rel="stylesheet">
 
-    <input name="action" value="login" type="hidden">
-    <input name="userName" placeholder="用户名" required="" type="text" id="Text1">
-    <hr class="hr15">
-    <input name="password" placeholder="密码" required="" type="password" id="Text2">
-    <hr class="hr15">
-    <div class="state"></div>
-    <#if loginFailureMessage??><div style="color:red;">${loginFailureMessage!""}</div></#if>
-    <input value="登录" style="width:100%;" type="submit" id="dengru">
-
-    <div class="zhuce"> <a href="${rc.contextPath}/user/register">立即注册</a></div>
-    <div class="clear"></div>
-    <hr class="hr20">
+<div id="header" data-spm="1">
+    <div class="header-layout y-row" style="min-width: 1000px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;">
+        <h1 class="logo" id="logo">
+            <a href="http://www.aliyun.com" data-spm-anchor-id="0.0.0.0">阿里云</a></h1>
+        <h2 class="logo-title">登录</h2>
+        <ul class="header-nav">
+            <li class="nav-first">
+                <a href="#" target="_blank">阿里云首页</a></li>
+            <li>
+                <a href="#" target="_blank">万网首页</a></li>
+            <li>
+                <a href="#" target="_blank">帮助与文档</a></li>
+            <li>
+                <a href="#" target="_blank">论坛</a></li>
+        </ul>
+    </div>
 </div>
-</form>
+<div class="content">
+
+    <div  style="height:300px;width:300px; border:1px solid #D4D4D4; float:left;margin-left:350px;border-radius:5px;"></div>
+
+    <div id="login-module">
+        <div id="login-wrap" class=" login-static  nc-outer-box">
+            <div style="background:#EBEBEB;height:40px;line-height:40px;text-indent:20px;font-weight:800;">
+                优搜云会员登录
+            </div>
+            <form  action="${rc.contextPath}/login" method="post">
+                <div id="login-loading" class="loading-mask">
+                    <div class="loading-icon"></div>
+                    <div class="loading-mask-body"></div>
+                </div>
+
+
+                <div id="login-content" class="form clr" style="width:250px;margin:0 auto;">
+
+                    <dl>
+                        <dt class="fm-label">
+                        <div class="fm-label-wrap clr">
+
+                            <label for="fm-login-id">登录名 :</label></div>
+                        </dt>
+                        <dd id="fm-login-id-wrap" class="fm-field">
+                            <div class="fm-field-wrap ">
+                                <div id="account-check-loading" class="loading-mask">
+                                    <div class="loading-icon"></div>
+                                    <div class="loading-mask-body"></div>
+                                </div>
+                                <input id="fm-login-id" class="fm-text" name="userName" tabindex="1" placeholder="6位ID" value="" autocorrect="off" autocapitalize="off"></div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt class="fm-label">
+                        <div class="fm-label-wrap clr">
+
+                            <label for="fm-login-password">登录密码:</label></div>
+                        </dt>
+                        <dd id="fm-login-password-wrap" class="fm-field">
+                            <div class="fm-field-wrap">
+                                <input id="fm-login-password" class="fm-text" name="password" tabindex="2" placeholder="登录密码" autocorrect="off" autocapitalize="off" type="password"></div>
+                        </dd>
+                    </dl>
+                </div>
+                <div id="login-submit" style="margin:20px 0 0 20px;">
+                    <#if loginFailureMessage??><div style="color:red;">${loginFailureMessage!""}</div></#if>
+                    <input id="fm-login-submit" value="登录" class="fm-button1 fm-submit" tabindex="4" name="submit-btn" type="submit" style="width: 236px;margin:0 auto;></div>
+                <div id="login-other">
+                    <div class="register">
+                        <a href="${rc.contextPath}/user/register">免费注册</a></div>
+                </div>
+        </div>
+    </div>
+</div>
+<div class="module-wrap ">
+
+</div>
 </@base.html>

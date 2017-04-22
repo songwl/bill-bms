@@ -21,5 +21,5 @@ public interface RemoteService {
      */
     CustomerRankingResult getCustomerRanking(CustomerRankingParam customerRankingParam) throws IOException, NoSuchAlgorithmException;
 
-    CustomerOptimizationResult insertYby(Map<String,String> params);
+    CustomerOptimizationResult getOptimizationApi(Map<String,String> params);
 }

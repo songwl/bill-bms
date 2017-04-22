@@ -80,6 +80,14 @@ public interface BillService {
      * @param user
      * @return
      */
+    int OptimizationStop(Map<String, String[]>  params,LoginUser user);
+
+    /**
+     * 优化停止
+     * @param params
+     * @param user
+     * @return
+     */
     int optimizationStop(Map<String, String[]>  params,LoginUser user);
     /**
      * 优化启动

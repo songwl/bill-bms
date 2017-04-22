@@ -999,6 +999,7 @@ ul.stats li.light strong {
 	-webkit-box-sizing: content-box;
 	-moz-box-sizing: content-box;
 	box-sizing: content-box;
+	border-radius: 50%;
 }
 
 .statbox .visual.blue {

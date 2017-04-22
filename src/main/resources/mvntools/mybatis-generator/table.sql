@@ -97,6 +97,8 @@
     `day_optimization` INT NULL COMMENT '日优化（初始值为1）可以调整数值，调整参数时，调用接口传入参数',
     `all_optimization` INT NULL COMMENT '总优化（计算总优化数）',
     `state` INT NULL COMMENT '订单状态',
+    `opstate` INT NULL COMMENT '订单状态1（调点击状态(0:未优化状态 1：优化中 2：离线)）',
+     `bill_type` INT NULL COMMENT '订单属性（1,正常单，2包年单，3，快排单）',
      `bill_ascription` BIGINT NULL COMMENT '订单专员归属',
     PRIMARY KEY (`id`)  COMMENT '')
   ENGINE = InnoDB

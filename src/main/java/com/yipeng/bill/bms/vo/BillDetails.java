@@ -28,6 +28,7 @@ public class BillDetails {
     private Double   monthConsumption;
     private Integer   standardDays;
     private Integer state;
+    private Integer opstate;
     private List<BillPrice> billPriceList;
 
     public  int  getdisplayId(){return  displayId;}
@@ -68,6 +69,8 @@ public class BillDetails {
     public  Integer  setStandardDays(Integer  standardDays){return  this.standardDays=standardDays;}
     public  Integer  getState(){return  state;}
     public  Integer  setState(Integer  state){return  this.state=state;}
+    public  Integer  getOpstate(){return  opstate;}
+    public  Integer  setOpstate(Integer  opstate){return  this.opstate=opstate;}
     public Long getCreateUserId() {
         return createUserId;
     }

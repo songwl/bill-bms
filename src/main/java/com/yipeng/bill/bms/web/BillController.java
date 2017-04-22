@@ -208,6 +208,40 @@ public class BillController extends BaseController {
 
 
     }
+
+    /**
+     * 调整停止
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/OptimizationStop",method = RequestMethod.POST)
+    @ResponseBody
+    public  ResultMessage OptimizationStop(HttpServletRequest request)
+    {
+        //getParameterMap()，获得请求参数map
+        Map<String,String[]> map= request.getParameterMap();
+        LoginUser user=this.getCurrentAccount();
+        if(user!=null)
+        {
+
+            int a=  billService.OptimizationStop(map,user);
+            if(a==1)
+            {
+                return  this.ajaxDoneSuccess("调整成功");
+            }
+            else
+            {
+                return  this.ajaxDoneError("系统错误，请稍后再试！");
+            }
+
+        }
+        else
+        {
+            return  this.ajaxDoneError("未登录");
+        }
+
+
+    }
     /**
      * 待审核订单
      * @param request
@@ -663,7 +697,12 @@ public class BillController extends BaseController {
          }
     }
 
-
+    /**
+     * 订单反馈
+     * @param request
+     * @param modelMap
+     * @return
+     */
     @RequestMapping(value = "/billFeedback",method = RequestMethod.GET)
     public  String billFeedback(HttpServletRequest request,ModelMap modelMap)
     {

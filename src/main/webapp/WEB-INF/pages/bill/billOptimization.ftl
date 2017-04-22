@@ -13,8 +13,11 @@
         <div id="OptimizationUpdate">
             <span>&nbsp;<i class="fa fa-apple"></i>&nbsp;优化调整</span>
         </div>
-        <div id="OptimizationUpdate">
-            <span>&nbsp;<i class="fa fa-stop"></i>&nbsp;优化停止</span>
+        <div id="OptimizationStart">
+            <span>&nbsp;<i class="fa fa-start"></i>&nbsp;优化上线</span>
+        </div>
+        <div id="OptimizationStop">
+            <span>&nbsp;<i class="fa fa-stop"></i>&nbsp;优化离线</span>
         </div>
         <div class="search">
             <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
@@ -86,8 +89,6 @@
         </div>
     </div>
 </div>
-
-
 <!--优化调整-->
 <div class="bootbox modal in OptimizationUpdateDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
     <div class="modal-dialog">
@@ -108,17 +109,6 @@
                             <div style="margin-left:15px;">优化指数：</div>
                             <div style="margin-left:10px;margin-top: 10px;">
                             <select style="width: 80px;" id="OptimizationUpdateSelect">
-                                <option>--请选择--</option>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                                <option>6</option>
-                                <option>7</option>
-                                <option>8</option>
-                                <option>9</option>
-                                <option>10</option>
                             </select>
                             </div>
                         </div>

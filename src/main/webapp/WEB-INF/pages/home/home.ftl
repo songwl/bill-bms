@@ -1,7 +1,7 @@
 <#import "/base/base.ftl" as base>
 <#import "/base/dict.ftl" as dict>
 
-<@base.html "操作员列表">
+<@base.html "系统概况">
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <script src="${ctx}/static/js/public/highcharts.js"></script>
 <div class="Navs">

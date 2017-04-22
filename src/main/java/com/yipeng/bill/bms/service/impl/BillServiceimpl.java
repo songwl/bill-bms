@@ -11,6 +11,7 @@ import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.model.Define;
 import com.yipeng.bill.bms.model.Md5_UrlEncode;
+import com.yipeng.bill.bms.model.OpDefine;
 import com.yipeng.bill.bms.model.Yby;
 import com.yipeng.bill.bms.service.BillService;
 import com.yipeng.bill.bms.service.RemoteService;
@@ -59,6 +60,8 @@ public class BillServiceimpl implements BillService {
     private RoleMapper roleMapper;
     @Autowired
     private RemoteService remoteService;
+
+    Md5_UrlEncode md5_urlEncode=new Md5_UrlEncode();
     /**
      * 相同价导入
      * @param bill
@@ -222,6 +225,10 @@ public class BillServiceimpl implements BillService {
                       bill.setDayOptimization(0);
                       bill.setAllOptimization(0);
                       bill.setState(state);
+                      //正常单
+                      bill.setBillType(1);
+                      //优化状态（未优化）（调点击）
+                      bill.setOpstate(0);
                       Long billId=billMapper.insert(bill);
                       //订单引擎表
                       BillSearchSupport billSearchSupport=new BillSearchSupport();
@@ -534,7 +541,7 @@ public class BillServiceimpl implements BillService {
         String[] price3 = params.get("price3");
         String[] caozuoyuan = params.get("caozuoyuan");
         Long caozuoyuanId = Long.parseLong(caozuoyuan[0]);
-        Md5_UrlEncode md5_urlEncode=new Md5_UrlEncode();
+
         int  length=Integer.parseInt(checkboxLength[0]);
         for(int i=0;i<length;i++)
         {
@@ -621,9 +628,9 @@ public class BillServiceimpl implements BillService {
 
 
                 //调整点击录入订单
-                int agid=100086;
+                int agid= OpDefine.agid;
                 String action="importkw";
-                String md5Key="05FEF02A7833380DC7E3354E9DB37F08";
+                String md5Key=OpDefine.md5Key;
 
                 //取现在时间
                 String dateString =new  SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -683,7 +690,7 @@ public class BillServiceimpl implements BillService {
                     //查排名返回对象（导入订单）
                     CustomerRankingResult customerRankingResult= remoteService.getCustomerRanking(customerRankingParam);
                     //调点击返回对象（导入订单）
-                    CustomerOptimizationResult customerOptimizationResult=remoteService.insertYby(map);
+                    CustomerOptimizationResult customerOptimizationResult=remoteService.getOptimizationApi(map);
                     //判断两个返回结果是否为空
                     if(customerRankingResult!=null&&customerOptimizationResult!=null)
                     {
@@ -710,6 +717,7 @@ public class BillServiceimpl implements BillService {
                             String[] updateUserId=params.get("selectContent["+i+"][updateUserId]");
                             billPrice.setOutMemberId(Long.parseLong(updateUserId[0]));
                             billPrice.setCreateTime(new Date());
+                            //修改订单
                             billPriceMapper.insert(billPrice);
                             Bill bill1=new Bill();
                             bill1.setId(billId);
@@ -719,6 +727,8 @@ public class BillServiceimpl implements BillService {
                             bill1.setDayOptimization(1);
                             bill1.setBillAscription(caozuoyuanId);
                             bill1.setState(2);
+                            //优化状态（优化中）（调点击）
+                            bill1.setOpstate(1);
                             billMapper.updateByPrimaryKeySelective(bill1);
                             if (!"NaN".equals(price1[0])) {
                                 String[] id1=params.get("selectContent["+i+"][id]");
@@ -789,8 +799,6 @@ public class BillServiceimpl implements BillService {
         }
         return 0;
     }
-
-
     /**
      * 订单列表
      * @param params
@@ -1076,6 +1084,7 @@ public class BillServiceimpl implements BillService {
         }
         billDetails.setStandardDays(bill.getStandardDays());
         billDetails.setState(bill.getState());
+        billDetails.setOpstate(bill.getOpstate());
         return billDetails;
     }
     /**
@@ -1092,23 +1101,197 @@ public class BillServiceimpl implements BillService {
         int  nums=Integer.parseInt(num[0]);
         for(int i=0;i<length;i++)
         {
+            //获取订单ID
             String[] id=params.get("selectContent["+i+"][id]");
             Long  billId=Long.parseLong(id[0]);
+            //获取订单
             Bill bill=billMapper.selectByPrimaryKey(billId);
-            int AllOptimization=bill.getAllOptimization();
-            int sum=nums+AllOptimization;
-            Bill  bill1 =new Bill();
-            bill1.setId(billId);
-            bill1.setDayOptimization(nums);
-            bill1.setAllOptimization(sum);
-            billMapper.updateByPrimaryKeySelective(bill1);
+            //组包
 
+            //调整点击录入订单
+            int agid=OpDefine.agid;
+            String action="setmcpd";
+            String md5Key=OpDefine.md5Key;
+
+            //取现在时间
+            String dateString =new  SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+            //订单优化量
+            //加密sign
+            int webApiId=bill.getWebAppId1();
+            int[] aa=new int[]{webApiId,nums};
+            JSONArray jsonArray=new JSONArray(aa);
+
+
+            String arr="[\"kw\","+jsonArray.toString()+"]";
+            //组包
+            String str="";
+            str=str.concat(JSON.toJSONString(dateString));
+            str=str.concat(JSON.toJSONString(action));
+            str=str.concat(arr);
+            str=str.concat(JSON.toJSONString(md5Key));
+            str=str.concat(JSON.toJSONString(agid));
+            //加密sign
+            String sign= null;
+            try {
+                sign = md5_urlEncode.EncoderByMd51(str);
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            //创建JSON
+            JSONObject jaction=new JSONObject();
+            jaction.put("action",action);
+            JSONObject jagid=new JSONObject();
+            jagid.put("agid",agid);
+            JSONObject jstamp=new JSONObject();
+            jstamp.put("stamp",dateString);
+            JSONObject jargs=new JSONObject();
+            jargs.put("args",arr);
+            JSONObject jsign=new JSONObject();
+            jsign.put("sign",sign);
+            //拼接字符串
+            String str11= "{"+jagid.toString().replace("{","").replace("}","")+","+jstamp.toString().replace("{","").replace("}","")+","+
+                    jaction.toString().replace("{","").replace("}","")+","+jsign.toString().replace("{","").replace("}","")+","+
+                    jargs.toString().replace("\"[", "[").replace("]\"", "]").replace("\\","").replace("{\"args\"","\"args\"");
+            //Base64  编码
+            BASE64Encoder base64Encoder=new BASE64Encoder();
+            String data= null;
+            try {
+                data = base64Encoder.encode(str11.getBytes("UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            Map<String,String> map=new HashMap<String,String>();
+            map.put("data",data);
+            //调点击返回对象（修改点击）
+            CustomerOptimizationResult customerOptimizationResult=remoteService.getOptimizationApi(map);
+            if(customerOptimizationResult!=null)
+            {
+                //判断返回结果是否成功
+                JSONObject jsonObject=customerOptimizationResult.getArgs();
+                String  code=jsonObject.get("code").toString();
+                if("success".equals(code))
+                {
+
+                    bill.setDayOptimization(nums);
+                    billMapper.updateByPrimaryKeySelective(bill);
+                }
+            }
         }
+        return 0;
+    }
+    /**
+     * 优化状态调整
+     * @param params
+     * @param user
+     * @return
+     */
+    @Override
+    public int OptimizationState(Map<String, String[]> params, LoginUser user) {
+        //任务个数
+        String[] checkboxLength=params.get("length");
+        //任务状态（1：在线  100：离线  999：删除）
+        String[] stateLength=params.get("state");
+        if(checkboxLength.length>0&&stateLength.length>0)
+        {
+            int  state=Integer.parseInt(stateLength[0]);
+            int  length=Integer.parseInt(checkboxLength[0]);
+            if(state!=0&&length!=0)
+            {
+                for(int i=0;i<length;i++)
+                {
+                    //获取订单ID
+                    String[] id=params.get("selectContent["+i+"][id]");
+                    Long  billId=Long.parseLong(id[0]);
+                    //获取订单
+                    Bill bill=billMapper.selectByPrimaryKey(billId);
+                    //组包
+                    //调整点击录入订单
+                    int agid=OpDefine.agid;
+                    String action="setstatus";
+                    String md5Key=OpDefine.md5Key;
+
+                    //取现在时间
+                    String dateString =new  SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+                    //订单优化量
+                    //加密sign
+                    int webApiId=bill.getWebAppId1();
+                    int[] intarr=new int[]{webApiId,state};
+                    JSONArray jsonArray=new JSONArray(intarr);
+
+
+                    String arr="[\"kw\","+jsonArray.toString()+"]";
+                    //组包
+                    String str="";
+                    str=str.concat(JSON.toJSONString(dateString));
+                    str=str.concat(JSON.toJSONString(action));
+                    str=str.concat(arr);
+                    str=str.concat(JSON.toJSONString(md5Key));
+                    str=str.concat(JSON.toJSONString(agid));
+                    //加密sign
+                    String sign= null;
+                    try {
+                        sign = md5_urlEncode.EncoderByMd51(str);
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    //创建JSON
+                    JSONObject jaction=new JSONObject();
+                    jaction.put("action",action);
+                    JSONObject jagid=new JSONObject();
+                    jagid.put("agid",agid);
+                    JSONObject jstamp=new JSONObject();
+                    jstamp.put("stamp",dateString);
+                    JSONObject jargs=new JSONObject();
+                    jargs.put("args",arr);
+                    JSONObject jsign=new JSONObject();
+                    jsign.put("sign",sign);
+                    //拼接字符串
+                    String str11= "{"+jagid.toString().replace("{","").replace("}","")+","+jstamp.toString().replace("{","").replace("}","")+","+
+                            jaction.toString().replace("{","").replace("}","")+","+jsign.toString().replace("{","").replace("}","")+","+
+                            jargs.toString().replace("\"[", "[").replace("]\"", "]").replace("\\","").replace("{\"args\"","\"args\"");
+                    //Base64  编码
+                    BASE64Encoder base64Encoder=new BASE64Encoder();
+                    String data= null;
+                    try {
+                        data = base64Encoder.encode(str11.getBytes("UTF-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    Map<String,String> map=new HashMap<String,String>();
+                    map.put("data",data);
+                    //调点击返回对象（停止优化）
+                    CustomerOptimizationResult customerOptimizationResult=remoteService.getOptimizationApi(map);
+                    if(customerOptimizationResult!=null)
+                    {
+                        //判断返回结果是否成功
+                        JSONObject jsonObject=customerOptimizationResult.getArgs();
+                        String  code=jsonObject.get("code").toString();
+                        if("success".equals(code))
+                        {
+                            //优化离线
+                            bill.setOpstate(2);
+                            billMapper.updateByPrimaryKeySelective(bill);
+                        }
+                    }
+                }
+                return 1;
+
+            }
+            else
+            {
+                return  0;
+            }
+        }
+
         return 0;
     }
 
     /**
-     * 优化停止
+     * 优化停止(订单主状态)
      * @param params
      * @param user
      * @return
@@ -1131,7 +1314,7 @@ public class BillServiceimpl implements BillService {
     }
 
     /**
-     * 优化启动
+     * 优化启动(订单主状态)
      * @param params
      * @param user
      * @return
@@ -1262,6 +1445,10 @@ public class BillServiceimpl implements BillService {
         bill.setDayOptimization(0);
         bill.setAllOptimization(0);
         bill.setState(Integer.parseInt(params.get("state").toString()));
+        //正常单
+        bill.setBillType(1);
+        //优化状态（未优化）（调点击）
+        bill.setOpstate(0);
         Long billId = billMapper.insert(bill);
         //订单引擎表
         BillSearchSupport billSearchSupport = new BillSearchSupport();
@@ -1276,13 +1463,11 @@ public class BillServiceimpl implements BillService {
         billPrice.setPrice(ret);
         Long rankend =Long.valueOf( params.get("rankend").toString());
         billPrice.setBillRankingStandard((rankend));
-
         billPrice.setInMemberId(CreateUserId);
-
         billPrice.setOutMemberId(customerId);
         billPrice.setCreateTime(new Date());
         billPriceMapper.insert(billPrice);
-
+        //判断价格
         if (!"".equals(params.get("price1").toString()) && null != params.get("price1").toString()) {
             BillPrice billPrice1 = new BillPrice();
             billPrice1.setBillId(bill.getId());

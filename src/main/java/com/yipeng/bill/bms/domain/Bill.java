@@ -25,12 +25,11 @@ public class Bill implements Serializable {
     private Integer webAppId;
     private Integer webAppId1;
     private Integer standardDays;
-
     private Integer dayOptimization;
-
     private Integer allOptimization;
-
     private Integer state;
+    private Integer opstate;
+    private Integer billType;
     private Long billAscription;
 
     private static final long serialVersionUID = 1L;
@@ -115,7 +114,6 @@ public class Bill implements Serializable {
         this.webAppId = webAppId;
     }
 
-
     public Integer getWebAppId1() {
         return webAppId1;
     }
@@ -155,6 +153,23 @@ public class Bill implements Serializable {
     public void setState(Integer state) {
         this.state = state;
     }
+
+    public Integer getOpstate() {
+        return opstate;
+    }
+
+    public void setOpstate(Integer opstate) {
+        this.opstate = opstate;
+    }
+
+    public Integer getBillType() {
+        return billType;
+    }
+
+    public void setBillType(Integer billType) {
+        this.billType = billType;
+    }
+
 
     public Long getBillAscription() {
         return billAscription;

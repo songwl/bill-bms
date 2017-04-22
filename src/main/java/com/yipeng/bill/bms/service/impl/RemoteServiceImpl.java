@@ -58,7 +58,7 @@ public class RemoteServiceImpl implements RemoteService {
     }
    //导入优帮云订单
     @Override
-    public CustomerOptimizationResult insertYby(Map<String, String> params) {
+    public CustomerOptimizationResult getOptimizationApi(Map<String, String> params) {
         //返回对象
         CustomerOptimizationResult customerOptimizationResult=new CustomerOptimizationResult();
 

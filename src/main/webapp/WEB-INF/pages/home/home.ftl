@@ -116,7 +116,7 @@
                     今日达标任务
                 </div>
                 <div class="value">
-                    0
+                    ${bmsModel.standardSum}
                 </div>
             </div>
         </div>

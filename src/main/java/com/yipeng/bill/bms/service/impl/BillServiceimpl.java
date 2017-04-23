@@ -86,7 +86,7 @@ public class BillServiceimpl implements BillService {
         String[] rankend3=params.get("rankend3");
         String[] price3=params.get("price3");
         String[] urls=urlsArr[0].split("\n");
-        String[] keywords=keywordsArr[0].split("\t\n");
+        String[] keywords=keywordsArr[0].split("\n");
         String[] search=params.get("search");
         String[] customerId=params.get("customerId");
         String errorDetails="";
@@ -170,7 +170,7 @@ public class BillServiceimpl implements BillService {
         String[] dfkeywordsArr=params.get("dfkeyword");
         String[] dfpricesArr=params.get("dfprice");
         String[] dfurls=dfurlsArr[0].split("\n");
-        String[] dfkeywords=dfkeywordsArr[0].split("\t\n");
+        String[] dfkeywords=dfkeywordsArr[0].split("\n");
         String[] dfprices=dfpricesArr[0].split("\n");
         String[] dfsearch=params.get("dfsearch");
         String[] dfrankend=params.get("dfrankend");
@@ -1188,7 +1188,7 @@ public class BillServiceimpl implements BillService {
      * @return
      */
     @Override
-    public int OptimizationState(Map<String, String[]> params, LoginUser user) {
+    public int updateYBYstate(Map<String, String[]> params, LoginUser user) {
         //任务个数
         String[] checkboxLength=params.get("length");
         //任务状态（1：在线  100：离线  999：删除）
@@ -1273,7 +1273,15 @@ public class BillServiceimpl implements BillService {
                         if("success".equals(code))
                         {
                             //优化离线
-                            bill.setOpstate(2);
+                            if(state==1)
+                            {
+                                bill.setOpstate(1);
+                            }
+                            else
+                            {
+                                bill.setOpstate(2);
+                            }
+
                             billMapper.updateByPrimaryKeySelective(bill);
                         }
                     }

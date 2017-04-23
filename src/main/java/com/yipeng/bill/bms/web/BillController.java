@@ -47,7 +47,6 @@ public class BillController extends BaseController {
     private UserService userService;
 
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * 上下层
@@ -214,9 +213,9 @@ public class BillController extends BaseController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/OptimizationStop",method = RequestMethod.POST)
+    @RequestMapping(value = "/updateYBYstate",method = RequestMethod.POST)
     @ResponseBody
-    public  ResultMessage OptimizationStop(HttpServletRequest request)
+    public  ResultMessage updateYBYstate(HttpServletRequest request)
     {
         //getParameterMap()，获得请求参数map
         Map<String,String[]> map= request.getParameterMap();
@@ -224,7 +223,7 @@ public class BillController extends BaseController {
         if(user!=null)
         {
 
-            int a=  billService.OptimizationStop(map,user);
+            int a=  billService.updateYBYstate(map,user);
             if(a==1)
             {
                 return  this.ajaxDoneSuccess("调整成功");

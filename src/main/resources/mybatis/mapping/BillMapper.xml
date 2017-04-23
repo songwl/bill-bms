@@ -455,7 +455,10 @@
         ORDER BY a.state ${sortOrder}
       </if>
     </if>
-    limit #{offset},#{limit}
+    <if test="offset != null">
+      limit #{offset},#{limit}
+    </if>
+
   </select>
 
   <select id="selectByOutMemberId"  resultMap="BaseResultMap">

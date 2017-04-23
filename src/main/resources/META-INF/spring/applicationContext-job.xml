@@ -18,7 +18,7 @@
         </property>
         <property name="cronExpression">
             <!--晚8点15分计费-->
-            <value>0 5 20 * * ? *</value>
+            <value>0 20/59 * * * ? *</value>
         </property>
     </bean>
     <!--查询初始排名-->
@@ -57,14 +57,14 @@
         </property>
     </bean>
 
-    <!--查询新排名-->
+    <!--统计总优化-->
     <bean id="optimizationTask" class="com.yipeng.bill.bms.task.OptimizationTask"></bean>
     <bean id="OptimizationTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="optimizationTask"/>
         <property name="targetMethod" value="execute"/>
         <property name="concurrent" value="false"/>
     </bean>
-    <bean id="optimizationTaskTaskJobTrigger"
+    <bean id="optimizationTaskJobTrigger"
           class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail">
             <ref bean="OptimizationTaskJob"/>
@@ -84,7 +84,7 @@
                 <ref bean="callCostTaskJobTrigger"/>
                 <ref bean="rankingTaskJobTrigger"/>
                 <ref bean="newRankingTaskJobTrigger"/>
-                <ref bean="optimizationTaskTaskJobTrigger"/>
+                <ref bean="optimizationTaskJobTrigger"/>
             </list>
         </property>
     </bean>

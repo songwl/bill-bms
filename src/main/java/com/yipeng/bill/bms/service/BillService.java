@@ -67,7 +67,7 @@ public interface BillService {
     Map<String, Object> getBillDetails(Map<String,Object> params, LoginUser user);
 
     /**
-     * 优化调整
+     * 优化调整（主订单状态）
      * @param params
      * @param user
      * @return
@@ -75,15 +75,7 @@ public interface BillService {
     int OptimizationUpdate(Map<String, String[]>  params,LoginUser user);
 
     /**
-     * 优化停止
-     * @param params
-     * @param user
-     * @return
-     */
-    int OptimizationStop(Map<String, String[]>  params,LoginUser user);
-
-    /**
-     * 优化停止
+     * 优化停止(主订单状态)
      * @param params
      * @param user
      * @return
@@ -100,5 +92,14 @@ public interface BillService {
     Map<String,Object> getPriceDetails( int limit,int offset,String billId,LoginUser user,String way);
 
     Map<String,Object> billFeedback(String website);
+
+
+    /**
+     * 调整优帮云上线离线状态
+     * @param params
+     * @param user
+     * @return
+     */
+    int updateYBYstate(Map<String, String[]>  params,LoginUser user);
 
 }

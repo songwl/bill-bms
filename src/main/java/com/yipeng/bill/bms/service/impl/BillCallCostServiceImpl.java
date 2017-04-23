@@ -72,9 +72,7 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                     billCost.setRanking(newRanking);
                     billCostMapper.insert(billCost);
 
-                    //新增达标天数
-                    bill.setStandardDays(bill.getStandardDays()+1);
-                    billMapper.updateByPrimaryKeySelective(bill);
+
 
                     //4.从资金账号扣减余额
                     FundAccount fundAccount = fundAccountMapper.selectByUserId(userId);
@@ -96,6 +94,9 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                         fundItem.setChangeTime(new Date());
                         fundItem.setItemType("cost"); //消费
                         fundItemMapper.insert(fundItem);
+                        //新增达标天数
+                        bill.setStandardDays(bill.getStandardDays()+1);
+                        billMapper.updateByPrimaryKeySelective(bill);
                         break;
 
                     }
@@ -111,6 +112,9 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                         fundItem.setChangeTime(new Date());
                         fundItem.setItemType("cost"); //消费
                         fundItemMapper.insert(fundItem);
+                        //新增达标天数
+                        bill.setStandardDays(bill.getStandardDays()+1);
+                        billMapper.updateByPrimaryKeySelective(bill);
                         break; //不需要再往后
                     }
 

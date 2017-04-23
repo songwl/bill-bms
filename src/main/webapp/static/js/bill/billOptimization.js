@@ -40,7 +40,7 @@ $(document).ready(function () {
                 var state=1;
                 $.ajax({
                     type:"post",
-                    url:CTX+"/bill/OptimizationStop",
+                    url:CTX+"/bill/updateYBYstate",
                     data:{selectContent:selectContent,length:len,state:state},
                     success:function (result) {
                         if(result.code==200)
@@ -71,7 +71,7 @@ $(document).ready(function () {
               var state=100;
               $.ajax({
                   type:"post",
-                  url:CTX+"/bill/OptimizationStop",
+                  url:CTX+"/bill/updateYBYstate",
                   data:{selectContent:selectContent,length:len,state:state},
                   success:function (result) {
                       if(result.code==200)

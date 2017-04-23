@@ -1,6 +1,8 @@
 package com.yipeng.bill.bms.service.impl;
 
 import com.yipeng.bill.bms.dao.*;
+import com.yipeng.bill.bms.domain.Bill;
+import com.yipeng.bill.bms.domain.BillPrice;
 import com.yipeng.bill.bms.domain.FundAccount;
 import com.yipeng.bill.bms.domain.Role;
 import com.yipeng.bill.bms.service.HomeService;
@@ -8,9 +10,7 @@ import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Administrator on 2017/4/10.
@@ -27,6 +27,8 @@ public class HomeServiceImpl implements HomeService {
     private BillMapper billMapper;
     @Autowired
     private FundAccountMapper fundAccountMapper;
+    @Autowired
+    private  BillPriceMapper billPriceMapper;
     /**
      * 首页详情
      * @param loginUser
@@ -62,6 +64,38 @@ public class HomeServiceImpl implements HomeService {
             params.put("state2",3);
             Long AllbillCount=billMapper.getBillListCount(params);
             map.put("AllbillCount",AllbillCount);
+            //今日达标数
+            //1,先获取对应所有的订单
+             Map<String,Object> billparam=new HashMap<>();
+             billparam.put("userId",loginUser.getId());
+            billparam.put("state",2);
+            List<Bill> billList=billMapper.selectByInMemberId(params);
+             //判断哪些订单今日达标
+            int standardSum=0;//今天达标数
+            if(billList.size()>0)
+            {
+                for (Bill bill:billList
+                     ) {
+                    //对应订单排名标准
+                    BillPrice billPrice=new BillPrice();
+                    billPrice.setBillId(bill.getId());
+                    billPrice.setInMemberId(loginUser.getId());
+                    List<BillPrice> billPriceList=new ArrayList<>();
+                    billPriceList=billPriceMapper.selectByBillPrice(billPrice);
+                    //判断今日订单达到哪个标准
+                    for (BillPrice item:billPriceList
+                         ) {
+                         if(bill.getNewRanking()<=item.getBillRankingStandard())
+                         {
+                             standardSum+=1;
+                             break;
+                         }
+                    }
+                }
+            }
+            map.put("standardSum",standardSum);
+
+
             //总完成率
             int state=2;
             Map<String,Object> AllCompleteness=new HashMap<>();
@@ -70,7 +104,7 @@ public class HomeServiceImpl implements HomeService {
 
             return map;
         }
-        else if(loginUser.hasRole("DISTRIBUTOR"))
+        else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
         {
             //客户数
             //Role role=roleMapper.selectByRoleCode("AGENT");
@@ -108,45 +142,43 @@ public class HomeServiceImpl implements HomeService {
             params.put("state2",3);
             Long AllbillCount=billMapper.getBillListCount(params);
             map.put("AllbillCount",AllbillCount);
+
+            //今日达标数
+            //1,先获取对应所有的订单
+            Map<String,Object> billparam=new HashMap<>();
+            billparam.put("userId",loginUser.getId());
+            billparam.put("state",2);
+            List<Bill> billList=billMapper.selectByInMemberId(params);
+            //判断哪些订单今日达标
+            int standardSum=0;//今天达标数
+            if(billList.size()>0)
+            {
+                for (Bill bill:billList
+                        ) {
+                    //对应订单排名标准
+                    BillPrice billPrice=new BillPrice();
+                    billPrice.setBillId(bill.getId());
+                    billPrice.setInMemberId(loginUser.getId());
+                    List<BillPrice> billPriceList=new ArrayList<>();
+                    billPriceList=billPriceMapper.selectByBillPrice(billPrice);
+                    //判断今日订单达到哪个标准
+                    for (BillPrice item:billPriceList
+                            ) {
+                        if(bill.getNewRanking()<=item.getBillRankingStandard())
+                        {
+                            standardSum+=1;
+                            break;
+                        }
+                    }
+                }
+            }
+            map.put("standardSum",standardSum);
+
+
+
             return map;
         }
-        else if(loginUser.hasRole("AGENT"))
-        {
-            //客户数
-           // Role role1=roleMapper.selectByRoleCode("CUSTOMER");
-           // params.put("roleId",role1.getId());
-           // Long count1=UserCount(params);
-           // Long AllCount=count1;
-           // map.put("UserCount",AllCount);
 
-            //账户余额
-            FundAccount fundAccount=fundAccountMapper.selectByUserId(loginUser.getId());
-            if (fundAccount==null)
-            {
-
-                map.put("balance",0);
-            }
-            else
-            {
-                map.put("balance",fundAccount.getBalance());
-
-            }
-            //月总消费
-            Double MonthConsumption=MonthConsumption(params);
-            map.put("MonthConsumption",MonthConsumption);
-            //本日消费
-            Double DayConsumption=DayConsumption(params);
-            map.put("DayConsumption",DayConsumption);
-            //当前任务数
-            params.put("state",2);
-            Long billCount=billMapper.getBillListCount(params);
-            map.put("billCount",billCount);
-            //累计任务数
-            params.put("state2",3);
-            Long AllbillCount=billMapper.getBillListCount(params);
-            map.put("AllbillCount",AllbillCount);
-            return map;
-        }
         else  if (loginUser.hasRole("COMMISSIONER"))
         {
             //客户数
@@ -176,6 +208,38 @@ public class HomeServiceImpl implements HomeService {
             params.put("day",now.get(Calendar.DATE));
             Double sum1=billCostMapper.MonthConsumptionCommissioner(params);
             map.put("DayConsumption",sum1);
+
+            //今日达标数
+            //1,先获取对应所有的订单
+            Map<String,Object> billparam=new HashMap<>();
+            billparam.put("userId",loginUser.getCreateUserId());
+            billparam.put("billAscription",loginUser.getId());
+            billparam.put("state",2);
+            List<Bill> billList=billMapper.selectByInMemberId(params);
+            //判断哪些订单今日达标
+            int standardSum=0;//今天达标数
+            if(billList.size()>0)
+            {
+                for (Bill bill:billList
+                        ) {
+                    //对应订单排名标准
+                    BillPrice billPrice=new BillPrice();
+                    billPrice.setBillId(bill.getId());
+                    billPrice.setInMemberId(loginUser.getId());
+                    List<BillPrice> billPriceList=new ArrayList<>();
+                    billPriceList=billPriceMapper.selectByBillPrice(billPrice);
+                    //判断今日订单达到哪个标准
+                    for (BillPrice item:billPriceList
+                            ) {
+                        if(bill.getNewRanking()<=item.getBillRankingStandard())
+                        {
+                            standardSum+=1;
+                            break;
+                        }
+                    }
+                }
+            }
+            map.put("standardSum",standardSum);
             return map;
         }
         else if (loginUser.hasRole("CUSTOMER"))

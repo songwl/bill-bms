@@ -12,17 +12,17 @@
       margin-left: auto;
       margin-right: auto;">
         <h1 class="logo" id="logo">
-            <a href="http://www.aliyun.com" data-spm-anchor-id="0.0.0.0">阿里云</a></h1>
+            <a href="#">优搜云</a></h1>
         <h2 class="logo-title">登录</h2>
         <ul class="header-nav">
             <li class="nav-first">
-                <a href="#" target="_blank">阿里云首页</a></li>
+                <a href="#" target="_blank">优搜云首页</a></li>
             <li>
-                <a href="#" target="_blank">万网首页</a></li>
+                <a href="#" target="_blank">XX首页</a></li>
             <li>
                 <a href="#" target="_blank">帮助与文档</a></li>
             <li>
-                <a href="#" target="_blank">论坛</a></li>
+                <a href="#" target="_blank">XXXX</a></li>
         </ul>
     </div>
 </div>

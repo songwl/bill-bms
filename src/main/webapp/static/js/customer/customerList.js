@@ -1,8 +1,22 @@
 /**
  * Created by 鱼在我这里。 on 2017/3/16.
  */
-$(document).ready(function () {
 
+var searchUserName=null;
+var searchState=null;
+$(document).ready(function () {
+//显示搜索内容
+    $(".search").click(function () {
+        if($(".Navs2").css("display")=="block"){
+            $(".Navs2").slideUp();
+
+        }
+        else
+        {
+            $(".Navs2").slideDown();
+
+        }
+    })
     //添加客户
     $(".addMember").click(function () {
 
@@ -468,6 +482,8 @@ var TableInit = function () {
             offset: params.pageNumber,  //页码
             sortOrder: params.sortOrder,
             sortName: params.sortName,
+            searchUserName :searchUserName,
+            searchState:searchState,
 
         };
         return temp;
@@ -552,7 +568,26 @@ var TableInit = function () {
 
     return oTableInit;
 };
-
+//搜索按钮
+$("#searchButton").click(function () {
+    if($("#searchUserName").val()!="")
+    {
+        searchUserName=$("#searchUserName").val();
+    }
+    else
+    {
+        searchUserName=null;
+    }
+    if($("#searchState option:selected").text()!="--请选择--")
+    {
+        searchState=$("#searchState option:selected").val();
+    }
+    else
+    {
+        searchState=null;
+    }
+    $('#myTable').bootstrapTable('refresh');
+});
 $(function () {
     $("#queren").click(function () {
 

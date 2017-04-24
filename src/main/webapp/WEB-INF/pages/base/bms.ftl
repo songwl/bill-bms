@@ -180,7 +180,7 @@
                             <a href="javascript:;">
                                 <i class="fa fa-star-o"></i><span class="title"> 优化方管理 </span><span class="arrow "></span>
                             </a>
-                            <ul class="sub-menu" style="background: #eee;">
+                            <ul class="sub-menu"  style="background: #293038;">
                                 <li>
                                     <a href="${ctx}/bill/list?way=1">
                                         关键词排名
@@ -340,22 +340,22 @@
                             </a>
                             <ul class="sub-menu"  style="background: #293038;">
                                 <li>
-                                    <a href="#">
+                                    <a href="/">
                                         关键词排名查询
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="/">
                                         关键词指数查询
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="/">
                                         关键词价格查询
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="/">
                                         网址收录查询
                                     </a>
                                 </li>

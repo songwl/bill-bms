@@ -583,34 +583,28 @@ public class BillServiceimpl implements BillService {
                 jsonObj.put("userId", Define.userId);
                 jsonObj.put("businessType", 2006);
                 //判断搜索引擎
-                 if (billSearchSupport.getSearchSupport().equals("百度"))
-                 {
-                     jsonObj.put("searchType", 1010);
-                 }
-                else if (billSearchSupport.getSearchSupport().equals("360"))
+                switch (billSearchSupport.getSearchSupport())
                 {
-                    jsonObj.put("searchType", 1015);
+                    case "百度":
+                        jsonObj.put("searchType", 1010);
+                        break;
+                    case "360":
+                        jsonObj.put("searchType", 1015);
+                        break;
+                    case "搜狗":
+                        jsonObj.put("searchType", 1030);
+                        break;
+                    case "手机百度":
+                        jsonObj.put("searchType", 7010);
+                        break;
+                    case "手机360":
+                        jsonObj.put("searchType", 7015);
+                        break;
+                    case "手机搜狗":
+                        jsonObj.put("searchType", 7030);
+                        break;
                 }
-                 else if (billSearchSupport.getSearchSupport().equals("搜狗"))
-                 {
-                     jsonObj.put("searchType", 1030);
-                 }
-                 else if (billSearchSupport.getSearchSupport().equals("手机百度"))
-                 {
-                     jsonObj.put("searchType", 7010);
-                 }
-                 else if (billSearchSupport.getSearchSupport().equals("手机360"))
-                 {
-                     jsonObj.put("searchType", 7015);
-                 }
-                 else if (billSearchSupport.getSearchSupport().equals("手机搜狗"))
-                 {
-                     jsonObj.put("searchType", 7030);
-                 }
-                 else
-                 {
-                     jsonObj.put("searchType", 7070);
-                 }
+
                 jsonObj.put("searchOnce", false);
                 String wParam = jsonObj.toString();
                 String wSign = null;
@@ -640,9 +634,29 @@ public class BillServiceimpl implements BillService {
                 Yby yby=new Yby();
                 yby.setKw(billA.getKeywords());
                 yby.setUrl(billA.getWebsite());
-                yby.setSe(1);
+                //判断搜索引擎
+                switch (billSearchSupport.getSearchSupport())
+                {
+                    case "百度":
+                    yby.setSe(1);
+                    break;
+                    case "360":
+                        yby.setSe(2);
+                        break;
+                    case "搜狗":
+                        yby.setSe(3);
+                        break;
+                    case "手机百度":
+                        yby.setSe(4);
+                        break;
+                    case "手机360":
+                        yby.setSe(5);
+                        break;
+                    case "手机搜狗":
+                        yby.setSe(6);
+                        break;
+                }
                 yby.setMcpd(1);
-
                 ybyList.add(yby);
                 //组包
                 String str="";

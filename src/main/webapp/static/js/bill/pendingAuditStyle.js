@@ -1,6 +1,19 @@
 /**
  * Created by Administrator on 2017/3/17.
  */
+//显示搜索内容
+$(".search").click(function () {
+    if($(".Navs2").css("display")=="block"){
+        $(".Navs2").slideUp();
+
+    }
+    else
+    {
+        $(".Navs2").slideDown();
+
+    }
+})
+
 $("#billExamine").click(function () {
     var selectContent = $('#myTable').bootstrapTable('getSelections');
     if(selectContent == "") {
@@ -90,6 +103,7 @@ $(".cancel").click(function () {
                             alert("审核成功");
                             $(".billExamineDiv").slideUp();
                             $(".modal-backdrop").hide();
+                            $(".pload").hide();
                             $('#myTable').bootstrapTable('refresh');
                         }
                         else
@@ -181,6 +195,7 @@ $(".adminshenhe").click(function () {
                     alert("审核成功");
                     $(".billExamineDiv").slideUp();
                     $(".modal-backdrop").hide();
+                    $(".pload").hide();
                     $('#myTable').bootstrapTable('refresh');
                 }
                 else

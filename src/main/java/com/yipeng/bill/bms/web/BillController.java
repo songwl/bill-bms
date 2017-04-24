@@ -242,7 +242,7 @@ public class BillController extends BaseController {
 
     }
     /**
-     * 待审核订单
+     * 待审核订单（审核）
      * @param request
      * @return
      */
@@ -253,11 +253,18 @@ public class BillController extends BaseController {
         LoginUser user = this.getCurrentAccount();
         if(user.hasRole("SUPER_ADMIN"))
         {
+            //操作员
             long ret=3;
             Map<String,Long> params=new HashMap<>();
             params.put("role",ret);
             List<User> userList=userService.getUserAll(params);
             model.put("userList",userList);
+            //渠道商
+            long ret1=4;
+           Map<String,Long> params1=new HashMap<>();
+            params1.put("role",ret1);
+            List<User>  distributorList=userService.getUserAll(params1);
+            model.put("distributorList",distributorList);
         }
         bms.put("user", user);
         model.addAttribute("bmsModel", bms);
@@ -578,7 +585,7 @@ public class BillController extends BaseController {
     }
 
     /**
-     * 待审核订单
+     * 待审核订单（预览）
      * @param request
      * @return
      */

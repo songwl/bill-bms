@@ -248,6 +248,7 @@
     <include refid="Base_Column_List" />
     from t_user
     where create_user_id= #{userId,jdbcType=BIGINT}
+
   </select>
 
   <select id="getUserRoleByCreateId" resultMap="BaseResultMap">
@@ -261,6 +262,12 @@
     <if test="roleId != null">
      AND b.role_id = #{roleId,jdbcType=BIGINT}
     </if>
+    <if test="searchUserName != null">
+      AND a.user_name LIKE CONCAT('%',#{searchUserName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="searchState != null">
+      AND a.status = #{searchState,jdbcType=BIT}
+    </if>
     limit #{offset},#{limit}
   </select>
 
@@ -273,6 +280,12 @@
     <if test="roleId != null">
       AND b.role_id = #{roleId,jdbcType=BIGINT}
     </if>
+    <if test="searchUserName != null">
+      AND a.user_name LIKE CONCAT('%',#{searchUserName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="searchState != null">
+      AND a.status = #{searchState,jdbcType=BIT}
+    </if>
   </select>
 
   <select id="getUserBillAscription" resultMap="BaseResultMap">
@@ -283,6 +296,12 @@
     b.bill_ascription= #{ascription,jdbcType=BIGINT}
     AND
     d.in_member_id= #{inMemberId,jdbcType=BIGINT}
+    <if test="searchUserName != null">
+      AND a.user_name LIKE CONCAT('%',#{searchUserName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="searchState != null">
+      AND a.status = #{searchState,jdbcType=BIT}
+    </if>
     limit #{offset},#{limit}
   </select>
 
@@ -294,6 +313,12 @@
     b.bill_ascription= #{ascription,jdbcType=BIGINT}
     AND
     d.in_member_id= #{inMemberId,jdbcType=BIGINT}
+    <if test="searchUserName != null">
+      AND a.user_name LIKE CONCAT('%',#{searchUserName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="searchState != null">
+      AND a.status = #{searchState,jdbcType=BIT}
+    </if>
   </select>
 
   <select id="getSearchUserBillAscription" resultMap="BaseResultMap">
@@ -304,6 +329,12 @@
     b.bill_ascription= #{ascription,jdbcType=BIGINT}
     AND
     d.in_member_id= #{inMemberId,jdbcType=BIGINT}
+    <if test="searchUserName != null">
+      AND a.user_name LIKE CONCAT('%',#{searchUserName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="searchState != null">
+      AND a.status = #{searchState,jdbcType=BIT}
+    </if>
   </select>
 
   <select id="selectByReviewUser"  resultMap="BaseResultMap">

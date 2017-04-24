@@ -134,7 +134,7 @@
                     总完成率
                 </div>
                 <div class="value">
-                    0.0%
+                ${bmsModel.AllCompleteness}%
                 </div>
             </div>
         </div>
@@ -149,7 +149,7 @@
                     百度完成率
                 </div>
                 <div class="value">
-                   0.0%
+                ${bmsModel.baiduCompleteness}%
                 </div>
             </div>
         </div>
@@ -164,7 +164,7 @@
                     百度手机完成率
                 </div>
                 <div class="value">
-                    0.0%
+                ${bmsModel.baiduWapCompleteness}%
                 </div>
             </div>
         </div>
@@ -179,7 +179,7 @@
                     360完成率
                 </div>
                 <div class="value">
-                    0.0%
+                ${bmsModel.sanliulingCompleteness}%
                 </div>
             </div>
         </div>
@@ -194,7 +194,7 @@
                     搜狗完成率
                 </div>
                 <div class="value">
-                    0.0%
+                ${bmsModel.sougouCompleteness}%
                 </div>
             </div>
         </div>

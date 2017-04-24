@@ -139,12 +139,13 @@
   AND b.in_member_id=#{userId,jdbcType=BIGINT} AND a.t_bill_id=#{billId,jdbcType=BIGINT}
   limit #{offset},#{limit}
   </select>
+
   <select id="getPriceByMapCount"  resultType="java.lang.Long">
     select COUNT(a.id) from t_bill_cost as a,t_bill_price as b
     WHERE a.t_bill_price_id = b.id
     AND b.in_member_id=#{userId,jdbcType=BIGINT} AND a.t_bill_id=#{billId,jdbcType=BIGINT}
   </select>
-
+ <!--总消费-->
   <select id="MonthConsumption"  resultType="java.lang.Double">
     SELECT SUM(b.cost_amount) from t_bill_price as a,t_bill_cost as b
     where a.bill_id=b.t_bill_id
@@ -157,12 +158,13 @@
     </if>
   </select>
 
+  <!--操作员总消费-->
   <select id="MonthConsumptionCommissioner"  resultType="java.lang.Double">
     SELECT SUM(b.cost_amount) from t_bill_price as a,t_bill_cost as b,t_bill as c
-    where a.bill_id=b.t_bill_id AND   b.t_bill_id=c.id
+    where a.bill_id=b.t_bill_id  AND  b.t_bill_id=c.id
     AND a.id=b.t_bill_price_id
-    AND c.bill_ascription=#{userId,jdbcType=BIGINT}
-     AND a.in_member_id=#{createId,jdbcType=BIGINT}
+    AND c.bill_ascription=#{ascription,jdbcType=BIGINT}
+    AND a.in_member_id=#{createId,jdbcType=BIGINT}
     and year(b.cost_date)=#{year,jdbcType=INTEGER}
     and month(b.cost_date)=#{month,jdbcType=INTEGER}
     <if test="day != null">

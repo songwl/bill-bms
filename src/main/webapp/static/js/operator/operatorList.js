@@ -58,7 +58,6 @@ $("input[name='userName']").blur(function () {
     }
 });
 //密码
-
 $("input[name='password']").blur(function () {
 
     if ($("input[name='password']").val()!= "")

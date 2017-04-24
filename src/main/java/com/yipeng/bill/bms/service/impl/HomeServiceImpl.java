@@ -9,6 +9,7 @@ import com.yipeng.bill.bms.service.HomeService;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.rmi.runtime.Log;
 
 import java.util.*;
 
@@ -66,10 +67,10 @@ public class HomeServiceImpl implements HomeService {
             map.put("AllbillCount",AllbillCount);
             //今日达标数
             //1,先获取对应所有的订单
-             Map<String,Object> billparam=new HashMap<>();
-             billparam.put("userId",loginUser.getId());
+            Map<String,Object> billparam=new HashMap<>();
+            billparam.put("userId",loginUser.getId());
             billparam.put("state",2);
-            List<Bill> billList=billMapper.selectByInMemberId(params);
+            List<Bill> billList=billMapper.selectByInMemberId(billparam);
              //判断哪些订单今日达标
             int standardSum=0;//今天达标数
             if(billList.size()>0)
@@ -94,16 +95,28 @@ public class HomeServiceImpl implements HomeService {
                 }
             }
             map.put("standardSum",standardSum);
-
-
-            //总完成率
-            int state=2;
-            Map<String,Object> AllCompleteness=new HashMap<>();
-           // AllCompleteness.put("state",)
-
-
+            //总完成率(今日达标数/总订单数)
+            double AllCompleteness=((double)standardSum/billList.size())*100;
+            map.put("AllCompleteness",AllCompleteness);
+            //百度完成率
+            String baidu="百度";
+            Double baiduCompleteness=searchCompleteness(baidu,loginUser);
+            map.put("baiduCompleteness",baiduCompleteness);
+            //百度wap完成率
+            String baiduWap="手机百度";
+            Double baiduWapCompleteness=searchCompleteness(baiduWap,loginUser);
+            map.put("baiduWapCompleteness",baiduWapCompleteness);
+            //360完成率
+            String sanliuling="360";
+            Double sanliulingCompleteness=searchCompleteness(sanliuling,loginUser);
+            map.put("sanliulingCompleteness",sanliulingCompleteness);
+            //搜狗完成率
+            String sougou="搜狗";
+            Double sougouCompleteness=searchCompleteness(sougou,loginUser);
+            map.put("sougouCompleteness",sougouCompleteness);
             return map;
         }
+        //渠道商和代理商
         else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
         {
             //客户数
@@ -148,7 +161,7 @@ public class HomeServiceImpl implements HomeService {
             Map<String,Object> billparam=new HashMap<>();
             billparam.put("userId",loginUser.getId());
             billparam.put("state",2);
-            List<Bill> billList=billMapper.selectByInMemberId(params);
+            List<Bill> billList=billMapper.selectByInMemberId(billparam);
             //判断哪些订单今日达标
             int standardSum=0;//今天达标数
             if(billList.size()>0)
@@ -176,9 +189,10 @@ public class HomeServiceImpl implements HomeService {
 
 
 
+
             return map;
         }
-
+        //操作员
         else  if (loginUser.hasRole("COMMISSIONER"))
         {
             //客户数
@@ -299,5 +313,46 @@ public class HomeServiceImpl implements HomeService {
         params.put("day",now.get(Calendar.DATE));
         Double sum=billCostMapper.MonthConsumption(params);
         return sum;
+    }
+    //搜索引擎完成率
+    public  Double searchCompleteness(String search, LoginUser loginUser)
+    {
+        //今日达标数
+        //1,先获取对应所有的订单
+        Map<String,Object> billparam=new HashMap<>();
+        billparam.put("userId",loginUser.getId());
+        billparam.put("state",2);
+        billparam.put("searchName",search);
+        List<Bill> billList=billMapper.selectByInMemberId(billparam);
+        //判断哪些订单今日达标
+        int standardSum=0;//今天达标数
+        if(billList.size()>0)
+        {
+            for (Bill bill:billList
+                    ) {
+                //对应订单排名标准
+                BillPrice billPrice=new BillPrice();
+                billPrice.setBillId(bill.getId());
+                billPrice.setInMemberId(loginUser.getId());
+                List<BillPrice> billPriceList=new ArrayList<>();
+                billPriceList=billPriceMapper.selectByBillPrice(billPrice);
+                //判断今日订单达到哪个标准
+                for (BillPrice item:billPriceList
+                        ) {
+                    if(bill.getNewRanking()<=item.getBillRankingStandard())
+                    {
+                        standardSum+=1;
+                        break;
+                    }
+                }
+            }
+        }
+        double Completeness=0.0;
+        if(billList.size()>0)
+        {
+            Completeness=((double)standardSum/billList.size())*100;
+        }
+
+        return Completeness;
     }
 }

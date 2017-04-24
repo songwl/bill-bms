@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -52,7 +53,7 @@ public class CustomerController extends  BaseController{
      */
     @RequestMapping(value="getCustomerList")
     @ResponseBody
-    public Map<String,Object> getCustomerList(int limit,int offset)
+    public Map<String,Object> getCustomerList(int limit,int offset,String searchUserName,String searchState)
     {
         LoginUser user=this.getCurrentAccount();
 
@@ -62,6 +63,21 @@ public class CustomerController extends  BaseController{
             Map<String,Object> params=new HashMap<>();
             params.put("limit",limit);
             params.put("offset",offset);
+            if(!searchUserName.isEmpty())
+            {
+                try{
+                    searchUserName = new String(searchUserName.getBytes("ISO-8859-1"),"utf-8");
+                }
+                catch (UnsupportedEncodingException e)
+                {
+                    e.printStackTrace();
+                }
+                params.put("searchUserName",searchUserName);
+            }
+            if(!searchState.isEmpty())
+            {
+                params.put("searchState",searchState);
+            }
             Map<String, Object> modelMap=  customerService.getCustomerList(params,user);
             return  modelMap;
 

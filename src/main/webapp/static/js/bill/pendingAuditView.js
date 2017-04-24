@@ -6,9 +6,6 @@ var keywords=null;
 var searchName=null;
 var searchUserName=null;
 var searchState=1;
-
-
-
 $(document).ready(function () {
 
     //显示搜索内容
@@ -27,9 +24,6 @@ $(document).ready(function () {
 
 
     })
-
-
-
 
     //复选框
     $("#btn_update").click(function () {

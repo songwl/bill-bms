@@ -128,22 +128,8 @@ var TableInit = function () {
 
                         return a;
                     }
-
-
                 },
-                {
-                    field: 'operate',
-                    title: '操作',
-                    align: 'center',
-                    valign: 'middle',
-                    formatter:function (value,row,index) {
-                        var a="<span style='color:#4382CF;cursor:pointer;' id='details'>详情</span>";
 
-                        return a;
-                    },
-                    events:operateEvents
-
-                },
 
 
             ],

@@ -31,7 +31,6 @@ public class BillCallCostServiceImpl implements BillCallCostService {
     @Autowired
     private FundItemMapper fundItemMapper;
 
-
     @Override
     public int updateCallCost(Bill bill) {
         //2.根据计算单Bill查询单价BillPrice
@@ -46,6 +45,7 @@ public class BillCallCostServiceImpl implements BillCallCostService {
             userPriceMap.get(userId).add(billPrice);
         }
 
+        Boolean bool=false;
         //3.根据最新的排名计算价钱,产生消费
         int newRanking = bill.getNewRanking().intValue();
         //今日消费总额
@@ -95,8 +95,9 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                         fundItem.setItemType("cost"); //消费
                         fundItemMapper.insert(fundItem);
                         //新增达标天数
-                        bill.setStandardDays(bill.getStandardDays()+1);
-                        billMapper.updateByPrimaryKeySelective(bill);
+                        bool=true;
+                       // bill.setStandardDays(bill.getStandardDays()+1);
+                        //billMapper.updateByPrimaryKeySelective(bill);
                         break;
 
                     }
@@ -113,15 +114,22 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                         fundItem.setItemType("cost"); //消费
                         fundItemMapper.insert(fundItem);
                         //新增达标天数
-                        bill.setStandardDays(bill.getStandardDays()+1);
-                        billMapper.updateByPrimaryKeySelective(bill);
+                        bool=true;
+                        //bill.setStandardDays(bill.getStandardDays()+1);
+                        //billMapper.updateByPrimaryKeySelective(bill);
                         break; //不需要再往后
                     }
 
                 }
             }
         }
-
+        //判断是否达标
+        if(bool)
+        {
+            //达标天数加一天
+            bill.setStandardDays(bill.getStandardDays()+1);
+            billMapper.updateByPrimaryKeySelective(bill);
+        }
         return 1;
     }
 }

@@ -20,8 +20,6 @@ public interface BillMapper {
 
     List<Bill> selectList(Map<String,Object> params);
 
-    Long getBillListCount(Map<String,Object> params);
-
     List<Bill> selectAll(Map<String,Object> params);
 
     Long  selectAllCount(int state);
@@ -47,10 +45,24 @@ public interface BillMapper {
     List<Bill>  selectByOutMemberId(Map<String,Object> params);
 
     /**
-     * 根据角色来获取订单
+     * 根据角色来获取订单(渠道商直属客户)
      * @param params
      * @return
      */
     List<Bill>  selectByCustomerId(Map<String,Object> params);
+
     Long selectByCustomerIdCount(Map<String,Object> params);
+
+    /**
+     * 除客户之外其他角色的订单数
+     * @param params
+     * @return
+     */
+    Long getBillListCount(Map<String,Object> params);
+    /**
+     * 客户的订单数
+     * @param params
+     * @return
+     */
+    Long getBillListByCmmCount(Map<String,Object> params);
 }

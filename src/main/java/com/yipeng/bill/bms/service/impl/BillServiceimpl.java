@@ -841,9 +841,19 @@ public class BillServiceimpl implements BillService {
                {
                    params.put("userId",user.getId());
                }
-               List<Bill> billList=billMapper.selectByOutMemberId(params);
 
-               Long total=billMapper.getBillListCount(params);
+
+                   List<Bill> billList=billMapper.selectByOutMemberId(params);
+               Long total;
+               if (user.hasRole("CUSTOMER"))
+               {
+                   total =billMapper.getBillListByCmmCount(params);
+               }
+               else
+               {
+                   total =billMapper.getBillListCount(params);
+               }
+
                for (Bill bill: billList
                        ) {
                    i++;
@@ -939,7 +949,8 @@ public class BillServiceimpl implements BillService {
                Role role=roleMapper.selectByRoleCode("CUSTOMER");
                params.put("roleId",role.getId());
                params.put("userId",user.getId());
-               List<Bill> billList=billMapper.selectByCustomerId(params);Long total=billMapper.selectByCustomerIdCount(params);
+               List<Bill> billList=billMapper.selectByCustomerId(params);
+               Long total=billMapper.selectByCustomerIdCount(params);
                for (Bill bill: billList
                        ) {
                        i++;
@@ -1026,6 +1037,7 @@ public class BillServiceimpl implements BillService {
             User user1= userMapper.selectByPrimaryKey(billPriceList.get(0).getOutMemberId());
             billDetails.setUserName(user1.getUserName());
         }
+        //插入数据
         billDetails.setKeywords(bill.getKeywords());
         billDetails.setWebsite(bill.getWebsite());
         billDetails.setSearchName(billSearchSupport.getSearchSupport());
@@ -1056,7 +1068,7 @@ public class BillServiceimpl implements BillService {
             }
 
         }
-
+      //判断今日消费
        List<BillPrice>  billPrice2= billPriceMapper.selectByBillPrice(billPrice1);
        if(billPrice2.size()>0)
        {
@@ -1070,6 +1082,7 @@ public class BillServiceimpl implements BillService {
                }
            }
        }
+       //统计本月消费
         Calendar now =Calendar.getInstance();
         Map<String,Object> map=new HashMap<>();
         map.put("year",now.get(Calendar.YEAR));
@@ -1091,6 +1104,7 @@ public class BillServiceimpl implements BillService {
             }
 
         }
+        //查询本月消费
         Double sum=billCostMapper.selectByPriceSum(map);
         if(sum!=null)
         {

@@ -30,9 +30,16 @@ public class BillCallCostServiceImpl implements BillCallCostService {
 
     @Autowired
     private FundItemMapper fundItemMapper;
-
+    @Autowired
+    private  BillOptimizationMapper billOptimizationMapper;
     @Override
     public int updateCallCost(Bill bill) {
+        //生成优化点击次数记录
+        BillOptimization billOptimization=new BillOptimization();
+        billOptimization.setBillId(bill.getId());
+        billOptimization.setOptimizationCount(bill.getDayOptimization());
+        billOptimization.setOptimizationDate(new Date());
+        billOptimizationMapper.insert(billOptimization);
         //2.根据计算单Bill查询单价BillPrice
         List<BillPrice> prices = billPriceMapper.selectByBillId(bill.getId());
 

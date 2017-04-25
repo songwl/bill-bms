@@ -138,6 +138,7 @@
   ENGINE = InnoDB
   COMMENT = '订单反馈信息表';
 
+
   CREATE TABLE IF NOT EXISTS `t_bill_price` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
     `bill_id` BIGINT NOT NULL COMMENT '',
@@ -216,3 +217,19 @@
     PRIMARY KEY (`id`)  COMMENT '')
   ENGINE = InnoDB
   COMMENT = '通知表';
+
+
+  CREATE TABLE IF NOT EXISTS `t_bill_optimization` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
+    `bill_id` BIGINT NOT NULL COMMENT '',
+    `optimization_count` INT  NULL COMMENT '优化次数',
+    `optimization_date`  DATETIME  NULL COMMENT '优化日期',
+    PRIMARY KEY (`id`)  COMMENT '',
+    INDEX `fk_t_bill_optimization_t_bill1_idx` (`bill_id` ASC)  COMMENT '',
+    CONSTRAINT `fk_t_bill_optimization_t_bill1`
+      FOREIGN KEY (`bill_id`)
+      REFERENCES `t_bill` (`id`)
+      ON DELETE NO ACTION
+      ON UPDATE NO ACTION)
+  ENGINE = InnoDB
+  COMMENT = '搜索引擎支持对象表';

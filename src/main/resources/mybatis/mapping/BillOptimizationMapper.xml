@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yipeng.bill.bms.dao.BillOptimizationMapper">
+  <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.BillOptimization">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="bill_id" jdbcType="BIGINT" property="billId" />
+    <result column="optimization_count" jdbcType="INTEGER" property="optimizationCount" />
+    <result column="optimization_date" jdbcType="TIMESTAMP" property="optimizationDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, bill_id, optimization_count, optimization_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_bill_optimization
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_bill_optimization
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.BillOptimization">
+    insert into t_bill_optimization (id, bill_id, optimization_count, 
+      optimization_date)
+    values (#{id,jdbcType=BIGINT}, #{billId,jdbcType=BIGINT}, #{optimizationCount,jdbcType=INTEGER}, 
+      #{optimizationDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.BillOptimization">
+    insert into t_bill_optimization
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="billId != null">
+        bill_id,
+      </if>
+      <if test="optimizationCount != null">
+        optimization_count,
+      </if>
+      <if test="optimizationDate != null">
+        optimization_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="billId != null">
+        #{billId,jdbcType=BIGINT},
+      </if>
+      <if test="optimizationCount != null">
+        #{optimizationCount,jdbcType=INTEGER},
+      </if>
+      <if test="optimizationDate != null">
+        #{optimizationDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.BillOptimization">
+    update t_bill_optimization
+    <set>
+      <if test="billId != null">
+        bill_id = #{billId,jdbcType=BIGINT},
+      </if>
+      <if test="optimizationCount != null">
+        optimization_count = #{optimizationCount,jdbcType=INTEGER},
+      </if>
+      <if test="optimizationDate != null">
+        optimization_date = #{optimizationDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.BillOptimization">
+    update t_bill_optimization
+    set bill_id = #{billId,jdbcType=BIGINT},
+      optimization_count = #{optimizationCount,jdbcType=INTEGER},
+      optimization_date = #{optimizationDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

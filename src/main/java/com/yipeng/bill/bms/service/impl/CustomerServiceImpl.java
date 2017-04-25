@@ -335,6 +335,11 @@ public class CustomerServiceImpl implements CustomerService{
 
     }
 
+    /**
+     * 待审核客户
+     * @param params
+     * @return
+     */
     @Override
     public Map<String, Object> getCustomerReviewList(Map<String, Object> params) {
         int limit=Integer.parseInt(params.get("limit").toString()) ;
@@ -359,12 +364,16 @@ public class CustomerServiceImpl implements CustomerService{
         Map<String,Object> map=new HashMap<>();
         map.put("rows",customerListDetailsList);
         map.put("total",total);
-
         return  map;
 
 
     }
 
+    /**
+     * 客户审核
+     * @param customerId
+     * @return
+     */
     @Override
     public int customerAudit(Long customerId) {
         User user=userMapper.selectByPrimaryKey(customerId);
@@ -438,6 +447,13 @@ public class CustomerServiceImpl implements CustomerService{
 
     }
 
+    /**
+     * 退款
+     * @param customerId
+     * @param RechargeSum
+     * @param user
+     * @return
+     */
     @Override
     public int Refound(String customerId, String RechargeSum, LoginUser user) {
         Double  nums=Double.parseDouble(RechargeSum);

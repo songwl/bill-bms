@@ -5,7 +5,7 @@
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <script src="${ctx}/static/js/public/pace.js"></script>
 <script src="${ctx}/static/js/bill/billOptimization.js"></script>
-<div class="Navs">
+<div class="Navs" >
     <div class="nav_L left">
         <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>关键词优化</span>
     </div>
@@ -27,17 +27,17 @@
     <div class="cls">
     </div>
 </div>
-<div class="Navs2">
+<div class="Navs2" style="width: 100%; height: 100px; line-height: 50px;border-left: 1px solid #d9d9d9;background: #eee;z-index: 99;display: none;">
     <div class="nav_R2 right col-md-11" >
         <input type="hidden" name="type" value="${way}" id="way">
         <div>
             网址:
         </div>
-        <input id="website" name="userName" class="form-control" value="" style="width: 150px;" type="text">
+        <input id="website" name="userName" class="form-control" value="" style="width: 150px;padding: 0 10px;" type="text">
         <div>
             关键词:
         </div>
-        <input id="keywords" name="keywords" class="form-control" value="" style="width: 150px;" type="text">
+        <input id="keywords" name="keywords" class="form-control" value="" style="width: 150px;padding: 0 10px;" type="text">
         <span style="font-size:13px;text-align:center;cursor:pointer;font-weight:bold;margin-left: 10px;">
         搜索引擎:
         </span>
@@ -62,6 +62,33 @@
             <option value="1">是</option>
             <option value="0">否</option>
         </select>
+
+    </div>
+    <div class="nav_R2 right col-md-11" >
+        <div>
+            初排:
+        </div>
+        <input id="firstRanking1" name="firstRanking1" class="form-control" value="" style="width: 50px;padding: 0 10px;" type="text">
+        <div style="width: 15px;">-</div>
+        <input id="firstRanking2" name="firstRanking2" class="form-control" value="" style="width: 50px;padding: 0 10px;" type="text">
+        <div>
+            新排:
+        </div>
+        <input id="newRanking1" name="newRanking1" class="form-control" value="" style="width: 50px;padding: 0 10px;" type="text">
+        <div style="width: 15px;">-</div>
+        <input id="newRanking2" name="newRanking2" class="form-control" value="" style="width: 50px;padding: 0 10px;" type="text">
+        <div>
+            新变:
+        </div>
+        <input id="newchange1" name="newchange1" class="form-control" value="" style="width: 50px;padding: 0 10px;" type="text">
+        <div style="width: 15px;">-</div>
+        <input id="newchange2" name="newchange2" class="form-control" value="" style="width: 50px;padding: 0 10px;" type="text">
+        <div style="width: 70px;">
+            增加时间:
+        </div>
+        <input id="addTime1" name="addTime1" class="form-control" value="" style="width: 150px;padding: 0 10px;" type="text" placeholder="格式：2017-1-1">
+        <div style="width: 15px;">-</div>
+        <input id="addTime2" name="addTime2" class="form-control" value="" style="width: 150px;padding: 0 10px;" type="text" placeholder="格式：2017-1-1">
         <span id="searchButton">查询</span>
     </div>
     <div class="cls">
@@ -108,8 +135,7 @@
                         <div class="form-group">
                             <div style="margin-left:15px;">优化指数：</div>
                             <div style="margin-left:10px;margin-top: 10px;">
-                            <select style="width: 80px;" id="OptimizationUpdateSelect">
-                            </select>
+                            <input  type="text" value="" id="OptimizationUpdateNum">
                             </div>
                         </div>
 

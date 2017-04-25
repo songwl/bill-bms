@@ -19,6 +19,7 @@ public class BillDetails {
     private String keywords;
     private Integer firstRanking;
     private Integer newRanking;
+    private Integer changeRanking;
     private Long createUserId;
     private Long updateUserId;
     private Integer webAppId;
@@ -53,6 +54,9 @@ public class BillDetails {
     public  Integer  setFirstRanking(Integer  firstRanking){return  this.firstRanking=firstRanking;}
     public  Integer  getNewRanking(){return  newRanking;}
     public  Integer  setNewRanking(Integer  newRanking){return  this.newRanking=newRanking;}
+
+    public  Integer  getChangeRanking(){return  changeRanking;}
+    public  Integer  setChangeRanking(Integer  changeRanking){return  this.changeRanking=changeRanking;}
 
     public  Integer  getWebAppId(){return  webAppId;}
     public  Integer  setWebAppId(Integer  webAppId){return  this.webAppId=webAppId;}

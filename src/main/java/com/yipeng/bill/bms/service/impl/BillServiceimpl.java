@@ -1044,6 +1044,7 @@ public class BillServiceimpl implements BillService {
         billDetails.setCreateTime(DateUtils.formatDate(bill.getCreateTime()));
         billDetails.setFirstRanking(bill.getFirstRanking());
         billDetails.setNewRanking(bill.getNewRanking());
+        billDetails.setChangeRanking(bill.getChangeRanking());
         billDetails.setBillPriceList(billPriceList);
         billDetails.setDayOptimization(bill.getDayOptimization());
         billDetails.setAllOptimization(bill.getAllOptimization());

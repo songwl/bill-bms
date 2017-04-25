@@ -65,4 +65,10 @@ public interface BillMapper {
      * @return
      */
     Long getBillListByCmmCount(Map<String,Object> params);
+    /**
+     * 客户的订单
+     * @param params
+     * @return
+     */
+    List<Bill> getBillCountByCmm(Map<String,Object> params);
 }

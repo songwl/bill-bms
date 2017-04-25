@@ -128,6 +128,15 @@ public class BillCallCostServiceImpl implements BillCallCostService {
         {
             //达标天数加一天
             bill.setStandardDays(bill.getStandardDays()+1);
+            if(bill.getChangeRanking()!=null)
+            {
+                bill.setChangeRanking(bill.getChangeRanking()-bill.getNewRanking());
+            }
+            else
+            {
+                bill.setChangeRanking(bill.getNewRanking());
+            }
+
             billMapper.updateByPrimaryKeySelective(bill);
         }
         return 1;

@@ -473,8 +473,7 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     formatter:function (value,row,index) {
-                        var a="<span style='color:#4382CF;cursor:pointer;' id='details'>详情</span>  " +
-                               "  <a href='/bill/bill/billFeedback?website="+row.website+"' style='color:#4382CF;cursor:pointer;' id='feedback'>反馈</a>";
+                        var a="<span style='color:#4382CF;cursor:pointer;' id='details'>详情</span> "  ;
 
                         return a;
                     },

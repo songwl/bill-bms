@@ -7,6 +7,14 @@ var searchName=null;
 var searchUserName=null;
 var searchState=2;
 var searchStandard=null;
+var firstRanking1=null;
+var firstRanking2=null;
+var newRanking1=null;
+var newRanking2=null;
+var newchange1=null;
+var newchange2=null;
+var addTime1=null;
+var addTime2=null;
 $(document).ready(function () {
 
     //优化调整（显示）
@@ -18,13 +26,6 @@ $(document).ready(function () {
         }else{
             $(".modal-backdrop").show();
             $(".OptimizationUpdateDiv").slideDown();
-           $("#OptimizationUpdateSelect").empty();
-            $("#OptimizationUpdateSelect").append("<option value=''>--请选择--</option>")
-           for(var i=1;i<=100;i++)
-           {
-
-               $("#OptimizationUpdateSelect").append( "<option value='"+i+"'>"+i+"</option>");
-           }
         }
     })
     //优化上线
@@ -102,9 +103,9 @@ $(document).ready(function () {
     $(".OptimizationUpdatecmt").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
         var len =selectContent.length;
-            if($("#OptimizationUpdateSelect option:selected").val()!="--请选择--")
+            if(!isNaN($("#OptimizationUpdateNum").val())&&$("#OptimizationUpdateNum").val()>0)
             {
-               var num= $("#OptimizationUpdateSelect option:selected").val();
+               var num= $("#OptimizationUpdateNum").val();
                 $.ajax({
                     type:"post",
                     url:CTX+"/bill/OptimizationUpdate",
@@ -123,7 +124,7 @@ $(document).ready(function () {
             }
             else
             {
-                alert("请选择优化指数");
+                alert("请填写正确的优化指数");
             }
 
     })
@@ -182,6 +183,62 @@ $(document).ready(function () {
         else
         {
             searchStandard=null;
+        }
+        if($("#firstRanking1").val()!="")//初排1
+        {
+            firstRanking1=$.trim($("#firstRanking1").val());
+        }
+        else
+        {
+            firstRanking1=null;
+        }
+        if($("#firstRanking2").val()!="")//初排2
+        {
+            firstRanking2=$.trim($("#firstRanking2").val());
+        }
+        else
+        {
+            firstRanking2=null;
+        }
+        if($("#newRanking1").val()!="")//新排1
+        {
+            newRanking1=$.trim($("#newRanking1").val());
+        }
+        else
+        {
+            newRanking1=null;
+        }
+        if($("#newchange1").val()!="")//新排2
+        {
+            newchange1=$.trim($("#newchange1").val());
+        }
+        else
+        {
+            newchange1=null;
+        }
+        if($("#newchange2").val()!="")//新排2
+        {
+            newchange2=$.trim($("#newchange2").val());
+        }
+        else
+        {
+            newchange2=null;
+        }
+        if($("#addTime1").val()!="")//新排2
+        {
+            addTime1=$.trim($("#addTime1").val());
+        }
+        else
+        {
+            addTime1=null;
+        }
+        if($("#addTime2").val()!="")//新排2
+        {
+            addTime2=$.trim($("#addTime2").val());
+        }
+        else
+        {
+            addTime2=null;
         }
         $('#myTable').bootstrapTable('refresh');
     });
@@ -314,8 +371,6 @@ var TableInit = function () {
                         }
                         return a;
                     }
-
-
                 },
                 {
                     field: 'newRanking',
@@ -343,6 +398,29 @@ var TableInit = function () {
 
                 },
                 {
+                    field: 'changeRanking',
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true,
+                    title: '新变',
+                    formatter:function (value,row,index) {
+                        var a="";
+                        if(value==null||value==0)
+                        {
+                            a="<span style='color:#FF0000;font-weight: bold;'>-</span>";
+                        }
+                        else if(value>0)
+                        {
+                            a="<span>"+value+"</span>&nbsp;&nbsp;<img src='/bill/static/img/up.ico' style='width:12px;height:12px;'>";
+                        }
+                        else
+                        {
+                            a="<span>" + math.abs(value) +"</span>&nbsp;&nbsp;<img src='/bill/static/img/down.ico' style='width:12px;height:12px;'>";
+                        }
+                        return a;
+                    }
+                },
+                {
                     field: 'billPriceList',
                     align: 'center',
                     valign: 'middle',
@@ -359,7 +437,6 @@ var TableInit = function () {
                     field: 'billPriceList',
                     align: 'center',
                     valign: 'middle',
-                    sortable: true,
                     title: '价格2',
                     formatter:function (value,row,index) {
                         var a="";
@@ -452,7 +529,15 @@ var TableInit = function () {
             searchName:searchName,
             searchUserName:searchUserName,
             state:searchState,
-            searchStandard:searchStandard
+            searchStandard:searchStandard,
+            firstRanking1:firstRanking1,
+            firstRanking2:firstRanking2,
+            newRanking1:newRanking1,
+            newRanking2:newRanking2,
+            newchange1:newchange1,
+            newchange2:newchange2,
+            addTime1:addTime1,
+            addTime2:addTime2
         };
         return temp;
     }

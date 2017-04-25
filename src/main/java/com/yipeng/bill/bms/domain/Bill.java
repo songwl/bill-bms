@@ -21,6 +21,7 @@ public class Bill implements Serializable {
     private Integer firstRanking;
 
     private Integer newRanking;
+    private Integer changeRanking;
 
     private Integer webAppId;
     private Integer webAppId1;
@@ -104,6 +105,14 @@ public class Bill implements Serializable {
 
     public void setNewRanking(Integer newRanking) {
         this.newRanking = newRanking;
+    }
+
+    public Integer getChangeRanking() {
+        return changeRanking;
+    }
+
+    public void setChangeRanking(Integer changeRanking) {
+        this.changeRanking = changeRanking;
     }
 
     public Integer getWebAppId() {

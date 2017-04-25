@@ -119,7 +119,9 @@ public class BillController extends BaseController {
     @ResponseBody
     public Map<String,Object> getBillOptimization( int limit, int offset,int way, String sortOrder, String sortName,
                                                    String website,String keywords,String searchName,String searchUserName,
-                                                   String state,String searchStandard)
+                                                   String state,String searchStandard,String firstRanking1,String firstRanking2
+                                                   ,String newRanking1,String newRanking2,String newchange1,String  newchange2,
+                                                   String  addTime1,String addTime2)
     {
         offset=(offset-1)*limit;
         Map<String, Object> params = this.getSearchRequest(); //查询参数
@@ -170,6 +172,39 @@ public class BillController extends BaseController {
         {
             params.put("sortName",sortName);
             params.put("sortOrder",sortOrder);
+        }
+        if(!firstRanking1.isEmpty()&&Integer.parseInt(firstRanking1)>0)
+        {
+            params.put("firstRanking1",firstRanking1);
+        }
+        if(!firstRanking2.isEmpty()&&Integer.parseInt(firstRanking2)>0)
+        {
+            params.put("firstRanking2",firstRanking2);
+        }
+
+        if(!newRanking1.isEmpty()&&Integer.parseInt(newRanking1)>0)
+        {
+            params.put("newRanking1",newRanking1);
+        }
+        if(!newRanking2.isEmpty()&&Integer.parseInt(newRanking2)>0)
+        {
+            params.put("newRanking2",newRanking2);
+        }
+        if(!newchange1.isEmpty()&&Integer.parseInt(newchange1)>0)
+        {
+            params.put("newchange1",newchange1);
+        }
+        if(!newchange2.isEmpty()&&Integer.parseInt(newchange2)>0)
+        {
+            params.put("newchange2",newchange2);
+        }
+        if(!addTime1.isEmpty())
+        {
+            params.put("addTime1",addTime1);
+        }
+        if(!addTime2.isEmpty())
+        {
+            params.put("addTime2",addTime2);
         }
 
         LoginUser user=this.getCurrentAccount();
@@ -601,7 +636,7 @@ public class BillController extends BaseController {
         return "/bill/billPendingAuditView";
     }
     /**
-     * 待审核订单y预览
+     * 待审核订单预览
      * @param limit
      * @param offset
      * @return

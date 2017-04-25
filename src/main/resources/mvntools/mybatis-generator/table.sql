@@ -91,6 +91,7 @@
     `update_user_id` BIGINT NULL COMMENT '',
     `first_ranking` INT NULL COMMENT '初始排名',
     `new_ranking` INT NULL COMMENT '新的排名',
+     `change_ranking` INT NULL COMMENT '今昨日排名变化',
     `web_app_id` INT NULL COMMENT '订单接口调用查询ID',
     `web_app_id1` INT NULL COMMENT '调点击接口调用查询ID',
     `standard_days` INT NULL COMMENT '达标天数',

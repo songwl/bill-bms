@@ -182,13 +182,13 @@
 <!--渠道商审核-->
     <#if  bmsModel.user.hasRole("DISTRIBUTOR")>
     <div class="bootbox modal in billExamineDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
-        <div class="modal-dialog">
+        <div class="modal-dialog" style="width: 990px;">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="bootbox-close-button close">×</button>
                     <h4 class="modal-title">审核</h4>
                 </div>
-                <div class="modal-body" style="max-height: 374px;">
+                <div class="modal-body" style="max-height: 574px;">
                     <div class="bootbox-body">
                         <style type="text/css">
                             .modal-dialog {
@@ -258,11 +258,12 @@
 
                     </div>
                 </div>
-                <div class="modal-footer">
+
+            </div>
+                <div class="modal-footer" style="height:70px;">
                     <button data-bb-handler="success" type="button" class="btn wzgj-blue qudaoShenhe">确定</button>
                     <button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
                 </div>
-            </div>
         </div>
     </div>
     </#if>

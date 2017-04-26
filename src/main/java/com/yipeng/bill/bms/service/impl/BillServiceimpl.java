@@ -605,7 +605,7 @@ public class BillServiceimpl implements BillService {
                         break;
                 }
 
-                jsonObj.put("searchOnce", false);
+                jsonObj.put("searchOnce", true);
                 String wParam = jsonObj.toString();
                 String wSign = null;
                 try {

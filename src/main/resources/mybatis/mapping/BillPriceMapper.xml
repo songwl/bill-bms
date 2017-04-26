@@ -170,4 +170,29 @@
     </if>
   </select>
 
+  <select id="selectByBillPriceSingle" parameterType="com.yipeng.bill.bms.domain.BillPrice" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_bill_price
+    where 1=1
+    <if test="billId != null">
+      AND bill_id = #{billId,jdbcType=BIGINT}
+    </if>
+    <if test="price != null">
+      AND  price = #{price,jdbcType=DECIMAL}
+    </if>
+    <if test="billRankingStandard != null">
+      AND  #{billRankingStandard,jdbcType=BIGINT}
+    </if>
+    <if test="inMemberId != null">
+      AND  in_member_id = #{inMemberId,jdbcType=BIGINT}
+    </if>
+    <if test="outMemberId != null">
+      AND out_member_id = #{outMemberId,jdbcType=BIGINT}
+    </if>
+    <if test="createTime != null">
+      AND  create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+  </select>
+
 </mapper>

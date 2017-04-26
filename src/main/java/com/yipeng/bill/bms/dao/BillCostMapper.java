@@ -39,4 +39,8 @@ public interface BillCostMapper {
     Double MonthConsumption(Map<String,Object> params);
     Double MonthConsumptionCommissioner(Map<String,Object> params);
     Double MonthConsumptionCustomer(Map<String,Object> params);
+
+    Double selectByBillCostOfWeek(Map<String,Object> params);
+    Double selectByBillCostOfMonth(Map<String,Object> params);
+    Double selectByBillCostOfAll(Map<String,Object> params);
 }

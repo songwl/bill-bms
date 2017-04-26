@@ -19,4 +19,5 @@ public interface BillPriceMapper {
     int updateByPrimaryKey(BillPrice record);
    int selectBillCount(Long UserId);
    Long selectByBillPriceOutMemberId(BillPrice billPrice);
+    BillPrice selectByBillPriceSingle(BillPrice record);
 }

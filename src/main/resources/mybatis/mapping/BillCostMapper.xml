@@ -183,4 +183,32 @@
       and DAY(b.cost_date) = #{day,jdbcType=INTEGER}
     </if>
   </select>
+
+  <!--周数据-->
+  <select id="selectByBillCostOfWeek"    resultType="java.lang.Double">
+    select
+    IFNULL(SUM(cost_amount),0)
+    from t_bill_cost
+    where t_bill_id = #{billId,jdbcType=BIGINT}
+    AND  t_bill_price_id=#{billPriceId,jdbcType=BIGINT}
+    AND YEARWEEK(date_format(cost_date,'%Y-%m-%d')) = YEARWEEK(now())
+  </select>
+  <!--月数据-->
+  <select id="selectByBillCostOfMonth"    resultType="java.lang.Double">
+    select
+    IFNULL(SUM(cost_amount),0)
+    from t_bill_cost
+    where t_bill_id = #{billId,jdbcType=BIGINT}
+    AND  t_bill_price_id=#{billPriceId,jdbcType=BIGINT}
+    AND date_format(cost_date,'%Y-%m')=date_format(now(),'%Y-%m')
+  </select>
+
+  <!--总数据-->
+  <select id="selectByBillCostOfAll"    resultType="java.lang.Double">
+    select
+    IFNULL(SUM(cost_amount),0)
+    from t_bill_cost
+    where t_bill_id = #{billId,jdbcType=BIGINT}
+    AND  t_bill_price_id=#{billPriceId,jdbcType=BIGINT}
+  </select>
 </mapper>

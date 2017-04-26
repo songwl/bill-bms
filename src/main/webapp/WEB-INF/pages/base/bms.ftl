@@ -339,17 +339,17 @@
                             </a>
                             <ul class="sub-menu"  style="background: #293038;">
                                 <li>
-                                    <a href="/">
+                                    <a href="${ctx}/dataStatistics/getBillOptimization">
                                         调点击
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/">
+                                    <a href="${ctx}/dataStatistics/distributorData">
                                         渠道商数据
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/">
+                                    <a href="${ctx}/dataStatistics/commissionerData">
                                         专员数据
                                     </a>
                                 </li>

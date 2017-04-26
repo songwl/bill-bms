@@ -232,4 +232,4 @@
       ON DELETE NO ACTION
       ON UPDATE NO ACTION)
   ENGINE = InnoDB
-  COMMENT = '搜索引擎支持对象表';
+  COMMENT = '优化指数统计表';

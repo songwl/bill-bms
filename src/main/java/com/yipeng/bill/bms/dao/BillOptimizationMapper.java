@@ -2,6 +2,8 @@ package com.yipeng.bill.bms.dao;
 
 import com.yipeng.bill.bms.domain.BillOptimization;
 
+import java.util.Map;
+
 public interface BillOptimizationMapper {
     int deleteByPrimaryKey(Long id);
 
@@ -14,4 +16,11 @@ public interface BillOptimizationMapper {
     int updateByPrimaryKeySelective(BillOptimization record);
 
     int updateByPrimaryKey(BillOptimization record);
+
+    int selectByBillIdOfWeek(Map<String,Object> params);
+
+
+    int selectByBillIdOfMonth(Map<String,Object> params);
+
+    int selectByBillIdOfAll(Map<String,Object> params);
 }

@@ -1,7 +1,10 @@
 package com.yipeng.bill.bms.service;
 
+import com.yipeng.bill.bms.model.BillOptimizations;
+import com.yipeng.bill.bms.model.DistributorData;
 import com.yipeng.bill.bms.vo.LoginUser;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,6 +17,14 @@ public interface DataStatisticsService {
      * @param user
      * @return
      */
-    Map<String, Object> getBillOptimization(Map<String,Object> params, LoginUser user);
+    List<BillOptimizations> getBillOptimization(Map<String,Object> params, LoginUser user);
+
+    /**
+     * 渠道商数据
+     * @param params
+     * @param user
+     * @return
+     */
+    List<DistributorData> distributorData(Map<String,Object> params, LoginUser user);
 
 }

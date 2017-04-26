@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -136,7 +137,7 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
                         Double week=0.0;
                         Double month=0.0;
                         Double all=0.0;
-
+                         int keywordsCount=0;//关键词达标
                         //循环所有订单 统计数据
                         for (Bill bill:billList
                                 ) {
@@ -152,9 +153,55 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
                              week+=billCostMapper.selectByBillCostOfWeek(map1);
                              month+=billCostMapper.selectByBillCostOfMonth(map1);
                              all+=billCostMapper.selectByBillCostOfAll(map1);
+                             //统计关键词达标
+                            List<BillPrice> billPriceList=billPriceMapper.selectByBillId(bill.getId());
+                            if (!CollectionUtils.isEmpty(billPriceList))
+                            {
+                                for (BillPrice priceItem:billPriceList
+                                     ) {
+                                    if(bill.getNewRanking()<=priceItem.getBillRankingStandard())
+                                    {
+                                        keywordsCount+=1;
+                                        break;
+                                    }
+                                }
+                            }
+
                         }
                         //订单数
                         Long count=billMapper.getBillListCount(map);
+                        //统计订单达标率
+                        //按网址分组的个数  对应的渠道商
+                        List<Bill> billList1=billMapper.getBillGroupByWebsite(map);
+                          //订单达标率
+                         double billStandard=0;
+                        DecimalFormat df = new DecimalFormat("0.00");//格式化小数
+                         if(!CollectionUtils.isEmpty(billList1))
+                         {
+                             //达标订单个数
+                             int billCount=0;
+                             for (Bill billItem:billList1
+                                  ) {
+
+                                 map.put("website",billItem.getWebsite());
+                                 map.put("searchStandard",1);
+                                 List<Bill> billListStandardCount=billMapper.selectByInMemberId(map);
+                                 if (!CollectionUtils.isEmpty(billListStandardCount))
+                                 {
+                                     billCount+=1;
+                                 }
+                             }
+                             billStandard=((double)billCount/billList1.size())*100;
+                         }
+                        //统计关键词达标率
+                        double keywordStandard=0;
+                        keywordStandard=((double)keywordsCount/billList.size())*100;// 关键词达标个数/订单总数
+                        //本月新增订单数
+                         Map<String,Object> monthMap=new HashMap<>();
+                        monthMap.put("userId",user1.getId());
+                         monthMap.put("state",2);
+                         monthMap.put("state2",3);
+                         int monthAddCount=billMapper.getBillMonthAdd(monthMap);
 
                         //视图对象
                         DistributorData distributorData=new DistributorData();
@@ -164,6 +211,9 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
                         distributorData.setMonthCost(month);
                         distributorData.setAllCost(all);
                         distributorData.setBillCount(count);
+                        distributorData.setBillStandard(df.format(billStandard));
+                        distributorData.setKeywordsStandard(df.format(keywordStandard));
+                        distributorData.setMonthAddBill(monthAddCount);
                         //加入到视图集合
                         distributorDataList.add(distributorData);
 

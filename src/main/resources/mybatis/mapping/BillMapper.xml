@@ -306,6 +306,9 @@
     <if test="keywords != null">
       AND  keywords = #{keywords,jdbcType=VARCHAR}
     </if>
+    <if test="state != null">
+      AND  state=#{state,jdbcType=INTEGER}
+    </if>
   </select>
 
   <select id="selectBill" resultMap="BaseResultMap">
@@ -992,4 +995,128 @@
       AND a.new_ranking &lt;= b.bill_ranking_standard
     </if>
   </select>
+  <!--按网址分组-->
+  <select id="getBillGroupByWebsite"  resultMap="BaseResultMap">
+    select DISTINCT a.*
+    from t_bill as a,t_bill_price as b
+    where a.id=b.bill_id
+    AND b.in_member_id=#{userId,jdbcType=BIGINT}
+    <if test="website != null">
+      AND a.website LIKE CONCAT('%',#{website,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="keywords != null">
+      AND a.keywords LIKE CONCAT('%',#{keywords,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="createTime != null">
+      AND create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateTime != null">
+      AND update_time = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="createUserId != null">
+      AND  create_user_id = #{createUserId,jdbcType=BIGINT}
+    </if>
+    <if test="updateUserId != null">
+      AND update_user_id = #{updateUserId,jdbcType=BIGINT}
+    </if>
+    <if test="firstRanking != null">
+      AND first_ranking = #{firstRanking,jdbcType=INTEGER}
+    </if>
+    <if test="newRanking != null">
+      AND  new_ranking = #{newRanking,jdbcType=INTEGER}
+    </if>
+    <if test="webAppId != null">
+      AND  web_app_id = #{webAppId,jdbcType=INTEGER}
+    </if>
+    <if test="webAppId1 != null">
+      AND  web_app_id1 = #{webAppId1,jdbcType=INTEGER}
+    </if>
+    <if test="standardDays != null">
+      AND  standard_days = #{standardDays,jdbcType=INTEGER}
+    </if>
+    <if test="dayOptimization != null">
+      AND  day_optimization = #{dayOptimization,jdbcType=INTEGER}
+    </if>
+    <if test="allOptimization != null">
+      AND  all_optimization = #{allOptimization,jdbcType=INTEGER}
+    </if>
+    <if test="state != null">
+      AND  a.state = #{state,jdbcType=INTEGER}
+    </if>
+    <if test="opstate != null">
+      AND  a.opstate = #{opstate,jdbcType=INTEGER}
+    </if>
+    <if test="billType != null">
+      AND  a.bill_type = #{billType,jdbcType=INTEGER}
+    </if>
+    <if test="billAscription != null">
+      AND  bill_ascription= #{billAscription,jdbcType=BIGINT}
+    </if>
+    GROUP  BY a.website
+  </select>
+
+  <!--本月新增订单数-->
+  <select id="getBillMonthAdd"  resultType="java.lang.Integer">
+    select IFNULL(COUNT(a.id),0)
+    from t_bill as a,t_bill_price as b
+    where a.id=b.bill_id
+    AND b.in_member_id=#{userId,jdbcType=BIGINT}
+    AND  date_format(a.create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+    <if test="website != null">
+      AND a.website LIKE CONCAT('%',#{website,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="keywords != null">
+      AND a.keywords LIKE CONCAT('%',#{keywords,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="createTime != null">
+      AND create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateTime != null">
+      AND update_time = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="createUserId != null">
+      AND  create_user_id = #{createUserId,jdbcType=BIGINT}
+    </if>
+    <if test="updateUserId != null">
+      AND update_user_id = #{updateUserId,jdbcType=BIGINT}
+    </if>
+    <if test="firstRanking != null">
+      AND first_ranking = #{firstRanking,jdbcType=INTEGER}
+    </if>
+    <if test="newRanking != null">
+      AND  new_ranking = #{newRanking,jdbcType=INTEGER}
+    </if>
+    <if test="webAppId != null">
+      AND  web_app_id = #{webAppId,jdbcType=INTEGER}
+    </if>
+    <if test="webAppId1 != null">
+      AND  web_app_id1 = #{webAppId1,jdbcType=INTEGER}
+    </if>
+    <if test="standardDays != null">
+      AND  standard_days = #{standardDays,jdbcType=INTEGER}
+    </if>
+    <if test="dayOptimization != null">
+      AND  day_optimization = #{dayOptimization,jdbcType=INTEGER}
+    </if>
+    <if test="allOptimization != null">
+      AND  all_optimization = #{allOptimization,jdbcType=INTEGER}
+    </if>
+    <if test="state != null">
+      AND  a.state = #{state,jdbcType=INTEGER}
+    </if>
+    <if test="state2 != null">
+      OR  a.state = #{state2,jdbcType=INTEGER}
+    </if>
+    <if test="opstate != null">
+      AND  a.opstate = #{opstate,jdbcType=INTEGER}
+    </if>
+    <if test="billType != null">
+      AND  a.bill_type = #{billType,jdbcType=INTEGER}
+    </if>
+    <if test="billAscription != null">
+      AND  bill_ascription= #{billAscription,jdbcType=BIGINT}
+    </if>
+  </select>
+
+
 </mapper>

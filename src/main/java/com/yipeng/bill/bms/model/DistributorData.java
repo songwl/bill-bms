@@ -10,8 +10,8 @@ public class DistributorData {
     private  Double monthCost;
     private  Double allCost;
     private  Long billCount;
-    private  Double billStandard;
-    private  Double keywordsStandard;
+    private  String billStandard;
+    private  String keywordsStandard;
     private  int monthAddBill;
 
     public Long getId() {
@@ -48,13 +48,13 @@ public class DistributorData {
         this.billCount = billCount;
     }
 
-    public  Double getBillStandard(){return  billStandard;}
-    public void setBillStandard(Double billStandard) {
+    public  String getBillStandard(){return  billStandard;}
+    public void setBillStandard(String billStandard) {
         this.billStandard = billStandard;
     }
 
-    public  Double getKeywordsStandard(){return  billStandard;}
-    public void setKeywordsStandard(Double keywordsStandard) {
+    public  String getKeywordsStandard(){return  keywordsStandard;}
+    public void setKeywordsStandard(String keywordsStandard) {
         this.keywordsStandard = keywordsStandard;
     }
 

@@ -71,4 +71,18 @@ public interface BillMapper {
      * @return
      */
     List<Bill> getBillCountByCmm(Map<String,Object> params);
+    /**
+     * 按网址分组
+     * @param params
+     * @return
+     */
+    List<Bill> getBillGroupByWebsite(Map<String,Object> params);
+
+    /**
+     * 本月新增订单数
+     * @param params
+     * @return
+     */
+    int getBillMonthAdd(Map<String,Object> params);
+
 }

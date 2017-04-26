@@ -76,15 +76,15 @@
                                 </li>
                                 <li style="height: 30px;line-height: 30px;border-bottom: 1px solid #d9d9d9">
                                     <span class="text-black-gray" style="font-weight: 800;">订单达标率</span>
-                                    <span class="pull-right text-gray-white">5</span>
+                                    <span class="pull-right text-gray-white">${item.billStandard}%</span>
                                 </li>
                                 <li style="height: 30px;line-height: 30px;border-bottom: 1px solid #d9d9d9">
                                     <span class="text-black-gray" style="font-weight: 800;">关键词达标率</span>
-                                    <span class="pull-right text-gray-white">6</span>
+                                    <span class="pull-right text-gray-white">${item.keywordsStandard}%</span>
                                 </li>
                                 <li style="height: 30px;line-height: 30px;border-bottom: 1px solid #d9d9d9">
                                     <span class="text-black-gray" style="font-weight: 800;">本月新增订单数</span>
-                                    <span class="pull-right text-gray-white">7</span>
+                                    <span class="pull-right text-gray-white">${item.monthAddBill}</span>
                                 </li>
                             </ul>
                         </div>

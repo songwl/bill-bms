@@ -13,6 +13,8 @@ public class DistributorData {
     private  String billStandard;
     private  String keywordsStandard;
     private  int monthAddBill;
+    private  String expectedPerformance;
+
 
     public Long getId() {
         return id;
@@ -62,4 +64,10 @@ public class DistributorData {
     public void setMonthAddBill(int monthAddBill) {
         this.monthAddBill = monthAddBill;
     }
+
+    public  String getExpectedPerformance(){return  expectedPerformance;}
+    public void setExpectedPerformance(String expectedPerformance) {
+        this.expectedPerformance = expectedPerformance;
+    }
+
 }

@@ -65,12 +65,21 @@ public class DataStatisticsController extends  BaseController{
     }
 
     /**
-     * 统计调点击数据页面
+     * 操作员统计数据
      * @return
      */
     @RequestMapping(value = "/commissionerData")
-    public  String commissionerData()
+    public  String commissionerData(ModelMap modelMap)
     {
+        LoginUser loginUser=this.getCurrentAccount();
+        if(loginUser!=null)
+        {
+            Map<String,Object> params=new HashedMap();
+            params.put("loginUser",loginUser);
+            List<DistributorData> distributorDataList=dataStatisticsService.commissionerData(params,loginUser);
+
+            modelMap.put("distributorDataList",distributorDataList);
+        }
 
 
         return  "/dataStatistics/commissionerData";

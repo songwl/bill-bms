@@ -52,27 +52,49 @@
                     <div class="cls"></div>
                 </div>
                 <ul class="class-content">
-                        <li class="pull-left margin-large-35" style="border: 1px solid #d9d9d9; height: 250px;width: 200px;padding: 20px;margin: 20px 40px 0 10px;">
+                    <#list distributorDataList as item>
+                        <li class="pull-left margin-large-35" style="border-top: 5px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-right: 1px solid #d9d9d9;
+                    border-bottom: 1px solid #d9d9d9;height: 350px;width:20%; margin: 20px 40px 0 10px;">
                             <div class="class-detail-top">
-
-                                <h3 class="text-center">${item.userName}</h3>
-                                <ul class="class-detail-has margin-top text-lh-big">
+                                <div class="text-center" style="height:40px;line-height:40px;font-size:18px;font-weight:bold;background:#09c;color:#fff;">${item.userName}</div>
+                                <ul class="class-detail-has margin-top text-lh-big" style="padding: 20px;">
                                     <li style="height: 30px;line-height: 30px;border-bottom: 1px solid #d9d9d9">
-                                        <span class="text-black-gray" style="font-weight: 800;">本周点击</span>
-                                        <span class="pull-right text-gray-white"></span>
+                                        <span class="text-black-gray" style="font-weight: 800;"><span class="fa fa-circle" style="color: #ff0000;"></span>周消费</span>
+                                        <span class="pull-right text-gray-white"><i class="fa fa-cny"></i>${item.weekCost}</span>
                                     </li>
                                     <li style="height: 30px;line-height: 30px;border-bottom: 1px solid #d9d9d9">
-                                        <span class="text-black-gray" style="font-weight: 800;">本月点击</span>
-                                        <span class="pull-right text-gray-white"></span>
+                                        <span class="text-black-gray" style="font-weight: 800;"><span class="fa fa-circle" style="color: #00ff00;"></span>月消费</span>
+                                        <span class="pull-right text-gray-white"><i class="fa fa-cny"></i>${item.monthCost}</span>
                                     </li>
                                     <li style="height: 30px;line-height: 30px;border-bottom: 1px solid #d9d9d9">
-                                        <span class="text-black-gray" style="font-weight: 800;">总点击</span>
-                                        <span class="pull-right text-gray-white"></span>
+                                        <span class="text-black-gray" style="font-weight: 800;"><span class="fa fa-circle" style="color: #0000ff;"></span>总消费</span>
+                                        <span class="pull-right text-gray-white"><i class="fa fa-cny"></i>${item.allCost}</span>
+                                    </li>
+                                    <li style="height: 30px;line-height: 30px;border-bottom: 1px solid #d9d9d9">
+                                        <span class="text-black-gray" style="font-weight: 800;"><span class="fa fa-circle" style="color: #78cff8;"></span>订单数</span>
+                                        <span class="pull-right text-gray-white">${item.billCount}</span>
+                                    </li>
+                                    <li style="height: 30px;line-height: 30px;border-bottom: 1px solid #d9d9d9">
+                                        <span class="text-black-gray" style="font-weight: 800;">订单达标率</span>
+                                        <span class="pull-right text-gray-white">${item.billStandard}%</span>
+                                    </li>
+                                    <li style="height: 30px;line-height: 30px;border-bottom: 1px solid #d9d9d9">
+                                        <span class="text-black-gray" style="font-weight: 800;">关键词达标率</span>
+                                        <span class="pull-right text-gray-white">${item.keywordsStandard}%</span>
+                                    </li>
+                                    <li style="height: 30px;line-height: 30px;border-bottom: 1px solid #d9d9d9">
+                                        <span class="text-black-gray" style="font-weight: 800;">本月新增订单数</span>
+                                        <span class="pull-right text-gray-white">${item.monthAddBill}</span>
+                                    </li>
+                                    <li style="height: 30px;line-height: 30px;border-bottom: 1px solid #d9d9d9">
+                                        <span class="text-black-gray" style="font-weight: 800;">预计业绩</span>
+                                        <span class="pull-right text-gray-white"><i class="fa fa-cny"></i>${item.expectedPerformance}</span>
                                     </li>
                                 </ul>
                             </div>
                         </li>
 
+                    </#list>
 
                 </ul>
 

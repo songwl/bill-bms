@@ -53,28 +53,26 @@
                 </div>
                 <ul class="class-content">
                     <#list optimizationsList as item>
-                    <li class="pull-left margin-large-35" style="border: 1px solid #d9d9d9; height: 250px;width: 200px;padding: 20px;margin: 20px 40px 0 10px;">
+                        <li class="pull-left margin-large-35" style="border-top: 5px solid #d9d9d9;border-left: 1px solid #d9d9d9;border-right: 1px solid #d9d9d9;
+                    border-bottom: 1px solid #d9d9d9;height: 200px;width:15%; margin: 20px 40px 0 10px;">
                             <div class="class-detail-top">
-                                <div class="text-center indentify-icon">
-                                    <img src="/bill/static/img/user.png" style="height: 50px;width: 50px;">
-                                </div>
-                                <h3 class="text-center">${item.userName}</h3>
-                                <ul class="class-detail-has margin-top text-lh-big">
+                                <div class="text-center" style="height:40px;line-height:40px;font-size:18px;font-weight:bold;background:#09c;color:#fff;">${item.userName}</div>
+                                <ul class="class-detail-has margin-top text-lh-big" style="padding: 20px;">
                                     <li style="height: 30px;line-height: 30px;border-bottom: 1px solid #d9d9d9">
-                                        <span class="text-black-gray" style="font-weight: 800;">本周点击</span>
-                                        <span class="pull-right text-gray-white">${item.weekOptimization}</span>
+                                        <span class="text-black-gray" style="font-weight: 800;"><span class="fa fa-circle" style="color: #ff0000;"></span>本周点击</span>
+                                        <span class="pull-right text-gray-white"><i class="fa fa-cny"></i>${item.weekOptimization}</span>
                                     </li>
                                     <li style="height: 30px;line-height: 30px;border-bottom: 1px solid #d9d9d9">
-                                        <span class="text-black-gray" style="font-weight: 800;">本月点击</span>
-                                        <span class="pull-right text-gray-white">${item.monthOptimization}</span>
+                                        <span class="text-black-gray" style="font-weight: 800;"><span class="fa fa-circle" style="color: #00ff00;"></span>本月点击</span>
+                                        <span class="pull-right text-gray-white"><i class="fa fa-cny"></i>${item.monthOptimization}</span>
                                     </li>
                                     <li style="height: 30px;line-height: 30px;border-bottom: 1px solid #d9d9d9">
-                                        <span class="text-black-gray" style="font-weight: 800;">总点击</span>
-                                        <span class="pull-right text-gray-white">${item.allOptimization}</span>
+                                        <span class="text-black-gray" style="font-weight: 800;"><span class="fa fa-circle" style="color: #0000ff;"></span>总点击</span>
+                                        <span class="pull-right text-gray-white"><i class="fa fa-cny"></i>${item.allOptimization}</span>
                                     </li>
                                 </ul>
                             </div>
-                    </li>
+                        </li>
                     </#list>
 
                 </ul>

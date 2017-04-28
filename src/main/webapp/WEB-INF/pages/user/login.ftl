@@ -5,7 +5,7 @@
 <link href="${ctx}/static/css/user/index.css" rel="stylesheet">
 <link href="${ctx}/static/css/user/style.css" rel="stylesheet">
 <link href="${ctx}/static/css/user/account_common.css" rel="stylesheet">
-
+<link href="${ctx}/static/css/user/zzsc.css" rel="stylesheet">
 <div id="header" data-spm="1">
     <div class="header-layout y-row" style="min-width: 1000px;
       max-width: 1200px;
@@ -27,8 +27,23 @@
     </div>
 </div>
 <div class="content">
+    <div id="slideBox">
+        <ul id="show_pic" style="left: 0px;">
+            <li><img alt="站长素材" title="" height="300" width="300" src="${ctx}/static/img/dk.jpg"></li>
+            <li><img alt="站长素材" title="" height="300" width="300" src="${ctx}/static/img/ldhkf.jpg"></li>
+        </ul>
+        <div id="slideText"></div>
+        <ul id="iconBall">
+            <li class="active">1</li>
+            <li class="">2</li>
+        </ul>
+        <ul id="textBall">
+            <li class="active"><a href="javascript:void(0)"></a></li>
+            <li class=""><a href="javascript:void(0)"></a></li>
+        </ul>
+    </div>
+    <script src="${ctx}/static/js/user/zzsc.js"></script>
 
-    <div  style="height:300px;width:300px; border:1px solid #D4D4D4; float:left;margin-left:350px;border-radius:5px;"></div>
 
     <div id="login-module">
         <div id="login-wrap" class=" login-static  nc-outer-box">

@@ -145,14 +145,18 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
                             BillPrice billPrice=new BillPrice();
                             billPrice.setBillId(bill.getId());
                             billPrice.setInMemberId(user.getId());
-                            BillPrice billPrice1=billPriceMapper.selectByBillPriceSingle(billPrice);
+                            List<BillPrice>  billPrices=billPriceMapper.selectByBillPriceSingle(billPrice);
                             //通过订单ID和单价ID 统计数据
-                             Map<String,Object> map1=new HashMap<>();
-                             map1.put("billId",bill.getId());
-                             map1.put("billPriceId",billPrice1.getId());
-                             week+=billCostMapper.selectByBillCostOfWeek(map1);
-                             month+=billCostMapper.selectByBillCostOfMonth(map1);
-                             all+=billCostMapper.selectByBillCostOfAll(map1);
+                            for (BillPrice billpriceitem:billPrices
+                                 ) {
+                                Map<String,Object> map1=new HashMap<>();
+                                map1.put("billId",bill.getId());
+                                map1.put("billPriceId",billpriceitem.getId());
+                                week+=billCostMapper.selectByBillCostOfWeek(map1);
+                                month+=billCostMapper.selectByBillCostOfMonth(map1);
+                                all+=billCostMapper.selectByBillCostOfAll(map1);
+                            }
+
                              //统计关键词达标
                             List<BillPrice> billPriceList=billPriceMapper.selectByBillId(bill.getId());
                             if (!CollectionUtils.isEmpty(billPriceList))
@@ -271,14 +275,18 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
                             BillPrice billPrice=new BillPrice();
                             billPrice.setBillId(bill.getId());
                             billPrice.setInMemberId(user.getCreateUserId());
-                            BillPrice billPrice1=billPriceMapper.selectByBillPriceSingle(billPrice);
+                          List<BillPrice>    billPrices=billPriceMapper.selectByBillPriceSingle(billPrice);
                             //通过订单ID和单价ID 统计数据
-                            Map<String,Object> map1=new HashMap<>();
-                            map1.put("billId",bill.getId());
-                            map1.put("billPriceId",billPrice1.getId());
-                            week+=billCostMapper.selectByBillCostOfWeek(map1);
-                            month+=billCostMapper.selectByBillCostOfMonth(map1);
-                            all+=billCostMapper.selectByBillCostOfAll(map1);
+                            for (BillPrice billpriceitem:billPrices
+                                    ) {
+                                Map<String,Object> map1=new HashMap<>();
+                                map1.put("billId",bill.getId());
+                                map1.put("billPriceId",billpriceitem.getId());
+                                week+=billCostMapper.selectByBillCostOfWeek(map1);
+                                month+=billCostMapper.selectByBillCostOfMonth(map1);
+                                all+=billCostMapper.selectByBillCostOfAll(map1);
+                            }
+                            ;
                             //统计关键词达标
                             List<BillPrice> billPriceList=billPriceMapper.selectByBillId(bill.getId());
                             if (!CollectionUtils.isEmpty(billPriceList))

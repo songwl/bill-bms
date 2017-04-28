@@ -182,56 +182,56 @@
                                 前
                                 <span class="red">N</span>名<span class="required">*</span>
                             </label>
-                            <div class="col-md-1 padding-left-0px padding-right-0px" style="width: 35px;">
+                            <div class="" style="width: 35px;float: left;">
                                 <input name="samePricerankend"   style="width: 35px;">
                             </div>
 
-                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 68px;">
                                 <span>元/天</span><span class="required">*</span>
                             </label>
-                            <div class="col-md-1 padding-left-5px padding-right-0px" style="width: 35px;">
+                            <div class="" style="width: 35px;float: left;">
                                 <input name="samePriceprice"   style="width: 35px;">
                             </div>
                             <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
                                 前
                                 <span class="red">N</span>名
                             </label>
-                            <div class="col-md-1 padding-left-0px padding-right-0px" style="width: 35px;">
+                            <div class="" style="width: 35px;float: left;">
                                 <input name="samePricerankend1"   style="width: 35px;">
                             </div>
 
-                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 68px;">
                                 <span>元/天</span>
                             </label>
-                            <div class="col-md-1 padding-left-5px padding-right-0px" style="width: 35px;">
+                            <div class="" style="width: 35px;float: left;">
                                 <input name="samePriceprice1"   style="width: 35px;">
                             </div>
                             <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
                                 前
                                 <span class="red">N</span>名
                             </label>
-                            <div class="col-md-1 padding-left-0px padding-right-0px" style="width: 35px;">
+                            <div class="" style="width: 35px;float: left;">
                                 <input name="samePricerankend2"  style="width: 35px;">
                             </div>
 
-                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 68px;">
                                 <span>元/天</span><span class="required">*</span>
                             </label>
-                            <div class="col-md-1 padding-left-5px padding-right-0px" style="width: 35px;">
+                            <div class="" style="width: 35px;float: left;">
                                 <input name="samePriceprice2"   style="width: 35px;">
                             </div>
                             <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
                                 前
                                 <span class="red">N</span>名
                             </label>
-                            <div class="col-md-1 padding-left-0px padding-right-0px" style="width: 35px;">
+                            <div class="" style="width: 35px;float: left;">
                                 <input name="samePricerankend3"   style="width: 35px;">
                             </div>
 
-                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 68px;">
                                 <span>元/天</span>
                             </label>
-                            <div class="col-md-1 padding-left-5px padding-right-0px" style="width: 35px;">
+                            <div class="" style="width: 35px;float: left;">
                                 <input name="samePriceprice3"   style="width: 35px;">
                             </div>
 
@@ -242,7 +242,8 @@
 
 
             <div class="modal-footer">
-                <button data-bb-handler="success" type="button" class="btn wzgj-blue samepricecmt">确定</button><button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
+                <button data-bb-handler="success" type="button" class="btn wzgj-blue samepricecmt" style="background: #09C;color: #fff;">确定</button>
+                <button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
             </div>
         </div>
     </div>
@@ -332,7 +333,7 @@
             </div>
 
             <div class="modal-footer">
-                <button data-bb-handler="success" type="button" class="btn wzgj-blue dfpricecmt">确定</button>
+                <button data-bb-handler="success" type="button" class="btn wzgj-blue dfpricecmt" style="background: #09C;color: #fff;">确定</button>
                 <button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
             </div>
         </div>

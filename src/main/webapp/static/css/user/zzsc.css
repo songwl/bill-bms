@@ -1,0 +1,90 @@
+* {
+	margin:0;
+	padding:0;
+	list-style-type:none;
+}
+body {
+	font:12px/180% "宋体", Arial, Helvetica, sans-serif;background:#f;
+}
+/*图片轮换*/
+#slideBox {
+	width:300px;
+	height:300px;
+	overflow:hidden;
+	position:relative;
+	/* margin:20px auto; */ 
+    float:left;
+	margin-left:350px;
+	border:10px solid #D4D4D4;
+	/* height:300px;width:300px; border:1px solid #D4D4D4; float:left;margin-left:350px;border-radius:5px; */
+}
+#slideBox ul#show_pic {
+    background:url(../images/dk.jpg) no-repeat;
+	margin:0;
+	padding:0;
+	list-style:none;
+	height:300px;
+	width:600px;
+	position:absolute;
+}
+#slideBox ul#show_pic li {
+	float:left;
+	margin:0;
+	padding:0;
+	height:285px;
+}
+#slideBox ul#show_pic li img {
+	display:block;
+}
+#iconBall {
+	position:absolute;
+	bottom:0;
+	right:0;
+}
+#iconBall li {
+	float:left;
+	color:#7a7a7a;
+	width:28px;
+	height:28px;
+	line-height:28px;
+	cursor:pointer;
+	text-align:center;
+	font-size:14px;
+	font-weight:bold;
+	padding-top:4px;
+}
+#iconBall li.active {
+	background:url(../images/iconbg.png) no-repeat;
+	color:#fff;
+}
+#slideText {
+	width:300px;
+	height:28px;
+	background:rgba(0, 0, 0, 1);
+	color:#fff;
+	position:absolute;
+	left:0px;
+	bottom:0px;
+*background:transparent;
+filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2000000, endColorstr=#b2000000);
+}
+#textBall {
+	position:absolute;
+	left:10px;
+	bottom:3px;
+}
+#textBall li {
+	float:left;
+	cursor:pointer;
+	display:none;
+	color:#fff;
+	font-size:14px;
+}
+#textBall li.active {
+	display:block;
+}
+#textBall li a {
+	text-decoration:none;
+	color:#fff;
+}
+p,p a{font-size:12px;color:#666;}

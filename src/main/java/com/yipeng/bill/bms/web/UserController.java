@@ -63,6 +63,7 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/register/validUserName",method = RequestMethod.GET)
     @ResponseBody
     public ResultMessage validUserName(@RequestParam String userName) {
+
         User user=  userService.getUserByName(userName);
         if(user!=null)
         {

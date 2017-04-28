@@ -74,22 +74,23 @@
                 </a>
                 <ul class="dropdown-menu userDetails">
 
-                    <li>
+                    <li clas="updateUser">
                         <a class="dlg-user-edit-info">
                             <i class="icon-user"></i> 基本资料
                         </a>
                     </li>
 
-                    <li>
+                    <li class="updatePwd">
                         <a class="dlg-user-edit-pwd">
                             <i class="icon-pencil"></i> 修改密码
                         </a>
                     </li>
+                    <!--
                     <li>
                         <a>
                             <i class="icon-tasks"></i> 任务列表
                         </a>
-                    </li>
+                    </li>-->
                     <li class="divider"></li>
                     <li>
                         <a href="${ctx}/logout">
@@ -121,12 +122,12 @@
                         <i class="icon-user"></i> 新的订单
                     </a>
                 </li>
-                <li>
+               <!-- <li>
                     <a class="dlg-user-edit-pwd">
                         <i class="icon-pencil"></i> 订单反馈
                     </a>
                 </li>
-
+                -->
             </ul>
         </ul>
     </div>

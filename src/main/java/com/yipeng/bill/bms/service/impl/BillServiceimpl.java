@@ -100,8 +100,17 @@ public class BillServiceimpl implements BillService {
                 Map<String,Object> map=new HashMap<>();
                 if(search[0].equals("360")||search[0].equals("搜狗"))
                 {
-                    String urlss="http://"+urls[i];
-                    map.put("url",urlss);
+                    String urlStr=urls[i].substring(0,7);
+                    if ("http://".equals(urlStr))
+                    {
+                        map.put("url",urls[i]);
+                    }
+                    else
+                    {
+                        String urlss="http://"+urls[i];
+                        map.put("url",urlss);
+                    }
+
                 }
                 else
                 {
@@ -204,10 +213,20 @@ public class BillServiceimpl implements BillService {
                   {
 
                       Bill bill=new Bill();
+                      //判断搜索引擎
                       if(dfsearch[0].equals("360")||dfsearch[0].equals("搜狗"))
                       {
-                          String urls="http://"+dfurls[i];
-                          bill.setWebsite(urls);
+
+                          //判断http:// 前缀
+                          String urlStr=dfurls[i].substring(0,7);
+                          if ("http://".equals(urlStr)) {
+                              bill.setWebsite(dfurls[i]);
+                          }
+                          else
+                          {
+                              String urls="http://"+dfurls[i];
+                              bill.setWebsite(urls);
+                          }
                       }
                       else
                       {
@@ -273,6 +292,8 @@ public class BillServiceimpl implements BillService {
                   bill.setDayOptimization(0);
                   bill.setAllOptimization(0);
                   bill.setState(state);
+                  //正常单
+                  bill.setBillType(1);
                   Long billId=billMapper.insert(bill);
                   //订单引擎表
                   BillSearchSupport billSearchSupport=new BillSearchSupport();
@@ -518,6 +539,10 @@ public class BillServiceimpl implements BillService {
                     }
                 }
             }
+            else
+            {
+                return  1;
+            }
 
 
         }
@@ -711,11 +736,11 @@ public class BillServiceimpl implements BillService {
                         //判断两个返回结果是否成功
                         JSONObject jsonObject=customerOptimizationResult.getArgs();
                         String  code=jsonObject.get("code").toString();
-                        JSONArray OptimizationValue=jsonObject.getJSONArray("value");
-                        String message= OptimizationValue.getJSONArray(0).get(1).toString();
-
-                        if(customerRankingResult.getMessage().equals("success.")&&("success").equals(code)&&("").equals(message))
+                        if(customerRankingResult.getMessage().equals("success.")&&("success").equals(code))
                         {
+
+                            JSONArray OptimizationValue=jsonObject.getJSONArray("value");
+                            String message= OptimizationValue.getJSONArray(0).get(1).toString();
                            JSONArray value=customerRankingResult.getValue();
                            JSONArray valueJSONArray= value.getJSONArray(0);
                            ApiId=Integer.parseInt(valueJSONArray.get(0).toString());
@@ -795,15 +820,17 @@ public class BillServiceimpl implements BillService {
                         }
                         else
                         {
-                            continue;
+                            return 1;
                         }
                     }
 
 
                 } catch (IOException e) {
                     e.printStackTrace();
+                    return 1;
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
+                    return 1;
                 }
 
 

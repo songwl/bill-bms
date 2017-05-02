@@ -85,4 +85,11 @@ public interface BillMapper {
      */
     int getBillMonthAdd(Map<String,Object> params);
 
+    /**
+     * 按网址分组
+     * @param params
+     * @return
+     */
+    List<Bill>  selectBillGroupByWebsite(Map<String,Object> params);
+
 }

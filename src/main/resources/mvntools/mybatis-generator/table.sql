@@ -49,7 +49,7 @@
   CREATE TABLE IF NOT EXISTS `t_fund_account` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
     `user_id` BIGINT NOT NULL COMMENT '',
-    `balance` DECIMAL NULL COMMENT '余额',
+    `balance` DECIMAL(10,2) NULL COMMENT '余额',
     `create_time` DATETIME NULL COMMENT '',
     `create_user_id` BIGINT NULL COMMENT '',
     `update_time` DATETIME NULL COMMENT '',
@@ -67,8 +67,8 @@
   CREATE TABLE IF NOT EXISTS `t_fund_item` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
     `fund_account_id` BIGINT NOT NULL COMMENT '',
-    `change_amount` DECIMAL NULL COMMENT '变动金额',
-    `balance` DECIMAL NULL COMMENT '余额',
+    `change_amount` DECIMAL(10,2) NULL COMMENT '变动金额',
+    `balance` DECIMAL(10,2) NULL COMMENT '余额',
     `change_time` DATE NULL COMMENT '变动时间',
     `item_type` VARCHAR(64) NULL COMMENT '消费形式',
     PRIMARY KEY (`id`)  COMMENT '',
@@ -142,7 +142,7 @@
   CREATE TABLE IF NOT EXISTS `t_bill_price` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
     `bill_id` BIGINT NOT NULL COMMENT '',
-    `price` DECIMAL NULL COMMENT '',
+    `price` DECIMAL(10,2) NULL COMMENT '',
     `bill_ranking_standard` BIGINT NULL COMMENT '',
     `in_member_id` BIGINT NULL COMMENT '收款方id',
     `out_member_id` BIGINT NULL COMMENT '付款方id',
@@ -161,7 +161,7 @@
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '',
     `t_bill_id` BIGINT NOT NULL COMMENT '',
     `t_bill_price_id` BIGINT NOT NULL COMMENT '',
-    `cost_amount` DECIMAL NULL COMMENT '消费金额',
+    `cost_amount` DECIMAL(10,2) NULL COMMENT '消费金额',
     `cost_date` DATE NULL COMMENT '',
     `ranking` INT NULL COMMENT '排名',
     PRIMARY KEY (`id`)  COMMENT '',

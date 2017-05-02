@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2017/4/10.
  */
-    function toIndex() {
+function toIndex() {
 
         var url = "/bill/home";
         if (url != null && url != 'javascript:;') {

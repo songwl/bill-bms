@@ -38,7 +38,7 @@ $(".samepricecmt").click(function () {
         && 1000 > price && price > 0
     )
     {
-        if(search==""||keyword==""||url==""||customerIds=="--请选择--")
+        if(search==""||keyword==""||url==""||customerIds=="0")
         {
             alert("请将信息填写完整！");
         }
@@ -96,6 +96,18 @@ $(".samepricecmt").click(function () {
                                 $(".modal-backdrop").hide();
                                 $(".samepriceDiv").slideUp();
                                 $('#myTable').bootstrapTable('refresh');
+                                $("#keyword").val("");
+                                $("#url").val("");
+                               jQuery("input[name='samePricerankend']").val("");
+                                jQuery("input[name='samePriceprice']").val("");
+                               jQuery("input[name='samePricerankend1']").val("");
+                                jQuery("input[name='samePriceprice1']").val("");
+                               jQuery("input[name='samePricerankend2']").val("");
+                                jQuery("input[name='samePriceprice2']").val("");
+                                jQuery("input[name='samePricerankend3']").val("");
+                               jQuery("input[name='samePriceprice3']").val("");
+                                $("#searchengineid").val("0");
+                                $("#sameSelect").val("0")
                             }
                             else
                             {

@@ -114,6 +114,9 @@
     <include refid="Base_Column_List" />
     from t_bill_cost
     where t_bill_id = #{BillId,jdbcType=BIGINT} AND cost_date=#{date,jdbcType=DATE}
+    <if test="priceId != null">
+      and t_bill_price_id= #{priceId,jdbcType=INTEGER}
+    </if>
   </select>
 
   <select id="selectByPriceSum" resultType="java.lang.Double">

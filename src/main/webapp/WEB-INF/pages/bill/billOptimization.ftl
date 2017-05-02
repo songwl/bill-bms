@@ -11,10 +11,10 @@
     </div>
     <div class="nav_R right" id="divQx">
         <div id="OptimizationUpdate">
-            <span>&nbsp;<i class="fa fa-apple"></i>&nbsp;优化调整</span>
+            <span>&nbsp;<i class="fa fa-exchange"></i>&nbsp;优化调整</span>
         </div>
         <div id="OptimizationStart">
-            <span>&nbsp;<i class="fa fa-start"></i>&nbsp;优化上线</span>
+            <span>&nbsp;<i class="fa fa-play"></i>&nbsp;优化上线</span>
         </div>
         <div id="OptimizationStop">
             <span>&nbsp;<i class="fa fa-stop"></i>&nbsp;优化离线</span>

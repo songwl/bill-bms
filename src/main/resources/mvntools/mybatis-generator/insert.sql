@@ -1,9 +1,9 @@
-INSERT INTO t_role(role_name,role_code) VALUES ('超级管理员','SUPER_ADMIN');
-INSERT INTO t_role(role_name,role_code) VALUES ('管理员','ADMIN');
-INSERT INTO t_role(role_name,role_code) VALUES ('专员','COMMISSIONER');
-INSERT INTO t_role(role_name,role_code) VALUES ('渠道商','DISTRIBUTOR');
-INSERT INTO t_role(role_name,role_code) VALUES ('代理商','AGENT');
-INSERT INTO t_role(role_name,role_code) VALUES ('客户','CUSTOMER');
+INSERT INTO t_role(role_name,role_code,role_desc) VALUES ('超级管理员','SUPER_ADMIN','');
+INSERT INTO t_role(role_name,role_code,role_desc) VALUES ('管理员','ADMIN','');
+INSERT INTO t_role(role_name,role_code,role_desc) VALUES ('专员','COMMISSIONER','');
+INSERT INTO t_role(role_name,role_code,role_desc) VALUES ('渠道商','DISTRIBUTOR','');
+INSERT INTO t_role(role_name,role_code,role_desc) VALUES ('代理商','AGENT','');
+INSERT INTO t_role(role_name,role_code,role_desc) VALUES ('客户','CUSTOMER','');
 
 
 

@@ -43,11 +43,12 @@
 	<script src="${ctx}/static/js/assets/plugins/jquery.cokie.min.js" type="text/javascript"></script>
 	<script src="${ctx}/static/js/assets/scripts/app.js" type="text/javascript"></script>
 	<script type="text/javascript" src="${ctx}/static/js/app/js/index.js"></script>
+<script src="${ctx}/static/js/home/bms.js"></script>
 	${bms_js_content!""}
 </@base.jscontent>
 
 <@base.html title "page-header-fixed">
-<script src="${ctx}/static/js/home/bms.js"></script>
+
 <!--顶部导航栏     开始 -->
 <header class="header navbar navbar-fixed-top" role="banner">
     <div class="container">
@@ -318,7 +319,7 @@
 						</ul>
 					</li>
 			</#if>
-				<#if bmsModel.user.hasRole("COMMISSIONER") >
+			<#--	<#if bmsModel.user.hasRole("COMMISSIONER") >
                     <li class="" style="border-bottom: 1px solid #3d3d3d;">
                         <a href="javascript:;">
                             <i class="fa fa-line-chart"></i><span class="title"> 业绩管理 </span><span class="arrow "></span>
@@ -332,32 +333,34 @@
 
                         </ul>
                     </li>
-                 </#if>
-                    <#if bmsModel.user.hasRole("SUPER_ADMIN")>
+                 </#if>-->
+
+                    <#if bmsModel.user.hasRole("SUPER_ADMIN")||  bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")>
                         <li class="" style="border-bottom: 1px solid #3d3d3d;">
                             <a href="javascript:;">
-                                <i class="fa fa-bar-chart-o"></i><span class="title"> 数据统计 </span><span class="arrow "></span>
+                                <i class="fa fa-server"></i><span class="title"> 订单管理 </span><span class="arrow "></span>
                             </a>
                             <ul class="sub-menu"  style="background: #293038;">
+                        <#if bmsModel.user.hasRole("SUPER_ADMIN")>
                                 <li>
-                                    <a href="${ctx}/dataStatistics/getBillOptimization">
-                                        调点击
+                                    <a href="${ctx}/billManage/manageListByAdmin">
+                                        订单管理
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="${ctx}/dataStatistics/distributorData">
-                                        渠道商数据
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="${ctx}/dataStatistics/commissionerData">
-                                        专员数据
-                                    </a>
-                                </li>
-
 
                             </ul>
                         </li>
+                        </#if>
+                        <#if  bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")>
+                            <li>
+                                <a href="${ctx}/billManage/manageListByOther">
+                                    订单管理
+                                </a>
+                            </li>
+
+                        </ul>
+                            </li>
+                        </#if>
                     </#if>
                     <#if bmsModel.user.hasRole("SUPER_ADMIN") || bmsModel.user.hasRole("COMMISSIONER") >
                         <li class="" style="border-bottom: 1px solid #3d3d3d;">
@@ -366,22 +369,22 @@
                             </a>
                             <ul class="sub-menu"  style="background: #293038;">
                                 <li>
-                                    <a href="/">
+                                    <a href="javascript:;">
                                         关键词排名查询
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/">
+                                    <a href="javascript:;">
                                         关键词指数查询
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/">
+                                    <a href="javascript:;">
                                         关键词价格查询
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="/">
+                                    <a href="javascript:;">
                                         网址收录查询
                                     </a>
                                 </li>

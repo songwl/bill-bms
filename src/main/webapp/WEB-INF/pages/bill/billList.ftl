@@ -7,7 +7,6 @@
 <script src="${ctx}/static/js/bill/billList.js"></script>
 <script src="${ctx}/static/js/bill/billListchangePrice.js"></script>
 <script src="${ctx}/static/js/bill/billListsamePrice.js"></script>
-<script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
 <div class="Navs">
     <div class="nav_L left">
         <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>关键词排名</span>

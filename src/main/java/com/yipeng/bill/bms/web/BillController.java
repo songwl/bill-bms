@@ -25,10 +25,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.ui.Model;
-import sun.misc.Request;
-import sun.rmi.runtime.Log;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
@@ -45,8 +41,6 @@ public class BillController extends BaseController {
     private BillService billService;
     @Autowired
     private UserService userService;
-
-
 
     /**
      * 上下层
@@ -542,7 +536,15 @@ public class BillController extends BaseController {
         if(user!=null)
         {
             int a=billService.distributorPrice(params,user);
-            return  this.ajaxDoneSuccess("成功！");
+            if(a==0)
+            {
+                return  this.ajaxDoneSuccess("成功！");
+            }
+
+            else
+            {
+                return  this.ajaxDoneError("订单信息有误，无法审核！");
+            }
         }
         return  this.ajaxDoneError("未登录");
 
@@ -563,7 +565,16 @@ public class BillController extends BaseController {
         if(user!=null)
         {
             int a=billService.adminPrice(params,user);
-            return  this.ajaxDoneSuccess("成功！");
+            if(a==0)
+            {
+                return  this.ajaxDoneSuccess("审核成功！");
+            }
+
+            else
+            {
+                return  this.ajaxDoneError("订单信息有误，无法审核！");
+            }
+
         }
         return  this.ajaxDoneError("未登录");
 

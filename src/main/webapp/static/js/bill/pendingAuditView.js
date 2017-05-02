@@ -235,7 +235,8 @@ var TableInit = function () {
 
 
                 },
-                {
+
+              /*  {
                     field: 'operate',
                     title: '操作',
                     align: 'center',
@@ -247,7 +248,7 @@ var TableInit = function () {
                     },
                     events:operateEvents
 
-                },
+                },*/
 
 
             ],
@@ -271,14 +272,14 @@ var TableInit = function () {
         };
         return temp;
     }
-    window.operateEvents = {
+  /*  window.operateEvents = {
         'click #details': function (e, value, row, index) {
             $("#billCostDetail").show();
             $(".modal-backdrop").show();
 
         }
 
-    }
+    }*/
 
 
     return oTableInit;

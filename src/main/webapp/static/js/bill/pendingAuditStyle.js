@@ -28,11 +28,12 @@ $("#billExamine").click(function () {
 $(".close").click(function () {
     $(".billExamineDiv").slideUp();
     $(".modal-backdrop").hide();
-
+    $(".pload").hide();
 })
 $(".cancel").click(function () {
     $(".billExamineDiv").slideUp();
     $(".modal-backdrop").hide();
+    $(".pload").hide();
 })
 //渠道商审核订单
     $(".qudaoShenhe").click(function () {
@@ -100,15 +101,32 @@ $(".cancel").click(function () {
                     success:function (result) {
                         if(result.code==200)
                         {
-                            alert("审核成功");
+                            alert(result.message);
                             $(".billExamineDiv").slideUp();
                             $(".modal-backdrop").hide();
                             $(".pload").hide();
                             $('#myTable').bootstrapTable('refresh');
+                           jQuery("input[name='rankend']").val("");
+                          jQuery("input[name='price']").val("");
+                            jQuery("input[name='rankend1']").val("");
+                            jQuery("input[name='price1']").val("");
+                          jQuery("input[name='rankend2']").val("");
+                            jQuery("input[name='price2']").val("");
+                            jQuery("input[name='rankend3']").val("");
+                            jQuery("input[name='price3']").val("");
                         }
                         else
                         {
-                            window.location.href=CTX+"/user/register";
+                            $(".pload").hide();
+                            alert(result.message);
+                            jQuery("input[name='rankend']").val("");
+                            jQuery("input[name='price']").val("");
+                            jQuery("input[name='rankend1']").val("");
+                            jQuery("input[name='price1']").val("");
+                            jQuery("input[name='rankend2']").val("");
+                            jQuery("input[name='price2']").val("");
+                            jQuery("input[name='rankend3']").val("");
+                            jQuery("input[name='price3']").val("");
                         }
                     }
 
@@ -154,61 +172,87 @@ $(".adminshenhe").click(function () {
         !isNaN(rankend) && isNaN(rankend1) && isNaN(rankend2) && isNaN(rankend3)
         && !isNaN(price) && isNaN(price1) && isNaN(price2) && isNaN(price3)
         && rankend > 0 && 51 > rankend
-        && 1000 > price && price > 0||caozuoyuan=="--请选择--"
+        && 1000 > price && price > 0
     )
     {
+      if(caozuoyuan!="0")
+      {
+          var rankendA = parseInt(jQuery("input[name='adminrankend']").val());
+          var priceA = parseFloat(jQuery("input[name='adminprice']").val());
+          var rankend1A = parseInt(jQuery("input[name='adminrankend1']").val());
+          var price1A = parseFloat(jQuery("input[name='adminprice1']").val());
+          var rankend2A = parseInt(jQuery("input[name='adminrankend2']").val());
+          var price2A = parseFloat(jQuery("input[name='adminprice2']").val());
+          var rankend3A = parseInt(jQuery("input[name='adminrankend3']").val());
+          var price3A = parseFloat(jQuery("input[name='adminprice3']").val());
+          var selectContent = $('#myTable').bootstrapTable('getSelections');
+          var len =selectContent.length;
+          var caozuoyuan1=$("#caozuoyuan  option:selected").val();
+          $.ajax({
+              type:'post',
+              url:CTX+"/bill/billList/adminPrice",
+              dataType:'json',
+              data:{
+                  rankend:rankendA,
+                  price:priceA,
+                  rankend1:rankend1A,
+                  price1:price1A,
+                  rankend2:rankend2A,
+                  price2:price2A,
+                  rankend3:rankend3A,
+                  price3:price3A,
+                  selectContent:selectContent,
+                  checkboxLength:len,
+                  caozuoyuan:caozuoyuan1
+              },
+              beforeSend: function () {
+                  $(".pload").show();
+              },
+              success:function (result) {
+                  if(result.code==200)
+                  {
+                      alert("审核成功");
+                      $(".billExamineDiv").slideUp();
+                      $(".modal-backdrop").hide();
+                      $(".pload").hide();
+                      $('#myTable').bootstrapTable('refresh');
+                      $("#caozuoyuan").val("0");
+                      jQuery("input[name='adminrankend']").val("");
+                      jQuery("input[name='adminprice']").val("");
+                      jQuery("input[name='adminrankend1']").val("");
+                      jQuery("input[name='adminprice1']").val("");
+                      jQuery("input[name='adminrankend2']").val("");
+                      jQuery("input[name='adminprice2']").val("");
+                      jQuery("input[name='adminrankend3']").val("");
+                      jQuery("input[name='adminprice3']").val("");
+                  }
+                  else
+                  {
+                      alert(result.message);
+                      $(".pload").hide();
+                      $("#caozuoyuan").val("0");
+                      jQuery("input[name='adminrankend']").val("");
+                      jQuery("input[name='adminprice']").val("");
+                      jQuery("input[name='adminrankend1']").val("");
+                      jQuery("input[name='adminprice1']").val("");
+                      jQuery("input[name='adminrankend2']").val("");
+                      jQuery("input[name='adminprice2']").val("");
+                      jQuery("input[name='adminrankend3']").val("");
+                      jQuery("input[name='adminprice3']").val("");
+                  }
+              }
 
-        var rankendA = parseInt(jQuery("input[name='adminrankend']").val());
-        var priceA = parseFloat(jQuery("input[name='adminprice']").val());
-        var rankend1A = parseInt(jQuery("input[name='adminrankend1']").val());
-        var price1A = parseFloat(jQuery("input[name='adminprice1']").val());
-        var rankend2A = parseInt(jQuery("input[name='adminrankend2']").val());
-        var price2A = parseFloat(jQuery("input[name='adminprice2']").val());
-        var rankend3A = parseInt(jQuery("input[name='adminrankend3']").val());
-        var price3A = parseFloat(jQuery("input[name='adminprice3']").val());
-        var selectContent = $('#myTable').bootstrapTable('getSelections');
-        var len =selectContent.length;
-        var caozuoyuan1=$("#caozuoyuan  option:selected").val();
-        $.ajax({
-            type:'post',
-            url:CTX+"/bill/billList/adminPrice",
-            dataType:'json',
-            data:{
-                rankend:rankendA,
-                price:priceA,
-                rankend1:rankend1A,
-                price1:price1A,
-                rankend2:rankend2A,
-                price2:price2A,
-                rankend3:rankend3A,
-                price3:price3A,
-                selectContent:selectContent,
-                checkboxLength:len,
-                caozuoyuan:caozuoyuan1
-            },
-            beforeSend: function () {
-                $(".pload").show();
-            },
-            success:function (result) {
-                if(result.code==200)
-                {
-                    alert("审核成功");
-                    $(".billExamineDiv").slideUp();
-                    $(".modal-backdrop").hide();
-                    $(".pload").hide();
-                    $('#myTable').bootstrapTable('refresh');
-                }
-                else
-                {
-                    window.location.href=CTX+"/user/register"
-                }
-            }
+          })
+      }
+      else
+      {
+          alert("专员必须选择!");
+      }
 
-        })
     }
     else
     {
-        alert("前N名依次增大，并且值介于1-50之间，收费依次减小，并且值大于0小于1000；前N名和收费必须同时提供，专员必须选择");
+        alert("前N名依次增大，并且值介于1-50之间，收费依次减小，并且值大于0小于1000；前N名和收费必须同时提供");
 
     }
 

@@ -151,7 +151,7 @@
                             </label>
                             <div class="col-md-2 padding-right-0px padding-left-5px input-width-small">
                                 <select id="sameSelect" name="searchengineid" class="form-control input-width-small">
-                                    <option>--请选择--</option>
+                                    <option value="0">--请选择--</option>
                                     <#list userList as user>
                                        <option value="${user.id}">${user.userName}</option>
 
@@ -288,7 +288,7 @@
                             </label>
                             <div class="col-md-2 padding-right-0px padding-left-5px input-width-small">
                                 <select id="selectDiffrent" name="searchengineid" class="form-control input-width-small">
-                                    <option>--请选择--</option>
+                                    <option value="0">--请选择--</option>
                                     <#list userList as user>
                                         <option value="${user.id}">${user.userName}</option>
                                     </#list>

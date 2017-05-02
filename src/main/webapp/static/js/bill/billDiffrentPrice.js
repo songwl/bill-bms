@@ -17,7 +17,7 @@ $(".dfpricecmt").click(function () {
     var bool = false;
     if (keywordarr.length >= 1 && urlarr.length >= 1 && pricearr.length >= 1
         && keywordarr.length == urlarr.length && keywordarr.length == pricearr.length
-        && rankend > 1 && rankend < 50 && search != "--请选择--" && customerIds != "--请选择--") {
+        && rankend > 1 && rankend < 50 && search != "--请选择--" && customerIds != "0") {
         for (var i = 0; i < keywordarr.length; i++) {
             if (keywordarr[i] != '' && urlarr[i] != '' && pricearr[i] != '' && pricearr[i] > 0) {
                 bool = true;
@@ -53,6 +53,13 @@ $(".dfpricecmt").click(function () {
                         $(".differentpriceDiv").slideUp();
                         $(".modal-backdrop").hide();
                         $('#myTable').bootstrapTable('refresh');
+                        $("#selectDiffrent").val("0");
+                        $("#dfrankend").val("");
+                      $("#dfsearch").val("0");
+                       $("#dfkeyword").val("");
+                       $("#dfurl").val("");
+                      $("#dfprice").val("");
+
                     }
                     else {
 

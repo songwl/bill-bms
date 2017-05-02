@@ -104,7 +104,7 @@
 
                         <div><h5>专员分配</h5></div>
                         <select class="selectpicker" id="caozuoyuan">
-                            <option>--请选择--</option>
+                            <option value="0">--请选择--</option>
                             <#list  userList as user>
                                 <option value="${user.id}">${user.userName}</option>
                             </#list>

@@ -1,6 +1,6 @@
 <#macro showOptions dictKey dictType="EMNU" selectValue="" haveBlank="N">
     <@showDictContent dictType=dictType dictKey=dictKey/>
-    <#if haveBlank=="Y"><option value="">--请选择--</option></#if>
+    <#if haveBlank=="Y"><option value="0">--请选择--</option></#if>
     <#list dictList as dict>
         <option value="${dict.value}" <#if dict.value==selectValue>selected</#if>>${dict.label}</option>
     </#list>

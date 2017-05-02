@@ -208,7 +208,15 @@ $(document).ready(function () {
         {
             newRanking1=null;
         }
-        if($("#newchange1").val()!="")//新排2
+        if($("#newRanking2").val()!="")//新排2
+        {
+            newRanking2=$.trim($("#newRanking2").val());
+        }
+        else
+        {
+            newRanking2=null;
+        }
+        if($("#newchange1").val()!="")//新变1
         {
             newchange1=$.trim($("#newchange1").val());
         }
@@ -216,7 +224,7 @@ $(document).ready(function () {
         {
             newchange1=null;
         }
-        if($("#newchange2").val()!="")//新排2
+        if($("#newchange2").val()!="")//新变2
         {
             newchange2=$.trim($("#newchange2").val());
         }
@@ -276,17 +284,10 @@ var TableInit = function () {
             sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
             queryParams: oTableInit.queryParams,//传递参数（*）
             queryParamsType: "",
-            showColumns: true,                  //是否显示所有的列
-            showRefresh: true,                  //是否显示刷新按钮
             minimumCountColumns: 2,             //最少允许的列数
             clickToSelect: true,                //是否启用点击选中行
             height: 700,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
             uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
-            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
-            cardView: false,                    //是否显示详细视图
-            detailView: false,                   //是否显示父子表
-            showExport: true,                     //是否显示导出
-            exportDataType: "basic",
             rowStyle: function (row, index) {
                 //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
                 var strclass = "";
@@ -420,39 +421,7 @@ var TableInit = function () {
                         return a;
                     }
                 },
-                {
-                    field: 'billPriceList',
-                    align: 'center',
-                    valign: 'middle',
-                    title: '价格1',
-                    formatter:function (value,row,index) {
-                        var a="";
-                        a=value[0]["price"];
-                        return a;
-                    }
 
-                },
-
-                {
-                    field: 'billPriceList',
-                    align: 'center',
-                    valign: 'middle',
-                    title: '价格2',
-                    formatter:function (value,row,index) {
-                        var a="";
-                        if(value[1]!=null)
-                        {
-                            a=value[1]["price"];
-                        }
-                        else
-                        {
-                            a="-";
-                        }
-
-                        return a;
-                    }
-
-                },
                 {
                     field: "standardDays",
                     align: 'center',
@@ -495,7 +464,7 @@ var TableInit = function () {
 
 
                 },
-                {
+               /* {
                     field: 'operate',
                     title: '操作',
                     align: 'center',
@@ -507,7 +476,7 @@ var TableInit = function () {
                     },
                     events:operateEvents
 
-                },
+                },*/
 
 
             ],
@@ -541,14 +510,14 @@ var TableInit = function () {
         };
         return temp;
     }
-    window.operateEvents = {
+   /* window.operateEvents = {
         'click #details': function (e, value, row, index) {
             $("#billCostDetail").show();
             $(".modal-backdrop").show();
 
         }
 
-    }
+    }*/
 
 
     return oTableInit;

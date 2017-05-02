@@ -10,4 +10,5 @@ import java.util.Map;
 public interface BillManageService {
 
     Map<String, Object> manageListByAdminTable(Map<String,Object> params, LoginUser user);
+    Map<String, Object> manageListByOtherTable(Map<String,Object> params, LoginUser user);
 }

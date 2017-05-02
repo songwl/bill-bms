@@ -70,6 +70,25 @@ public class BillManageController extends  BaseController {
         return "/billManage/manageListByOther";
     }
 
+    /**
+     * 订单管理TABLE  (渠道商和操作员)
+     * @param request
+     * @return
+     */
+    @RequestMapping(value="/manageListByOtherTable",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String,Object> manageListByOtherTable(HttpServletRequest request)
+    {
+        LoginUser user=this.getCurrentAccount();
+        int limit =Integer.parseInt(request.getParameter("limit"));
+        int offset=Integer.parseInt(request.getParameter("offset"));
 
+        offset=(offset-1)*limit;
+        Map<String, Object> params=new HashMap<>();
+        params.put("limit",limit);
+        params.put("offset",offset);
+        Map<String,Object> map= billManageService.manageListByOtherTable(params,user);
+        return  map;
+    }
 
 }

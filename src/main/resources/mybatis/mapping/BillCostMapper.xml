@@ -202,7 +202,9 @@
     IFNULL(SUM(cost_amount),0)
     from t_bill_cost
     where t_bill_id = #{billId,jdbcType=BIGINT}
-    AND  t_bill_price_id=#{billPriceId,jdbcType=BIGINT}
+    <if test="billPriceId != null">
+      AND  t_bill_price_id=#{billPriceId,jdbcType=BIGINT}
+    </if>
     AND date_format(cost_date,'%Y-%m')=date_format(now(),'%Y-%m')
   </select>
 

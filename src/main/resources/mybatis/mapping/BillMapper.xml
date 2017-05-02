@@ -561,7 +561,7 @@
       AND  a.bill_type = #{billType,jdbcType=INTEGER}
     </if>
     <if test="billAscription != null">
-      AND  bill_ascription= #{billAscription,jdbcType=BIGINT}
+      AND  a.bill_ascription= #{billAscription,jdbcType=BIGINT}
     </if>
     <if test="searchStandard != null">
       AND a.new_ranking &lt;= b.bill_ranking_standard
@@ -1128,7 +1128,10 @@
     WHERE 1=1
     AND  b.in_member_id=#{userId,jdbcType=BIGINT}
     <if test="state != null">
-      AND  state = #{state,jdbcType=INTEGER}
+      AND  a.state = #{state,jdbcType=INTEGER}
+    </if>
+    <if test="billAscription != null">
+      AND  a.bill_ascription = #{billAscription,jdbcType=BIGINT}
     </if>
      GROUP  BY a.website
     limit #{offset},#{limit}

@@ -5,7 +5,7 @@
 
 <script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
-
+<script src="${ctx}/static/js/billManage/manageListByOther.js"></script>
 <div class="Navs">
     <div class="nav_L left">
         <i class="fa fa-home">&nbsp;</i><span>订单管理</span> > <span>订单管理</span>

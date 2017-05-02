@@ -16,7 +16,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#myTable').bootstrapTable({
-            url:CTX+ '/billManage/manageListByAdminTable',         //请求后台的URL（*）
+            url:CTX+ '/billManage/manageListByOtherTable',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
@@ -73,14 +73,6 @@ var TableInit = function () {
 
                 },
                 {
-                    field: 'commissioner',
-                    sortable: true,
-                    align: 'center',
-                    valign: 'middle',
-                    title: '操作员',
-
-                },
-                {
                     field: 'webSite',
                     align: 'center',
                     valign: 'middle',
@@ -126,6 +118,13 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '今日消费',
+
+                },
+                {
+                    field: 'monthConsumption',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '本月消费',
 
                 },
             ],

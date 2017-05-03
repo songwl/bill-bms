@@ -130,6 +130,7 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
                     Map<String,Object> map=new HashMap<>();
                     map.put("userId",user1.getId());
                     map.put("state",2);
+                    map.put("state2",3);
                     List<Bill> billList=billMapper.selectByInMemberId(map);
                     //判断订单是否为空
                     if (!CollectionUtils.isEmpty(billList))
@@ -186,7 +187,6 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
                              int billCount=0;
                              for (Bill billItem:billList1
                                   ) {
-
                                  map.put("website",billItem.getWebsite());
                                  map.put("searchStandard",1);
                                  List<Bill> billListStandardCount=billMapper.selectByInMemberId(map);
@@ -259,6 +259,7 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
                     Map<String,Object> map=new HashMap<>();
                     map.put("userId",user1.getCreateUserId());
                     map.put("state",2);
+                    map.put("state2",3);
                     map.put("billAscription",user1.getId());
                     List<Bill> billList=billMapper.selectByInMemberId(map);
                     //判断订单是否为空
@@ -288,18 +289,22 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
                             }
                             ;
                             //统计关键词达标
-                            List<BillPrice> billPriceList=billPriceMapper.selectByBillId(bill.getId());
-                            if (!CollectionUtils.isEmpty(billPriceList))
+                            if(bill.getState()==2)
                             {
-                                for (BillPrice priceItem:billPriceList
-                                        ) {
-                                    if(bill.getNewRanking()<=priceItem.getBillRankingStandard())
-                                    {
-                                        keywordsCount+=1;
-                                        break;
+                                List<BillPrice> billPriceList=billPriceMapper.selectByBillId(bill.getId());
+                                if (!CollectionUtils.isEmpty(billPriceList))
+                                {
+                                    for (BillPrice priceItem:billPriceList
+                                            ) {
+                                        if(bill.getNewRanking()<=priceItem.getBillRankingStandard())
+                                        {
+                                            keywordsCount+=1;
+                                            break;
+                                        }
                                     }
                                 }
                             }
+
 
                         }
                         //订单数

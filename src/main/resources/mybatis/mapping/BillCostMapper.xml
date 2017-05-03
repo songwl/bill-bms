@@ -216,4 +216,14 @@
     where t_bill_id = #{billId,jdbcType=BIGINT}
     AND  t_bill_price_id=#{billPriceId,jdbcType=BIGINT}
   </select>
+
+  <!--每个月每天的达标词数数据-->
+  <select id="selectByBillCostOfDay"    resultType="java.lang.Integer">
+    select
+    IFNULL(COUNT(a.id),0)
+    from t_bill_cost as a ,t_bill_price as b
+    where   a.t_bill_price_id=b.id
+    AND b.in_member_id=#{userId,jdbcType=BIGINT}
+    AND a.cost_date=#{date,jdbcType=VARCHAR}
+  </select>
 </mapper>

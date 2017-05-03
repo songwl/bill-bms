@@ -1057,7 +1057,7 @@
 
   <!--本月新增订单数-->
   <select id="getBillMonthAdd"  resultType="java.lang.Integer">
-    select IFNULL(COUNT(a.id),0)
+    select IFNULL(COUNT(DISTINCT a.id),0)
     from t_bill as a,t_bill_price as b
     where a.id=b.bill_id
     AND b.in_member_id=#{userId,jdbcType=BIGINT}

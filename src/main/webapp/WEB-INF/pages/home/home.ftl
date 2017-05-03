@@ -216,127 +216,37 @@
     </div>
 </div>
 
-<div id="container" style="width: 40%; height: 400px; float:left;margin-left:70px;"></div>
-<div id="container1" style="width: 40%; height: 400px; float:left;margin-left:70px;"></div>
-<div id="container2" style="min-width:400px;height:400px"></div>
+<div id="container" style="width: 100%; height: 400px; float:left;;"></div>
+
 <script>
-    $(function () {
-        $('#container').highcharts({
-            chart: {
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false
-            },
-            title: {
-                text: '搜索引擎达标率'
-            },
-            tooltip: {
-                headerFormat: '{series.name}<br>',
-                pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
-            },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: true,
-                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                        style: {
-                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                        }
-                    }
-                }
-            },
-            series: [{
-                type: 'pie',
-                name: '浏览器访问量占比',
-                data: [
-                    ['Firefox',   45.0],
-                    ['IE',       26.8],
-                    {
-                        name: 'Chrome',
-                        y: 12.8,
-                        sliced: true,
-                        selected: true
-                    },
-                    ['Safari',    8.5],
-                    ['Opera',     6.2],
-                    ['其他',   0.7]
-                ]
-            }]
-        });
-    });
-    $(function () {
-        $('#container1').highcharts({
-            chart: {
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false
-            },
-            title: {
-                text: '搜索引擎达标率'
-            },
-            tooltip: {
-                headerFormat: '{series.name}<br>',
-                pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
-            },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: true,
-                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                        style: {
-                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                        }
-                    }
-                }
-            },
-            series: [{
-                type: 'pie',
-                name: '浏览器访问量占比',
-                data: [
-                    ['Firefox',   45.0],
-                    ['IE',       26.8],
-                    {
-                        name: 'Chrome',
-                        y: 12.8,
-                        sliced: true,
-                        selected: true
-                    },
-                    ['Safari',    8.5],
-                    ['Opera',     6.2],
-                    ['其他',   0.7]
-                ]
-            }]
-        });
-    });
+
+
     /**
      * Highcharts 在 4.2.0 开始已经不依赖 jQuery 了，直接用其构造函数既可创建图表
      **/
     $(function () {
-    var chart = new Highcharts.Chart('container2', {
+    var chart = new Highcharts.Chart('container', {
         title: {
             text: '任务达标数量走势图 ',
             x: -20
         },
 
         xAxis: {
-            categories: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+            categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10','11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31']
+
         },
         yAxis: {
+            floor: 0,
+            gridLineColor: '#197F07',
+            gridLineWidth: 1,
+            tickPositions:[${bmsModel.yAxis}],
+            ceiling: 20,
             title: {
-                text: '温度 (°C)'
-            },
-            plotLines: [{
-                value: 0,
-                width: 1,
-                color: '#808080'
-            }]
+                text: '单位 (个)'
+            }
         },
         tooltip: {
-            valueSuffix: '°C'
+            valueSuffix: ''
         },
         legend: {
             layout: 'vertical',
@@ -346,10 +256,10 @@
         },
         series: [{
             name: '上月',
-            data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
+            data: [${bmsModel.seriesLastMonth}]
         }, {
             name: '本月',
-            data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
+            data: [${bmsModel.seriesNowMonth}]
         },  ]
     })
     });

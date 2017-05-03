@@ -334,34 +334,50 @@
                         </ul>
                     </li>
                  </#if>-->
-
                     <#if bmsModel.user.hasRole("SUPER_ADMIN")||  bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")>
+
                         <li class="" style="border-bottom: 1px solid #3d3d3d;">
                             <a href="javascript:;">
-                                <i class="fa fa-server"></i><span class="title"> 订单管理 </span><span class="arrow "></span>
+                                <i class="fa fa-bar-chart-o"></i><span class="title"> 数据统计 </span><span class="arrow "></span>
                             </a>
                             <ul class="sub-menu"  style="background: #293038;">
                         <#if bmsModel.user.hasRole("SUPER_ADMIN")>
+                                <li>
+                                    <a href="${ctx}/dataStatistics/getBillOptimization">
+                                        成本统计
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="${ctx}/dataStatistics/distributorData">
+                                        渠道商统计
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="${ctx}/dataStatistics/commissionerData">
+                                        专员统计
+                                    </a>
+                                </li>
                                 <li>
                                     <a href="${ctx}/billManage/manageListByAdmin">
                                         订单管理
                                     </a>
                                 </li>
+                        </#if>
+                                <#if  bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")>
 
+                                    <li>
+                                        <a href="${ctx}/billManage/manageListByOther">
+                                            订单管理
+                                        </a>
+                                    </li>
+                                </#if>
                             </ul>
                         </li>
-                        </#if>
-                        <#if  bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")>
-                            <li>
-                                <a href="${ctx}/billManage/manageListByOther">
-                                    订单管理
-                                </a>
-                            </li>
 
-                        </ul>
-                            </li>
-                        </#if>
+
+
                     </#if>
+
                     <#if bmsModel.user.hasRole("SUPER_ADMIN") || bmsModel.user.hasRole("COMMISSIONER") >
                         <li class="" style="border-bottom: 1px solid #3d3d3d;">
                             <a href="javascript:;">

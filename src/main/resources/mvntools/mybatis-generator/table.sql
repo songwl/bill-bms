@@ -13,6 +13,7 @@
     `phone` VARCHAR(20) NULL COMMENT '手机号',
     `last_login_time` DATETIME NULL COMMENT '最后登录时间',
     `login_count` INT NULL COMMENT '登录次数',
+     `daili_Role` INT NULL COMMENT '是否有代理权限',
     PRIMARY KEY (`id`)  COMMENT '')
   ENGINE = InnoDB;
 
@@ -233,3 +234,29 @@
       ON UPDATE NO ACTION)
   ENGINE = InnoDB
   COMMENT = '优化指数统计表';
+
+CREATE TABLE `t_user_hyperlink` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `userId` bigint(20) NOT NULL,
+  `title` varchar(20) NOT NULL,
+  `hyperlink` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB
+ COMMENT = '用户超链接表';
+
+CREATE TABLE `t_user_imgurl` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `userId` bigint(20) NOT NULL,
+  `img_url` varchar(200) NOT NULL COMMENT '图片路径',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB
+ COMMENT = '用户图片表';
+
+CREATE TABLE `t_user_company` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_Id` bigint(20) NOT NULL,
+  `user_company` varchar(200) DEFAULT NULL,
+  `user_logoImg` varchar(200) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB
+COMMENT = '用户公司信息表';

@@ -3,7 +3,7 @@
  */
 function toIndex() {
 
-        var url = "/bill/home";
+        var url = CTX+"/home";
         if (url != null && url != 'javascript:;') {
             $.get(url, function(data) {
                 $('.page-content').html(data);
@@ -195,4 +195,9 @@ $(document).ready(function () {
             alert("信息有误,请重新尝试！");
         }
     })
+    $.ajax({
+        url:CTX+"/"
+
+    })
+
 })

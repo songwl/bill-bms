@@ -27,7 +27,6 @@ public class BillCallCostServiceImpl implements BillCallCostService {
 
     @Autowired
     private FundAccountMapper fundAccountMapper;
-
     @Autowired
     private FundItemMapper fundItemMapper;
     @Autowired
@@ -78,9 +77,6 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                     billCost.setCostDate(new Date()); //消费日期
                     billCost.setRanking(newRanking);
                     billCostMapper.insert(billCost);
-
-
-
                     //4.从资金账号扣减余额
                     FundAccount fundAccount = fundAccountMapper.selectByUserId(userId);
                     if(fundAccount==null)
@@ -128,6 +124,7 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                     }
 
                 }
+
             }
         }
         //判断是否达标
@@ -148,4 +145,5 @@ public class BillCallCostServiceImpl implements BillCallCostService {
         }
         return 1;
     }
+
 }

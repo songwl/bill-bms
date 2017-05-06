@@ -32,6 +32,8 @@ public class User implements Serializable {
 
     private Integer loginCount;
 
+    private Integer dailiRole;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -144,5 +146,13 @@ public class User implements Serializable {
 
     public void setLoginCount(Integer loginCount) {
         this.loginCount = loginCount;
+    }
+
+    public Integer getDailiRole() {
+        return dailiRole;
+    }
+
+    public void setDailiRole(Integer dailiRole) {
+        this.dailiRole = dailiRole;
     }
 }

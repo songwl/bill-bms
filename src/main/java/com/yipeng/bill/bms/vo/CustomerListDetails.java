@@ -19,6 +19,7 @@ public class CustomerListDetails {
     private int loginCount;
     private int missionCount;
     private BigDecimal balance;
+    private int dailiRole;
 
 
     public  int  getId(){return  id;}
@@ -47,4 +48,6 @@ public class CustomerListDetails {
     public  int  setMissionCount(int missionCount){return this.missionCount= missionCount;}
     public BigDecimal getBalance(){return balance;}
     public  BigDecimal  setBalance(BigDecimal balance){return this.balance= balance;}
+    public int getDailiRole(){return dailiRole;}
+    public  int  setDailiRole(int dailiRole){return this.dailiRole= dailiRole;}
 }

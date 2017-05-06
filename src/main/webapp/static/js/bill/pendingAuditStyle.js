@@ -81,7 +81,7 @@ $(".cancel").click(function () {
 
                 $.ajax({
                     type:'post',
-                    url:CTX+"/bill/billList/distributorPrice",
+                    url:CTX+"/order/billList/distributorPrice",
                     dataType:'json',
                     data:{
                         rankend:rankendA,
@@ -190,7 +190,7 @@ $(".adminshenhe").click(function () {
           var caozuoyuan1=$("#caozuoyuan  option:selected").val();
           $.ajax({
               type:'post',
-              url:CTX+"/bill/billList/adminPrice",
+              url:CTX+"/order/billList/adminPrice",
               dataType:'json',
               data:{
                   rankend:rankendA,

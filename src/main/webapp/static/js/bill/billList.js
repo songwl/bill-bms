@@ -151,7 +151,7 @@ $(document).ready(function () {
             {
                 $.ajax({
                     type:"post",
-                    url:CTX+"/bill/billList/optimizationStop",
+                    url:CTX+"/order/billList/optimizationStop",
                     data:{ selectContent:selectContent,length:len},
                     success:function (result) {
                         if(result.code==200)
@@ -182,7 +182,7 @@ $(document).ready(function () {
             {
                 $.ajax({
                     type:"post",
-                    url:CTX+"/bill/billList/optimizationStart",
+                    url:CTX+"/order/billList/optimizationStart",
                     data:{ selectContent:selectContent,length:len},
                     success:function (result) {
                         if(result.code==200)
@@ -211,8 +211,8 @@ $(function () {
     var oTable1 = new TableInit1();
     oTable1.Init();
     //2.初始化Button的点击事件
-    var oButtonInit = new ButtonInit();
-    oButtonInit.Init();
+  /*  var oButtonInit = new ButtonInit();
+    oButtonInit.Init();*/
 
 });
 var TableInit = function () {
@@ -220,7 +220,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#myTable').bootstrapTable({
-            url: CTX+'/bill/getBillDetails',         //请求后台的URL（*）
+            url: CTX+'/order/getBillDetails',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
@@ -532,7 +532,7 @@ var TableInit1 = function () {
         //初始化Table
         oTableInit1.Init = function () {
             $('#pricetable').bootstrapTable({
-                url: CTX+'/bill/getPriceDetails',         //请求后台的URL（*）
+                url: CTX+'/order/getPriceDetails',         //请求后台的URL（*）
                 method: 'get',                      //请求方式（*）
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，

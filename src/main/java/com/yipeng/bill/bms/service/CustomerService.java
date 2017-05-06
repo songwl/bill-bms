@@ -58,4 +58,10 @@ public interface CustomerService {
      * @return
      */
     Map<String, Object> fundAccountList(Map<String,Object> params,LoginUser user);
+    /**
+     * 客户代理权限
+     * @param params
+     * @return
+     */
+    int updateDailiRole(Map<String, String[]>  params,LoginUser user);
 }

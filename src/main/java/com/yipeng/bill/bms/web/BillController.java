@@ -35,7 +35,7 @@ import java.util.*;
  * Created by Administrator on 2017/3/10.
  */
 @Controller
-@RequestMapping(value = "/bill")
+@RequestMapping(value = "/order")
 public class BillController extends BaseController {
     @Autowired
     private BillService billService;

@@ -39,11 +39,13 @@ public class HomeController extends BaseController {
 	public String home(ModelMap model) throws Exception {
         LoginUser loginUser=this.getCurrentAccount();
 		Map<String, Object> bms=homeService.homeDetails(loginUser);
+		/*Map<String, Object> bms=new HashMap<>();*/
 		bms.put("user", loginUser);
 		model.addAttribute("bmsModel", bms);
 
 		return "/home/home";
 	}
+
 
 
 }

@@ -31,7 +31,7 @@ $(".dfpricecmt").click(function () {
     if (bool) {
         $.ajax({
             type: 'post',
-            url: CTX + "/bill/list/diffrentprice",
+            url: CTX + "/order/list/diffrentprice",
             contentType: "application/x-www-form-urlencoded; charset=utf-8",
             dataType: 'json',
             data: {

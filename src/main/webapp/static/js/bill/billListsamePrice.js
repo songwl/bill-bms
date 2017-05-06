@@ -63,7 +63,7 @@ $(".samepricecmt").click(function () {
                 var customerId=$("#sameSelect  option:selected").val();
                 $.ajax({
                     type:"post",
-                    url:CTX+"/bill/list/sameprice",
+                    url:CTX+"/order/list/sameprice",
                     dataType:'json',
                     contentType: "application/x-www-form-urlencoded; charset=utf-8",
                     data:{

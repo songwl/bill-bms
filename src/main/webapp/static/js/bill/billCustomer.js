@@ -210,7 +210,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#myTable').bootstrapTable({
-            url: CTX+'/bill/getCustomerBill',         //请求后台的URL（*）
+            url: CTX+'/order/getCustomerBill',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
@@ -508,7 +508,7 @@ var TableInit1 = function () {
     //初始化Table
     oTableInit1.Init = function () {
         $('#pricetable').bootstrapTable({
-            url: CTX+'/bill/getPriceDetails',         //请求后台的URL（*）
+            url: CTX+'/order/getPriceDetails',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，

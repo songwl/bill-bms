@@ -30,8 +30,8 @@
 <form action="${rc.contextPath}/user/register" method="post" id="f1">
     <dl class="admin_login">
         <dt>
-            <strong>翊芃网络科技会员注册</strong>
-            <em>YiPeng System</em>
+            <strong>会员注册</strong>
+            <em></em>
         </dt>
 
         <dd class="user_icon">

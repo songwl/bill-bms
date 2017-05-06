@@ -38,8 +38,7 @@ public class CustomerController extends  BaseController{
     public  String customerList(ModelMap model) throws Exception
     {
         Map<String, Object> bms = new HashMap<>();
-        Object user = this.getCurrentAccount();
-
+        LoginUser user = this.getCurrentAccount();
         bms.put("user", user);
         model.addAttribute("bmsModel", bms);
         return "/customer/customerList";
@@ -264,5 +263,31 @@ public class CustomerController extends  BaseController{
 
         return  this.ajaxDoneError("退款失败，请稍后再试!");
 
+    }
+
+    /**
+     * 客户代理权限
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/updateDailiRole",method = RequestMethod.POST)
+    @ResponseBody
+    public  ResultMessage updateDailiRole(HttpServletRequest request)
+    {
+        LoginUser user=this.getCurrentAccount();
+        if(user!=null)
+        {
+            Map<String, String[]> params= request.getParameterMap();
+            int a=customerService.updateDailiRole(params,user);
+            if(a==1)
+            {
+                return this.ajaxDoneSuccess("开通成功!");
+            }
+            else
+            {
+                return this.ajaxDoneError("开通失败，请稍后再试！");
+            }
+        }
+        return this.ajaxDoneError("您还未登录，请先登录!");
     }
 }

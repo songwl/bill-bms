@@ -41,7 +41,7 @@ $(document).ready(function () {
                 var state=1;
                 $.ajax({
                     type:"post",
-                    url:CTX+"/bill/updateYBYstate",
+                    url:CTX+"/order/updateYBYstate",
                     data:{selectContent:selectContent,length:len,state:state},
                     success:function (result) {
                         if(result.code==200)
@@ -72,7 +72,7 @@ $(document).ready(function () {
               var state=100;
               $.ajax({
                   type:"post",
-                  url:CTX+"/bill/updateYBYstate",
+                  url:CTX+"/order/updateYBYstate",
                   data:{selectContent:selectContent,length:len,state:state},
                   success:function (result) {
                       if(result.code==200)
@@ -108,7 +108,7 @@ $(document).ready(function () {
                var num= $("#OptimizationUpdateNum").val();
                 $.ajax({
                     type:"post",
-                    url:CTX+"/bill/OptimizationUpdate",
+                    url:CTX+"/order/OptimizationUpdate",
                     data:{selectContent:selectContent,length:len,num:num},
                     success:function (result) {
                           if(result.code==200)
@@ -272,7 +272,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#myTable').bootstrapTable({
-            url: CTX+'/bill/getBillOptimization',         //请求后台的URL（*）
+            url: CTX+'/order/getBillOptimization',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色

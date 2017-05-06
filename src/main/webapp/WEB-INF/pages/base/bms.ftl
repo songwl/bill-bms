@@ -155,21 +155,21 @@
 						</a>
 						<ul class="sub-menu" style="background: #293038;">
                             <li>
-                                <a href="${ctx}/bill/list?way=2">
+                                <a href="${ctx}/order/list?way=2">
                                     关键词排名
                                 </a>
                             </li>
 
 						<#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("COMMISSIONER")>
      				  		 <li>
-                                <a href="${ctx}/bill/billOptimization">
+                                <a href="${ctx}/order/billOptimization">
                                     关键词优化
                                 </a>
                             </li>
 						</#if>
 							<#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("ADMIN")>
                                 <li>
-                                    <a href="${ctx}/bill/pendingAudit">
+                                    <a href="${ctx}/order/pendingAudit">
                                         待审核订单
                                     </a>
                                 </li>
@@ -184,26 +184,26 @@
                             </a>
                             <ul class="sub-menu"  style="background: #293038;">
                                 <li>
-                                    <a href="${ctx}/bill/list?way=1">
+                                    <a href="${ctx}/order/list?way=1">
                                         关键词排名
                                     </a>
                                 </li>
                             </ul>
                         </li>
 					</#if>
-					<#if bmsModel.user.hasRole("DISTRIBUTOR")>
+					<#if bmsModel.user.dailiRole=1>
                     <li class="" style="border-bottom: 1px solid #3d3d3d;">
                         <a href="javascript:;">
                             <i class="fa fa-star-o"></i><span class="title"> 代理商管理 </span><span class="arrow "></span>
                         </a>
                         <ul class="sub-menu" style="background: #293038;">
                             <li>
-                                <a href="${ctx}/bill/list?way=2">
+                                <a href="${ctx}/order/list?way=2">
                                     关键词排名
                                 </a>
                             </li>
                             <li>
-                                <a href="${ctx}/bill/pendingAudit">
+                                <a href="${ctx}/order/pendingAudit">
                                     订单审核
                                 </a>
                             </li>
@@ -217,12 +217,12 @@
                             </a>
                             <ul class="sub-menu" style="background: #293038;">
                                 <li>
-                                    <a href="${ctx}/bill/billCustomer">
+                                    <a href="${ctx}/order/billCustomer">
                                         关键词排名
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="${ctx}/bill/pendingAuditView">
+                                    <a href="${ctx}/order/pendingAuditView">
                                         待审核订单
                                     </a>
                                 </li>
@@ -236,7 +236,7 @@
                             </a>
                             <ul class="sub-menu" style="background: #293038;">
                                 <li>
-                                    <a href="${ctx}/bill/list?way=1">
+                                    <a href="${ctx}/order/list?way=1">
                                         关键词排名
                                     </a>
                                 </li>
@@ -250,12 +250,12 @@
                             </a>
                             <ul class="sub-menu" style="background: #293038;">
                                 <li>
-                                    <a href="${ctx}/bill/billCustomer">
+                                    <a href="${ctx}/order/billCustomer">
                                         关键词排名
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="${ctx}/bill/pendingAuditView">
+                                    <a href="${ctx}/order/pendingAuditView">
                                         待审核订单
                                     </a>
                                 </li>
@@ -269,7 +269,7 @@
                             </a>
                             <ul class="sub-menu"  style="background: #293038;">
                                 <li>
-                                    <a href="${ctx}/bill/list?way=1">
+                                    <a href="${ctx}/order/list?way=1">
                                         关键词排名
                                     </a>
                                 </li>

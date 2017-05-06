@@ -31,7 +31,6 @@ public class UserServiceImpl implements UserService {
     private BillPriceMapper billPriceMapper;
     @Autowired
     private RoleService roleService;
-
     @Autowired
     private UserRoleMapper userRoleMapper;
     @Autowired
@@ -44,6 +43,9 @@ public class UserServiceImpl implements UserService {
         user.setPassword(CryptoUtils.md5(user.getPassword()));
         //Role role1= roleMapper.selectByRoleCode("SUPER_ADMIN");
         user.setCreateUserId(new Long(1));
+        //代理权限(默认无权限)
+        int dailiRole=0;
+        user.setDailiRole(dailiRole);
         int c = userMapper.insert(user);
         Role role = roleService.getRoleByRoleCode(Roles.DISTRIBUTOR.name());
         if (role!=null) {

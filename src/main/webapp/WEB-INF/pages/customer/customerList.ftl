@@ -17,7 +17,7 @@
             <span id="Import">&nbsp;<i class="fa fa-plus"></i>&nbsp;添加客户</span>
         </div>
     </#if>
-        <#if bmsModel.user.hasRole("DISTRIBUTOR")>
+        <#if bmsModel.user.dailiRole=1>
             <div class="Import addAGENT">
                 <span id="Import">&nbsp;<i class="fa fa-plus"></i>&nbsp;添加代理商</span>
             </div>
@@ -25,7 +25,11 @@
         <div class="search">
             <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
         </div>
-
+        <#if  bmsModel.user.hasRole("SUPER_ADMIN")>
+            <div class="updateDailiRole" style="width:130px;">
+                <span id="dailiRole">&nbsp;<i class="fa fa-gavel"></i>&nbsp;开通代理权限</span>
+            </div>
+        </#if>
     </div>
 </div>
 <div class="cls">
@@ -63,11 +67,11 @@
                 </div>
                 <div id="toolbar" class="btn-group">
 
-                <#if  bmsModel.user.hasRole("SUPER_ADMIN")|| bmsModel.user.hasRole("DISTRIBUTOR")|| bmsModel.user.hasRole("AGENT")>
-                    <button   type="button" class="btn btn-default" id="Recharge">
-                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 充值
-                    </button>
-                </#if>
+                <#--    <#if  bmsModel.user.hasRole("SUPER_ADMIN")|| bmsModel.user.hasRole("DISTRIBUTOR")|| bmsModel.user.hasRole("AGENT")>
+                        <button   type="button" class="btn btn-default" id="Recharge">
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 充值
+                        </button>
+                    </#if>-->
 
                 </div>
 
@@ -103,7 +107,7 @@
                                 登录名<span class="required">* </span>
                             </label>
                             <div class="col-md-9">
-                                <input name="userName" class="form-control input-width-large" type="text" id="userName1">
+                                <input name="userName" class="form-control input-width-large" type="text" id="userName1" placeholder="六位以上英文+数字">
                             </div>
                             <div class="pdlogid"></div>
                         </div>

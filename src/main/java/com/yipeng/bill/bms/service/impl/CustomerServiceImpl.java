@@ -65,6 +65,7 @@ public class CustomerServiceImpl implements CustomerService{
                     user.setPhone(phone);
                     user.setQq(qq);
                     user.setLoginCount(0);
+                    user.setDailiRole(0);
                     user.setStatus(true);
                     int num = userMapper.insert(user);
                     //资金余额
@@ -101,6 +102,7 @@ public class CustomerServiceImpl implements CustomerService{
                         user.setPhone(phone);
                         user.setQq(qq);
                         user.setLoginCount(0);
+                        user.setDailiRole(0);
                         int num = userMapper.insert(user);
                         //资金余额
                         FundAccount fundAccount=new FundAccount();
@@ -127,6 +129,7 @@ public class CustomerServiceImpl implements CustomerService{
                         user.setPassword(CryptoUtils.md5(user.getPassword()));
                         user.setCreateUserId(userId);
                         user.setLoginCount(0);
+                        user.setDailiRole(0);
                         int num = userMapper.insert(user);
                         //资金余额
                         FundAccount fundAccount=new FundAccount();
@@ -156,6 +159,7 @@ public class CustomerServiceImpl implements CustomerService{
                     user.setPassword(CryptoUtils.md5(user.getPassword()));
                     user.setCreateUserId(userId);
                     user.setLoginCount(0);
+                    user.setDailiRole(0);
                     int num = userMapper.insert(user);
                     //资金余额
                     FundAccount fundAccount=new FundAccount();
@@ -217,7 +221,7 @@ public class CustomerServiceImpl implements CustomerService{
                      customerListDetails.setQq(user1.getQq());
                      customerListDetails.setStatus(user1.getStatus());
                      customerListDetails.setCreateTime(DateUtils.formatDate(user1.getCreateTime()));
-
+                     customerListDetails.setDailiRole(user1.getDailiRole());
                      if(user1.getLastLoginTime()!=null)
                      {
                          customerListDetails.setLastLoginTime(DateUtils.formatDate(user1.getLastLoginTime()));
@@ -263,7 +267,7 @@ public class CustomerServiceImpl implements CustomerService{
                 customerListDetails.setPhone(user1.getPhone());
                 customerListDetails.setQq(user1.getQq());
                 customerListDetails.setCreateTime(DateUtils.formatDate(user1.getCreateTime()));
-
+                customerListDetails.setDailiRole(user1.getDailiRole());
                 if(user1.getLastLoginTime()!=null)
                 {
                     customerListDetails.setLastLoginTime(DateUtils.formatDate(user1.getLastLoginTime()));
@@ -306,7 +310,7 @@ public class CustomerServiceImpl implements CustomerService{
                 customerListDetails.setPhone(user1.getPhone());
                 customerListDetails.setQq(user1.getQq());
                 customerListDetails.setCreateTime(DateUtils.formatDate(user1.getCreateTime()));
-
+                customerListDetails.setDailiRole(user1.getDailiRole());
                 if(user1.getLastLoginTime()!=null)
                 {
                     customerListDetails.setLastLoginTime(DateUtils.formatDate(user1.getLastLoginTime()));
@@ -576,5 +580,38 @@ public class CustomerServiceImpl implements CustomerService{
                 return map;
             }
 
+    }
+
+    /**
+     * 客户代理权限
+     * @param params
+     * @param user
+     * @return
+     */
+    @Override
+    public int updateDailiRole(Map<String, String[]> params, LoginUser loginUser) {
+        String[] checkboxLength=params.get("length");
+        int  length=Integer.parseInt(checkboxLength[0]);
+        if(length!=0||loginUser!=null)
+        {
+            for(int i=0;i<length;i++)
+            {
+                String[] id=params.get("selectContent["+i+"][customerId]");
+                Long  userId=Long.parseLong(id[0]);
+                User user=new User();
+                user.setId(userId);
+                //设置拥有代理权限
+                user.setDailiRole(1);
+                user.setUpdateTime(new Date());
+                user.setUpdateUserId(loginUser.getId());
+                int a=userMapper.updateByPrimaryKeySelective(user);
+
+            }
+            return  1;
+        }
+        else
+        {
+            return 0;
+        }
     }
 }

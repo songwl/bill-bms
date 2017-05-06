@@ -16,10 +16,11 @@
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
     <result column="login_count" jdbcType="INTEGER" property="loginCount" />
+    <result column="daili_Role" jdbcType="INTEGER" property="dailiRole" />
   </resultMap>
   <sql id="Base_Column_List">
     id, user_name, real_name, password, status, create_user_id, create_time, update_user_id, 
-    update_time, contact, qq, phone, last_login_time, login_count
+    update_time, contact, qq, phone, last_login_time, login_count,daili_Role
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
   select
@@ -60,12 +61,12 @@
       password, status, create_user_id, 
       create_time, update_user_id, update_time, 
       contact, qq, phone, 
-      last_login_time, login_count)
+      last_login_time, login_count,daili_Role)
     values (#{id,jdbcType=BIGINT}, #{userName,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{status,jdbcType=BIT}, #{createUserId,jdbcType=BIGINT}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{contact,jdbcType=VARCHAR}, #{qq,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
-      #{lastLoginTime,jdbcType=TIMESTAMP}, #{loginCount,jdbcType=INTEGER})
+      #{lastLoginTime,jdbcType=TIMESTAMP}, #{loginCount,jdbcType=INTEGER}, #{dailiRole,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.User" >
     insert into t_user
@@ -112,6 +113,9 @@
       <if test="loginCount != null">
         login_count,
       </if>
+      <if test="dailiRole != null">
+        daili_Role,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -155,6 +159,9 @@
       </if>
       <if test="loginCount != null">
         #{loginCount,jdbcType=INTEGER},
+      </if>
+      <if test="dailiRole != null">
+        #{dailiRole,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -200,6 +207,9 @@
       <if test="loginCount != null">
         login_count = #{loginCount,jdbcType=INTEGER},
       </if>
+      <if test="dailiRole != null">
+        daili_Role = #{dailiRole,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -218,6 +228,7 @@
       phone = #{phone,jdbcType=VARCHAR},
       last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
       login_count = #{loginCount,jdbcType=INTEGER}
+       daili_Role = #{dailiRole,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="getUserListCount" resultType="java.lang.Long">

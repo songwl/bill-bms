@@ -66,7 +66,7 @@ public class LoginController extends BaseController {
 					int loginCount=user.getLoginCount();
 					user.setLastLoginTime(new Date());
 					user.setLoginCount(loginCount+1);
-					userMapper.updateByPrimaryKey(user);
+					userMapper.updateByPrimaryKeySelective(user);
 					boolean flag = executeLogin(request, response, user);
 					return "redirect:/index";
 				}

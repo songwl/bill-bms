@@ -39,6 +39,7 @@
         <script src="${ctx}/static/js/public/bootstrap-table-export.js"></script>
         <script src="${ctx}/static/js/public/bootstrap-table-zh-CN.js"></script>
         <script src="${ctx}/static/js/public/pace.js"></script>
+        <link rel="shortcut icon" href="${ctx}/static/img/favicon.ico"  type="image/x-icon" />
         <script type="text/javascript">
             var CTX = "${ctx}";
         </script>

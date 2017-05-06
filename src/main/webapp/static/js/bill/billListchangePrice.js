@@ -46,7 +46,7 @@ $(document).ready(function () {
 
             $.ajax({
                 type:'post',
-                url:CTX+"/bill/billList/updatePrice",
+                url:CTX+"/order/billList/updatePrice",
                 dataType:'json',
                 data:{
                     rankend:changerankend,

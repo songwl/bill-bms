@@ -16,14 +16,14 @@
         </h1>
         <h2 class="logo-title">登录</h2>
         <ul class="header-nav">
-            <li class="nav-first">
+            <#--<li class="nav-first">
                 <a href="#" target="_blank">优搜云首页</a></li>
             <li>
                 <a href="#" target="_blank">XX首页</a></li>
             <li>
                 <a href="#" target="_blank">帮助与文档</a></li>
             <li>
-                <a href="#" target="_blank">XXXX</a></li>
+                <a href="#" target="_blank">XXXX</a></li>-->
         </ul>
     </div>
 </div>
@@ -49,15 +49,13 @@
     <div id="login-module">
         <div id="login-wrap" class=" login-static  nc-outer-box">
             <div style="background:#EBEBEB;height:40px;line-height:40px;text-indent:20px;font-weight:800;">
-                优搜云会员登录
+                <#--优搜云-->会员登录
             </div>
             <form  action="${rc.contextPath}/login" method="post">
                 <div id="login-loading" class="loading-mask">
                     <div class="loading-icon"></div>
                     <div class="loading-mask-body"></div>
                 </div>
-
-
                 <div id="login-content" class="form clr" style="width:250px;margin:0 auto;">
 
                     <dl>

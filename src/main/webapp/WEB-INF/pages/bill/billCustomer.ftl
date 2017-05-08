@@ -21,7 +21,9 @@
                     <li id="Differentprice">不同价导入</li>
                 </ul>
             </div>
-
+        <div id="btn_update">
+            <span >&nbsp;<i class="fa fa-paint-brush"></i>&nbsp;调价</span>
+        </div>
         <div class="search">
             <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
         </div>
@@ -92,18 +94,7 @@
                     </div>
                     <div class="cls"></div>
                 </div>
-                <div id="toolbar" class="btn-group">
 
-
-                    <button id="btn_update" type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 调价
-                    </button>
-
-                    <button id="testpm" type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-leaf" aria-hidden="true" id=""></span> 查排名
-                    </button>
-
-                </div>
                 <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%">
                 </table>
             </div>
@@ -174,6 +165,9 @@
                             <div class="col-md-6 padding-left-5px">
                                 <textarea name="url" id="url" rows="15" class="form-control"   style=" height: 297px;resize: none;"></textarea>
                             </div>
+                        </div>
+                        <div class="alert alert-info fade in">
+                            录入价格的时候请按对应的顺序录入，请谨慎录入。顺序（排名1，价格1，排名2，价格2,......）
                         </div>
                         <div class="form-group" style="margin-top:30px;">
                             <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
@@ -338,82 +332,6 @@
     </div>
 </div>
 <!--不同价导入end-->
-
-<!--调价-->
-<div class="bootbox modal in changepriceDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="bootbox-close-button close">×</button>
-                <h4 class="modal-title">调价</h4>
-            </div>
-            <div class="modal-body" style="max-height: 374px;">
-                <div class="bootbox-body">
-                    <style type="text/css">
-                        .modal-dialog {
-                            width: 400px;
-                        }
-                    </style>
-                    <form class="form-horizontal row-border" id="edt-form" action="#" novalidate="novalidate">
-                        <div class="form-group">
-                            <table class="table table-striped table-bordered">
-                                <tbody>
-                                <tr>
-                                    <th>
-                                        前<span class="red">N</span>名
-                                    </th>
-                                    <th>
-                                        收费<span class="red">(元/天)</span>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input name="changerankend" class="form-control input-width-small" type="text">
-                                    </td>
-                                    <td>
-                                        <input name="changeprice" class="form-control input-width-small" type="text">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input name="changerankend1" class="form-control input-width-small" type="text">
-                                    </td>
-                                    <td>
-                                        <input name="changeprice1" class="form-control input-width-small" type="text">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input name="changerankend2" class="form-control input-width-small" type="text">
-                                    </td>
-                                    <td>
-                                        <input name="changeprice2" class="form-control input-width-small" type="text">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <input name="changerankend3" class="form-control input-width-small" type="text">
-                                    </td>
-                                    <td>
-                                        <input name="changeprice3" class="form-control input-width-small" type="text">
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <input name="tids" value="" type="hidden">
-                        <input name="op" value="cp" type="hidden">
-                    </form>
-
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button data-bb-handler="success" type="button" class="btn wzgj-blue changeprice">确定</button><button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!--调价end-->
 <!--详情-->
 
 <div class="modal-backdrop in" style="display: none">
@@ -449,7 +367,7 @@
                             <label>任务消费记录</label>
                             <div class="widget box">
                                 <div class="widget-header">
-                                    <h4><i class="icon-reorder"></i>(17条记录)</h4>
+
                                 </div>
                                 <div class="widget-content">
                                     <table id="pricetable"  class="table table-striped  table-condensed table-responsive" >
@@ -481,5 +399,94 @@
     </div>
 </div>
 
+    <div class="bootbox modal in billExamineDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
+        <div class="modal-dialog" style="width: 990px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="bootbox-close-button close">×</button>
+                    <h4 class="modal-title">审核</h4>
+                </div>
+                <div class="modal-body" style="max-height: 574px;">
+                    <div class="bootbox-body">
+                        <style type="text/css">
+                            .modal-dialog {
+                                width: 990px;
+                            }
+                        </style>
+                        <div>
+                            <div class="alert alert-info fade in">
+                                <i class="icon-remove close" data-dismiss="alert"></i>录入价格的时候请按对应的顺序录入，请谨慎录入。顺序（排名1，价格1，排名2，价格2,......）
+                            </div>
+                            <div class="form-group">
+                            <div class="form-group" style="margin-top:30px;">
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                    前
+                                    <span class="red">N</span>名<span class="required">*</span>
+                                </label>
+                                <div class="" style="width: 35px;float: left;">
+                                    <input name="updaterankend"   style="width: 35px;">
+                                </div>
+
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 68px;">
+                                    <span>元/天</span><span class="required">*</span>
+                                </label>
+                                <div class="" style="width: 35px;float: left;">
+                                    <input name="updateprice"   style="width: 35px;">
+                                </div>
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                    前
+                                    <span class="red">N</span>名
+                                </label>
+                                <div class="" style="width: 35px;float: left;">
+                                    <input name="updaterankend1"   style="width: 35px;">
+                                </div>
+
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 68px;">
+                                    <span>元/天</span>
+                                </label>
+                                <div class="" style="width: 35px;float: left;">
+                                    <input name="updateprice1"   style="width: 35px;">
+                                </div>
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                    前
+                                    <span class="red">N</span>名
+                                </label>
+                                <div class="" style="width: 35px;float: left;">
+                                    <input name="updaterankend2"  style="width: 35px;">
+                                </div>
+
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 68px;">
+                                    <span>元/天</span><span class="required">*</span>
+                                </label>
+                                <div class="" style="width: 35px;float: left;">
+                                    <input name="updateprice2"   style="width: 35px;">
+                                </div>
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                    前
+                                    <span class="red">N</span>名
+                                </label>
+                                <div class="" style="width: 35px;float: left;">
+                                    <input name="updaterankend3"   style="width: 35px;">
+                                </div>
+
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width:68px;">
+                                    <span>元/天</span>
+                                </label>
+                                <div class="" style="width: 35px;float: left;">
+                                    <input name="updateprice3"   style="width: 35px;">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+                <div class="modal-footer" style="height:70px;">
+                    <button data-bb-handler="success" type="button" class="btn wzgj-blue updatePricecmt" style="background: #09C;color: #fff;">确定</button>
+                    <button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
+                </div>
+        </div>
 <!--详情end-->
 </@base.html>

@@ -19,7 +19,6 @@ import javax.imageio.stream.ImageOutputStream;
  * 第二种：英文字符加数字的验证码
  * 第三种：像铁路订票系统一样的验证码，肆+？=21
  *
- * @author 李朋飞
  *
  */
 public class VerificationCodeUtil {

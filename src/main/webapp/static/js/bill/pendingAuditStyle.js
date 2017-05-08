@@ -97,6 +97,7 @@ $(".cancel").click(function () {
                     },
                     beforeSend: function () {
                         $(".pload").show();
+                        $('.qudaoShenhe').attr('disabled',"true");
                     },
                     success:function (result) {
                         if(result.code==200)
@@ -114,6 +115,7 @@ $(".cancel").click(function () {
                             jQuery("input[name='price2']").val("");
                             jQuery("input[name='rankend3']").val("");
                             jQuery("input[name='price3']").val("");
+                            $('.qudaoShenhe').removeAttr("disabled");
                         }
                         else
                         {
@@ -127,6 +129,7 @@ $(".cancel").click(function () {
                             jQuery("input[name='price2']").val("");
                             jQuery("input[name='rankend3']").val("");
                             jQuery("input[name='price3']").val("");
+                            $('.qudaoShenhe').removeAttr("disabled");
                         }
                     }
 
@@ -207,6 +210,7 @@ $(".adminshenhe").click(function () {
               },
               beforeSend: function () {
                   $(".pload").show();
+                  $('.adminshenhe').attr('disabled',"true");
               },
               success:function (result) {
                   if(result.code==200)
@@ -225,6 +229,7 @@ $(".adminshenhe").click(function () {
                       jQuery("input[name='adminprice2']").val("");
                       jQuery("input[name='adminrankend3']").val("");
                       jQuery("input[name='adminprice3']").val("");
+                      $('.adminshenhe').removeAttr("disabled");
                   }
                   else
                   {
@@ -239,6 +244,7 @@ $(".adminshenhe").click(function () {
                       jQuery("input[name='adminprice2']").val("");
                       jQuery("input[name='adminrankend3']").val("");
                       jQuery("input[name='adminprice3']").val("");
+                      $('.adminshenhe').removeAttr("disabled");
                   }
               }
 

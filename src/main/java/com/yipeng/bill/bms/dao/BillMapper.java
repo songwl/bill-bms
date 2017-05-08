@@ -91,5 +91,7 @@ public interface BillMapper {
      * @return
      */
     List<Bill>  selectBillGroupByWebsite(Map<String,Object> params);
+    List<Bill>  selectByNewRanking(Map<String,Object> params);
+    Long selectByNewRankingCount(Map<String,Object> params);
 
 }

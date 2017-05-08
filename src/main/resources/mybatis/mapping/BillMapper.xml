@@ -370,6 +370,7 @@
     limit #{offset},#{limit}
   </select>
 <!--下游-->
+
   <select id="selectByInMemberId"  resultMap="BaseResultMap">
     select DISTINCT a.*
     from t_bill as a   INNER JOIN   t_bill_price as b on a.id=b.bill_id
@@ -1134,8 +1135,273 @@
       AND  a.bill_ascription = #{billAscription,jdbcType=BIGINT}
     </if>
      GROUP  BY a.website
+    <if test="sortName =='webSite'">
+      ORDER BY a.website ${sortOrder}
+    </if>
     limit #{offset},#{limit}
   </select>
 
+  <select id="selectByNewRanking"  resultMap="BaseResultMap">
+    select DISTINCT a.*
+    from t_bill as a   INNER JOIN   t_bill_price as b on a.id=b.bill_id
+    INNER  JOIN  t_bill_search_support as d ON a.id=d.bill_id
+    INNER  JOIN t_user as e ON b.out_member_id=e.id
+    where  1=1
+    AND b.in_member_id=#{userId,jdbcType=BIGINT}
+    AND (
+    <if test="state != null">
+      a.state = #{state,jdbcType=INTEGER}
+    </if>
+    <if test="state2 != null">
+      OR  a.state = #{state2,jdbcType=INTEGER}
+    </if>
+    )
+    <if test="website != null">
+      AND a.website LIKE CONCAT('%',#{website,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="keywords != null">
+      AND a.keywords LIKE CONCAT('%',#{keywords,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="createTime != null">
+      AND a.create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateTime != null">
+      AND a.update_time = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="createUserId != null">
+      AND  a.create_user_id = #{createUserId,jdbcType=BIGINT}
+    </if>
+    <if test="updateUserId != null">
+      AND a.update_user_id = #{updateUserId,jdbcType=BIGINT}
+    </if>
+    <if test="firstRanking != null">
+      AND a.first_ranking = #{firstRanking,jdbcType=INTEGER}
+    </if>
+    <if test="newRanking != null">
+      AND  a.new_ranking = #{newRanking,jdbcType=INTEGER}
+    </if>
+    <if test="webAppId != null">
+      AND  a.web_app_id = #{webAppId,jdbcType=INTEGER}
+    </if>
+    <if test="webAppId1 != null">
+      AND  a.web_app_id1 = #{webAppId1,jdbcType=INTEGER}
+    </if>
+    <if test="standardDays != null">
+      AND  a.standard_days = #{standardDays,jdbcType=INTEGER}
+    </if>
+    <if test="dayOptimization != null">
+      AND  a.day_optimization = #{dayOptimization,jdbcType=INTEGER}
+    </if>
+    <if test="allOptimization != null">
+      AND  a.all_optimization = #{allOptimization,jdbcType=INTEGER}
+    </if>
+    <if test="billAscription != null">
+      AND  a.bill_ascription= #{billAscription,jdbcType=BIGINT}
+    </if>
+    <if test="searchName != null">
+      AND  d.search_support= #{searchName,jdbcType=VARCHAR}
+    </if>
+    <if test="searchUserNameId != null">
+      AND  b.out_member_id= #{searchUserNameId,jdbcType=VARCHAR}
+    </if>
+    <if test="searchStandard != null">
+      AND a.new_ranking &lt;= b.bill_ranking_standard
+    </if>
+    <if test="opstate != null">
+      AND  a.opstate = #{opstate,jdbcType=INTEGER}
+    </if>
+    <if test="billType != null">
+      AND  a.bill_type = #{billType,jdbcType=INTEGER}
+    </if>
+    <if test="firstRanking1 != null">
+      AND  a.first_ranking &gt;= #{firstRanking1,jdbcType=INTEGER}
+    </if>
+    <if test="firstRanking2 != null">
+      AND  a.first_ranking &lt;= #{firstRanking2,jdbcType=INTEGER}
+    </if>
+    <if test="newRanking1 != null">
+      AND  a.new_ranking &gt;= #{newRanking1,jdbcType=INTEGER}
+    </if>
+    <if test="newRanking2 != null">
+      AND  a.new_ranking &lt;= #{newRanking2,jdbcType=INTEGER}
+    </if>
+    <if test="newchange != null">
+      AND  a.change_ranking &gt; 0
+    </if>
+    <if test="addTime1 != null">
+      AND  DATE_FORMAT(a.create_time,'%Y-%m-%d')  &gt;= DATE_FORMAT( #{addTime1,jdbcType=VARCHAR},'%Y-%m-%d')
+    </if>
+    <if test="addTime2 != null">
+      AND  DATE_FORMAT(a.create_time,'%Y-%m-%d')  &lt;= DATE_FORMAT( #{addTime2,jdbcType=VARCHAR},'%Y-%m-%d')
+    </if>
+    <if test="sortName != null">
+      <if test="sortName =='id'">
+        ORDER BY a.id ${sortOrder}
+      </if>
+      <if test="sortName =='userName'">
+        ORDER BY e.user_name ${sortOrder}
+      </if>
+      <if test="sortName =='keywords'">
+        ORDER BY a.keywords ${sortOrder}
+      </if>
+      <if test="sortName =='website'">
+        ORDER BY a.website ${sortOrder}
+      </if>
+      <if test="sortName =='searchName'">
+        ORDER BY d.search_support ${sortOrder}
+      </if>
+      <if test="sortName =='createTime'">
+        ORDER BY a.create_time ${sortOrder}
+      </if>
+      <if test="sortName =='firstRanking'">
+        ORDER BY a.first_ranking ${sortOrder}
+      </if>
+      <if test="sortName =='newRanking'">
+        ORDER BY a.new_ranking ${sortOrder}
+      </if>
+      <if test="sortName =='changeRanking'">
+        ORDER BY a.change_ranking ${sortOrder}
+      </if>
+      <if test="sortName =='standardDays'">
+        ORDER BY a.standard_days ${sortOrder}
+      </if>
+      <if test="sortName =='state'">
+        ORDER BY a.state ${sortOrder}
+      </if>
+    </if>
+    <if test="offset != null">
+      limit #{offset},#{limit}
+    </if>
 
+  </select>
+  <select id="selectByNewRankingCount"   resultType="java.lang.Long">
+    select COUNT(DISTINCT a.id)
+    from t_bill as a   INNER JOIN   t_bill_price as b on a.id=b.bill_id
+    INNER  JOIN  t_bill_search_support as d ON a.id=d.bill_id
+    INNER  JOIN t_user as e ON b.out_member_id=e.id
+    where  1=1
+    AND b.in_member_id=#{userId,jdbcType=BIGINT}
+    AND (
+    <if test="state != null">
+      a.state = #{state,jdbcType=INTEGER}
+    </if>
+    <if test="state2 != null">
+      OR  a.state = #{state2,jdbcType=INTEGER}
+    </if>
+    )
+    <if test="website != null">
+      AND a.website LIKE CONCAT('%',#{website,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="keywords != null">
+      AND a.keywords LIKE CONCAT('%',#{keywords,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="createTime != null">
+      AND a.create_time = #{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateTime != null">
+      AND a.update_time = #{updateTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="createUserId != null">
+      AND  a.create_user_id = #{createUserId,jdbcType=BIGINT}
+    </if>
+    <if test="updateUserId != null">
+      AND a.update_user_id = #{updateUserId,jdbcType=BIGINT}
+    </if>
+    <if test="firstRanking != null">
+      AND a.first_ranking = #{firstRanking,jdbcType=INTEGER}
+    </if>
+    <if test="newRanking != null">
+      AND  a.new_ranking = #{newRanking,jdbcType=INTEGER}
+    </if>
+    <if test="webAppId != null">
+      AND  a.web_app_id = #{webAppId,jdbcType=INTEGER}
+    </if>
+    <if test="webAppId1 != null">
+      AND  a.web_app_id1 = #{webAppId1,jdbcType=INTEGER}
+    </if>
+    <if test="standardDays != null">
+      AND  a.standard_days = #{standardDays,jdbcType=INTEGER}
+    </if>
+    <if test="dayOptimization != null">
+      AND  a.day_optimization = #{dayOptimization,jdbcType=INTEGER}
+    </if>
+    <if test="allOptimization != null">
+      AND  a.all_optimization = #{allOptimization,jdbcType=INTEGER}
+    </if>
+    <if test="billAscription != null">
+      AND  a.bill_ascription= #{billAscription,jdbcType=BIGINT}
+    </if>
+    <if test="searchName != null">
+      AND  d.search_support= #{searchName,jdbcType=VARCHAR}
+    </if>
+    <if test="searchUserNameId != null">
+      AND  b.out_member_id= #{searchUserNameId,jdbcType=VARCHAR}
+    </if>
+    <if test="searchStandard != null">
+      AND a.new_ranking &lt;= b.bill_ranking_standard
+    </if>
+    <if test="opstate != null">
+      AND  a.opstate = #{opstate,jdbcType=INTEGER}
+    </if>
+    <if test="billType != null">
+      AND  a.bill_type = #{billType,jdbcType=INTEGER}
+    </if>
+    <if test="firstRanking1 != null">
+      AND  a.first_ranking &gt;= #{firstRanking1,jdbcType=INTEGER}
+    </if>
+    <if test="firstRanking2 != null">
+      AND  a.first_ranking &lt;= #{firstRanking2,jdbcType=INTEGER}
+    </if>
+    <if test="newRanking1 != null">
+      AND  a.new_ranking &gt;= #{newRanking1,jdbcType=INTEGER}
+    </if>
+    <if test="newRanking2 != null">
+      AND  a.new_ranking &lt;= #{newRanking2,jdbcType=INTEGER}
+    </if>
+    <if test="newchange != null">
+      AND  a.change_ranking &gt;= 0
+    </if>
+    <if test="addTime1 != null">
+      AND  DATE_FORMAT(a.create_time,'%Y-%m-%d')  &gt;= DATE_FORMAT( #{addTime1,jdbcType=VARCHAR},'%Y-%m-%d')
+    </if>
+    <if test="addTime2 != null">
+      AND  DATE_FORMAT(a.create_time,'%Y-%m-%d')  &lt;= DATE_FORMAT( #{addTime2,jdbcType=VARCHAR},'%Y-%m-%d')
+    </if>
+    <if test="sortName != null">
+      <if test="sortName =='userName'">
+        ORDER BY e.user_name ${sortOrder}
+      </if>
+      <if test="sortName =='keywords'">
+        ORDER BY a.keywords ${sortOrder}
+      </if>
+      <if test="sortName =='website'">
+        ORDER BY a.website ${sortOrder}
+      </if>
+      <if test="sortName =='searchName'">
+        ORDER BY d.search_support ${sortOrder}
+      </if>
+      <if test="sortName =='createTime'">
+        ORDER BY a.create_time ${sortOrder}
+      </if>
+      <if test="sortName =='firstRanking'">
+        ORDER BY a.first_ranking ${sortOrder}
+      </if>
+      <if test="sortName =='newRanking'">
+        ORDER BY a.new_ranking ${sortOrder}
+      </if>
+      <if test="sortName =='changeRanking'">
+        ORDER BY a.change_ranking ${sortOrder}
+      </if>
+      <if test="sortName =='standardDays'">
+        ORDER BY a.standard_days ${sortOrder}
+      </if>
+      <if test="sortName =='state'">
+        ORDER BY a.state ${sortOrder}
+      </if>
+    </if>
+    <if test="offset != null">
+      limit #{offset},#{limit}
+    </if>
+
+  </select>
 </mapper>

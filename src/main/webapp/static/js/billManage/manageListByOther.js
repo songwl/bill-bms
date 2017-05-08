@@ -96,7 +96,7 @@ var TableInit = function () {
                         var a="";
                         if(value>60.00)
                         {
-                            a="<span style='color:#ff0000;font-weight: 800;'>"+value+"%</span>";
+                            a="<span style='color:#09c;font-weight: 400;'>"+value+"%</span>";
                         }
                         else
                         {
@@ -118,6 +118,13 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '今日消费',
+                    formatter:function (value,row,index) {
+                        var a="";
+
+                         a="<span style='color:#09c;font-weight: 400;'>¥ "+value+"</span>";
+
+                        return a;
+                    }
 
                 },
                 {

@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import org.json.JSONString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
@@ -431,7 +432,135 @@ public class BillServiceimpl implements BillService {
      * @return
      */
     @Override
-    public int updateBillPrice(Map<String, String[]>  params,User user) {
+    public int updateBillPrice(Map<String, String[]>  params,LoginUser loginUser) {
+        //获取参数
+        String[] selectContent=params.get("selectContent[0][userName]");
+        String[] checkboxLength=params.get("checkboxLength");
+        String[] price=params.get("price");
+        String[] price1=params.get("price1");
+        String[] price2=params.get("price2");
+        String[] price3=params.get("price3");
+        String[] rankend=params.get("rankend");
+        String[] rankend1=params.get("rankend1");
+        String[] rankend2=params.get("rankend2");
+        String[] rankend3=params.get("rankend3");
+        int  length=Integer.parseInt(checkboxLength[0]);
+        for(int i=0;i<length;i++) {
+            //数据库订单ID
+            String[] id = params.get("selectContent[" + i + "][id]");;
+            Long billId = Long.parseLong(id[0]);
+            //查询单价对象
+            BillPrice billPrice=new BillPrice();
+            billPrice.setBillId(billId);
+            billPrice.setInMemberId(loginUser.getId());
+           List<BillPrice> billPriceList=billPriceMapper.selectByBillPrice(billPrice);
+           //判断对象是否为空
+            if(!CollectionUtils.isEmpty(billPriceList))
+            {
+                if (!"NaN".equals(price[0]))
+                {
+                    //修改的对象
+                     BillPrice billPriceInsert =new BillPrice();
+                     billPriceInsert.setId(billPriceList.get(0).getId());
+                     billPriceInsert.setBillRankingStandard(Long.parseLong(rankend[0]));
+                     billPriceInsert.setPrice(new BigDecimal(price[0]));
+                     //修改数据库
+                     billPriceMapper.updateByPrimaryKeySelective(billPriceInsert);
+                }
+                //判断价格2是否为空  如果不为空才修改数据库
+                if (!"NaN".equals(price1[0]))
+                {
+                    //价格已经存在
+                    if(billPriceList.size()==2)
+                    {
+                        //修改的对象
+                        BillPrice billPriceInsert =new BillPrice();
+                        billPriceInsert.setId(billPriceList.get(1).getId());
+                        billPriceInsert.setBillRankingStandard(Long.parseLong(rankend1[0]));
+                        billPriceInsert.setPrice(new BigDecimal(price1[0]));
+                        //修改数据库
+                        billPriceMapper.updateByPrimaryKeySelective(billPriceInsert);
+                    }
+                    else
+                    {
+                        //插入的对象
+                        BillPrice billPriceInsert1 =new BillPrice();
+                        billPriceInsert1.setBillRankingStandard(Long.parseLong(rankend1[0]));
+                        billPriceInsert1.setPrice(new BigDecimal(price1[0]));
+                        billPriceInsert1.setBillId(billId);
+                        billPriceInsert1.setInMemberId(loginUser.getId());
+                        billPriceInsert1.setOutMemberId(billPriceList.get(0).getOutMemberId());
+                        billPriceInsert1.setCreateTime(new Date());
+                        //修改数据库
+                        billPriceMapper.insert(billPriceInsert1);
+                    }
+                }
+                //判断价格3是否为空  如果不为空才修改数据库
+                if (!"NaN".equals(price2[0]))
+                {
+                    //价格已经存在 修改数据库
+                    if(billPriceList.size()==3)
+                    {
+                        //修改的对象
+                        BillPrice billPriceInsert2 =new BillPrice();
+                        billPriceInsert2.setId(billPriceList.get(2).getId());
+                        billPriceInsert2.setBillRankingStandard(Long.parseLong(rankend2[0]));
+                        billPriceInsert2.setPrice(new BigDecimal(price2[0]));
+                        //修改数据库
+                        billPriceMapper.updateByPrimaryKeySelective(billPriceInsert2);
+                    }
+                    //价格不存在 新增数据库
+                    else
+                    {
+                        //插入的对象
+                        BillPrice billPriceInsert3 =new BillPrice();
+                        billPriceInsert3.setBillRankingStandard(Long.parseLong(rankend2[0]));
+                        billPriceInsert3.setPrice(new BigDecimal(price2[0]));
+                        billPriceInsert3.setBillId(billId);
+                        billPriceInsert3.setInMemberId(loginUser.getId());
+                        billPriceInsert3.setOutMemberId(billPriceList.get(0).getOutMemberId());
+                        billPriceInsert3.setCreateTime(new Date());
+                        //修改数据库
+                        billPriceMapper.insert(billPriceInsert3);
+                    }
+                }
+                //判断价格4是否为空  如果不为空才修改数据库
+                if (!"NaN".equals(price3[0]))
+                {
+                    //价格已经存在 修改数据库
+                    if(billPriceList.size()==4)
+                    {
+                        //修改的对象
+                        BillPrice billPriceInsert4 =new BillPrice();
+                        billPriceInsert4.setId(billPriceList.get(3).getId());
+                        billPriceInsert4.setBillRankingStandard(Long.parseLong(rankend3[0]));
+                        billPriceInsert4.setPrice(new BigDecimal(price3[0]));
+                        //修改数据库
+                        billPriceMapper.updateByPrimaryKeySelective(billPriceInsert4);
+                    }
+                    //价格不存在 新增数据库
+                    else
+                    {
+                        //插入的对象
+                        BillPrice billPriceInsert5 =new BillPrice();
+                        billPriceInsert5.setBillRankingStandard(Long.parseLong(rankend3[0]));
+                        billPriceInsert5.setPrice(new BigDecimal(price3[0]));
+                        billPriceInsert5.setBillId(billId);
+                        billPriceInsert5.setInMemberId(loginUser.getId());
+                        billPriceInsert5.setOutMemberId(billPriceList.get(0).getOutMemberId());
+                        billPriceInsert5.setCreateTime(new Date());
+                        //修改数据库
+                        billPriceMapper.insert(billPriceInsert5);
+                    }
+                }
+                return 0;
+            }
+            else
+            {
+                return  1;
+            }
+
+        }
         return 0;
     }
 
@@ -444,7 +573,6 @@ public class BillServiceimpl implements BillService {
     @Override
     public int distributorPrice(Map<String, String[]> params, User user) {
 
-        String[] bill=params.get("rankend1");
         String[] selectContent=params.get("selectContent[0][userName]");
         String[] checkboxLength=params.get("checkboxLength");
         String[] price1=params.get("price1");

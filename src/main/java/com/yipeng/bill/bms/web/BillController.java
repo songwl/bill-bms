@@ -514,10 +514,26 @@ public class BillController extends BaseController {
     public ResultMessage updatePrice( HttpServletRequest request, HttpServletResponse response)
     {
         Map<String, String[]> params= request.getParameterMap();
+        LoginUser user = this.getCurrentAccount();
+        if (user!=null)
+        {
+            int a=billService.updateBillPrice(params,user);
+            if(a==0)
+            {
+                return  this.ajaxDoneSuccess("调整成功!");
+            }
+            else
+            {
+                return  this.ajaxDoneError("未知错误,请稍后再试!");
+            }
 
-        User user = this.getCurrentAccount();
-        int a=billService.updateBillPrice(params,user);
-        return  this.ajaxDoneSuccess("");
+        }
+       else
+        {
+            return  this.ajaxDoneError("未登录");
+        }
+
+
     }
 
     /**

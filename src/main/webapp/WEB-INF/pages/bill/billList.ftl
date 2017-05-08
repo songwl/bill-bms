@@ -36,7 +36,6 @@
     </div>
 </div>
 <div class="Navs2">
-
     <div class="nav_R2 right col-md-11" >
         <input type="hidden" name="type" value="${way}" id="way">
         <div>

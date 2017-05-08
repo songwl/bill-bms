@@ -334,7 +334,6 @@ var TableInit = function () {
             clickToSelect: true,                //是否启用点击选中行
             height: 700,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
             uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
-                  //是否显示导出
             exportDataType: "basic",
             rowStyle: function (row, index) {
                 //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];

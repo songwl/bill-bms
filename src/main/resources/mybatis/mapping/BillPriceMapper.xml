@@ -86,7 +86,7 @@
         price = #{price,jdbcType=DECIMAL},
       </if>
       <if test="billRankingStandard != null">
-        #{billRankingStandard,jdbcType=BIGINT},
+        bill_ranking_standard=  #{billRankingStandard,jdbcType=BIGINT},
       </if>
       <if test="inMemberId != null">
         in_member_id = #{inMemberId,jdbcType=BIGINT},
@@ -104,7 +104,7 @@
     update t_bill_price
     set bill_id = #{billId,jdbcType=BIGINT},
       price = #{price,jdbcType=DECIMAL},
-      billRankingStandard= #{billRankingStandard,jdbcType=BIGINT},
+      bill_ranking_standard= #{billRankingStandard,jdbcType=BIGINT},
       in_member_id = #{inMemberId,jdbcType=BIGINT},
       out_member_id = #{outMemberId,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP}

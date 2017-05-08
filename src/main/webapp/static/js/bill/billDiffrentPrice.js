@@ -44,6 +44,7 @@ $(".dfpricecmt").click(function () {
             },
             beforeSend: function () {
                 $(".pload").show();
+                $('.dfpricecmt').attr('disabled',"true");
             },
             success: function (result) {
                 $(".pload").hide();
@@ -59,16 +60,19 @@ $(".dfpricecmt").click(function () {
                        $("#dfkeyword").val("");
                        $("#dfurl").val("");
                       $("#dfprice").val("");
+                        $('.dfpricecmt').removeAttr("disabled");
 
                     }
                     else {
 
                         alert(result.message + " 已经存在!");
+                        $('.dfpricecmt').removeAttr("disabled");
                     }
                 }
                 else {
 
                     alert("系统繁忙，请稍后再试！");
+                    $('.dfpricecmt').removeAttr("disabled");
                 }
             }
 

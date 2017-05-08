@@ -41,8 +41,7 @@
                     </div>
                     <div class="cls"></div>
                 </div>
-                <div id="toolbar" class="btn-group">
-                </div>
+
                 <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%">
                 </table>
             </div>

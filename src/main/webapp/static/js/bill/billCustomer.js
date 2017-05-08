@@ -64,6 +64,7 @@ $(document).ready(function () {
         $(".changepriceDiv").slideUp();
         $(".modal-backdrop").hide();
         $("#billCostDetail").hide();
+        $(".billExamineDiv").slideUp();
     })
     $(".cancel").click(function () {
         $(".samepriceDiv").slideUp();
@@ -71,6 +72,7 @@ $(document).ready(function () {
         $(".changepriceDiv").slideUp();
         $(".modal-backdrop").hide();
         $("#billCostDetail").hide();
+        $(".billExamineDiv").slideUp();
     })
     //显示搜索内容
     $(".search").click(function () {
@@ -89,20 +91,18 @@ $(document).ready(function () {
 
     })
 
-
-
-
-   //复选框
+   //调价
     $("#btn_update").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
-        if(selectContent == "") {
+      if(selectContent == "") {
             alert('请选择一列数据!');
 
-        }else{
-            $(".modal-backdrop").show();
-            $(".changepriceDiv").slideDown();
+        }else {
 
-        }
+          $(".modal-backdrop").show();
+          $(".billExamineDiv").slideDown();
+      }
+
     })
     $("#searchButton").click(function () {
 
@@ -192,6 +192,113 @@ $(document).ready(function () {
 
     })
 
+    //调价确认
+    $(".updatePricecmt").click(function () {
+        var rankend = parseInt(jQuery("input[name='updaterankend']").val());
+        var price = parseFloat(jQuery("input[name='updateprice']").val());
+        var rankend1 = parseInt(jQuery("input[name='updaterankend1']").val());
+        var price1 = parseFloat(jQuery("input[name='updateprice1']").val());
+        var rankend2 = parseInt(jQuery("input[name='updaterankend2']").val());
+        var price2 = parseFloat(jQuery("input[name='updateprice2']").val());
+        var rankend3 = parseInt(jQuery("input[name='updaterankend3']").val());
+        var price3 = parseFloat(jQuery("input[name='updateprice3']").val());
+        if (!isNaN(rankend) && !isNaN(rankend1) && !isNaN(rankend2) && !isNaN(rankend3)
+            && !isNaN(price) && !isNaN(price1) && !isNaN(price2) && !isNaN(price3)
+            && rankend > 0 && rankend1 > rankend && rankend2 > rankend1 && rankend3 > rankend2 && 51 > rankend3
+            && 1000 > price && price > price1 && price1 > price2 && price2 > price3 && price3 > 0
+            ||
+            !isNaN(rankend) && !isNaN(rankend1) && !isNaN(rankend2) && isNaN(rankend3)
+            && !isNaN(price) && !isNaN(price1) && !isNaN(price2) && isNaN(price3)
+            && rankend > 0 && rankend1 > rankend && rankend2 > rankend1 && 51 > rankend2
+            && 1000 > price && price > price1 && price1 > price2 && price2 > 0
+            ||
+            !isNaN(rankend) && !isNaN(rankend1) && isNaN(rankend2) && isNaN(rankend3)
+            && !isNaN(price) && !isNaN(price1) && isNaN(price2) && isNaN(price3)
+            && rankend > 0 && rankend1 > rankend && 51 > rankend1
+            && 1000 > price && price > price1 && price1 > 0
+            ||
+            !isNaN(rankend) && isNaN(rankend1) && isNaN(rankend2) && isNaN(rankend3)
+            && !isNaN(price) && isNaN(price1) && isNaN(price2) && isNaN(price3)
+            && rankend > 0 && 51 > rankend
+            && 1000 > price && price > 0
+        )
+        {
+
+            var rankendA = parseInt(jQuery("input[name='updaterankend']").val());
+            var priceA = parseFloat(jQuery("input[name='updateprice']").val());
+            var rankend1A = parseInt(jQuery("input[name='updaterankend1']").val());
+            var price1A = parseFloat(jQuery("input[name='updateprice1']").val());
+            var rankend2A = parseInt(jQuery("input[name='updaterankend2']").val());
+            var price2A = parseFloat(jQuery("input[name='updateprice2']").val());
+            var rankend3A = parseInt(jQuery("input[name='updaterankend3']").val());
+            var price3A = parseFloat(jQuery("input[name='updateprice3']").val());
+            var selectContent = $('#myTable').bootstrapTable('getSelections');
+            var len =selectContent.length;
+            $.ajax({
+                type:'post',
+                url:CTX+"/order/billList/updatePrice",
+                dataType:'json',
+                data:{
+                    rankend:rankendA,
+                    price:priceA,
+                    rankend1:rankend1A,
+                    price1:price1A,
+                    rankend2:rankend2A,
+                    price2:price2A,
+                    rankend3:rankend3A,
+                    price3:price3A,
+                    selectContent:selectContent,
+                    checkboxLength:len
+                },
+                beforeSend: function () {
+                    $(".pload").show();
+                    $('.updatePricecmt').attr('disabled',"true");
+                },
+                success:function (result) {
+                    if(result.code==200)
+                    {
+                        alert(result.message);
+                        $(".billExamineDiv").slideUp();
+                        $(".modal-backdrop").hide();
+                        $(".pload").hide();
+                        $('#myTable').bootstrapTable('refresh');
+                        jQuery("input[name='updaterankend']").val("");
+                        jQuery("input[name='updateprice']").val("");
+                        jQuery("input[name='updaterankend1']").val("");
+                        jQuery("input[name='updateprice1']").val("");
+                        jQuery("input[name='updaterankend2']").val("");
+                        jQuery("input[name='updateprice2']").val("");
+                        jQuery("input[name='updaterankend3']").val("");
+                        jQuery("input[name='updateprice3']").val("");
+                        $('.updatePricecmt').removeAttr("disabled");
+                    }
+                    else
+                    {
+                        $(".pload").hide();
+                        alert(result.message);
+                        jQuery("input[name='updaterankend']").val("");
+                        jQuery("input[name='updateprice']").val("");
+                        jQuery("input[name='updaterankend1']").val("");
+                        jQuery("input[name='updateprice1']").val("");
+                        jQuery("input[name='updaterankend2']").val("");
+                        jQuery("input[name='updateprice2']").val("");
+                        jQuery("input[name='updaterankend3']").val("");
+                        jQuery("input[name='updateprice3']").val("");
+                        $('.updatePricecmt').removeAttr("disabled");
+                    }
+                }
+
+            })
+
+
+        }
+        else
+        {
+            alert("前N名依次增大，并且值介于1-50之间，收费依次减小，并且值大于0小于1000；前N名和收费必须同时提供");
+
+        }
+
+    })
 
 })
 $(function () {
@@ -222,16 +329,11 @@ var TableInit = function () {
             sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
             queryParams: oTableInit.queryParams,//传递参数（*）
             queryParamsType: "",
-            showColumns: true,                  //是否显示所有的列
-            showRefresh: true,                  //是否显示刷新按钮
             minimumCountColumns: 2,             //最少允许的列数
             clickToSelect: true,                //是否启用点击选中行
             height: 700,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
             uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
-            showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
-            cardView: false,                    //是否显示详细视图
-            detailView: false,                   //是否显示父子表
-            showExport: true,                     //是否显示导出
+
             exportDataType: "basic",
             rowStyle: function (row, index) {
                 //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];

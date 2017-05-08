@@ -12,7 +12,7 @@
       margin-left: auto;
       margin-right: auto;">
         <h1 class="logo" id="logo">
-            <img alt="站长素材" title="" height="40" width="140" src="${ctx}/static/img/upload/${bmsModel.userLogoimgUrl}">
+            <img   title="" height="40" width="140" src="${ctx}/static/img/upload/${bmsModel.userLogoimgUrl}">
         </h1>
         <h2 class="logo-title">登录</h2>
         <ul class="header-nav">
@@ -30,8 +30,8 @@
 <div class="content">
     <div id="slideBox">
         <ul id="show_pic" style="left: 0px;">
-            <li><img alt="站长素材" title="" height="300" width="300" src="${ctx}/static/img/upload/${bmsModel.userLogoimgUrl}"></li>
-            <li><img alt="站长素材" title="" height="300" width="300" src="${ctx}/static/img/ldhkf.jpg"></li>
+            <li><img   title="" height="300" width="300" src="${ctx}/static/img/upload/${bmsModel.userLogoimgUrl}"></li>
+            <li><img   title="" height="300" width="300" src="${ctx}/static/img/ldhkf.jpg"></li>
         </ul>
         <div id="slideText"></div>
         <ul id="iconBall">
@@ -83,7 +83,13 @@
                             <div class="fm-field-wrap">
                                 <input id="fm-login-password" class="fm-text" name="password" tabindex="2" placeholder="登录密码" autocorrect="off" autocapitalize="off" type="password"></div>
                         </dd>
+
                     </dl>
+                    <dl>
+                        <input type="text" style="width: 50px;"/>
+                        <img id="img" src="${ctx}/user/check.jpg" onclick="refresh()">
+                        <span style="cursor: pointer" onclick="refresh()">看不清？换一张</span>
+                  </dl>
                 </div>
                 <div id="login-submit" style="margin:20px 0 0 20px;">
                     <#if loginFailureMessage??><div style="color:red;">${loginFailureMessage!""}</div></#if>
@@ -98,4 +104,10 @@
 <div class="module-wrap ">
 
 </div>
+<script type="text/javascript">
+    function refresh() {
+        var url = "${ctx}/user/check.jpg?number="+Math.random();
+        $("#img").attr("src",url);
+    }
+</script>
 </@base.html>

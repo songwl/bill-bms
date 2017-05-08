@@ -41,7 +41,7 @@ public interface BillService {
      */
     Map<String, Object> pendingAuditList(Map<String,Object> params, LoginUser user);
 
-    int updateBillPrice(Map<String, String[]>  params,User user);
+    int updateBillPrice(Map<String, String[]>  params,LoginUser user);
 
     /**
      *渠道商录入价格

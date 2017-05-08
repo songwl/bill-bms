@@ -83,6 +83,7 @@ $(".samepricecmt").click(function () {
                     },
                     beforeSend: function () {
                         $(".pload").show();
+                        $('.samepricecmt').attr('disabled',"true");
                     },
 
                     success:function (result) {
@@ -107,18 +108,22 @@ $(".samepricecmt").click(function () {
                                 jQuery("input[name='samePricerankend3']").val("");
                                jQuery("input[name='samePriceprice3']").val("");
                                 $("#searchengineid").val("0");
-                                $("#sameSelect").val("0")
+                                $("#sameSelect").val("0");
+                                $('.samepricecmt').removeAttr("disabled");
+
                             }
                             else
                             {
 
                                 alert(result.message+" 已经存在!");
+                                $('.samepricecmt').removeAttr("disabled");
                             }
                         }
                         else
                         {
 
                             alert("系统繁忙，请稍后再试！");
+                            $('.samepricecmt').removeAttr("disabled");
                         }
                     }
 

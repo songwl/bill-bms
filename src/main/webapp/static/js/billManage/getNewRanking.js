@@ -1,18 +1,51 @@
+
 /**
  * Created by 鱼在我这里。 on 2017/3/16.
  */
+//显示搜索内容
+var website=null;
+var keywords=null;
+$(".search").click(function () {
+    if($(".Navs2").css("display")=="block"){
+        $(".Navs2").slideUp();
+
+    }
+    else
+    {
+        $(".Navs2").slideDown();
+
+    }
+
+
+})
+//搜索按钮
+$("#searchButton").click(function () {
+    if($("#website").val()!="")//网址
+    {
+        website=$.trim($("#website").val());
+    }
+    else
+    {
+        website=null
+    }
+    if($("#keywords").val()!="")//关键词
+    {
+        keywords=$.trim($("#keywords").val())
+    }
+    else
+    {
+        keywords=null;
+    }
+
+    $('#myTable').bootstrapTable('refresh');
+});
 
 $(function () {
 
     //1.初始化Table
     var oTable = new TableInit();
     oTable.Init();
-    var oTable1 = new TableInit();
-    oTable1.Init();
 
-    //2.初始化Button的点击事件
-    var oButtonInit = new ButtonInit();
-    oButtonInit.Init();
 
 
 });
@@ -21,7 +54,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#myTable').bootstrapTable({
-            url: CTX+'/customer/getCustomerReviewList',         //请求后台的URL（*）
+            url:CTX+ '/billManage/getNewRankingTable',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
@@ -37,7 +70,7 @@ var TableInit = function () {
             clickToSelect: true,                //是否启用点击选中行
             height: 700,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
             uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
-
+            exportDataType: "basic",
             rowStyle: function (row, index) {
                 //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
                 var strclass = "";
@@ -53,76 +86,55 @@ var TableInit = function () {
                 {
                     checkbox: true
                 },{
-                    field: 'id',
+                    field: 'displayId',
                     sortable: true,
                     align: 'center',
                     valign: 'middle',
                     title: '序号',
+                    width:100
 
                 },
                 {
-                    field: 'customerId',
+                    field: 'id',
                     sortable: true,
                     align: 'center',
                     valign: 'middle',
-                    title: '数据库编号',
+                    title: 'sql序号',
                     visible:false
 
                 },
                 {
-                    field: 'userName',
+                    field: 'website',
                     sortable: true,
                     align: 'center',
                     valign: 'middle',
-                    title: '客户',
+                    title: '网址',
+
 
                 },
                 {
-                    field: 'realName',
+                    field: 'keywords',
+                    sortable: true,
+                    align: 'center',
+                    valign: 'middle',
+                    title: '关键词',
+
+                },
+                {
+                    field: 'newRanking',
                     align: 'center',
                     valign: 'middle',
                     sortable: true,
-                    title: '真实姓名'
+                    title: '最新排名',
+                    width:100
+
                 }, {
-                    field: 'contact',
+                    field: 'changeRanking',
                     align: 'center',
                     valign: 'middle',
-                    title: '联系人',
-
-                }, {
-                    field: 'qq',
-                    align: 'center',
-                    sortable: true,
-                    valign: 'middle',
-                    title: 'qq'
+                    title: '新增排名',
+                    width:100
                 },
-                {
-                    field: 'phone',
-                    align: 'center',
-                    valign: 'middle',
-                    sortable: true,
-                    title: '电话'
-                },
-
-                {
-                    field: 'createTime',
-                    align: 'center',
-                    valign: 'middle',
-                    title: '注册时间',
-
-                },
-                {
-                    field: 'operate',
-                    title: '操作',
-                    align: 'center',
-                    valign: 'middle',
-                    formatter:function (value,row,index) {
-                        var a="<span style='color: #1b9dec;cursor: pointer;' id='Audit'>审核</span>";
-                        return a;
-                    },
-                    events:operateEvents
-                },
-
 
             ],
 
@@ -136,34 +148,11 @@ var TableInit = function () {
             offset: params.pageNumber,  //页码
             sortOrder: params.sortOrder,
             sortName: params.sortName,
+            website:website,
+            keywords:keywords,
 
         };
         return temp;
-    }
-    window.operateEvents = {
-        'click #Audit': function (e, value, row, index) {
-           if(confirm("是否通过审核？"))
-           {
-              $.ajax({
-                  type:'post',
-                  url:CTX+"/customer/customerAudit",
-                  data:{customerId:row.customerId},
-                  success:function (result) {
-                      if(result.code==200)
-                      {
-                          alert(result.message);
-                          $('#myTable').bootstrapTable('refresh');
-                      }
-                      else
-                      {
-                          alert(result.message);
-                      }
-                      
-                  }
-              })
-           }
-        }
-
     }
 
 
@@ -178,5 +167,7 @@ $(function () {
     });
 
 });
+
+
 
 

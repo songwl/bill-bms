@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -62,9 +63,10 @@ public class LoginController extends BaseController {
 	}
 
 	@RequestMapping(value="/login",method = RequestMethod.POST)
-	public  String dologin(HttpServletRequest request,HttpServletResponse response,
+	public  String dologin(HttpServletRequest request,HttpServletResponse response,HttpSession session,
 						   @RequestParam String userName, @RequestParam String password,ModelMap modelMap)
 	{
+
 		User user = userService.getUserByName(userName);
 
 		if(user!=null)

@@ -65,15 +65,7 @@
                     </div>
                     <div class="cls"></div>
                 </div>
-                <div id="toolbar" class="btn-group">
 
-                <#--    <#if  bmsModel.user.hasRole("SUPER_ADMIN")|| bmsModel.user.hasRole("DISTRIBUTOR")|| bmsModel.user.hasRole("AGENT")>
-                        <button   type="button" class="btn btn-default" id="Recharge">
-                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 充值
-                        </button>
-                    </#if>-->
-
-                </div>
 
                 <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%">
                 </table>

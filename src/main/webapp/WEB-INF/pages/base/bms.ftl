@@ -101,7 +101,7 @@
                 </ul>
             </li>
         </ul>
-        <ul class="nav navbar-right"  style="height:50px;">
+        <#--<ul class="nav navbar-right"  style="height:50px;">
             <li class="dropdown user" style="height:48px;" >
                 <a class="dropdown-toggle" data-toggle="dropdown"  id="clickMessage">
                     <i class="fa fa-bell"></i>
@@ -128,9 +128,9 @@
                         <i class="icon-pencil"></i> 订单反馈
                     </a>
                 </li>
-                -->
+                &ndash;&gt;
             </ul>
-        </ul>
+        </ul>-->
     </div>
 </header>
 	<div class="clearfix">
@@ -362,12 +362,22 @@
                                         订单管理
                                     </a>
                                 </li>
+                            <li>
+                                <a href="${ctx}/billManage/getNewRanking">
+                                    最新排名
+                                </a>
+                            </li>
                         </#if>
                                 <#if  bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")>
 
                                     <li>
                                         <a href="${ctx}/billManage/manageListByOther">
                                             订单管理
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="${ctx}/billManage/getNewRanking">
+                                            最新排名
                                         </a>
                                     </li>
                                 </#if>
@@ -436,6 +446,7 @@
                             </li>
                         </ul>
                     </li>
+
 				</ul>
 			</div>
 		</div>

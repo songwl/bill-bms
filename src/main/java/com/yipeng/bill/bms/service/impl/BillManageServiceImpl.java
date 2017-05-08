@@ -10,6 +10,7 @@ import com.yipeng.bill.bms.domain.BillPrice;
 import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.model.BillManageList;
 import com.yipeng.bill.bms.service.BillManageService;
+import com.yipeng.bill.bms.vo.BillDetails;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -160,6 +161,12 @@ public class BillManageServiceImpl implements BillManageService {
 
     }
 
+    /**
+     * 订单管理（渠道商和操作员）
+     * @param params
+     * @param loginUser
+     * @return
+     */
     @Override
     public Map<String, Object> manageListByOtherTable(Map<String, Object> params, LoginUser loginUser) {
         //转换时间
@@ -211,7 +218,6 @@ public class BillManageServiceImpl implements BillManageService {
                     User user=userMapper.selectByPrimaryKey(userId);
                     billManageList.setUserName(user.getUserName());
                 }
-
                 billManageList.setWebSite(item.getWebsite());
                 //一个网址对应的关键词数
                 Map<String,Object> websiteParams=new HashMap<>();
@@ -227,14 +233,14 @@ public class BillManageServiceImpl implements BillManageService {
                     for (Bill billitem:bills
                             ) {
                         BillPrice billPrices=new BillPrice();
-                        billPrice.setBillId(billitem.getId());
+                        billPrices.setBillId(billitem.getId());
                         if (loginUser.hasRole("COMMISSIONER"))
                         {
-                            billPrice.setInMemberId(loginUser.getCreateUserId());
+                            billPrices.setInMemberId(loginUser.getCreateUserId());
                         }
                         else
                         {
-                            billPrice.setInMemberId(loginUser.getId());
+                            billPrices.setInMemberId(loginUser.getId());
                         }
                         List<BillPrice> billPriceLists=billPriceMapper.selectByBillPrice(billPrices);
                         //循环判断当前关键词是否达标
@@ -290,5 +296,49 @@ public class BillManageServiceImpl implements BillManageService {
             return null;
         }
 
+    }
+
+    @Override
+    public Map<String, Object> getNewRankingTable(Map<String, Object> params, LoginUser loginUser) {
+        int offset=Integer.parseInt(params.get("offset").toString()) ;
+         int i=offset;
+        List<BillDetails> billDetailsList=new ArrayList<>();
+        //根据权限来判断
+        //管理员
+        if(loginUser.hasRole("SUPER_ADMIN"))
+        {
+
+        }
+        //渠道商
+        else if(loginUser.hasRole("DISTRIBUTOR"))
+        {
+            //查询最新排名的订单
+            params.put("userId",loginUser.getId());
+            params.put("state",2);
+            params.put("newchange",true);
+            List<Bill> billList=billMapper.selectByNewRanking(params);
+            Long total=billMapper.selectByNewRankingCount(params);
+            if (!CollectionUtils.isEmpty(billList))
+            {
+                for (Bill item: billList
+                     ) {
+                    i++;
+                     BillDetails billDetails=new BillDetails();
+                     billDetails.setdisplayId(i);
+                     billDetails.setWebsite(item.getWebsite());
+                     billDetails.setKeywords(item.getKeywords());
+                     billDetails.setNewRanking(item.getNewRanking());
+                     billDetails.setChangeRanking(item.getChangeRanking());
+                     billDetailsList.add(billDetails);
+                }
+
+                Map<String,Object> map=new HashMap<>();
+                map.put("total",total);
+                map.put("rows",billDetailsList);
+                return  map;
+            }
+
+        }
+        return null;
     }
 }

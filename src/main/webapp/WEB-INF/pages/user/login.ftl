@@ -12,7 +12,8 @@
       margin-left: auto;
       margin-right: auto;">
         <h1 class="logo" id="logo">
-            <a href="#">优搜云</a></h1>
+            <img alt="站长素材" title="" height="40" width="140" src="${ctx}/static/img/upload/${bmsModel.userLogoimgUrl}">
+        </h1>
         <h2 class="logo-title">登录</h2>
         <ul class="header-nav">
             <li class="nav-first">
@@ -29,7 +30,7 @@
 <div class="content">
     <div id="slideBox">
         <ul id="show_pic" style="left: 0px;">
-            <li><img alt="站长素材" title="" height="300" width="300" src="${ctx}/static/img/dk.jpg"></li>
+            <li><img alt="站长素材" title="" height="300" width="300" src="${ctx}/static/img/upload/${bmsModel.userLogoimgUrl}"></li>
             <li><img alt="站长素材" title="" height="300" width="300" src="${ctx}/static/img/ldhkf.jpg"></li>
         </ul>
         <div id="slideText"></div>

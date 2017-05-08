@@ -373,11 +373,7 @@
                                 </#if>
                             </ul>
                         </li>
-
-
-
                     </#if>
-
                     <#if bmsModel.user.hasRole("SUPER_ADMIN") || bmsModel.user.hasRole("COMMISSIONER") >
                         <li class="" style="border-bottom: 1px solid #3d3d3d;">
                             <a href="javascript:;">
@@ -428,6 +424,18 @@
 
 						</ul>
 					</li>
+                    <li class="" style="border-bottom: 1px solid #3d3d3d;">
+                        <a href="javascript:;">
+                            <i class="fa fa-magnet"></i><span class="title"> 自定义桌面 </span><span class="arrow "></span>
+                        </a>
+                        <ul class="sub-menu"  style="background: #293038;">
+                            <li class="bbbb">
+                                <a href="${ctx}/userCompany/userCompanyView">
+                                    自定义页面
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 				</ul>
 			</div>
 		</div>

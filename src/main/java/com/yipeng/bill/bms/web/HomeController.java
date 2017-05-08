@@ -1,7 +1,10 @@
 package com.yipeng.bill.bms.web;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import com.yipeng.bill.bms.service.HomeService;
 import com.yipeng.bill.bms.service.RemoteService;
@@ -10,6 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class HomeController extends BaseController {
@@ -46,6 +53,7 @@ public class HomeController extends BaseController {
 		return "/home/home";
 	}
 
+	//uploadFile
 
 
 }

@@ -2,8 +2,6 @@
 <#import "/base/dict.ftl" as dict>
 
 <@base.html "关键词优化">
-
-<script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <script src="${ctx}/static/js/public/pace.js"></script>
 <script src="${ctx}/static/js/bill/billCustomer.js"></script>

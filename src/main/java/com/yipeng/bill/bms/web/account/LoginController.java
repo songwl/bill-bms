@@ -2,9 +2,11 @@ package com.yipeng.bill.bms.web.account;
 
 import com.yipeng.bill.bms.core.crypto.CryptoUtils;
 import com.yipeng.bill.bms.core.utils.ServletUtil;
+import com.yipeng.bill.bms.dao.UserCompanyMapper;
 import com.yipeng.bill.bms.dao.UserMapper;
 import com.yipeng.bill.bms.domain.Role;
 import com.yipeng.bill.bms.domain.User;
+import com.yipeng.bill.bms.domain.UserCompany;
 import com.yipeng.bill.bms.domain.UserRole;
 import com.yipeng.bill.bms.service.RoleService;
 import com.yipeng.bill.bms.service.UserRoleService;
@@ -23,7 +25,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * LoginController负责打开登录页面(GET请求)和登录出错页面(POST请求)，
@@ -45,9 +49,15 @@ public class LoginController extends BaseController {
 	private UserRoleService userRoleService;
 	@Autowired
 	private UserMapper userMapper;
+	@Autowired
+	UserCompanyMapper userCompanyMapper;
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String login(HttpServletRequest request) {
+	public String login(HttpServletRequest request,ModelMap map) {
+		String website= request.getServerName();
+		UserCompany userCompany=userCompanyMapper.selectByWebsite(website);
+		Map<String, Object> bms=new HashMap<>();
+		map.addAttribute("bmsModel", userCompany);
 		return  "/user/login";
 	}
 

@@ -236,27 +236,41 @@
   COMMENT = '优化指数统计表';
 
 CREATE TABLE `t_user_hyperlink` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `userId` bigint(20) NOT NULL,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `web_site` varchar(200) NOT NULL COMMENT '绑定域名',
   `title` varchar(20) NOT NULL,
   `hyperlink` varchar(100) NOT NULL,
+     `create_time` DATETIME NULL COMMENT '发布时间',
+    `update_time` DATETIME NULL COMMENT '',
+    `create_user_id` BIGINT NULL COMMENT '发布对象',
+    `update_user_id` BIGINT NULL COMMENT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB
  COMMENT = '用户超链接表';
 
 CREATE TABLE `t_user_imgurl` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `userId` bigint(20) NOT NULL,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `creuserId` BIGINT NOT NULL,
+  `web_site` varchar(200) NOT NULL COMMENT '绑定域名',
   `img_url` varchar(200) NOT NULL COMMENT '图片路径',
+     `create_time` DATETIME NULL COMMENT '发布时间',
+    `update_time` DATETIME NULL COMMENT '',
+    `create_user_id` BIGINT NULL COMMENT '发布对象',
+    `update_user_id` BIGINT NULL COMMENT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB
  COMMENT = '用户图片表';
 
 CREATE TABLE `t_user_company` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `user_Id` bigint(20) NOT NULL,
-  `user_company` varchar(200) DEFAULT NULL,
-  `user_logoImg` varchar(200) DEFAULT NULL,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `user_Id` BIGINT NOT NULL,
+  `web_site` varchar(200) NOT NULL COMMENT '绑定域名',
+  `user_company_name` varchar(200) DEFAULT NULL,
+  `user_logoImg_url` varchar(200) DEFAULT NULL,
+     `create_time` DATETIME NULL COMMENT '发布时间',
+    `update_time` DATETIME NULL COMMENT '',
+    `create_user_id` BIGINT NULL COMMENT '发布对象',
+    `update_user_id` BIGINT NULL COMMENT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB
 COMMENT = '用户公司信息表';

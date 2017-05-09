@@ -1792,7 +1792,7 @@ blr:expression(this.onFocus=this.blur());
 
 	height:200px;
 
-	background:url(/bill/static/img/r34_c2.jpg) repeat-x left top;
+	background:url(/static/img/r34_c2.jpg) repeat-x left top;
 
 	margin-bottom:40px;
 
@@ -1829,6 +1829,7 @@ blr:expression(this.onFocus=this.blur());
 	width:1200px;
 
 	height:130px;
+	margin:0 auto;
 
 }
 
@@ -1840,7 +1841,7 @@ blr:expression(this.onFocus=this.blur());
 
 	float:left;
 
-	background:url(/bill/static/img/withos.jpg);
+	background:url(/static/img/withos.jpg);
 
 }
 

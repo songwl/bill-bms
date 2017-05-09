@@ -434,7 +434,7 @@
 
 						</ul>
 					</li>
-                <#if bmsModel.user.hasRole("SUPER_ADMIN")>
+        <#--        <#if bmsModel.user.hasRole("SUPER_ADMIN")>
                     <li class="" style="border-bottom: 1px solid #3d3d3d;">
                                     <a href="javascript:;">
                                         <i class="fa fa-magnet"></i><span class="title"> 自定义桌面 </span><span class="arrow "></span>
@@ -447,7 +447,7 @@
                                         </li>
                                     </ul>
                      </li>
-                </#if>
+                </#if>-->
 				</ul>
 			</div>
 		</div>

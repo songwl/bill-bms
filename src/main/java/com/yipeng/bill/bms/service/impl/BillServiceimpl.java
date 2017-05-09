@@ -93,6 +93,9 @@ public class BillServiceimpl implements BillService {
         String errorDetails="";
         if(urls.length==keywords.length) {
             for (int i = 0; i < urls.length; i++) {
+
+
+
                 //先查询是否订单已经存在
                 Map<String, Object> params1 = new HashMap();
                 params1.put("website", urls[i]);

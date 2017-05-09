@@ -479,6 +479,7 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '代理权限',
+                    visible:false
 
                 },
                 {

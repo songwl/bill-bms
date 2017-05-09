@@ -26,6 +26,12 @@
             lineColor: '#5cbdaa'
         });
     });
+
+            function refresh() {
+                var url = "${ctx}/user/check.jpg?number="+Math.random();
+                $("#img").attr("src",url);
+            }
+
 </script>
 <form action="${rc.contextPath}/user/register" method="post" id="f1">
     <dl class="admin_login">

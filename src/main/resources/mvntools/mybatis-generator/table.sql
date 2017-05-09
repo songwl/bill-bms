@@ -274,3 +274,12 @@ CREATE TABLE `t_user_company` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB
 COMMENT = '用户公司信息表';
+
+
+
+CREATE TABLE `t_forbidden_words` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `words` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

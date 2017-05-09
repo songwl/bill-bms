@@ -14,7 +14,10 @@
       margin-left: auto;
       margin-right: auto;">
         <h1 class="logo" id="logo">
-            <img   title="" height="40" width="140" src="${ctx}/static/img/upload/${bmsModel.userLogoimgUrl}">
+            <#if bmsModel.userLogoimgUrl??>
+                <img   title="" height="40" width="140" src="${ctx}/static/img/upload/${bmsModel.userLogoimgUrl}">
+            </#if>
+
         </h1>
         <h2 class="logo-title">登录</h2>
         <ul class="header-nav">
@@ -58,7 +61,7 @@
     <div id="login-module">
         <div id="login-wrap" class=" login-static  nc-outer-box">
             <div style="background:#EBEBEB;height:40px;line-height:40px;text-indent:20px;font-weight:800;">
-            ${bmsModel.userCompanyName}
+          <#--  ${bmsModel.userCompanyName}-->
                 会员登录
             </div>
             <form  action="${rc.contextPath}/login" method="post">
@@ -86,7 +89,6 @@
                     <dl>
                         <dt class="fm-label">
                         <div class="fm-label-wrap clr">
-
                             <label for="fm-login-password">登录密码:</label></div>
                         </dt>
                         <dd id="fm-login-password-wrap" class="fm-field">
@@ -114,7 +116,7 @@
 </div>
     <div class="WeBody" id="job">
         <div class="WeBodyHead">
-            <div class="title">合作伙伴</div></div>
+            <#--div class="title">合作伙伴</div>--></div>
         <div class="WeBodyTop">
             <div class="WeBodyTopLeft"></div>
             <div class="WeBodyTopRight">

@@ -106,15 +106,22 @@ $(document).ready(function() {
     });
 
     $(".submit_btn").click(function () {
-
-        if(logid&&pwd&&rpwd)
+        if($("#code").val()!="")
         {
-            $("#f1").submit();
+            if(logid&&pwd&&rpwd)
+            {
+                $("#f1").submit();
+            }
+            else
+            {
+                alert("信息填写不正确，请重新输入!");
+            }
         }
         else
         {
-            alert("信息填写不正确，请重新输入!");
+            alert("请输入验证码!");
         }
+
     })
 
 

@@ -35,25 +35,37 @@
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label">超链接1</label>
-                    <div class="col-sm-9">
+                    <div class="col-sm-3">
+                        <input type="text" name="title1" class="col-sm-10 form-control"   placeholder="标题">
+                    </div>
+                    <div class="col-sm-6">
                         <input type="text" name="hyperlink1" class="col-sm-10 form-control"   placeholder="超链接1">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label">超链接2</label>
-                    <div class="col-sm-9">
+                    <div class="col-sm-3">
+                        <input type="text" name="title2" class="col-sm-10 form-control"   placeholder="标题">
+                    </div>
+                    <div class="col-sm-6">
                         <input type="text" name="hyperlink2" class="col-sm-10 form-control"   placeholder="超链接2">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label">超链接3</label>
-                    <div class="col-sm-9">
+                    <div class="col-sm-3">
+                        <input type="text" name="title3" class="col-sm-10 form-control"   placeholder="标题">
+                    </div>
+                    <div class="col-sm-6">
                         <input type="text" name="hyperlink3" class="col-sm-10 form-control"   placeholder="超链接3">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label">超链接4</label>
-                    <div class="col-sm-9">
+                    <div class="col-sm-3">
+                        <input type="text" name="title4" class="col-sm-10 form-control"   placeholder="标题">
+                    </div>
+                    <div class="col-sm-6">
                         <input type="text" name="hyperlink4" class="col-sm-10 form-control"   placeholder="超链接4">
                     </div>
                 </div>

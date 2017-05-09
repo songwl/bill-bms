@@ -35,7 +35,7 @@
 		<init-param>
 			<param-name>excludeUrl</param-name>
 			<param-value>
-				.*/css/.*,.*/fonts/.*,.*/images/.*,.*/img/.*,.*/js/.*,.*/upload/.*,.*/login.*,.*/logout.*,.*/dologin.*,.*/register.*,.*/doregister.*
+				.*/css/.*,.*/fonts/.*,.*/images/.*,.*/img/.*,.*/js/.*,.*/upload/.*,.*/login.*,.*/logout.*,.*/dologin.*,.*/register.*,.*/doregister.*,.*/user/check.jpg
 			</param-value>
 		</init-param>
 	</filter>

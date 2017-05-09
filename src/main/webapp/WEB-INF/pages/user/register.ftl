@@ -48,8 +48,12 @@
             <input type="password" name="rpwd" placeholder="确认密码" class="login_txtbx" id="rpwd" />
         </dd>
         <span style="font-size:14px;" class="pdrpwd"></span>
-
-
+        <div>
+        <input type="text" style="width: 100px;" name="code" id="code"/>
+        <img id="img" src="${ctx}/user/check.jpg" onclick="refresh()">
+        <span style="cursor: pointer" onclick="refresh()">看不清？换一张</span>
+        <#if loginFailureMessage??><div style="color:red;">${loginFailureMessage!""}</div></#if>
+        </div>
         <dd>
             <input type="button" value="立即注册" class="submit_btn" />
         </dd>

@@ -6,6 +6,8 @@
 <link href="${ctx}/static/css/user/style.css" rel="stylesheet">
 <link href="${ctx}/static/css/user/account_common.css" rel="stylesheet">
 <link href="${ctx}/static/css/user/zzsc.css" rel="stylesheet">
+<link href="${ctx}/static/css/user/loginFoot.css" rel="stylesheet">
+<link href="${ctx}/static/css/user/web_style.css" rel="stylesheet">
 <div id="header" data-spm="1">
     <div class="header-layout y-row" style="min-width: 1000px;
       max-width: 1200px;
@@ -30,8 +32,15 @@
 <div class="content">
     <div id="slideBox">
         <ul id="show_pic" style="left: 0px;">
-            <li><img   title="" height="300" width="300" src="${ctx}/static/img/upload/${bmsModel.userLogoimgUrl}"></li>
-            <li><img   title="" height="300" width="300" src="${ctx}/static/img/ldhkf.jpg"></li>
+            <#if userImgurlList??>
+                <#list userImgurlList as item>
+                    <li><img   title="" height="300" width="300" src="${ctx}/static/img/upload/${item.imgUrl}"></li>
+                </#list>
+            </#if>
+            <#if bmsModel.userImgurlList==null>
+                    <li><img   title="" height="300" width="300" src="${ctx}/static/img/dk.jpg"></li>
+                    <li><img   title="" height="300" width="300" src="${ctx}/static/img/ldhkf.jpg"></li>
+            </#if>
         </ul>
         <div id="slideText"></div>
         <ul id="iconBall">
@@ -49,7 +58,8 @@
     <div id="login-module">
         <div id="login-wrap" class=" login-static  nc-outer-box">
             <div style="background:#EBEBEB;height:40px;line-height:40px;text-indent:20px;font-weight:800;">
-                <#--优搜云-->会员登录
+            ${bmsModel.userCompanyName}
+                会员登录
             </div>
             <form  action="${rc.contextPath}/login" method="post">
                 <div id="login-loading" class="loading-mask">
@@ -86,7 +96,7 @@
 
                     </dl>
                     <dl>
-                        <input type="text" style="width: 50px;"/>
+                        <input type="text" style="width: 50px;" name="code" id="code"/>
                         <img id="img" src="${ctx}/user/check.jpg" onclick="refresh()">
                         <span style="cursor: pointer" onclick="refresh()">看不清？换一张</span>
                   </dl>
@@ -98,12 +108,23 @@
                     <div class="register">
                         <a href="${rc.contextPath}/user/register">免费注册</a></div>
                 </div>
+            </form>
         </div>
     </div>
 </div>
-<div class="module-wrap ">
+    <div class="WeBody" id="job">
+        <div class="WeBodyHead">
+            <div class="title">合作伙伴</div></div>
+        <div class="WeBodyTop">
+            <div class="WeBodyTopLeft"></div>
+            <div class="WeBodyTopRight">
+                <div class="title">我们，因为您而在</div>
+                <div class="coms">唯有客户的满意才是我们努力上进的原动力。
+                </div>
+            </div>
+        </div>
+    </div>
 
-</div>
 <script type="text/javascript">
     function refresh() {
         var url = "${ctx}/user/check.jpg?number="+Math.random();

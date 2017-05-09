@@ -416,7 +416,7 @@ var TableInit = function () {
                         }
                         else
                         {
-                            a="<span>" + math.abs(value) +"</span>&nbsp;&nbsp;<img src='/bill/static/img/down.ico' style='width:12px;height:12px;'>";
+                            a="<span>" + value +"</span>&nbsp;&nbsp;<img src='/bill/static/img/down.ico' style='width:12px;height:12px;'>";
                         }
                         return a;
                     }

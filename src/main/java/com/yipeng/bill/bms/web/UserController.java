@@ -9,6 +9,7 @@ import com.yipeng.bill.bms.service.UserService;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -49,14 +51,28 @@ public class UserController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/register",method = RequestMethod.POST)
-    public  String createUser(HttpServletRequest request,User user)
+    public  String createUser(HttpServletRequest request, User user, ModelMap modelMap, HttpSession session,String code)
     {
-        if(user.getUserName()!=""&&user.getPassword()!="")
-        {
-            userService.saveUser(user);
-            Long id=user.getId();
-        }
-        return  "/user/login";
+        String codeSession = (String) session.getAttribute("code");
+       if(codeSession.toLowerCase().equals(code.toLowerCase()))
+       {
+           if(user.getUserName()!=""&&user.getPassword()!="")
+           {
+               userService.saveUser(user);
+               Long id=user.getId();
+           }
+           else
+           {
+               modelMap.addAttribute("loginFailureMessage", "填写信息不正确");
+           }
+       }
+
+       else
+       {
+           modelMap.addAttribute("loginFailureMessage", "验证码错误  !");
+       }
+
+        return  "/user/register";
     }
 
     /**
@@ -175,6 +191,9 @@ public class UserController extends BaseController {
         }
 
     }
+
+
+
     @RequestMapping("/check.jpg")
     public void createCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // 通知浏览器不要缓存

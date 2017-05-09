@@ -250,7 +250,7 @@ CREATE TABLE `t_user_hyperlink` (
 
 CREATE TABLE `t_user_imgurl` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `creuserId` BIGINT NOT NULL,
+  `userId` BIGINT NOT NULL,
   `web_site` varchar(200) NOT NULL COMMENT '绑定域名',
   `img_url` varchar(200) NOT NULL COMMENT '图片路径',
      `create_time` DATETIME NULL COMMENT '发布时间',

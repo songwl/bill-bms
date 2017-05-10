@@ -3,6 +3,7 @@ package com.yipeng.bill.bms.web.account;
 import com.yipeng.bill.bms.core.crypto.CryptoUtils;
 import com.yipeng.bill.bms.core.utils.ServletUtil;
 import com.yipeng.bill.bms.dao.UserCompanyMapper;
+import com.yipeng.bill.bms.dao.UserHyperlinkMapper;
 import com.yipeng.bill.bms.dao.UserImgurlMapper;
 import com.yipeng.bill.bms.dao.UserMapper;
 import com.yipeng.bill.bms.domain.*;
@@ -52,18 +53,27 @@ public class LoginController extends BaseController {
 	UserCompanyMapper userCompanyMapper;
 	@Autowired
 	UserImgurlMapper userImgurlMapper;
-
+	@Autowired
+	UserHyperlinkMapper userHyperlinkMapper;
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(HttpServletRequest request,ModelMap map) {
+		//获取当前访问的网址
 		String website= request.getServerName();
+		//获取当前网址对应的公司信息数据库
 		UserCompany userCompany=userCompanyMapper.selectByWebsite(website);
+		//获取当前网址对应的滚动图片数据库
 		List<UserImgurl> userImgurlList=userImgurlMapper.selectByWebsite(website);
+		//获取当前网址对应的超链接
+		List<UserHyperlink> userHyperlinkList=userHyperlinkMapper.selectByWebsite(website);
 		Map<String, Object> bms=new HashMap<>();
 		if(!CollectionUtils.isEmpty(userImgurlList))
 		{
 			map.put("userImgurlList",userImgurlList);
 		}
-
+		if(!CollectionUtils.isEmpty(userHyperlinkList))
+		{
+			map.put("userHyperlinkList",userHyperlinkList);
+		}
 		map.addAttribute("bmsModel", userCompany);
 		return  "/user/login";
 	}

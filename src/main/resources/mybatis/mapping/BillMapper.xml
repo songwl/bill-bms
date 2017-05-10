@@ -319,6 +319,9 @@
     <if test="state != null">
       AND  state=#{state,jdbcType=INTEGER}
     </if>
+    <if test="webAppId != null">
+      AND  web_app_id = #{webAppId,jdbcType=INTEGER}
+    </if>
   </select>
 
   <select id="selectBill" resultMap="BaseResultMap">

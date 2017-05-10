@@ -3,6 +3,7 @@ var glide =new function(){
 	this.layerGlide=function(auto,oEventCont,oTxtCont,oSlider,sSingleSize,second,fSpeed,point){
 		var oSubLi = $id(oEventCont).getElementsByTagName('li');
 		var oTxtLi = $id(oTxtCont).getElementsByTagName('li');
+		var oTxtLi1 = $id(oTxtCont).getElementsByTagName('li');
 		var interval,timeout,oslideRange;
 		var time=1; 
 		var speed = fSpeed 
@@ -13,6 +14,16 @@ var glide =new function(){
 			return function(){
 				oslideRange = Math.abs(parseInt($id(oSlider).style[point]));	
 				$id(oSlider).style[point] =-Math.floor(oslideRange+(parseInt(s*sSingleSize) - oslideRange)*speed) +'px';		
+				if(oslideRange==[(sSingleSize * s)]){
+					clearInterval(interval);
+					a=s;
+				}
+			}
+		};
+		var setValLeft1=function(s){
+			return function(){
+				oslideRange = Math.abs(parseInt($id(oSlider).style[point]));	
+				$id(oSlider).style[point] =-Math.ceil(oslideRange+(parseInt(s*sSingleSize) - oslideRange)*speed) +'px';		
 				if(oslideRange==[(sSingleSize * s)]){
 					clearInterval(interval);
 					a=s;
@@ -38,12 +49,14 @@ var glide =new function(){
 				a=0;
 				oSubLi[a].className="active";
 				oTxtLi[a].className = "active";
+				oTxtLi1[a].className = "active";
 				interval = setInterval(setValLeft(a),time);
 				timeout = setTimeout(autoGlide,delay);
 			}else{
 				a++;
 				oSubLi[a].className="active";
 				oTxtLi[a].className = "active";
+				oTxtLi1[a].className = "active";
 				interval = setInterval(setValRight(a),time);	
 				timeout = setTimeout(autoGlide,delay);
 			}
@@ -58,8 +71,12 @@ var glide =new function(){
 					clearInterval(interval);
 					oSubLi[i].className = "active";
 					oTxtLi[i].className = "active";
+					oTxtLi1[a].className = "active";
 					if(Math.abs(parseInt($id(oSlider).style[point]))>[(sSingleSize * i)]){
 						interval = setInterval(setValLeft(i),time);
+						this.onmouseout=function(){if(auto){timeout = setTimeout(autoGlide,delay);};};
+					}else if(Math.abs(parseInt($id(oSlider).style[point]))<[(sSingleSize * i)]){
+							interval = setInterval(setValLeft1(i),time);
 						this.onmouseout=function(){if(auto){timeout = setTimeout(autoGlide,delay);};};
 					}else if(Math.abs(parseInt($id(oSlider).style[point]))<[(sSingleSize * i)]){
 							interval = setInterval(setValRight(i),time);
@@ -77,7 +94,7 @@ glide.layerGlide(
 	'iconBall',   //对应索引按钮
 	'textBall',   //标题内容文本
 	'show_pic',   //焦点图片容器
-	300,          //设置滚动图片位移像素
+	400,          //设置滚动图片位移像素
 	2,			  //设置滚动时间2秒 
 	0.1,          //设置过渡滚动速度
 	'left'		  //设置滚动方向“向左”

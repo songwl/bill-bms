@@ -8,15 +8,12 @@ body {
 }
 /*图片轮换*/
 #slideBox {
-	width:300px;
+	width:400px;
 	height:300px;
 	overflow:hidden;
 	position:relative;
-	/* margin:20px auto; */ 
     float:left;
-	margin-left:350px;
 	border:10px solid #D4D4D4;
-	/* height:300px;width:300px; border:1px solid #D4D4D4; float:left;margin-left:350px;border-radius:5px; */
 }
 #slideBox ul#show_pic {
     background:url(../images/dk.jpg) no-repeat;
@@ -24,7 +21,7 @@ body {
 	padding:0;
 	list-style:none;
 	height:300px;
-	width:600px;
+	width:1200px;
 	position:absolute;
 }
 #slideBox ul#show_pic li {
@@ -58,7 +55,7 @@ body {
 	color:#fff;
 }
 #slideText {
-	width:300px;
+	width:400px;
 	height:28px;
 	background:rgba(0, 0, 0, 1);
 	color:#fff;

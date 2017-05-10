@@ -22,7 +22,7 @@
         </property>
     </bean>
     <!--查询初始排名-->
-    <bean id="rankingTask" class="com.yipeng.bill.bms.task.RankingTask"></bean>
+  <!--  <bean id="rankingTask" class="com.yipeng.bill.bms.task.RankingTask"></bean>
     <bean id="RankingTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="rankingTask"/>
         <property name="targetMethod" value="execute"/>
@@ -34,12 +34,12 @@
             <ref bean="RankingTaskJob"/>
         </property>
         <property name="cronExpression">
-            <!--每1分钟-->
+            &lt;!&ndash;每1分钟&ndash;&gt;
             <value>0 0/1 * * * ?</value>
         </property>
-    </bean>
+    </bean>-->
 
-    <!--查询新排名-->
+ <!--   &lt;!&ndash;查询新排名&ndash;&gt;
     <bean id="newRankingTask" class="com.yipeng.bill.bms.task.NewRankingTask"></bean>
     <bean id="NewRankingTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="newRankingTask"/>
@@ -52,11 +52,11 @@
             <ref bean="NewRankingTaskJob"/>
         </property>
         <property name="cronExpression">
-            <!--每6小时-->
+            &lt;!&ndash;每6小时&ndash;&gt;
             <value>0 6 * * * ?</value>
         </property>
     </bean>
-
+-->
     <!--统计总优化-->
     <bean id="optimizationTask" class="com.yipeng.bill.bms.task.OptimizationTask"></bean>
     <bean id="OptimizationTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -82,8 +82,8 @@
         <property name="triggers">
             <list>
                 <ref bean="callCostTaskJobTrigger"/>
-                <ref bean="rankingTaskJobTrigger"/>
-                <ref bean="newRankingTaskJobTrigger"/>
+               <!-- <ref bean="rankingTaskJobTrigger"/>
+                <ref bean="newRankingTaskJobTrigger"/>-->
                 <ref bean="optimizationTaskJobTrigger"/>
             </list>
         </property>

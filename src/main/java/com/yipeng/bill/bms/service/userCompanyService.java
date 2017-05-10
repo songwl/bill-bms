@@ -11,6 +11,6 @@ import java.util.Map;
  */
 public interface userCompanyService {
     int uploadFile(MultipartFile logoImgurl, MultipartFile img_url1, MultipartFile img_url2,
-                   MultipartFile img_url3, MultipartFile img_url4, Map<String,String[]> map, LoginUser loginUser,HttpServletRequest request);
+                   MultipartFile img_url3,Map<String,String[]> map, LoginUser loginUser,HttpServletRequest request);
 
 }

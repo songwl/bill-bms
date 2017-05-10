@@ -17,3 +17,5 @@
   INSERT INTO t_dict(`dict_group_code`,`dict_code`,`dict_name`,`valid`,`seq`,`dict_desc`) VALUES ('search','wap360','手机360','Y',1,'手机360搜索引擎');
 
   INSERT INTO t_dict(`dict_group_code`,`dict_code`,`dict_name`,`valid`,`seq`,`dict_desc`) VALUES ('search','wapsougou','手机搜狗','Y',1,'手机搜狗搜索引擎');
+
+  INSERT INTO t_dict(`dict_group_code`,`dict_code`,`dict_name`,`valid`,`seq`,`dict_desc`) VALUES ('search','shenma','神马','Y',1,'神马搜索引擎');

@@ -77,30 +77,23 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">滚动图1(必填)</label>
+                    <label class="col-sm-3 control-label">滚动图1</label>
                     <div class="col-sm-9">
                         <input type="file" name="img_url1" data-ref="url" class="col-sm-10 myfile" value=""/>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">滚动图2(选填)</label>
+                    <label class="col-sm-3 control-label">滚动图2</label>
                     <div class="col-sm-9">
                         <input type="file" name="img_url2" data-ref="url2" class="col-sm-10 myfile" value=""/>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">滚动图3(选填)</label>
+                    <label class="col-sm-3 control-label">滚动图3</label>
                     <div class="col-sm-9">
                         <input type="file" name="img_url3" data-ref="url2" class="col-sm-10 myfile" value=""/>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label">滚动图4(选填)</label>
-                    <div class="col-sm-9">
-                        <input type="file" name="img_url4" data-ref="url2" class="col-sm-10 myfile" value=""/>
-                    </div>
-                </div>
-
                 <button type="submit" id="submit" class="btn btn-default col-sm-2 col-sm-offset-4" style="background: #09C;color: #fff;">提交</button>
 
         </div>

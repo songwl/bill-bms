@@ -172,10 +172,24 @@ public class HomeServiceImpl implements HomeService {
             String sanliuling="360";
             Double sanliulingCompleteness=searchCompleteness(sanliuling,loginUser);
             map.put("sanliulingCompleteness",df.format(sanliulingCompleteness));
+
             //搜狗完成率
             String sougou="搜狗";
             Double sougouCompleteness=searchCompleteness(sougou,loginUser);
             map.put("sougouCompleteness",df.format(sougouCompleteness));
+
+            //手机360
+            String sanliulingWap="手机360";
+            Double sanliulingWapCompleteness=searchCompleteness(sanliulingWap,loginUser);
+            map.put("sanliulingWapCompleteness",df.format(sanliulingWapCompleteness));
+            //手机搜狗
+            String sougouWap="手机搜狗";
+            Double sougouWapWapCompleteness=searchCompleteness(sougouWap,loginUser);
+            map.put("sougouWapWapCompleteness",df.format(sougouWapWapCompleteness));
+            //手机搜狗
+            String shenma="神马";
+            Double shenmaCompleteness=searchCompleteness(shenma,loginUser);
+            map.put("shenmaCompleteness",df.format(shenmaCompleteness));
             //某个月的第一天和最后一天
             Map<String, String> maps = getFirstday_Lastday_Month(dateNow);
             String fistDay=maps.get("first");
@@ -334,10 +348,23 @@ public class HomeServiceImpl implements HomeService {
             String sanliuling="360";
             Double sanliulingCompleteness=searchCompleteness(sanliuling,loginUser);
             map.put("sanliulingCompleteness",df.format(sanliulingCompleteness));
+
             //搜狗完成率
             String sougou="搜狗";
             Double sougouCompleteness=searchCompleteness(sougou,loginUser);
             map.put("sougouCompleteness",df.format(sougouCompleteness));
+            //手机360
+            String sanliulingWap="手机360";
+            Double sanliulingWapCompleteness=searchCompleteness(sanliulingWap,loginUser);
+            map.put("sanliulingWapCompleteness",df.format(sanliulingWapCompleteness));
+            //手机搜狗
+            String sougouWap="手机搜狗";
+            Double sougouWapWapCompleteness=searchCompleteness(sougouWap,loginUser);
+            map.put("sougouWapWapCompleteness",df.format(sougouWapWapCompleteness));
+            //手机搜狗
+            String shenma="神马";
+            Double shenmaCompleteness=searchCompleteness(shenma,loginUser);
+            map.put("shenmaCompleteness",df.format(shenmaCompleteness));
             //某个月的第一天和最后一天
             Map<String, String> maps = getFirstday_Lastday_Month(dateNow);
             String fistDay=maps.get("first");
@@ -492,6 +519,18 @@ public class HomeServiceImpl implements HomeService {
             String sougou="搜狗";
             Double sougouCompleteness=searchCompletenessBycmm(sougou,loginUser);
             map.put("sougouCompleteness",df.format(sougouCompleteness));
+            //手机360
+            String sanliulingWap="手机360";
+            Double sanliulingWapCompleteness=searchCompletenessBycmm(sanliulingWap,loginUser);
+            map.put("sanliulingWapCompleteness",df.format(sanliulingWapCompleteness));
+            //手机搜狗
+            String sougouWap="手机搜狗";
+            Double sougouWapWapCompleteness=searchCompletenessBycmm(sougouWap,loginUser);
+            map.put("sougouWapWapCompleteness",df.format(sougouWapWapCompleteness));
+            //神马
+            String shenma="神马";
+            Double shenmaCompleteness=searchCompletenessBycmm(shenma,loginUser);
+            map.put("shenmaCompleteness",df.format(shenmaCompleteness));
             //某个月的第一天和最后一天
             Map<String, String> maps = getFirstday_Lastday_Month(dateNow);
             String fistDay=maps.get("first");
@@ -642,6 +681,18 @@ public class HomeServiceImpl implements HomeService {
             String sougou="搜狗";
             Double sougouCompleteness=searchCompletenessBycus(sougou,loginUser);
             map.put("sougouCompleteness",df.format(sougouCompleteness));
+            //手机360
+            String sanliulingWap="手机360";
+            Double sanliulingWapCompleteness=searchCompletenessBycus(sanliulingWap,loginUser);
+            map.put("sanliulingWapCompleteness",df.format(sanliulingWapCompleteness));
+            //手机搜狗
+            String sougouWap="手机搜狗";
+            Double sougouWapWapCompleteness=searchCompletenessBycus(sougouWap,loginUser);
+            map.put("sougouWapWapCompleteness",df.format(sougouWapWapCompleteness));
+            //神马
+            String shenma="神马";
+            Double shenmaCompleteness=searchCompletenessBycus(shenma,loginUser);
+            map.put("shenmaCompleteness",df.format(shenmaCompleteness));
             //某个月的第一天和最后一天
             Map<String, String> maps = getFirstday_Lastday_Month(dateNow);
             String fistDay=maps.get("first");

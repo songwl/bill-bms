@@ -37,7 +37,7 @@ private userCompanyService userCompanyService;
     @RequestMapping("/uploadFile")
     @ResponseBody
     public Map<String,Object> uploadFile(HttpSession session, MultipartFile logoImgurl, MultipartFile img_url1, MultipartFile img_url2,
-                                         MultipartFile img_url3, MultipartFile img_url4,HttpServletRequest request) throws IllegalStateException, IOException {
+                                         MultipartFile img_url3, HttpServletRequest request) throws IllegalStateException, IOException {
 
         //当前登录对象
         LoginUser loginUser=this.getCurrentAccount();
@@ -47,7 +47,7 @@ private userCompanyService userCompanyService;
         String[] website=map.get("website");
         if(!"".equals(website[0])&&logoImgurl!=null)
         {
-            userCompanyService.uploadFile(logoImgurl, img_url1,img_url2,img_url3, img_url4,map,loginUser,request);
+            userCompanyService.uploadFile(logoImgurl, img_url1,img_url2,img_url3,map,loginUser,request);
         }
 
 

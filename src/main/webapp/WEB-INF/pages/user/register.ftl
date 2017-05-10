@@ -46,7 +46,7 @@
         <span style="font-size:14px;" class="pdlogid"></span>
 
         <dd class="pwd_icon">
-            <input type="password" name="password" placeholder="密码" class="login_txtbx" id="pwd"/>
+            <input type="password" name="password" placeholder="密码(12位以下，英文加数字)" class="login_txtbx" id="pwd"/>
         </dd>
         <span style="font-size:14px;" class="pdpwd"></span>
 

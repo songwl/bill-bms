@@ -72,7 +72,7 @@ public class UserController extends BaseController {
            modelMap.addAttribute("loginFailureMessage", "验证码错误  !");
        }
 
-        return  "/user/register";
+        return  "/user/login";
     }
 
     /**

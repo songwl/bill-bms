@@ -21,6 +21,13 @@
         </h1>
         <h2 class="logo-title">登录</h2>
         <ul class="header-nav">
+            <#if userHyperlinkList??>
+                <#list userHyperlinkList as item>
+                    <li class="nav-first">
+                    <a href="${item.hyperlink}" target="_blank">${item.title}</a></li>
+
+                </#list>
+            </#if>
             <#--<li class="nav-first">
                 <a href="#" target="_blank">优搜云首页</a></li>
             <li>
@@ -32,36 +39,44 @@
         </ul>
     </div>
 </div>
-<div class="content">
+<div class="content" style="width:900px;margin:0 auto;margin-top:80px;">
     <div id="slideBox">
         <ul id="show_pic" style="left: 0px;">
-            <#if userImgurlList??>
+
+          <#if userImgurlList??>
                 <#list userImgurlList as item>
-                    <li><img   title="" height="300" width="300" src="${ctx}/static/img/upload/${item.imgUrl}"></li>
+                    <li><img   title="" height="300" width="400" src="${ctx}/static/img/upload/${item.imgUrl}"></li>
                 </#list>
             </#if>
             <#if bmsModel.userImgurlList==null>
-                    <li><img   title="" height="300" width="300" src="${ctx}/static/img/dk.jpg"></li>
-                    <li><img   title="" height="300" width="300" src="${ctx}/static/img/ldhkf.jpg"></li>
-            </#if>
+                <li><img   title="" height="300" width="400" src="${ctx}/static/img/gundong1.jpg"></li>
+                <li><img   title="" height="300" width="400" src="${ctx}/static/img/gundong2.jpg"></li>
+                <li><img   title="" height="300" width="400" src="${ctx}/static/img/gundong3.jpg"></li>
+           </#if>
+
         </ul>
         <div id="slideText"></div>
         <ul id="iconBall">
             <li class="active">1</li>
             <li class="">2</li>
+            <li class="">3</li>
+        <#-- <li class="">4</li>-->
         </ul>
         <ul id="textBall">
             <li class="active"><a href="javascript:void(0)"></a></li>
             <li class=""><a href="javascript:void(0)"></a></li>
+            <li class=""><a href="javascript:void(0)"></a></li>
         </ul>
     </div>
+
+
     <script src="${ctx}/static/js/user/zzsc.js"></script>
 
 
     <div id="login-module">
         <div id="login-wrap" class=" login-static  nc-outer-box">
             <div style="background:#EBEBEB;height:40px;line-height:40px;text-indent:20px;font-weight:800;">
-          <#--  ${bmsModel.userCompanyName}-->
+          ${bmsModel.userCompanyName}
                 会员登录
             </div>
             <form  action="${rc.contextPath}/login" method="post">
@@ -83,7 +98,7 @@
                                     <div class="loading-icon"></div>
                                     <div class="loading-mask-body"></div>
                                 </div>
-                                <input id="fm-login-id" class="fm-text" name="userName" tabindex="1" placeholder="6位ID" value="" autocorrect="off" autocapitalize="off"></div>
+                                <input id="fm-login-id" class="fm-text" name="userName" tabindex="1" placeholder="登录名" value="" autocorrect="off" autocapitalize="off"></div>
                         </dd>
                     </dl>
                     <dl>
@@ -108,7 +123,9 @@
                     <input id="fm-login-submit" value="登录" class="fm-button1 fm-submit" tabindex="4" name="submit-btn" type="submit" style="width: 236px;margin:0 auto;></div>
                 <div id="login-other">
                     <div class="register">
-                        <a href="${rc.contextPath}/user/register">免费注册</a></div>
+                        <a href="${rc.contextPath}/user/register">立即注册</a></div>
+                    <#--<div class="test">
+                         接口测试</div>-->
                 </div>
             </form>
         </div>
@@ -132,5 +149,18 @@
         var url = "${ctx}/user/check.jpg?number="+Math.random();
         $("#img").attr("src",url);
     }
+/*    $(".test").click(function () {
+        $.ajax({
+            type:'post',
+            url:CTX+"/ybyNotify/getYbyNotify",
+            data:{xAction:1,
+                xParam:2,
+                xSign:3},
+            success:function () {
+
+            }
+        })
+    })*/
+
 </script>
 </@base.html>

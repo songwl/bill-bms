@@ -774,7 +774,7 @@ public class BillServiceimpl implements BillService {
 
                 String[] qurl = {billA.getWebsite()};
                 //组合参数
-                int[] timeSet = { 9,12,15,19, };
+                int[] timeSet = { 7,12,15 };
                 JSONObject jsonObj = new JSONObject();
                 jsonObj.put("keyword", qkeyword);
                 jsonObj.put("url", qurl);
@@ -802,6 +802,9 @@ public class BillServiceimpl implements BillService {
                         break;
                     case "手机搜狗":
                         jsonObj.put("searchType", 7030);
+                        break;
+                    case "神马":
+                        jsonObj.put("searchType", 7070);
                         break;
                 }
 
@@ -854,6 +857,9 @@ public class BillServiceimpl implements BillService {
                         break;
                     case "手机搜狗":
                         yby.setSe(6);
+                        break;
+                    case "神马":
+                        yby.setSe(7);
                         break;
                 }
                 yby.setMcpd(1);

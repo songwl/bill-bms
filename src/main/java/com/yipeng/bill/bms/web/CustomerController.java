@@ -149,7 +149,7 @@ public class CustomerController extends  BaseController{
     }
 
     /**
-     * 审核订单
+     * 审核客户
      * @param request
      * @param customerId
      * @return

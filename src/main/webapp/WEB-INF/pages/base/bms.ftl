@@ -455,7 +455,7 @@
 
 						</ul>
 					</li>
-        <#--        <#if bmsModel.user.hasRole("SUPER_ADMIN")>
+          <#-- <#if bmsModel.user.hasRole("SUPER_ADMIN")>
                     <li class="" style="border-bottom: 1px solid #3d3d3d;">
                                     <a href="javascript:;">
                                         <i class="fa fa-magnet"></i><span class="title"> 自定义桌面 </span><span class="arrow "></span>
@@ -555,7 +555,7 @@
 <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-            <button type="button" class="bootbox-close-button close">×</button>
+
             <h4 class="modal-title">修改密码</h4></div>
         <div class="modal-body" style="max-height: 372px;">
             <div class="bootbox-body">
@@ -573,7 +573,7 @@
                     <div class="form-group">
                         <label class="col-md-2 control-label">新密码:</label>
                         <div class="col-md-10">
-                            <input class="form-control input-width-large" name="passnew" id="passnew" placeholder="新密码" type="password" style="width:210px;">
+                            <input class="form-control input-width-large" name="passnew" id="passnew" placeholder="新密码(12位以下，英文加数字)" type="password" style="width:210px;">
                             <div class="passnewDiv"></div>
                         </div>
                     </div>

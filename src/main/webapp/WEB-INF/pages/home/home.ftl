@@ -187,6 +187,21 @@
     <div class="col-sm-6 col-md-2 hidden-xs">
         <div class="statbox widget box box-shadow">
             <div class="widget-content">
+                <div class="visual cyan">
+                    <i class="fa fa-tasks"></i>
+                </div>
+                <div class="title">
+                    360手机完成率
+                </div>
+                <div class="value">
+                ${bmsModel.sanliulingWapCompleteness}%
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-2 hidden-xs">
+        <div class="statbox widget box box-shadow">
+            <div class="widget-content">
                 <div class="visual red">
                     <i class="fa fa-tasks"></i>
                 </div>
@@ -199,6 +214,10 @@
             </div>
         </div>
     </div>
+
+</div>
+
+ <div class="row row-bg">
     <div class="col-sm-6 col-md-2 hidden-xs">
         <div class="statbox widget box box-shadow">
             <div class="widget-content">
@@ -206,10 +225,25 @@
                     <i class="fa fa-tasks"></i>
                 </div>
                 <div class="title">
+                    搜狗手机完成率
+                </div>
+                <div class="value">
+                 ${bmsModel.sougouWapWapCompleteness}%
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-2 hidden-xs">
+        <div class="statbox widget box box-shadow">
+            <div class="widget-content">
+                <div class="visual cyan">
+                    <i class="fa fa-tasks"></i>
+                </div>
+                <div class="title">
                     神马完成率
                 </div>
                 <div class="value">
-                    0.0%
+                ${bmsModel.shenmaCompleteness}%
                 </div>
             </div>
         </div>

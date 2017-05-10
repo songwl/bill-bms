@@ -38,7 +38,7 @@ public class userCompanyServiceImpl implements userCompanyService {
     private UserImgurlMapper userImgurlMapper;
     @Override
     public int uploadFile(MultipartFile logoImgurl, MultipartFile img_url1, MultipartFile img_url2,
-                          MultipartFile img_url3, MultipartFile img_url4, Map<String, String[]> map,
+                          MultipartFile img_url3, Map<String, String[]> map,
                           LoginUser loginUser,HttpServletRequest request) {
         // 声明图片后缀名数组
         String imgeArray [][] = {
@@ -69,7 +69,6 @@ public class userCompanyServiceImpl implements userCompanyService {
         String oldimgurl1 = img_url1.getOriginalFilename();
         String oldimgurl2 = img_url2.getOriginalFilename();
         String oldimgurl3 = img_url3.getOriginalFilename();
-        String oldimgurl4 = img_url4.getOriginalFilename();
         // 获得文件后缀名
         String tmpName1 = oldlogoImgurl.substring(oldlogoImgurl.lastIndexOf(".") + 1,
                 oldlogoImgurl.length());//公司LOGO图片
@@ -79,8 +78,6 @@ public class userCompanyServiceImpl implements userCompanyService {
                 oldimgurl2.length());//公司滚动2
         String tmpName4 = oldimgurl3.substring(oldimgurl3.lastIndexOf(".") + 1,
                 oldimgurl3.length());//公司滚动3
-        String tmpName5 = oldimgurl4.substring(oldimgurl4.lastIndexOf(".") + 1,
-                oldimgurl4.length());//公司滚动4
         // 遍历名称数组  tmpName1
 
         //输出文件后缀名称
@@ -92,100 +89,56 @@ public class userCompanyServiceImpl implements userCompanyService {
         //判断数据库是否已经拥有对象
        List<UserImgurl>  userImgurlList=userImgurlMapper.selectByUserId(loginUser.getId());
 
-        if(userCompany!=null)
+       //判断绑定的域名是否存在
+        if(website.length>0&&!"".equals(website[0]))
         {
-            UserCompany userCompany1=new UserCompany();
 
-            userCompany1.setId(userCompany.getId());
-            if(!"".equals(website[0]))
+            if(userCompany!=null)
             {
-                userCompany1.setWebSite(website[0]);
-            }
-            if(!"".equals(companyname[0]))
-            {
-                userCompany1.setUserCompanyName(companyname[0]);
-            }
-            if(!"".equals(tmpName1)) {
+                UserCompany userCompany1=new UserCompany();
 
-                //图片名称
-                String name = df.format(new Date());
-                //随机数
-                Random r = new Random();
-                for(int i = 0 ;i<3 ;i++){
-                    name += r.nextInt(10);
+                userCompany1.setId(userCompany.getId());
+                if(!"".equals(website[0]))
+                {
+                    userCompany1.setWebSite(website[0]);
                 }
-                for (int i = 0; i < imgeArray.length; i++) {
-                    // 判断单个类型文件的场合
-                    if (imgeArray[i][0].equals(tmpName1.toLowerCase())
-                            ) {
-                        //相对路径
-                        String path = "/" + name + "." + tmpName1;
-                        try {
-                            logoImgurl.transferTo(new File(url + path));
-                            userCompany1.setUserLogoimgUrl(name + "." + tmpName1);
+                if(!"".equals(companyname[0]))
+                {
+                    userCompany1.setUserCompanyName(companyname[0]);
+                }
+                if(!"".equals(tmpName1)) {
 
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                    //图片名称
+                    String name = df.format(new Date());
+                    //随机数
+                    Random r = new Random();
+                    for(int i = 0 ;i<3 ;i++){
+                        name += r.nextInt(10);
+                    }
+                    for (int i = 0; i < imgeArray.length; i++) {
+                        // 判断单个类型文件的场合
+                        if (imgeArray[i][0].equals(tmpName1.toLowerCase())
+                                ) {
+                            //相对路径
+                            String path = "/" + name + "." + tmpName1;
+                            try {
+                                logoImgurl.transferTo(new File(url + path));
+                                userCompany1.setUserLogoimgUrl(name + "." + tmpName1);
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
                         }
-
                     }
                 }
+                userCompany1.setUserId(loginUser.getId());
+                userCompany1.setUpdateTime(new Date());
+                userCompany1.setUpdateUserId(loginUser.getId());
+                userCompanyMapper.updateByPrimaryKeySelective(userCompany1);
             }
-            userCompany1.setUserId(loginUser.getId());
-            userCompany1.setUpdateTime(new Date());
-            userCompany1.setUpdateUserId(loginUser.getId());
-            userCompanyMapper.updateByPrimaryKeySelective(userCompany1);
-        }
-        //当前不存在对象
-        else
-        {
-            //图片名称
-            String name = df.format(new Date());
-            //随机数
-            Random r = new Random();
-            for(int i = 0 ;i<3 ;i++){
-                name += r.nextInt(10);
-            }
-            UserCompany userCompany2=new UserCompany();
-
-            if(!"".equals(website[0]))
-            {
-                userCompany2.setWebSite(website[0]);
-            }
-            if(!"".equals(companyname[0]))
-            {
-                userCompany2.setUserCompanyName(companyname[0]);
-            }
-            if(!"".equals(tmpName1)) {
-
-                for (int i = 0; i < imgeArray.length; i++) {
-                    // 判断单个类型文件的场合
-                    if (imgeArray[i][0].equals(tmpName1.toLowerCase())
-                            ) {
-                        //相对路径
-                        String path = "/" + name + "." + tmpName1;
-                        try {
-                            logoImgurl.transferTo(new File(url + path));
-                            userCompany2.setUserLogoimgUrl(name + "." + tmpName1);
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }
-            }
-            userCompany2.setUserId(loginUser.getId());
-            userCompany2.setUserLogoimgUrl(name + "." + tmpName1);
-            userCompany2.setCreateTime(new Date());
-            userCompany2.setCreateUserId(loginUser.getId());
-            userCompanyMapper.insertSelective(userCompany2);
-        }
-        //判断滚动图片是否存在
-        if(!CollectionUtils.isEmpty(userImgurlList))
-        {
-
-            if(!"".equals(tmpName2))
+            //当前不存在对象
+            else
             {
                 //图片名称
                 String name = df.format(new Date());
@@ -194,14 +147,62 @@ public class userCompanyServiceImpl implements userCompanyService {
                 for(int i = 0 ;i<3 ;i++){
                     name += r.nextInt(10);
                 }
-                for(int i = 0; i<imgeArray.length;i++) {
-                    if(imgeArray [i][0].equals(tmpName2.toLowerCase())
-                            ){
-                        //相对路径
-                        String path = "/"+name + "." + tmpName2;
-                        try {
-                            img_url1.transferTo(new File(url+path));
-                            //判断滚动图片是否存在
+                UserCompany userCompany2=new UserCompany();
+
+                if(!"".equals(website[0]))
+                {
+                    userCompany2.setWebSite(website[0]);
+                }
+                if(!"".equals(companyname[0]))
+                {
+                    userCompany2.setUserCompanyName(companyname[0]);
+                }
+                if(!"".equals(tmpName1)) {
+
+                    for (int i = 0; i < imgeArray.length; i++) {
+                        // 判断单个类型文件的场合
+                        if (imgeArray[i][0].equals(tmpName1.toLowerCase())
+                                ) {
+                            //相对路径
+                            String path = "/" + name + "." + tmpName1;
+                            try {
+                                logoImgurl.transferTo(new File(url + path));
+                                userCompany2.setUserLogoimgUrl(name + "." + tmpName1);
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }
+                }
+                userCompany2.setUserId(loginUser.getId());
+                userCompany2.setUserLogoimgUrl(name + "." + tmpName1);
+                userCompany2.setCreateTime(new Date());
+                userCompany2.setCreateUserId(loginUser.getId());
+                userCompanyMapper.insertSelective(userCompany2);
+            }
+            //判断滚动图片是否存在
+            if(!CollectionUtils.isEmpty(userImgurlList))
+            {
+
+                if(!"".equals(tmpName2))
+                {
+                    //图片名称
+                    String name = df.format(new Date());
+                    //随机数
+                    Random r = new Random();
+                    for(int i = 0 ;i<3 ;i++){
+                        name += r.nextInt(10);
+                    }
+                    for(int i = 0; i<imgeArray.length;i++) {
+                        if(imgeArray [i][0].equals(tmpName2.toLowerCase())
+                                ){
+                            //相对路径
+                            String path = "/"+name + "." + tmpName2;
+                            try {
+                                img_url1.transferTo(new File(url+path));
+                                //判断滚动图片是否存在
 
                                 UserImgurl userImgurl=new UserImgurl();
                                 userImgurl.setId(userImgurlList.get(0).getId());
@@ -215,124 +216,6 @@ public class userCompanyServiceImpl implements userCompanyService {
 
 
 
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }
-            }
-            //判断是否传了第二张图片
-            if(!"".equals(tmpName3))
-            {
-                 if(userImgurlList.size()>=2)
-                 {
-                     //图片名称
-                     String name = df.format(new Date());
-                     //随机数
-                     Random r = new Random();
-                     for(int i = 0 ;i<3 ;i++){
-                         name += r.nextInt(10);
-                     }
-                     for(int i = 0; i<imgeArray.length;i++) {
-                         if(imgeArray [i][0].equals(tmpName3.toLowerCase())
-                                 ){
-                             //相对路径
-                             String path = "/"+name + "." + tmpName3;
-                             try {
-                                 img_url2.transferTo(new File(url+path));
-                                 //判断滚动图片是否存在
-
-                                 UserImgurl userImgurl=new UserImgurl();
-                                 userImgurl.setId(userImgurlList.get(1).getId());
-                                 if(!"".equals(website[0])) {
-                                     userImgurl.setWebSite(website[0]);
-                                 }
-                                 userImgurl.setImgUrl(name + "." + tmpName3);
-                                 userImgurl.setUpdateUserId(loginUser.getId());
-                                 userImgurl.setUpdateTime(new Date());
-                                 userImgurlMapper.updateByPrimaryKeySelective(userImgurl);
-
-
-
-                             } catch (IOException e) {
-                                 e.printStackTrace();
-                             }
-
-                         }
-                     }
-                 }
-                 else
-                 {
-                     //图片名称
-                     String name = df.format(new Date());
-                     //随机数
-                     Random r = new Random();
-                     for(int i = 0 ;i<3 ;i++){
-                         name += r.nextInt(10);
-                     }
-                     for(int i = 0; i<imgeArray.length;i++) {
-                         if(imgeArray [i][0].equals(tmpName3.toLowerCase())
-                                 ){
-                             //相对路径
-                             String path = "/"+name + "." + tmpName3;
-                             try {
-                                 img_url2.transferTo(new File(url+path));
-                                 //判断滚动图片是否存在
-
-                                 UserImgurl userImgurl=new UserImgurl();
-                                 if(!"".equals(website[0])) {
-                                     userImgurl.setWebSite(website[0]);
-                                 }
-                                 userImgurl.setImgUrl(name + "." + tmpName3);
-                                 userImgurl.setCreateUserId(loginUser.getId());
-                                 userImgurl.setUserid(loginUser.getId());
-                                 userImgurl.setCreateTime(new Date());
-                                 userImgurlMapper.insert(userImgurl);
-
-
-
-                             } catch (IOException e) {
-                                 e.printStackTrace();
-                             }
-
-                         }
-                     }
-                 }
-            }
-            //判断是否传了第三张图片
-            if(!"".equals(tmpName4))
-            {
-                if(userImgurlList.size()>=3)
-                {
-                    //图片名称
-                    String name = df.format(new Date());
-                    //随机数
-                    Random r = new Random();
-                    for(int i = 0 ;i<3 ;i++){
-                        name += r.nextInt(10);
-                    }
-                    for(int i = 0; i<imgeArray.length;i++) {
-                        if(imgeArray [i][0].equals(tmpName4.toLowerCase())
-                                ){
-                            //相对路径
-                            String path = "/"+name + "." + tmpName4;
-                            try {
-                                img_url3.transferTo(new File(url+path));
-                                //判断滚动图片是否存在
-
-                                UserImgurl userImgurl=new UserImgurl();
-                                userImgurl.setId(userImgurlList.get(2).getId());
-                                if(!"".equals(website[0])) {
-                                    userImgurl.setWebSite(website[0]);
-                                }
-                                userImgurl.setImgUrl(name + "." + tmpName4);
-                                userImgurl.setUpdateUserId(loginUser.getId());
-                                userImgurl.setUpdateTime(new Date());
-                                userImgurlMapper.updateByPrimaryKeySelective(userImgurl);
-
-
-
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -340,50 +223,171 @@ public class userCompanyServiceImpl implements userCompanyService {
                         }
                     }
                 }
-                else
+                //判断是否传了第二张图片
+                if(!"".equals(tmpName3))
                 {
-                    //图片名称
-                    String name = df.format(new Date());
-                    //随机数
-                    Random r = new Random();
-                    for(int i = 0 ;i<3 ;i++){
-                        name += r.nextInt(10);
-                    }
-                    for(int i = 0; i<imgeArray.length;i++) {
-                        if(imgeArray [i][0].equals(tmpName4.toLowerCase())
-                                ){
-                            //相对路径
-                            String path = "/"+name + "." + tmpName4;
-                            try {
-                                img_url3.transferTo(new File(url+path));
-                                //判断滚动图片是否存在
+                    if(userImgurlList.size()>=2)
+                    {
+                        //图片名称
+                        String name = df.format(new Date());
+                        //随机数
+                        Random r = new Random();
+                        for(int i = 0 ;i<3 ;i++){
+                            name += r.nextInt(10);
+                        }
+                        for(int i = 0; i<imgeArray.length;i++) {
+                            if(imgeArray [i][0].equals(tmpName3.toLowerCase())
+                                    ){
+                                //相对路径
+                                String path = "/"+name + "." + tmpName3;
+                                try {
+                                    img_url2.transferTo(new File(url+path));
+                                    //判断滚动图片是否存在
 
-                                UserImgurl userImgurl=new UserImgurl();
-                                if(!"".equals(website[0])) {
-                                    userImgurl.setWebSite(website[0]);
+                                    UserImgurl userImgurl=new UserImgurl();
+                                    userImgurl.setId(userImgurlList.get(1).getId());
+                                    if(!"".equals(website[0])) {
+                                        userImgurl.setWebSite(website[0]);
+                                    }
+                                    userImgurl.setImgUrl(name + "." + tmpName3);
+                                    userImgurl.setUpdateUserId(loginUser.getId());
+                                    userImgurl.setUpdateTime(new Date());
+                                    userImgurlMapper.updateByPrimaryKeySelective(userImgurl);
+
+
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
-                                userImgurl.setImgUrl(name + "." + tmpName4);
-                                userImgurl.setCreateUserId(loginUser.getId());
-                                userImgurl.setUserid(loginUser.getId());
-                                userImgurl.setCreateTime(new Date());
-                                userImgurlMapper.insert(userImgurl);
 
-
-
-                            } catch (IOException e) {
-                                e.printStackTrace();
                             }
+                        }
+                    }
+                    else
+                    {
+                        //图片名称
+                        String name = df.format(new Date());
+                        //随机数
+                        Random r = new Random();
+                        for(int i = 0 ;i<3 ;i++){
+                            name += r.nextInt(10);
+                        }
+                        for(int i = 0; i<imgeArray.length;i++) {
+                            if(imgeArray [i][0].equals(tmpName3.toLowerCase())
+                                    ){
+                                //相对路径
+                                String path = "/"+name + "." + tmpName3;
+                                try {
+                                    img_url2.transferTo(new File(url+path));
+                                    //判断滚动图片是否存在
 
+                                    UserImgurl userImgurl=new UserImgurl();
+                                    if(!"".equals(website[0])) {
+                                        userImgurl.setWebSite(website[0]);
+                                    }
+                                    userImgurl.setImgUrl(name + "." + tmpName3);
+                                    userImgurl.setCreateUserId(loginUser.getId());
+                                    userImgurl.setUserid(loginUser.getId());
+                                    userImgurl.setCreateTime(new Date());
+                                    userImgurlMapper.insert(userImgurl);
+
+
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
                         }
                     }
                 }
+                //判断是否传了第三张图片
+                if(!"".equals(tmpName4))
+                {
+                    if(userImgurlList.size()>=3)
+                    {
+                        //图片名称
+                        String name = df.format(new Date());
+                        //随机数
+                        Random r = new Random();
+                        for(int i = 0 ;i<3 ;i++){
+                            name += r.nextInt(10);
+                        }
+                        for(int i = 0; i<imgeArray.length;i++) {
+                            if(imgeArray [i][0].equals(tmpName4.toLowerCase())
+                                    ){
+                                //相对路径
+                                String path = "/"+name + "." + tmpName4;
+                                try {
+                                    img_url3.transferTo(new File(url+path));
+                                    //判断滚动图片是否存在
+
+                                    UserImgurl userImgurl=new UserImgurl();
+                                    userImgurl.setId(userImgurlList.get(2).getId());
+                                    if(!"".equals(website[0])) {
+                                        userImgurl.setWebSite(website[0]);
+                                    }
+                                    userImgurl.setImgUrl(name + "." + tmpName4);
+                                    userImgurl.setUpdateUserId(loginUser.getId());
+                                    userImgurl.setUpdateTime(new Date());
+                                    userImgurlMapper.updateByPrimaryKeySelective(userImgurl);
+
+
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //图片名称
+                        String name = df.format(new Date());
+                        //随机数
+                        Random r = new Random();
+                        for(int i = 0 ;i<3 ;i++){
+                            name += r.nextInt(10);
+                        }
+                        for(int i = 0; i<imgeArray.length;i++) {
+                            if(imgeArray [i][0].equals(tmpName4.toLowerCase())
+                                    ){
+                                //相对路径
+                                String path = "/"+name + "." + tmpName4;
+                                try {
+                                    img_url3.transferTo(new File(url+path));
+                                    //判断滚动图片是否存在
+
+                                    UserImgurl userImgurl=new UserImgurl();
+                                    if(!"".equals(website[0])) {
+                                        userImgurl.setWebSite(website[0]);
+                                    }
+                                    userImgurl.setImgUrl(name + "." + tmpName4);
+                                    userImgurl.setCreateUserId(loginUser.getId());
+                                    userImgurl.setUserid(loginUser.getId());
+                                    userImgurl.setCreateTime(new Date());
+                                    userImgurlMapper.insert(userImgurl);
+
+
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        }
+                    }
+                }
+
             }
 
-            //判断是否传了第四张图片
-            if(!"".equals(tmpName5))
+            //不存在
+            else
             {
-                if(userImgurlList.size()>=4)
-                {
+
+                //判断是否传了第1张图片
+                if(!"".equals(tmpName2)) {
                     //图片名称
                     String name = df.format(new Date());
                     //随机数
@@ -391,57 +395,20 @@ public class userCompanyServiceImpl implements userCompanyService {
                     for(int i = 0 ;i<3 ;i++){
                         name += r.nextInt(10);
                     }
-                    for(int i = 0; i<imgeArray.length;i++) {
-                        if(imgeArray [i][0].equals(tmpName5.toLowerCase())
-                                ){
+                    for (int i = 0; i < imgeArray.length; i++) {
+                        if (imgeArray[i][0].equals(tmpName2.toLowerCase())
+                                ) {
                             //相对路径
-                            String path = "/"+name + "." + tmpName5;
+                            String path = "/" + name + "." + tmpName2;
                             try {
-                                img_url4.transferTo(new File(url+path));
+                                img_url1.transferTo(new File(url + path));
                                 //判断滚动图片是否存在
 
-                                UserImgurl userImgurl=new UserImgurl();
-                                userImgurl.setId(userImgurlList.get(3).getId());
-                                if(!"".equals(website[0])) {
+                                UserImgurl userImgurl = new UserImgurl();
+                                if (!"".equals(website[0])) {
                                     userImgurl.setWebSite(website[0]);
                                 }
-                                userImgurl.setImgUrl(name + "." + tmpName5);
-                                userImgurl.setUpdateUserId(loginUser.getId());
-                                userImgurl.setUpdateTime(new Date());
-                                userImgurlMapper.updateByPrimaryKeySelective(userImgurl);
-
-
-
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    }
-                }
-                else
-                {
-                    //图片名称
-                    String name = df.format(new Date());
-                    //随机数
-                    Random r = new Random();
-                    for(int i = 0 ;i<3 ;i++){
-                        name += r.nextInt(10);
-                    }
-                    for(int i = 0; i<imgeArray.length;i++) {
-                        if(imgeArray [i][0].equals(tmpName5.toLowerCase())
-                                ){
-                            //相对路径
-                            String path = "/"+name + "." + tmpName5;
-                            try {
-                                img_url4.transferTo(new File(url+path));
-                                //判断滚动图片是否存在
-
-                                UserImgurl userImgurl=new UserImgurl();
-                                if(!"".equals(website[0])) {
-                                    userImgurl.setWebSite(website[0]);
-                                }
-                                userImgurl.setImgUrl(name + "." + tmpName5);
+                                userImgurl.setImgUrl(name + "." + tmpName2);
                                 userImgurl.setCreateUserId(loginUser.getId());
                                 userImgurl.setUserid(loginUser.getId());
                                 userImgurl.setCreateTime(new Date());
@@ -452,160 +419,200 @@ public class userCompanyServiceImpl implements userCompanyService {
                             }
 
                         }
+
                     }
                 }
-            }
-        }
 
-        //不存在
-        else
-        {
+                //判断是否传了第2张图片
+                if(!"".equals(tmpName3)) {
+                    //图片名称
+                    String name = df.format(new Date());
+                    //随机数
+                    Random r = new Random();
+                    for(int i = 0 ;i<3 ;i++){
+                        name += r.nextInt(10);
+                    }
+                    for (int i = 0; i < imgeArray.length; i++) {
+                        if (imgeArray[i][0].equals(tmpName3.toLowerCase())
+                                ) {
+                            //相对路径
+                            String path = "/" + name + "." + tmpName3;
+                            try {
+                                img_url2.transferTo(new File(url + path));
+                                //判断滚动图片是否存在
 
-            //判断是否传了第1张图片
-            if(!"".equals(tmpName2)) {
-                //图片名称
-                String name = df.format(new Date());
-                //随机数
-                Random r = new Random();
-                for(int i = 0 ;i<3 ;i++){
-                    name += r.nextInt(10);
-                }
-                for (int i = 0; i < imgeArray.length; i++) {
-                    if (imgeArray[i][0].equals(tmpName2.toLowerCase())
-                            ) {
-                        //相对路径
-                        String path = "/" + name + "." + tmpName2;
-                        try {
-                            img_url1.transferTo(new File(url + path));
-                            //判断滚动图片是否存在
+                                UserImgurl userImgurl = new UserImgurl();
+                                if (!"".equals(website[0])) {
+                                    userImgurl.setWebSite(website[0]);
+                                }
+                                userImgurl.setImgUrl(name + "." + tmpName3);
+                                userImgurl.setCreateUserId(loginUser.getId());
+                                userImgurl.setUserid(loginUser.getId());
+                                userImgurl.setCreateTime(new Date());
+                                userImgurlMapper.insert(userImgurl);
 
-                            UserImgurl userImgurl = new UserImgurl();
-                            if (!"".equals(website[0])) {
-                                userImgurl.setWebSite(website[0]);
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-                            userImgurl.setImgUrl(name + "." + tmpName2);
-                            userImgurl.setCreateUserId(loginUser.getId());
-                            userImgurl.setUserid(loginUser.getId());
-                            userImgurl.setCreateTime(new Date());
-                            userImgurlMapper.insert(userImgurl);
 
-                        } catch (IOException e) {
-                            e.printStackTrace();
                         }
 
                     }
-
                 }
-            }
+                //判断是否传了第3张图片
+                if(!"".equals(tmpName4)) {
+                    //图片名称
+                    String name = df.format(new Date());
+                    //随机数
+                    Random r = new Random();
+                    for(int i = 0 ;i<3 ;i++){
+                        name += r.nextInt(10);
+                    }
+                    for (int i = 0; i < imgeArray.length; i++) {
+                        if (imgeArray[i][0].equals(tmpName4.toLowerCase())
+                                ) {
+                            //相对路径
+                            String path = "/" + name + "." + tmpName4;
+                            try {
+                                img_url3.transferTo(new File(url + path));
+                                //判断滚动图片是否存在
 
-            //判断是否传了第2张图片
-            if(!"".equals(tmpName3)) {
-                //图片名称
-                String name = df.format(new Date());
-                //随机数
-                Random r = new Random();
-                for(int i = 0 ;i<3 ;i++){
-                    name += r.nextInt(10);
-                }
-                for (int i = 0; i < imgeArray.length; i++) {
-                    if (imgeArray[i][0].equals(tmpName3.toLowerCase())
-                            ) {
-                        //相对路径
-                        String path = "/" + name + "." + tmpName3;
-                        try {
-                            img_url2.transferTo(new File(url + path));
-                            //判断滚动图片是否存在
+                                UserImgurl userImgurl = new UserImgurl();
+                                if (!"".equals(website[0])) {
+                                    userImgurl.setWebSite(website[0]);
+                                }
+                                userImgurl.setImgUrl(name + "." + tmpName4);
+                                userImgurl.setCreateUserId(loginUser.getId());
+                                userImgurl.setUserid(loginUser.getId());
+                                userImgurl.setCreateTime(new Date());
+                                userImgurlMapper.insert(userImgurl);
 
-                            UserImgurl userImgurl = new UserImgurl();
-                            if (!"".equals(website[0])) {
-                                userImgurl.setWebSite(website[0]);
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-                            userImgurl.setImgUrl(name + "." + tmpName3);
-                            userImgurl.setCreateUserId(loginUser.getId());
-                            userImgurl.setUserid(loginUser.getId());
-                            userImgurl.setCreateTime(new Date());
-                            userImgurlMapper.insert(userImgurl);
 
-                        } catch (IOException e) {
-                            e.printStackTrace();
                         }
 
                     }
-
                 }
+
+
             }
-            //判断是否传了第3张图片
-            if(!"".equals(tmpName4)) {
-                //图片名称
-                String name = df.format(new Date());
-                //随机数
-                Random r = new Random();
-                for(int i = 0 ;i<3 ;i++){
-                    name += r.nextInt(10);
-                }
-                for (int i = 0; i < imgeArray.length; i++) {
-                    if (imgeArray[i][0].equals(tmpName4.toLowerCase())
-                            ) {
-                        //相对路径
-                        String path = "/" + name + "." + tmpName4;
-                        try {
-                            img_url3.transferTo(new File(url + path));
-                            //判断滚动图片是否存在
 
-                            UserImgurl userImgurl = new UserImgurl();
-                            if (!"".equals(website[0])) {
-                                userImgurl.setWebSite(website[0]);
-                            }
-                            userImgurl.setImgUrl(name + "." + tmpName4);
-                            userImgurl.setCreateUserId(loginUser.getId());
-                            userImgurl.setUserid(loginUser.getId());
-                            userImgurl.setCreateTime(new Date());
-                            userImgurlMapper.insert(userImgurl);
+            //判断超链接
+            if(!"".equals(title1[0])&&!"".equals(hyperlink1[0]))//第一个超链接
+            {
+                   List<UserHyperlink> userHyperlinkList=userHyperlinkMapper.selectByUserId(loginUser.getId());
+                   //判断是否已经存在超链接
+                  if(!CollectionUtils.isEmpty(userHyperlinkList))
+                  {
+                      UserHyperlink userHyperlink1=new UserHyperlink();
+                      userHyperlink1.setId(userHyperlinkList.get(0).getId());
+                      userHyperlink1.setTitle(title1[0]);
+                      userHyperlink1.setWebSite(website[0]);
+                      userHyperlink1.setHyperlink(hyperlink1[0]);
+                      userHyperlink1.setUpdateUserId(loginUser.getId());
+                      userHyperlink1.setUpdateTime(new Date());
+                      userHyperlinkMapper.updateByPrimaryKeySelective(userHyperlink1);
+                  }
+                  else
+                  {
 
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
+                      UserHyperlink userHyperlink1=new UserHyperlink();
+                      userHyperlink1.setTitle(title1[0]);
+                      userHyperlink1.setWebSite(website[0]);
+                      userHyperlink1.setHyperlink(hyperlink1[0]);
+                      userHyperlink1.setCreateUserId(loginUser.getId());
+                      userHyperlink1.setCreateTime(new Date());
+                      userHyperlinkMapper.insert(userHyperlink1);
+                  }
+                  //第二个超链接
+                  if (!"".equals(title2[0])&&!"".equals(hyperlink2[0]))
+                  {
+                      //存在 ->更新
+                      if (userHyperlinkList.size()>=2)
+                      {
+                          UserHyperlink userHyperlink2=new UserHyperlink();
+                          userHyperlink2.setId(userHyperlinkList.get(1).getId());
+                          userHyperlink2.setTitle(title2[0]);
+                          userHyperlink2.setWebSite(website[0]);
+                          userHyperlink2.setHyperlink(hyperlink2[0]);
+                          userHyperlink2.setUpdateUserId(loginUser.getId());
+                          userHyperlink2.setUpdateTime(new Date());
+                          userHyperlinkMapper.updateByPrimaryKeySelective(userHyperlink2);
+                      }
+                      //不存在 -》添加
+                      else
+                      {
+                          UserHyperlink userHyperlink2=new UserHyperlink();
+                          userHyperlink2.setTitle(title2[0]);
+                          userHyperlink2.setWebSite(website[0]);
+                          userHyperlink2.setHyperlink(hyperlink2[0]);
+                          userHyperlink2.setCreateUserId(loginUser.getId());
+                          userHyperlink2.setCreateTime(new Date());
+                          userHyperlinkMapper.insert(userHyperlink2);
+                      }
+                  }
+                //第三个超链接
+                if (!"".equals(title3[0])&&!"".equals(hyperlink3[0]))
+                {
+                    //存在 ->更新
+                    if (userHyperlinkList.size()>=3)
+                    {
+                        UserHyperlink userHyperlink3=new UserHyperlink();
+                        userHyperlink3.setId(userHyperlinkList.get(2).getId());
+                        userHyperlink3.setTitle(title3[0]);
+                        userHyperlink3.setWebSite(website[0]);
+                        userHyperlink3.setHyperlink(hyperlink3[0]);
+                        userHyperlink3.setUpdateUserId(loginUser.getId());
+                        userHyperlink3.setUpdateTime(new Date());
+                        userHyperlinkMapper.updateByPrimaryKeySelective(userHyperlink3);
                     }
-
-                }
-            }
-            //判断是否传了第4张图片
-            if(!"".equals(tmpName5)) {
-                //图片名称
-                String name = df.format(new Date());
-                //随机数
-                Random r = new Random();
-                for(int i = 0 ;i<3 ;i++){
-                    name += r.nextInt(10);
-                }
-                for (int i = 0; i < imgeArray.length; i++) {
-                    if (imgeArray[i][0].equals(tmpName5.toLowerCase())
-                            ) {
-                        //相对路径
-                        String path = "/" + name + "." + tmpName5;
-                        try {
-                            img_url4.transferTo(new File(url + path));
-                            //判断滚动图片是否存在
-
-                            UserImgurl userImgurl = new UserImgurl();
-                            if (!"".equals(website[0])) {
-                                userImgurl.setWebSite(website[0]);
-                            }
-                            userImgurl.setImgUrl(name + "." + tmpName5);
-                            userImgurl.setCreateUserId(loginUser.getId());
-                            userImgurl.setUserid(loginUser.getId());
-                            userImgurl.setCreateTime(new Date());
-                            userImgurlMapper.insert(userImgurl);
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
+                    //不存在 -》添加
+                    else
+                    {
+                        UserHyperlink userHyperlink3=new UserHyperlink();
+                        userHyperlink3.setTitle(title3[0]);
+                        userHyperlink3.setWebSite(website[0]);
+                        userHyperlink3.setHyperlink(hyperlink3[0]);
+                        userHyperlink3.setCreateUserId(loginUser.getId());
+                        userHyperlink3.setCreateTime(new Date());
+                        userHyperlinkMapper.insert(userHyperlink3);
                     }
-
+                }
+                //第四个超链接
+                if (!"".equals(title4[0])&&!"".equals(hyperlink4[0]))
+                {
+                    //存在 ->更新
+                    if (userHyperlinkList.size()>=4)
+                    {
+                        UserHyperlink userHyperlink4=new UserHyperlink();
+                        userHyperlink4.setId(userHyperlinkList.get(3).getId());
+                        userHyperlink4.setTitle(title4[0]);
+                        userHyperlink4.setWebSite(website[0]);
+                        userHyperlink4.setHyperlink(hyperlink4[0]);
+                        userHyperlink4.setUpdateUserId(loginUser.getId());
+                        userHyperlink4.setUpdateTime(new Date());
+                        userHyperlinkMapper.updateByPrimaryKeySelective(userHyperlink4);
+                    }
+                    //不存在 -》添加
+                    else
+                    {
+                        UserHyperlink userHyperlink4=new UserHyperlink();
+                        userHyperlink4.setTitle(title4[0]);
+                        userHyperlink4.setWebSite(website[0]);
+                        userHyperlink4.setHyperlink(hyperlink4[0]);
+                        userHyperlink4.setCreateUserId(loginUser.getId());
+                        userHyperlink4.setCreateTime(new Date());
+                        userHyperlinkMapper.insert(userHyperlink4);
+                    }
                 }
             }
+            else
+            {
+
+            }
+
         }
 
 

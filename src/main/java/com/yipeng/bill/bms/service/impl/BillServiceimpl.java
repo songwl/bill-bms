@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.yipeng.bill.bms.core.model.Page;
 import com.yipeng.bill.bms.core.utils.DateUtils;
 import com.yipeng.bill.bms.dao.*;
@@ -61,7 +62,8 @@ public class BillServiceimpl implements BillService {
     private RoleMapper roleMapper;
     @Autowired
     private RemoteService remoteService;
-
+    @Autowired
+    private ForbiddenWordsMapper forbiddenWordsMapper;
     Md5_UrlEncode md5_urlEncode=new Md5_UrlEncode();
     /**
      * 相同价导入
@@ -92,72 +94,93 @@ public class BillServiceimpl implements BillService {
         String[] customerId=params.get("customerId");
         String errorDetails="";
         if(urls.length==keywords.length) {
+            //违禁词库
+             List<ForbiddenWords> forbiddenWordsList =forbiddenWordsMapper.selectBySelective();
             for (int i = 0; i < urls.length; i++) {
 
 
-
-                //先查询是否订单已经存在
-                Map<String, Object> params1 = new HashMap();
-                params1.put("website", urls[i]);
-                params1.put("keywords", keywords[i]);
-                List<Bill> billList = billMapper.selectAllSelective(params1);
-                Map<String,Object> map=new HashMap<>();
-                if(search[0].equals("360")||search[0].equals("搜狗"))
-                {
-                    String urlStr=urls[i].substring(0,7);
-                    if ("http://".equals(urlStr))
+                //判断当前关键词是否为违禁词
+                Boolean ForbiddenWordsBool=true;//变量
+                for (ForbiddenWords items: forbiddenWordsList
+                     ) {
+                    if(keywords[i].equals(items.getWords()))//是违禁词
                     {
-                        map.put("url",urls[i]);
+                        ForbiddenWordsBool=false;
+                    }
+                }
+                //不是违禁词  就添加
+                if(ForbiddenWordsBool)
+                {
+                    //先查询是否订单已经存在
+                    Map<String, Object> params1 = new HashMap();
+                    params1.put("website", urls[i]);
+                    params1.put("keywords", keywords[i]);
+                    List<Bill> billList = billMapper.selectAllSelective(params1);
+                    Map<String,Object> map=new HashMap<>();
+                    if(search[0].equals("360")||search[0].equals("搜狗"))
+                    {
+                        String urlStr=urls[i].substring(0,7);
+                        if ("http://".equals(urlStr))
+                        {
+                            map.put("url",urls[i]);
+                        }
+                        else
+                        {
+                            String urlss="http://"+urls[i];
+                            map.put("url",urlss);
+                        }
+
                     }
                     else
                     {
-                        String urlss="http://"+urls[i];
-                        map.put("url",urlss);
+                        map.put("url",urls[i]);
                     }
 
-                }
-                else
-                {
-                    map.put("url",urls[i]);
-                }
+                    map.put("keywords",keywords[i]);
+                    map.put("CreateUserId",user.getId());
+                    map.put("search",search[0]);
+                    map.put("price",price[0]);
+                    map.put("rankend",rankend[0]);
+                    map.put("customerId",customerId[0]);
+                    map.put("price1",price1[0]);
+                    map.put("rankend1",rankend1[0]);
+                    map.put("price2",price2[0]);
+                    map.put("rankend2",rankend2[0]);
+                    map.put("price3",price3[0]);
+                    map.put("rankend3",rankend3[0]);
+                    map.put("state",state);
+                    //存在 判断搜索引擎是否一致
+                    if (billList.size() > 0) {
+                        Boolean bool = true;
+                        for (Bill bill : billList
+                                ) {
 
-                map.put("keywords",keywords[i]);
-                map.put("CreateUserId",user.getId());
-                map.put("search",search[0]);
-                map.put("price",price[0]);
-                map.put("rankend",rankend[0]);
-                map.put("customerId",customerId[0]);
-                map.put("price1",price1[0]);
-                map.put("rankend1",rankend1[0]);
-                map.put("price2",price2[0]);
-                map.put("rankend2",rankend2[0]);
-                map.put("price3",price3[0]);
-                map.put("rankend3",rankend3[0]);
-                map.put("state",state);
-                //存在 判断搜索引擎是否一致
-                if (billList.size() > 0) {
-                    Boolean bool = true;
-                    for (Bill bill : billList
-                            ) {
+                            //查询每个订单对应的搜索引擎名
+                            BillSearchSupport billSearchSupport = billSearchSupportMapper.selectByBillId(bill.getId());
+                            if (billSearchSupport.getSearchSupport().equals(search[0])) {
+                                bool = false;
+                                errorDetails += +(i + 1) + "网址：" + urls[i] + "  关键词：" + keywords[i] + "已存在！  ";
 
-                        //查询每个订单对应的搜索引擎名
-                        BillSearchSupport billSearchSupport = billSearchSupportMapper.selectByBillId(bill.getId());
-                        if (billSearchSupport.getSearchSupport().equals(search[0])) {
-                            bool = false;
-                            errorDetails += +(i + 1) + "网址：" + urls[i] + "  关键词：" + keywords[i] + " ";
+                            }
+                        }
 
+                        if (bool) {
+                            //订单主表
+                            this.insertPirce(map);
                         }
                     }
-
-                    if (bool) {
-                        //订单主表
-                       this.insertPirce(map);
+                    //不存在 直接录入
+                    else {
+                        this.insertPirce(map);
                     }
                 }
-                //不存在 直接录入
-                else {
-                    this.insertPirce(map);
+                //返回错误信息
+                else
+                {
+                    errorDetails += +(i + 1) + "网址：" + urls[i] + "  关键词：" + keywords[i] + "是违禁词   ";
                 }
+
+
             }
 
         }
@@ -191,131 +214,152 @@ public class BillServiceimpl implements BillService {
         String errorDetails="";
         if(dfurls.length==dfkeywords.length&&dfkeywords.length==dfprices.length)
         {
+            //违禁词库
+            List<ForbiddenWords> forbiddenWordsList =forbiddenWordsMapper.selectBySelective();
+
             for(int i=0;i<dfurls.length;i++)
             {
+                //判断当前关键词是否为违禁词
+                Boolean ForbiddenWordsBool=true;//变量
+                for (ForbiddenWords items: forbiddenWordsList
+                        ) {
+                    if(dfkeywords[i].equals(items.getWords()))//是违禁词
+                    {
+                        ForbiddenWordsBool=false;
+                    }
+                }
+
                 //先查询是否订单已经存在
                 Map<String,Object> params1=new HashMap();
                 params1.put("website",dfurls[i]);
                 params1.put("keywords",dfkeywords[i]);
                 List<Bill> billList=billMapper.selectAllSelective(params1);
-            //还有else判断
-              if(billList!=null&&billList.size()>0)
-              {
-                  Boolean bool=true;
-                  for (Bill bill:billList
-                          ) {
-                     //查询每个订单对应的搜索引擎名
-                      BillSearchSupport billSearchSupport=billSearchSupportMapper.selectByBillId(bill.getId());
-                      if (billSearchSupport.getSearchSupport().equals(dfsearch[0]))
-                      {
-                          bool=false;
-                          errorDetails+=+(i+1)+"网址："+dfurls[i]+"  关键词："+dfkeywords[i]+" ";
-                           break;
-                      }
-                  }
-                  if(bool)
-                  {
 
-                      Bill bill=new Bill();
-                      //判断搜索引擎
-                      if(dfsearch[0].equals("360")||dfsearch[0].equals("搜狗"))
-                      {
+                //不是违禁词  就添加
+                if(ForbiddenWordsBool) {
+                    if(billList!=null&&billList.size()>0)
+                    {
+                        Boolean bool=true;
+                        for (Bill bill:billList
+                                ) {
+                            //查询每个订单对应的搜索引擎名
+                            BillSearchSupport billSearchSupport=billSearchSupportMapper.selectByBillId(bill.getId());
+                            if (billSearchSupport.getSearchSupport().equals(dfsearch[0]))
+                            {
+                                bool=false;
+                                errorDetails+=+(i+1)+"网址："+dfurls[i]+"  关键词："+dfkeywords[i]+"已存在！ ";
+                                break;
+                            }
+                        }
+                        if(bool)
+                        {
 
-                          //判断http:// 前缀
-                          String urlStr=dfurls[i].substring(0,7);
-                          if ("http://".equals(urlStr)) {
-                              bill.setWebsite(dfurls[i]);
-                          }
-                          else
-                          {
-                              String urls="http://"+dfurls[i];
-                              bill.setWebsite(urls);
-                          }
-                      }
-                      else
-                      {
-                          bill.setWebsite(dfurls[i]);
-                      }
+                            Bill bill=new Bill();
+                            //判断搜索引擎
+                            if(dfsearch[0].equals("360")||dfsearch[0].equals("搜狗"))
+                            {
 
-                      bill.setKeywords(dfkeywords[i]);
-                      bill.setCreateUserId(user.getId());
-                      bill.setUpdateUserId(user.getId());
-                      bill.setCreateTime(new Date());
-                      //默认排名为200（无排名）
-                      bill.setFirstRanking(200);
-                      bill.setNewRanking(200);
-                      bill.setStandardDays(0);
-                      bill.setDayOptimization(0);
-                      bill.setAllOptimization(0);
-                      bill.setState(state);
-                      //正常单
-                      bill.setBillType(1);
-                      //优化状态（未优化）（调点击）
-                      bill.setOpstate(0);
-                      Long billId=billMapper.insert(bill);
-                      //订单引擎表
-                      BillSearchSupport billSearchSupport=new BillSearchSupport();
-                      billSearchSupport.setBillId(bill.getId());
-                      billSearchSupport.setSearchSupport(dfsearch[0]);
-                      billSearchSupportMapper.insert(billSearchSupport);
-                      //订单单价表
-                      BillPrice billPrice=new BillPrice();
-                      billPrice.setBillId(bill.getId());
-                      BigDecimal bd=new BigDecimal(dfprices[i]);
-                      billPrice.setPrice(bd);
-                      billPrice.setBillRankingStandard(Long.parseLong(dfrankend[0]));
-                      billPrice.setInMemberId(user.getId());
-                      billPrice.setOutMemberId(new Long(customerId[0]));
-                      billPrice.setCreateTime(new Date());
-                      billPriceMapper.insert(billPrice);
+                                //判断http:// 前缀
+                                String urlStr=dfurls[i].substring(0,7);
+                                if ("http://".equals(urlStr)) {
+                                    bill.setWebsite(dfurls[i]);
+                                }
+                                else
+                                {
+                                    String urls="http://"+dfurls[i];
+                                    bill.setWebsite(urls);
+                                }
+                            }
+                            else
+                            {
+                                bill.setWebsite(dfurls[i]);
+                            }
 
-                  }
-              }
-              else
-              {
+                            bill.setKeywords(dfkeywords[i]);
+                            bill.setCreateUserId(user.getId());
+                            bill.setUpdateUserId(user.getId());
+                            bill.setCreateTime(new Date());
+                            //默认排名为200（无排名）
+                            bill.setFirstRanking(200);
+                            bill.setNewRanking(200);
+                            bill.setStandardDays(0);
+                            bill.setDayOptimization(0);
+                            bill.setAllOptimization(0);
+                            bill.setState(state);
+                            //正常单
+                            bill.setBillType(1);
+                            //优化状态（未优化）（调点击）
+                            bill.setOpstate(0);
+                            Long billId=billMapper.insert(bill);
+                            //订单引擎表
+                            BillSearchSupport billSearchSupport=new BillSearchSupport();
+                            billSearchSupport.setBillId(bill.getId());
+                            billSearchSupport.setSearchSupport(dfsearch[0]);
+                            billSearchSupportMapper.insert(billSearchSupport);
+                            //订单单价表
+                            BillPrice billPrice=new BillPrice();
+                            billPrice.setBillId(bill.getId());
+                            BigDecimal bd=new BigDecimal(dfprices[i]);
+                            billPrice.setPrice(bd);
+                            billPrice.setBillRankingStandard(Long.parseLong(dfrankend[0]));
+                            billPrice.setInMemberId(user.getId());
+                            billPrice.setOutMemberId(new Long(customerId[0]));
+                            billPrice.setCreateTime(new Date());
+                            billPriceMapper.insert(billPrice);
+
+                        }
+                    }
+                    else
+                    {
 
 
-                  Bill bill=new Bill();
-                  if(dfsearch[0].equals("360")||dfsearch[0].equals("搜狗"))
-                  {
-                      String urls="http://"+dfurls[i];
-                      bill.setWebsite(urls);
-                  }
-                  else
-                  {
-                      bill.setWebsite(dfurls[i]);
-                  }
-                  bill.setKeywords(dfkeywords[i]);
-                  bill.setCreateUserId(user.getId());
-                  bill.setUpdateUserId(user.getId());
-                  bill.setCreateTime(new Date());
-                  //默认排名为200（无排名）
-                  bill.setFirstRanking(200);
-                  bill.setNewRanking(200);
-                  bill.setStandardDays(0);
-                  bill.setDayOptimization(0);
-                  bill.setAllOptimization(0);
-                  bill.setState(state);
-                  //正常单
-                  bill.setBillType(1);
-                  Long billId=billMapper.insert(bill);
-                  //订单引擎表
-                  BillSearchSupport billSearchSupport=new BillSearchSupport();
-                  billSearchSupport.setBillId(bill.getId());
-                  billSearchSupport.setSearchSupport(dfsearch[0]);
-                  billSearchSupportMapper.insert(billSearchSupport);
-                  //订单单价表
-                  BillPrice billPrice=new BillPrice();
-                  billPrice.setBillId(bill.getId());
-                  BigDecimal bd=new BigDecimal(dfprices[i]);
-                  billPrice.setPrice(bd);
-                  billPrice.setBillRankingStandard(Long.parseLong(dfrankend[0]));
-                  billPrice.setInMemberId(user.getId());
-                  billPrice.setOutMemberId(new Long(customerId[0]));
-                  billPrice.setCreateTime(new Date());
-                  billPriceMapper.insert(billPrice);
-              }
+                        Bill bill=new Bill();
+                        if(dfsearch[0].equals("360")||dfsearch[0].equals("搜狗"))
+                        {
+                            String urls="http://"+dfurls[i];
+                            bill.setWebsite(urls);
+                        }
+                        else
+                        {
+                            bill.setWebsite(dfurls[i]);
+                        }
+                        bill.setKeywords(dfkeywords[i]);
+                        bill.setCreateUserId(user.getId());
+                        bill.setUpdateUserId(user.getId());
+                        bill.setCreateTime(new Date());
+                        //默认排名为200（无排名）
+                        bill.setFirstRanking(200);
+                        bill.setNewRanking(200);
+                        bill.setStandardDays(0);
+                        bill.setDayOptimization(0);
+                        bill.setAllOptimization(0);
+                        bill.setState(state);
+                        //正常单
+                        bill.setBillType(1);
+                        Long billId=billMapper.insert(bill);
+                        //订单引擎表
+                        BillSearchSupport billSearchSupport=new BillSearchSupport();
+                        billSearchSupport.setBillId(bill.getId());
+                        billSearchSupport.setSearchSupport(dfsearch[0]);
+                        billSearchSupportMapper.insert(billSearchSupport);
+                        //订单单价表
+                        BillPrice billPrice=new BillPrice();
+                        billPrice.setBillId(bill.getId());
+                        BigDecimal bd=new BigDecimal(dfprices[i]);
+                        billPrice.setPrice(bd);
+                        billPrice.setBillRankingStandard(Long.parseLong(dfrankend[0]));
+                        billPrice.setInMemberId(user.getId());
+                        billPrice.setOutMemberId(new Long(customerId[0]));
+                        billPrice.setCreateTime(new Date());
+                        billPriceMapper.insert(billPrice);
 
+                    }
+                }
+                //返货错误信息
+                else
+                {
+                    errorDetails += +(i + 1) + "网址：" + dfurls[i] + "  关键词：" + dfkeywords[i] + "是违禁词！   ";
+                }
             }
         }
 
@@ -1485,6 +1529,8 @@ public class BillServiceimpl implements BillService {
         return 0;
     }
 
+
+
     /**
      * 优化停止(订单主状态)
      * @param params
@@ -1745,5 +1791,79 @@ public class BillServiceimpl implements BillService {
 
         }
         return null;
+    }
+    /**
+     * 申请停单
+     * @param params
+     * @param user
+     * @return
+     */
+    @Override
+    public int applyStopBillConfirm(Map<String, String[]> params, LoginUser loginUser) {
+
+        String[] checkboxLength=params.get("length");
+        int  length=Integer.parseInt(checkboxLength[0]);
+
+        for(int i=0;i<length;i++)
+        {
+            String[] id=params.get("selectContent["+i+"][id]");
+            Long  billId=Long.parseLong(id[0]);
+            Bill  bill =new Bill();
+            bill.setId(billId);
+
+            if(loginUser.hasRole("AGENT"))
+            {
+                bill.setApplyState(1);
+            }
+
+            //如果是渠道商 停单状态直接为2
+            if(loginUser.hasRole("DISTRIBUTOR"))
+            {
+                bill.setApplyState(2);
+            }
+
+
+            billMapper.updateByPrimaryKeySelective(bill);
+
+        }
+
+        return 0;
+    }
+
+    /**
+     * 审核通过
+     * @param params
+     * @param user
+     * @return
+     */
+    @Override
+    public int applyStopBillPass(Map<String, String[]> params, LoginUser user) {
+
+
+        String[] checkboxLength=params.get("length");
+        int  length=Integer.parseInt(checkboxLength[0]);
+
+        for(int i=0;i<length;i++)
+        {
+            String[] id=params.get("selectContent["+i+"][id]");
+            Long  billId=Long.parseLong(id[0]);
+            Bill  bill =new Bill();
+            bill.setId(billId);
+            if(user.hasRole("SUPER_ADMIN"))
+            {
+                bill.setState(3);
+                bill.setApplyState(null);
+            }
+            else
+            {
+                bill.setApplyState(2);
+            }
+
+
+            billMapper.updateByPrimaryKeySelective(bill);
+
+        }
+
+        return 0;
     }
 }

@@ -101,5 +101,20 @@ public interface BillService {
      * @return
      */
     int updateYBYstate(Map<String, String[]>  params,LoginUser user);
+    /**
+     * 申请停单
+     * @param params
+     * @param user
+     * @return
+     */
+    int applyStopBillConfirm(Map<String, String[]>  params,LoginUser user);
+
+    /**
+     * 申请停单审核
+     * @param params
+     * @param user
+     * @return
+     */
+    int applyStopBillPass(Map<String, String[]>  params,LoginUser user);
 
 }

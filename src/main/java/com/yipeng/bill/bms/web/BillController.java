@@ -57,8 +57,8 @@ public class BillController extends BaseController {
         //type 1代表 查询上游的订单   2代表 查询提交到下游的订单
         model.put("way",way);
            List<User> userList=  userService.getSearchUser(user,way);
-            model.put("userList",userList);
-             model.addAttribute("bmsModel", bms);
+        model.put("userList",userList);
+         model.addAttribute("bmsModel", bms);
 
         return "/bill/billList";
     }
@@ -783,4 +783,165 @@ public class BillController extends BaseController {
         return "/bill/billFeedback";
     }
 
+    /**
+     * 审核订单
+     * @param model
+     * @param way
+     * @return
+     */
+    @RequestMapping(value = "/billApplyStop")
+    public  String billApplyStop(ModelMap model)
+    {
+
+            Map<String, Object> bms = new HashMap<>();
+            LoginUser user = this.getCurrentAccount();
+            bms.put("user", user);
+            model.addAttribute("bmsModel", bms);
+
+        return "/bill/billApplyStop";
+    }
+    /**
+     * 审核订单
+     * @param model
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/billApplyStopPass")
+    public  String billApplyStopPass(ModelMap model)
+    {
+
+        Map<String, Object> bms = new HashMap<>();
+        LoginUser user = this.getCurrentAccount();
+        bms.put("user", user);
+        model.addAttribute("bmsModel", bms);
+
+        return "/bill/billApplyStopPass";
+    }
+
+    /**
+     * 申请停单
+     * @param request
+     * @return
+     */
+    @RequestMapping(value ="/applyStopBillConfirm")
+    @ResponseBody
+    public  ResultMessage applyStopBillConfirm(HttpServletRequest request)
+    {
+        Map<String, String[]> params= request.getParameterMap();
+        LoginUser user=this.getCurrentAccount();
+        if(user!=null)
+        {
+
+            int a=  billService.applyStopBillConfirm(params,user);
+            return  this.ajaxDoneSuccess("操作成功");
+
+        }
+        else
+        {
+            return  this.ajaxDoneError("未登录");
+        }
+
+    }
+    /**
+     * 申请停单通过
+     * @param request
+     * @return
+     */
+    @RequestMapping(value ="/applyStopBillPass")
+    @ResponseBody
+    public  ResultMessage applyStopBillPass(HttpServletRequest request)
+    {
+        Map<String, String[]> params= request.getParameterMap();
+        LoginUser user=this.getCurrentAccount();
+        if(user!=null)
+        {
+
+            int a=  billService.applyStopBillPass(params,user);
+            return  this.ajaxDoneSuccess("操作成功");
+
+        }
+        else
+        {
+            return  this.ajaxDoneError("未登录");
+        }
+
+    }
+
+    /**
+     * 审核订单table数据
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/billApplyStopTable")
+    @ResponseBody
+    public   Map<String,Object> billApplyStopTable(int limit, int offset,String sortOrder, String sortName)
+    {
+        offset=(offset-1)*limit;
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        LoginUser user=this.getCurrentAccount();
+
+        params.put("limit",limit);
+        params.put("offset",offset);
+        if(user.hasRole("SUPER_ADMIN"))
+        {
+            params.put("way",2);
+        }
+        else
+        {
+            params.put("way",1);
+        }
+
+        if(user.hasRole("DISTRIBUTOR"))
+        {
+            params.put("applyState",2);
+        }
+       else
+        {
+            params.put("applyState",1);
+        }
+        params.put("state",2);
+        Map<String, Object> modelMap=billService.getBillDetails(params,user);
+        return  modelMap;
+
+    }
+
+    /**
+     * 审核通过table数据
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/billApplyStopPassTable")
+    @ResponseBody
+    public   Map<String,Object> billApplyStopPassTable(int limit, int offset,String sortOrder, String sortName)
+    {
+        offset=(offset-1)*limit;
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        LoginUser user=this.getCurrentAccount();
+
+        params.put("limit",limit);
+        params.put("offset",offset);
+        if(user.hasRole("SUPER_ADMIN"))
+        {
+            params.put("way",2);
+        }
+        else
+        {
+            params.put("way",1);
+        }
+
+        if(user.hasRole("DISTRIBUTOR"))
+        {
+            params.put("applyState",1);
+        }
+        else
+        {
+            params.put("applyState",2);
+        }
+        params.put("state",2);
+        Map<String, Object> modelMap=billService.getBillDetails(params,user);
+        return  modelMap;
+
+    }
 }

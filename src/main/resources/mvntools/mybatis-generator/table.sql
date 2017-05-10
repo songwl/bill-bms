@@ -102,6 +102,7 @@
     `opstate` INT NULL COMMENT '订单状态1（调点击状态(0:未优化状态 1：优化中 2：离线)）',
      `bill_type` INT NULL COMMENT '订单属性（1,正常单，2包年单，3，快排单）',
      `bill_ascription` BIGINT NULL COMMENT '订单专员归属',
+     `apply_state` BIGINT  NULL COMMENT '申请订单状态（1,代理商 2,渠道商）',
     PRIMARY KEY (`id`)  COMMENT '')
   ENGINE = InnoDB
   COMMENT = '计费单表';
@@ -281,5 +282,6 @@ CREATE TABLE `t_forbidden_words` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `words` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB D
+COMMENT = '违禁词库.';
 

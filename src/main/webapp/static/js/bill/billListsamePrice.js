@@ -115,7 +115,7 @@ $(".samepricecmt").click(function () {
                             else
                             {
 
-                                alert(result.message+" 已经存在!");
+                                alert(result.message+" !");
                                 $('.samepricecmt').removeAttr("disabled");
                             }
                         }

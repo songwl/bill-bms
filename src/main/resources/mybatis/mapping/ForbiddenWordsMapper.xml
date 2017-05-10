@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yipeng.bill.bms.dao.ForbiddenWordsMapper">
+  <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.ForbiddenWords">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="words" jdbcType="VARCHAR" property="words" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, words
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_forbidden_words
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_forbidden_words
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.ForbiddenWords">
+    insert into t_forbidden_words (id, words)
+    values (#{id,jdbcType=BIGINT}, #{words,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.ForbiddenWords">
+    insert into t_forbidden_words
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="words != null">
+        words,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="words != null">
+        #{words,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.ForbiddenWords">
+    update t_forbidden_words
+    <set>
+      <if test="words != null">
+        words = #{words,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.ForbiddenWords">
+    update t_forbidden_words
+    set words = #{words,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectBySelective"   resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_forbidden_words
+  </select>
+</mapper>

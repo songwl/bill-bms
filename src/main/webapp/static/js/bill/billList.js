@@ -7,6 +7,16 @@ var searchState2=null;
 var searchStandard=null;
 
 $(document).ready(function () {
+    $(function () {
+    if($("#way").val()==1)
+    {
+        $("#applyStopBill").show();
+    }
+    else
+    {
+        $("#applyStopBill").hide();
+    }
+})
 
     $(".close").click(function () {
 
@@ -35,9 +45,6 @@ $(document).ready(function () {
 
 
     })
-
-
-
     $("#searchState").change(function () {
          var state=$("#searchState option:selected").val();
          if(state==1)
@@ -118,6 +125,7 @@ $(document).ready(function () {
        $("#continue").css({"background":"#eee"});
        $("#stop").css({"background":"#fff"});
        $("#all").css({"background":"#fff"});
+       $("#applyStopBill").show();
        searchState=2;
        searchState2=null;
        $('#myTable').bootstrapTable('refresh');
@@ -126,6 +134,7 @@ $(document).ready(function () {
         $("#stop").css({"background":"#eee"});
         $("#continue").css({"background":"#fff"});
         $("#all").css({"background":"#fff"});
+        $("#applyStopBill").hide();
         searchState=3;
         searchState2=null;
         $('#myTable').bootstrapTable('refresh');
@@ -134,6 +143,7 @@ $(document).ready(function () {
         $("#stop").css({"background":"#fff"});
         $("#continue").css({"background":"#fff"});
         $("#all").css({"background":"#eee"});
+        $("#applyStopBill").hide();
         searchState=2;
         searchState2=3;
         $('#myTable').bootstrapTable('refresh');
@@ -201,7 +211,36 @@ $(document).ready(function () {
         }
     })
 })
+//申请停单
+$("#applyStopBill").click(function () {
+    var selectContent = $('#myTable').bootstrapTable('getSelections');
+    var len =selectContent.length;
+    if(selectContent == "") {
+        alert('请选择一列数据!');
 
+    }else{
+        if(confirm("是否申请停单?"))
+        {
+            $.ajax({
+                type:"post",
+                url:CTX+"/order/applyStopBillConfirm",
+                data:{ selectContent:selectContent,length:len},
+                success:function (result) {
+                    if(result.code==200)
+                    {
+                        alert(result.message);
+                        $('#myTable').bootstrapTable('refresh');
+                    }
+                    else
+                    {
+                        alert(result.message);
+                    }
+                }
+
+            })
+        }
+    }
+})
 
 $(function () {
 

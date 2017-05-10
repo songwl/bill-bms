@@ -159,7 +159,6 @@
                                     关键词排名
                                 </a>
                             </li>
-
 						<#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("COMMISSIONER")>
      				  		 <li>
                                 <a href="${ctx}/order/billOptimization">
@@ -174,6 +173,13 @@
                                     </a>
                                 </li>
 							</#if>
+                            <#if bmsModel.user.hasRole("SUPER_ADMIN") >
+                                <li>
+                                    <a href="${ctx}/order/billApplyStopPass">
+                                        停单待通过
+                                    </a>
+                                </li>
+                            </#if>
 						</ul>
 						</li>
 					</#if>
@@ -186,6 +192,11 @@
                                 <li>
                                     <a href="${ctx}/order/list?way=1">
                                         关键词排名
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="${ctx}/order/billApplyStop">
+                                        停单待审核列表
                                     </a>
                                 </li>
                             </ul>
@@ -205,6 +216,11 @@
                             <li>
                                 <a href="${ctx}/order/pendingAudit">
                                     订单审核
+                                </a>
+                            </li>
+                            <li>
+                                <a href="${ctx}/order/billApplyStopPass">
+                                    停单待通过
                                 </a>
                             </li>
                         </ul>
@@ -238,6 +254,11 @@
                                 <li>
                                     <a href="${ctx}/order/list?way=1">
                                         关键词排名
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="${ctx}/order/billApplyStop">
+                                        停单待审核列表
                                     </a>
                                 </li>
                             </ul>

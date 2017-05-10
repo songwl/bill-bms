@@ -27,6 +27,11 @@
                <span>&nbsp;<i class="fa fa-cny"></i>&nbsp;调价</span>
            </div>
        </#if>
+        <#if  bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")>
+            <div id="applyStopBill">
+                <span>&nbsp;<i class="fa fa-trash"></i>&nbsp;申请停单</span>
+            </div>
+        </#if>
         <div class="search">
             <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
         </div>

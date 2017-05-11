@@ -574,7 +574,7 @@ var TableInit = function () {
         },
         'click #changepwd': function (e, value, row, index)
         {
-            if(confirm("是否重置密码？"))
+            if(confirm("是否重置密码？(默认重置密码:123456   重置完毕后请尽快修改默认密码)"))
             {
                 $.ajax({
                     type:'post',

@@ -393,8 +393,9 @@ public class BillServiceimpl implements BillService {
         {
 
             params.put("state",1);
+            params.put("roleId",4);
            //查询所有订单状态为1的
-             List<Bill> billList=billMapper.selectAll(params);
+             List<Bill> billList=billMapper.selectByBillAudit(params);
             for (Bill bill: billList
                  ) {
                 i++;

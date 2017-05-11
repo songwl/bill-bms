@@ -44,4 +44,6 @@ public interface BillCostMapper {
     Double selectByBillCostOfWeek(Map<String,Object> params);
     Double selectByBillCostOfMonth(Map<String,Object> params);
     Double selectByBillCostOfAll(Map<String,Object> params);
+
+    Double  selectByBillCostOfDaySum(Map<String,Object> params);
 }

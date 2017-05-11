@@ -1,6 +1,7 @@
 package com.yipeng.bill.bms.dao;
 
 import com.yipeng.bill.bms.domain.Bill;
+import com.yipeng.bill.bms.vo.LoginUser;
 
 import java.util.List;
 import java.util.Map;
@@ -93,5 +94,8 @@ public interface BillMapper {
     List<Bill>  selectBillGroupByWebsite(Map<String,Object> params);
     List<Bill>  selectByNewRanking(Map<String,Object> params);
     Long selectByNewRankingCount(Map<String,Object> params);
+
+    //审核订单预览
+    List<Bill>  selectByBillAudit(Map<String,Object> params);
 
 }

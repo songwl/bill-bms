@@ -12,23 +12,23 @@
 </div>
 <div class="row row-bg">
     <#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("ADMIN")||bmsModel.user.hasRole("COMMISSIONER")>
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual cyan">
-                    <i class="fa fa-user"></i>
-                </div>
-                <div class="title">
-                    客户数
-                </div>
-                <div class="value">
-                ${bmsModel.UserCount}
+        <div class="col-sm-6 col-md-2 hidden-xs">
+            <div class="statbox widget box box-shadow">
+                <div class="widget-content">
+                    <div class="visual cyan">
+                        <i class="fa fa-user"></i>
+                    </div>
+                    <div class="title">
+                        客户数
+                    </div>
+                    <div class="value">
+                    ${bmsModel.UserCount}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</#if>
- <#if bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")||bmsModel.user.hasRole("CUSTOMER")>
+    </#if>
+    <#if bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")||bmsModel.user.hasRole("CUSTOMER")>
         <div class="col-sm-6 col-md-2 hidden-xs">
             <div class="statbox widget box box-shadow">
                 <div class="widget-content">
@@ -39,7 +39,7 @@
                         账户余额
                     </div>
                     <div class="value">
-                        ¥${bmsModel.balance}
+                        ￥${bmsModel.balance}
                     </div>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                     本月总消费
                 </div>
                 <div class="value">
-                    ¥${bmsModel.MonthConsumption}
+                    ￥${bmsModel.MonthConsumption}
                 </div>
             </div>
         </div>
@@ -86,7 +86,7 @@
                     当前任务数
                 </div>
                 <div class="value">
-                    ${bmsModel.billCount}
+                ${bmsModel.billCount}
                 </div>
             </div>
         </div>
@@ -101,7 +101,7 @@
                     今日消费
                 </div>
                 <div class="value">
-                     ¥${bmsModel.DayConsumption}
+                    ￥${bmsModel.DayConsumption}
                 </div>
             </div>
         </div>
@@ -116,7 +116,7 @@
                     今日达标任务
                 </div>
                 <div class="value">
-                    ${bmsModel.standardSum}
+                ${bmsModel.standardSum}
                 </div>
             </div>
         </div>
@@ -217,7 +217,7 @@
 
 </div>
 
- <div class="row row-bg">
+<div class="row row-bg">
     <div class="col-sm-6 col-md-2 hidden-xs">
         <div class="statbox widget box box-shadow">
             <div class="widget-content">
@@ -228,7 +228,7 @@
                     搜狗手机完成率
                 </div>
                 <div class="value">
-                 ${bmsModel.sougouWapWapCompleteness}%
+                ${bmsModel.sougouWapWapCompleteness}%
                 </div>
             </div>
         </div>
@@ -250,55 +250,92 @@
     </div>
 </div>
 
-<div id="container" style="width: 100%; height: 400px; float:left;;"></div>
 
+<div id="container1" style="width: 100%; height: 400px; float:left;;"></div>
+    <#if bmsModel.user.hasRole("SUPER_ADMIN")>
+    <div id="container" style="width: 100%; height: 400px; float:left;;"></div>
+    <script>
+        $(function () {
+            var chart = new Highcharts.Chart('container', {
+                title: {
+                    text: '任务达标数量走势图 ',
+                    x: -20
+                },
+
+                xAxis: {
+                    categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10','11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31']
+
+                },
+                yAxis: {
+                    floor: 0,
+                    gridLineColor: '#197F07',
+                    gridLineWidth: 1,
+                    tickPositions:[${bmsModel.yAxis}],
+                    ceiling: 20,
+                    title: {
+                        text: '单位 (个)'
+                    }
+                },
+                tooltip: {
+                    valueSuffix: ''
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle',
+                    borderWidth: 0
+                },
+                series: [{
+                    name: '上月',
+                    data: [${bmsModel.seriesLastMonth}]
+                }, {
+                    name: '本月',
+                    data: [${bmsModel.seriesNowMonth}]
+                },  ]
+            })
+        });
+    </script>
+    </#if>
 <script>
-
-
-    /**
-     * Highcharts 在 4.2.0 开始已经不依赖 jQuery 了，直接用其构造函数既可创建图表
-     **/
     $(function () {
-    var chart = new Highcharts.Chart('container', {
-        title: {
-            text: '任务达标数量走势图 ',
-            x: -20
-        },
-
-        xAxis: {
-            categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10','11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31']
-
-        },
-        yAxis: {
-            floor: 0,
-            gridLineColor: '#197F07',
-            gridLineWidth: 1,
-            tickPositions:[${bmsModel.yAxis}],
-            ceiling: 20,
+        var chart1 = new Highcharts.Chart('container1', {
             title: {
-                text: '单位 (个)'
-            }
-        },
-        tooltip: {
-            valueSuffix: ''
-        },
-        legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle',
-            borderWidth: 0
-        },
-        series: [{
-            name: '上月',
-            data: [${bmsModel.seriesLastMonth}]
-        }, {
-            name: '本月',
-            data: [${bmsModel.seriesNowMonth}]
-        },  ]
-    })
+                text: '任务消费走势图 ',
+                x: -20
+            },
+
+            xAxis: {
+                categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10','11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31']
+
+            },
+            yAxis: {
+                floor: 0,
+                gridLineColor: '#197F07',
+                gridLineWidth: 1,
+                tickPositions:[${bmsModel.yAxisSum}],
+                ceiling: 20,
+                title: {
+                    text: '单位 (元)'
+                }
+            },
+            tooltip: {
+                valueSuffix: ''
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            },
+            series: [{
+                name: '上月',
+                data: [${bmsModel.seriesLastMonthSum}]
+            }, {
+                name: '本月',
+                data: [${bmsModel.seriesNowMonthSum}]
+            },  ]
+        })
     });
-
-
 
 </script>
 

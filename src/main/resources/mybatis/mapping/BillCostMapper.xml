@@ -235,4 +235,23 @@
       AND  c.bill_ascription=#{billAascription,jdbcType=BIGINT}
     </if>
   </select>
+
+  <!--每个月每天的消费数据-->
+  <select id="selectByBillCostOfDaySum"    resultType="java.lang.Double">
+    select
+    IFNULL(SUM(a.cost_amount),0)
+    from t_bill_cost as a ,t_bill_price as b, t_bill as c
+    where   a.t_bill_price_id=b.id
+    AND  b.bill_id=c.id
+    <if test="userId != null">
+      AND b.in_member_id=#{userId,jdbcType=BIGINT}
+    </if>
+    <if test="outMemberId != null">
+      AND b.out_member_id=#{outMemberId,jdbcType=BIGINT}
+    </if>
+    AND a.cost_date=#{date,jdbcType=VARCHAR}
+    <if test="billAascription != null">
+      AND  c.bill_ascription=#{billAascription,jdbcType=BIGINT}
+    </if>
+  </select>
 </mapper>

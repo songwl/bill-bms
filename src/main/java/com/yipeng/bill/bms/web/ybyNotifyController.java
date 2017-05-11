@@ -62,18 +62,18 @@ public class ybyNotifyController extends  BaseController{
             if(RankFirst==null||"".equals(RankFirst)||RankLast==null||"".equals(RankLast))
             {
                 System.out.print("排名出错:"+xParam);
-                return "2";
+                return "排名出错";
 
             }
 
               int a= rankingUpdateService.updateRanking(Integer.parseInt(TaskId),Integer.parseInt(RankLast),Integer.parseInt(RankFirst));
             if(a==1)
             {
-                return "数据更新失败";
+                return "1";
             }
             else
             {
-                return "2";
+                return "数据更新失败";
             }
 
         }

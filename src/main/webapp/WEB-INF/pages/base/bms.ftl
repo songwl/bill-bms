@@ -562,7 +562,7 @@
                 <style type="text/css">.modal-dialog { width: 560px; }</style>
                 <form class="form-horizontal row-border" id="edt-form" action="#" novalidate="novalidate">
                     <div class="alert alert-info fade in">
-                        <i class="icon-remove close" data-dismiss="alert"></i>系统对密码采用不可逆多重加密技术，如有遗忘，请联系客服随机生成！</div>
+                         系统对密码采用不可逆多重加密技术，如有遗忘，请联系客服随机生成！</div>
                     <div class="form-group">
                         <label class="col-md-2 control-label">原始密码:</label>
                         <div class="col-md-10">

@@ -126,12 +126,12 @@ public class HomeServiceImpl implements HomeService {
             billparam.put("state",2);
             //订单数（优化中）
             List<Bill> billList=billMapper.selectByInMemberId(billparam);
-             //判断哪些订单今日达标
+            //判断哪些订单今日达标
             int standardSum=0;//今天达标数
             if(billList.size()>0)
             {
                 for (Bill bill:billList
-                     ) {
+                        ) {
                     //对应订单排名标准
                     BillPrice billPrice=new BillPrice();
                     billPrice.setBillId(bill.getId());
@@ -140,12 +140,12 @@ public class HomeServiceImpl implements HomeService {
                     billPriceList=billPriceMapper.selectByBillPrice(billPrice);
                     //判断今日订单达到哪个标准
                     for (BillPrice item:billPriceList
-                         ) {
-                         if(bill.getNewRanking()<=item.getBillRankingStandard())
-                         {
-                             standardSum+=1;
-                             break;
-                         }
+                            ) {
+                        if(bill.getNewRanking()<=item.getBillRankingStandard())
+                        {
+                            standardSum+=1;
+                            break;
+                        }
                     }
                 }
             }
@@ -200,12 +200,16 @@ public class HomeServiceImpl implements HomeService {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-             String seriesLastMonth="";
+            String seriesLastMonth="";
+            //上个月消费
+            String seriesLastMonthSum="";
             //循环获取上个月每天的达标数
             Map<String,Object> dateMap=new  HashMap<>();
             dateMap.put("userId",loginUser.getId());
-            //判断Y轴的显示
+            //判断Y轴任务数的显示
             int MaxYbylast=0;
+            //判断Y轴消费的显示
+            double MaxYbylastCost=0;
             for(int i=0;i<monthPreCount;i++)
             {
                 calendar.setTime(fistDate);
@@ -214,18 +218,29 @@ public class HomeServiceImpl implements HomeService {
                 String str=formatter.format(tomorrow);
                 dateMap.put("date",str);
                 int keywordsCount=billCostMapper.selectByBillCostOfDay(dateMap);
+                Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
+
                 //比较达标最大数
                 if(MaxYbylast<=keywordsCount)
                 {
                     MaxYbylast=keywordsCount;
                 }
+                //比较消费最大数
+                if(MaxYbylastCost<=keywordsSum)
+                {
+                    MaxYbylastCost=keywordsSum;
+                }
                 seriesLastMonth+=keywordsCount+",";
+                seriesLastMonthSum+=keywordsSum+",";
 
             }
-             //上个月的达标数
+            //上个月的达标数
             map.put("seriesLastMonth",seriesLastMonth);
+            map.put("seriesLastMonthSum",seriesLastMonthSum);
             //判断Y轴的显示
             int MaxYbyNew=0;
+            double MaxYbyNewCost=0;
+            String seriesNowMonthSum="";
             for(int i=0;i<monthNowCount;i++)
             {
                 calendar.setTime(fistDateNow);
@@ -234,42 +249,50 @@ public class HomeServiceImpl implements HomeService {
                 String str1=formatter.format(tomorrow);
                 dateMap.put("date",str1);
                 int keywordsCount=billCostMapper.selectByBillCostOfDay(dateMap);
+                Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
                 //比较达标最大数
                 if(MaxYbyNew<=keywordsCount)
                 {
                     MaxYbyNew=keywordsCount;
                 }
+                if(MaxYbyNewCost<=keywordsCount)
+                {
+                    MaxYbyNewCost=keywordsSum;
+                }
                 seriesNowMonth+=keywordsCount+",";
+                seriesNowMonthSum+=keywordsSum+",";
 
             }
             String yAxis="";
             if(MaxYbyNew!=0)
             {
-                 yAxis=getYAxis(MaxYbyNew);
+                yAxis=getYAxis(MaxYbyNew);
             }
             else
             {
                 yAxis=getYAxis(MaxYbylast);
             }
-            map.put("yAxis",yAxis);
 
+            String yAxisSum="";
+            if(MaxYbyNewCost!=0)
+            {
+                yAxisSum=getYAxisSum(MaxYbyNewCost);
+            }
+            else
+            {
+                yAxisSum=getYAxisSum(MaxYbylastCost);
+            }
+
+            map.put("yAxis",yAxis);
+            map.put("yAxisSum",yAxisSum);
 
             map.put("seriesNowMonth",seriesNowMonth);
+            map.put("seriesNowMonthSum",seriesNowMonthSum);
             return map;
         }
         //渠道商和代理商
         else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
         {
-            //客户数
-            //Role role=roleMapper.selectByRoleCode("AGENT");
-            //params.put("roleId",role.getId());
-            //Long count=UserCount(params);
-           // Role role1=roleMapper.selectByRoleCode("CUSTOMER");
-           // params.put("roleId",role1.getId());
-            //Long count1=UserCount(params);
-            //Long AllCount=count+count1;
-            //.put("UserCount",AllCount);
-
             //账户余额
             FundAccount fundAccount=fundAccountMapper.selectByUserId(loginUser.getId());
             if (fundAccount==null)
@@ -282,7 +305,7 @@ public class HomeServiceImpl implements HomeService {
                 map.put("balance",fundAccount.getBalance());
 
             }
-             //月总消费
+            //月总消费
             Double MonthConsumption=MonthConsumption(params);
             map.put("MonthConsumption",MonthConsumption);
             //本日消费
@@ -375,12 +398,17 @@ public class HomeServiceImpl implements HomeService {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+            //上个月达标数
             String seriesLastMonth="";
+            //上个月消费
+            String seriesLastMonthSum="";
             //循环获取上个月每天的达标数
             Map<String,Object> dateMap=new  HashMap<>();
             dateMap.put("userId",loginUser.getId());
             //判断Y轴的显示
             int MaxYbylast=0;
+            //判断Y轴消费的显示
+            double MaxYbylastCost=0;
             for(int i=0;i<monthPreCount;i++)
             {
                 calendar.setTime(fistDate);
@@ -389,18 +417,27 @@ public class HomeServiceImpl implements HomeService {
                 String str=formatter.format(tomorrow);
                 dateMap.put("date",str);
                 int keywordsCount=billCostMapper.selectByBillCostOfDay(dateMap);
+                Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
                 //比较达标最大数
                 if(MaxYbylast<=keywordsCount)
                 {
                     MaxYbylast=keywordsCount;
                 }
+                //比较消费最大数
+                if(MaxYbylastCost<=keywordsSum)
+                {
+                    MaxYbylastCost=keywordsSum;
+                }
                 seriesLastMonth+=keywordsCount+",";
-
+                seriesLastMonthSum+=keywordsSum+",";
             }
             //上个月的达标数
             map.put("seriesLastMonth",seriesLastMonth);
+            map.put("seriesLastMonthSum",seriesLastMonthSum);
             //判断Y轴的显示
             int MaxYbyNew=0;
+            double MaxYbyNewCost=0;
+            String seriesNowMonthSum="";
             for(int i=0;i<monthNowCount;i++)
             {
                 calendar.setTime(fistDateNow);
@@ -409,13 +446,18 @@ public class HomeServiceImpl implements HomeService {
                 String str1=formatter.format(tomorrow);
                 dateMap.put("date",str1);
                 int keywordsCount=billCostMapper.selectByBillCostOfDay(dateMap);
+                Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
                 //比较达标最大数
                 if(MaxYbyNew<=keywordsCount)
                 {
                     MaxYbyNew=keywordsCount;
                 }
+                if(MaxYbyNewCost<=keywordsCount)
+                {
+                    MaxYbyNewCost=keywordsSum;
+                }
                 seriesNowMonth+=keywordsCount+",";
-
+                seriesNowMonthSum+=keywordsSum+",";
             }
             String yAxis="";
             if(MaxYbyNew!=0)
@@ -426,10 +468,21 @@ public class HomeServiceImpl implements HomeService {
             {
                 yAxis=getYAxis(MaxYbylast);
             }
+            String yAxisSum="";
+            if(MaxYbyNewCost!=0)
+            {
+                yAxisSum=getYAxisSum(MaxYbyNewCost);
+            }
+            else
+            {
+                yAxisSum=getYAxisSum(MaxYbylastCost);
+            }
+
+
             map.put("yAxis",yAxis);
-
-
+            map.put("yAxisSum",yAxisSum);
             map.put("seriesNowMonth",seriesNowMonth);
+            map.put("seriesNowMonthSum",seriesNowMonthSum);
             return map;
         }
         //操作员
@@ -542,12 +595,16 @@ public class HomeServiceImpl implements HomeService {
                 e.printStackTrace();
             }
             String seriesLastMonth="";
+            //上个月消费
+            String seriesLastMonthSum="";
             //循环获取上个月每天的达标数
             Map<String,Object> dateMap=new  HashMap<>();
             dateMap.put("userId",loginUser.getCreateUserId());
             dateMap.put("billAscription",loginUser.getId());
             //判断Y轴的显示
             int MaxYbylast=0;
+            //判断Y轴消费的显示
+            double MaxYbylastCost=0;
             for(int i=0;i<monthPreCount;i++)
             {
                 calendar.setTime(fistDate);
@@ -556,18 +613,30 @@ public class HomeServiceImpl implements HomeService {
                 String str=formatter.format(tomorrow);
                 dateMap.put("date",str);
                 int keywordsCount=billCostMapper.selectByBillCostOfDay(dateMap);
+                Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
                 //比较达标最大数
                 if(MaxYbylast<=keywordsCount)
                 {
                     MaxYbylast=keywordsCount;
                 }
                 seriesLastMonth+=keywordsCount+",";
+                //比较消费最大数
+                if(MaxYbylastCost<=keywordsSum)
+                {
+                    MaxYbylastCost=keywordsSum;
+                }
+                seriesLastMonth+=keywordsCount+",";
+                seriesLastMonthSum+=keywordsSum+",";
 
             }
             //上个月的达标数
             map.put("seriesLastMonth",seriesLastMonth);
+            map.put("seriesLastMonthSum",seriesLastMonthSum);
+            //判断Y轴的显示
             //判断Y轴的显示
             int MaxYbyNew=0;
+            double MaxYbyNewCost=0;
+            String seriesNowMonthSum="";
             for(int i=0;i<monthNowCount;i++)
             {
                 calendar.setTime(fistDateNow);
@@ -576,13 +645,18 @@ public class HomeServiceImpl implements HomeService {
                 String str1=formatter.format(tomorrow);
                 dateMap.put("date",str1);
                 int keywordsCount=billCostMapper.selectByBillCostOfDay(dateMap);
+                Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
                 //比较达标最大数
                 if(MaxYbyNew<=keywordsCount)
                 {
                     MaxYbyNew=keywordsCount;
                 }
+                if(MaxYbyNewCost<=keywordsCount)
+                {
+                    MaxYbyNewCost=keywordsSum;
+                }
                 seriesNowMonth+=keywordsCount+",";
-
+                seriesNowMonthSum+=keywordsSum+",";
             }
             String yAxis="";
             if(MaxYbyNew!=0)
@@ -593,10 +667,21 @@ public class HomeServiceImpl implements HomeService {
             {
                 yAxis=getYAxis(MaxYbylast);
             }
+            String yAxisSum="";
+            if(MaxYbyNewCost!=0)
+            {
+                yAxisSum=getYAxisSum(MaxYbyNewCost);
+            }
+            else
+            {
+                yAxisSum=getYAxisSum(MaxYbylastCost);
+            }
+
+
             map.put("yAxis",yAxis);
-
-
+            map.put("yAxisSum",yAxisSum);
             map.put("seriesNowMonth",seriesNowMonth);
+            map.put("seriesNowMonthSum",seriesNowMonthSum);
             return map;
         }
         else if (loginUser.hasRole("CUSTOMER"))
@@ -704,11 +789,15 @@ public class HomeServiceImpl implements HomeService {
                 e.printStackTrace();
             }
             String seriesLastMonth="";
+            //上个月消费
+            String seriesLastMonthSum="";
             //循环获取上个月每天的达标数
             Map<String,Object> dateMap=new  HashMap<>();
             dateMap.put("outMemberId",loginUser.getId());
             //判断Y轴的显示
             int MaxYbylast=0;
+            //判断Y轴消费的显示
+            double MaxYbylastCost=0;
             for(int i=0;i<monthPreCount;i++)
             {
                 calendar.setTime(fistDate);
@@ -717,18 +806,30 @@ public class HomeServiceImpl implements HomeService {
                 String str=formatter.format(tomorrow);
                 dateMap.put("date",str);
                 int keywordsCount=billCostMapper.selectByBillCostOfDay(dateMap);
+                Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
                 //比较达标最大数
                 if(MaxYbylast<=keywordsCount)
                 {
                     MaxYbylast=keywordsCount;
                 }
                 seriesLastMonth+=keywordsCount+",";
+                //比较消费最大数
+                if(MaxYbylastCost<=keywordsSum)
+                {
+                    MaxYbylastCost=keywordsSum;
+                }
+                seriesLastMonth+=keywordsCount+",";
+                seriesLastMonthSum+=keywordsSum+",";
 
             }
             //上个月的达标数
             map.put("seriesLastMonth",seriesLastMonth);
+            map.put("seriesLastMonthSum",seriesLastMonthSum);
+            //判断Y轴的显示
             //判断Y轴的显示
             int MaxYbyNew=0;
+            double MaxYbyNewCost=0;
+            String seriesNowMonthSum="";
             for(int i=0;i<monthNowCount;i++)
             {
                 calendar.setTime(fistDateNow);
@@ -737,13 +838,18 @@ public class HomeServiceImpl implements HomeService {
                 String str1=formatter.format(tomorrow);
                 dateMap.put("date",str1);
                 int keywordsCount=billCostMapper.selectByBillCostOfDay(dateMap);
+                Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
                 //比较达标最大数
                 if(MaxYbyNew<=keywordsCount)
                 {
                     MaxYbyNew=keywordsCount;
                 }
+                if(MaxYbyNewCost<=keywordsCount)
+                {
+                    MaxYbyNewCost=keywordsSum;
+                }
                 seriesNowMonth+=keywordsCount+",";
-
+                seriesNowMonthSum+=keywordsSum+",";
             }
             String yAxis="";
             if(MaxYbyNew!=0)
@@ -754,14 +860,25 @@ public class HomeServiceImpl implements HomeService {
             {
                 yAxis=getYAxis(MaxYbylast);
             }
+            String yAxisSum="";
+            if(MaxYbyNewCost!=0)
+            {
+                yAxisSum=getYAxisSum(MaxYbyNewCost);
+            }
+            else
+            {
+                yAxisSum=getYAxisSum(MaxYbylastCost);
+            }
+
+
             map.put("yAxis",yAxis);
-
-
+            map.put("yAxisSum",yAxisSum);
             map.put("seriesNowMonth",seriesNowMonth);
+            map.put("seriesNowMonthSum",seriesNowMonthSum);
             return map;
         }
 
-         return null;
+        return null;
     }
 
 
@@ -781,7 +898,7 @@ public class HomeServiceImpl implements HomeService {
         params.put("year",now.get(Calendar.YEAR));
         params.put("month",now.get(Calendar.MONTH)+1);
         Double sum=billCostMapper.MonthConsumption(params);
-         return sum;
+        return sum;
     }
     //今日消费
     public  Double DayConsumption(Map<String, Object> params)
@@ -919,7 +1036,7 @@ public class HomeServiceImpl implements HomeService {
         return Completeness;
     }
 
-  //获取一个月的天数
+    //获取一个月的天数
     public static int getDaysOfMonth(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -963,7 +1080,7 @@ public class HomeServiceImpl implements HomeService {
 
     public String getYAxis(int max)
     {
-       String yAxis="";
+        String yAxis="";
         if(max<=50)
         {
             yAxis="0,5,10,15,20,25,30,35,40,45";
@@ -972,6 +1089,26 @@ public class HomeServiceImpl implements HomeService {
         {
 
             yAxis="50,55,60,65,70,75,80,85,90,95";
+        }
+        else if(max<=300&&max>200)
+        {
+            yAxis="210,220,230,240,250,260,270,280,290,300";
+        }
+
+        return yAxis;
+    }
+
+    public String getYAxisSum(double max)
+    {
+        String yAxis="";
+        if(max<=100)
+        {
+            yAxis="0,10,20,30,40,50,60,70,80,90";
+        }
+        else if(max<=200&&max>100)
+        {
+
+            yAxis="100,110,120,130,14,150,160,170,180,190";
         }
         else if(max<=300&&max>200)
         {

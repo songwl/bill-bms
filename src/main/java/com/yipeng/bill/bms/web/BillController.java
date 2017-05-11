@@ -453,27 +453,7 @@ public class BillController extends BaseController {
         Map<String, Object> modelMap=billService.getBillDetails(params,user);
         return  modelMap;
     }
-    /**
-     * 待审核订单table表格获取数据
-     * @param limit
-     * @param offset
-     * @return
-     */
-    @RequestMapping(value = "/pendingAuditList")
-    @ResponseBody
-    public Map<String,Object> pendingAuditList( int limit, int offset)
-    {
 
-        offset=(offset-1)*limit;
-        Map<String, Object> params = this.getSearchRequest(); //查询参数
-        LoginUser user=this.getCurrentAccount();
-
-        params.put("limit",limit);
-        params.put("offset",offset);
-
-        Map<String, Object> modelMap=billService.pendingAuditList(params,user);
-        return  modelMap;
-    }
     /**
      *  相同价提交
      * @return
@@ -646,6 +626,65 @@ public class BillController extends BaseController {
 
     }
 
+
+    /**
+     * 待审核订单table表格获取数据(确认审核页面)
+     * @param limit
+     * @param offset
+     * @return
+     */
+    @RequestMapping(value = "/pendingAuditList")
+    @ResponseBody
+    public Map<String,Object> pendingAuditList(HttpServletRequest request,@RequestParam(required = true) int limit,
+                                               @RequestParam(required = true)int offset,String website,String keywords,
+                                               String searchName,String searchUserName ,String sortOrder, String sortName)
+    {
+
+        offset=(offset-1)*limit;
+         Map<String, Object> params = this.getSearchRequest(); //查询参数
+        LoginUser user=this.getCurrentAccount();
+
+        params.put("limit",limit);
+        params.put("offset",offset);
+        if(!keywords.isEmpty())
+        {
+            try{
+                keywords = new String(keywords.getBytes("ISO-8859-1"),"utf-8");
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+            }
+            params.put("keywords",keywords);
+        }
+        if(!website.isEmpty())
+        {
+            params.put("website",website);
+        }
+        if(!searchName.isEmpty())
+        {
+            try{
+                searchName = new String(searchName.getBytes("ISO-8859-1"),"utf-8");
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+            }
+            params.put("searchName",searchName);
+        }
+        if(!searchUserName.isEmpty())
+        {
+            params.put("searchUserNameId",searchUserName);
+        }
+        if(sortName!=null)
+        {
+            params.put("sortName",sortName);
+            params.put("sortOrder",sortOrder);
+        }
+
+        Map<String, Object> modelMap=billService.pendingAuditList(params,user);
+        return  modelMap;
+    }
     /**
      * 待审核订单（预览）
      * @param request

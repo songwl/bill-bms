@@ -18,7 +18,7 @@
         </property>
         <property name="cronExpression">
             <!--下午3点30分计费-->
-            <value>0 37 10  * * ? *</value>
+            <value>0 10 10  * * ? *</value>
         </property>
     </bean>
     <!--查询初始排名-->

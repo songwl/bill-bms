@@ -124,8 +124,6 @@ $(document).ready(function () {
          {
              if (/^\w{6,12}$/.test($(this).val())) {
                  pwdnew = true;
-                 $(".passnewDiv").css({ "color": "#ff0000" }).text("密码格式正确！");
-                 $(".passnewDiv").show();
              }
              else {
                  //格式不对
@@ -148,8 +146,6 @@ $(document).ready(function () {
         {
             if ($("#passok").val() == $("#passnew").val()) {
                 pwdok = true;
-                $(".passokDiv").css({ "color": "#ff0000" }).text("两次密码一致！");
-                $(".passokDiv").show();
             }
             else {
                 //格式不对
@@ -195,9 +191,6 @@ $(document).ready(function () {
             alert("信息有误,请重新尝试！");
         }
     })
-    $.ajax({
-        url:CTX+"/"
 
-    })
 
 })

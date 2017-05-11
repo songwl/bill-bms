@@ -116,7 +116,7 @@
                                 密码<span class="required">* </span>
                             </label>
                             <div class="col-md-9">
-                                <input name="password" class="form-control input-width-large" type="password">
+                                <input name="password" class="form-control input-width-large" type="password" placeholder="12位以下，英文数字">
                             </div>
                             <div class="pdpwd"></div>
                         </div>

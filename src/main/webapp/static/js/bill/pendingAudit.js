@@ -2,6 +2,42 @@
  * Created by Administrator on 2017/3/16.
  */
 
+var website=null;
+var keywords=null;
+var searchName=null;
+var searchUserName=null;
+$("#searchButton").click(function () {
+
+    if($("#website").val()!="")
+    {
+        website=$("#website").val();
+    }
+    else
+    {
+        website=null
+    }
+    if($("#keywords").val()!="")
+    {
+        keywords=$("#keywords").val();
+    }
+    else
+    {
+        keywords=null;
+    }
+    if($("#searchName option:selected").text()!="--请选择--")
+    {
+        searchName=$("#searchName option:selected").text();
+    }
+    else
+    {
+        searchName=null;
+    }
+
+
+
+    $('#myTable').bootstrapTable('refresh');
+})
+
 $(function () {
 
     //1.初始化Table
@@ -137,6 +173,10 @@ var TableInit = function () {
             offset: params.pageNumber,  //页码
             sortOrder: params.sortOrder,
             sortName: params.sortName,
+            website:website,
+            keywords:keywords,
+            searchName:searchName,
+            searchUserName:searchUserName,
 
         };
         return temp;

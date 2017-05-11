@@ -13,6 +13,7 @@ public class BillDetails {
     private int displayId;
     private Long id;
     private String userName;
+    private String userNameByKehu;
     private String website;
     private String searchName;
     private String createTime;
@@ -40,6 +41,9 @@ public class BillDetails {
 
     public  String  getUserName(){return  userName;}
     public String setUserName(String  userName){return  this.userName=userName;}
+
+    public  String  getUserNameByKehu(){return  userNameByKehu;}
+    public String setUserNameByKehu(String  userNameByKehu){return  this.userNameByKehu=userNameByKehu;}
 
     public  String  getWebsite(){return  website;}
     public String setWebsite(String  website){return  this.website=website;}

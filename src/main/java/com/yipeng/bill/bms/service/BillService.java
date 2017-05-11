@@ -117,4 +117,18 @@ public interface BillService {
      */
     int applyStopBillPass(Map<String, String[]>  params,LoginUser user);
 
+    /**
+     * 优化结算
+     * @param
+     * @return
+     */
+    Map<String,Object> billOptimizationSettlement(LoginUser user);
+
+    /**
+     * 批量修改价格（云客订单）
+     * @param bill
+     * @param loginUser
+     * @return
+     */
+    int uploadPrice(Bill bill,LoginUser loginUser);
 }

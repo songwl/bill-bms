@@ -18,15 +18,26 @@ import com.yipeng.bill.bms.service.UserService;
 import com.yipeng.bill.bms.vo.BillDetails;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.*;
@@ -44,56 +55,56 @@ public class BillController extends BaseController {
 
     /**
      * 上下层
+     *
      * @param model
      * @param way
      * @return
      */
     @RequestMapping(value = "/list")
-    public  String listDetails(ModelMap model,@RequestParam(defaultValue = "1") String way)
-    {
+    public String listDetails(ModelMap model, @RequestParam(defaultValue = "1") String way) {
         Map<String, Object> bms = new HashMap<>();
         LoginUser user = this.getCurrentAccount();
         bms.put("user", user);
         //type 1代表 查询上游的订单   2代表 查询提交到下游的订单
-        model.put("way",way);
-           List<User> userList=  userService.getSearchUser(user,way);
-        model.put("userList",userList);
-         model.addAttribute("bmsModel", bms);
+        model.put("way", way);
+        List<User> userList = userService.getSearchUser(user, way);
+        model.put("userList", userList);
+        model.addAttribute("bmsModel", bms);
 
         return "/bill/billList";
     }
+
     /**
      * 客户页面（渠道商和代理商 ）
+     *
      * @param request
      * @return
      */
     @RequestMapping(value = "/billCustomer")
-    public  String billCustomer(HttpServletRequest request,ModelMap modelMap)
-    {
-         User user=this.getCurrentAccount();
-         Map<String,Long> params=new HashMap<>();
-         //查询当前登录对象对应的客户
-         params.put("createId",user.getId());
-         List<User> userList=userService.userCreater(params);
-        modelMap.put("userList",userList);
+    public String billCustomer(HttpServletRequest request, ModelMap modelMap) {
+        User user = this.getCurrentAccount();
+        Map<String, Long> params = new HashMap<>();
+        //查询当前登录对象对应的客户
+        params.put("createId", user.getId());
+        List<User> userList = userService.userCreater(params);
+        modelMap.put("userList", userList);
         return "/bill/billCustomer";
     }
 
     /**
      * 关键词优化
+     *
      * @param request
      * @return
      */
     @RequestMapping(value = "/billOptimization")
-    public  String billOptimization(ModelMap model,@RequestParam(defaultValue = "1") String way)
-    {
+    public String billOptimization(ModelMap model, @RequestParam(defaultValue = "1") String way) {
         LoginUser user = this.getCurrentAccount();
-        if(user!=null)
-        {
-            way="2";
+        if (user != null) {
+            way = "2";
             Map<String, Object> bms = new HashMap<>();
-            List<User> userList=  userService.getSearchUser(user,way);
-            model.put("userList",userList);
+            List<User> userList = userService.getSearchUser(user, way);
+            model.put("userList", userList);
             model.addAttribute("bmsModel", bms);
         }
 
@@ -102,6 +113,7 @@ public class BillController extends BaseController {
 
     /**
      * 关键词优化列表获取
+     *
      * @param limit
      * @param offset
      * @param way
@@ -111,127 +123,103 @@ public class BillController extends BaseController {
      */
     @RequestMapping(value = "/getBillOptimization")
     @ResponseBody
-    public Map<String,Object> getBillOptimization( int limit, int offset,int way, String sortOrder, String sortName,
-                                                   String website,String keywords,String searchName,String searchUserName,
-                                                   String state,String searchStandard,String firstRanking1,String firstRanking2
-                                                   ,String newRanking1,String newRanking2,String newchange1,String  newchange2,
-                                                   String  addTime1,String addTime2)
-    {
-        offset=(offset-1)*limit;
+    public Map<String, Object> getBillOptimization(int limit, int offset, int way, String sortOrder, String sortName,
+                                                   String website, String keywords, String searchName, String searchUserName,
+                                                   String state, String searchStandard, String firstRanking1, String firstRanking2
+            , String newRanking1, String newRanking2, String newchange1, String newchange2,
+                                                   String addTime1, String addTime2) {
+        offset = (offset - 1) * limit;
         Map<String, Object> params = this.getSearchRequest(); //查询参数
-        LoginUser loginUser=this.getCurrentAccount();
-        if(!keywords.isEmpty())
-        {
-            try{
-                keywords = new String(keywords.getBytes("ISO-8859-1"),"utf-8");
-            }
-            catch (UnsupportedEncodingException e)
-            {
+        LoginUser loginUser = this.getCurrentAccount();
+        if (!keywords.isEmpty()) {
+            try {
+                keywords = new String(keywords.getBytes("ISO-8859-1"), "utf-8");
+            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            params.put("keywords",keywords);
+            params.put("keywords", keywords);
         }
-        if(!website.isEmpty())
-        {
-            params.put("website",website);
+        if (!website.isEmpty()) {
+            params.put("website", website);
         }
-        if(!searchName.isEmpty())
-        {
-            try{
-                searchName = new String(searchName.getBytes("ISO-8859-1"),"utf-8");
-            }
-            catch (UnsupportedEncodingException e)
-            {
+        if (!searchName.isEmpty()) {
+            try {
+                searchName = new String(searchName.getBytes("ISO-8859-1"), "utf-8");
+            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            params.put("searchName",searchName);
+            params.put("searchName", searchName);
         }
-        if(!loginUser.hasRole("CUSTOMER"))
-        {
-            if(!searchUserName.isEmpty())
-            {
-                params.put("searchUserNameId",searchUserName);
+        if (!loginUser.hasRole("CUSTOMER")) {
+            if (!searchUserName.isEmpty()) {
+                params.put("searchUserNameId", searchUserName);
             }
         }
-        if(!state.isEmpty())
-        {
-            params.put("state",state);
+        if (!state.isEmpty()) {
+            params.put("state", state);
         }
 
-        if(!searchStandard.isEmpty())
-        {
-            params.put("searchStandard",searchStandard);
+        if (!searchStandard.isEmpty()) {
+            params.put("searchStandard", searchStandard);
         }
-        if(sortName!=null)
-        {
-            params.put("sortName",sortName);
-            params.put("sortOrder",sortOrder);
+        if (sortName != null) {
+            params.put("sortName", sortName);
+            params.put("sortOrder", sortOrder);
         }
-        if(!firstRanking1.isEmpty()&&Integer.parseInt(firstRanking1)>0)
-        {
-            params.put("firstRanking1",firstRanking1);
+        if (!firstRanking1.isEmpty() && Integer.parseInt(firstRanking1) > 0) {
+            params.put("firstRanking1", firstRanking1);
         }
-        if(!firstRanking2.isEmpty()&&Integer.parseInt(firstRanking2)>0)
-        {
-            params.put("firstRanking2",firstRanking2);
+        if (!firstRanking2.isEmpty() && Integer.parseInt(firstRanking2) > 0) {
+            params.put("firstRanking2", firstRanking2);
         }
 
-        if(!newRanking1.isEmpty()&&Integer.parseInt(newRanking1)>0)
-        {
-            params.put("newRanking1",newRanking1);
+        if (!newRanking1.isEmpty() && Integer.parseInt(newRanking1) > 0) {
+            params.put("newRanking1", newRanking1);
         }
-        if(!newRanking2.isEmpty()&&Integer.parseInt(newRanking2)>0)
-        {
-            params.put("newRanking2",newRanking2);
+        if (!newRanking2.isEmpty() && Integer.parseInt(newRanking2) > 0) {
+            params.put("newRanking2", newRanking2);
         }
-        if(!newchange1.isEmpty()&&Integer.parseInt(newchange1)>0)
-        {
-            params.put("newchange1",newchange1);
+        if (!newchange1.isEmpty() && Integer.parseInt(newchange1) > 0) {
+            params.put("newchange1", newchange1);
         }
-        if(!newchange2.isEmpty()&&Integer.parseInt(newchange2)>0)
-        {
-            params.put("newchange2",newchange2);
+        if (!newchange2.isEmpty() && Integer.parseInt(newchange2) > 0) {
+            params.put("newchange2", newchange2);
         }
-        if(!addTime1.isEmpty())
-        {
-            params.put("addTime1",addTime1);
+        if (!addTime1.isEmpty()) {
+            params.put("addTime1", addTime1);
         }
-        if(!addTime2.isEmpty())
-        {
-            params.put("addTime2",addTime2);
+        if (!addTime2.isEmpty()) {
+            params.put("addTime2", addTime2);
         }
 
-        LoginUser user=this.getCurrentAccount();
-        params.put("limit",limit);
-        params.put("offset",offset);
-        params.put("way",way);
+        LoginUser user = this.getCurrentAccount();
+        params.put("limit", limit);
+        params.put("offset", offset);
+        params.put("way", way);
 
-        Map<String, Object> modelMap=billService.getBillDetails(params,user);
-        return  modelMap;
+        Map<String, Object> modelMap = billService.getBillDetails(params, user);
+        return modelMap;
     }
 
     /**
      * 调整优化
+     *
      * @param request
      * @return
      */
-    @RequestMapping(value = "/OptimizationUpdate",method = RequestMethod.POST)
+    @RequestMapping(value = "/OptimizationUpdate", method = RequestMethod.POST)
     @ResponseBody
-    public  ResultMessage OptimizationUpdate(HttpServletRequest request)
-    {
+    public ResultMessage OptimizationUpdate(HttpServletRequest request) {
         //getParameterMap()，获得请求参数map
-        Map<String,String[]> map= request.getParameterMap();
-        LoginUser user=this.getCurrentAccount();
-        if(user!=null)
-        {
+        Map<String, String[]> map = request.getParameterMap();
+        LoginUser user = this.getCurrentAccount();
+        if (user != null) {
 
-          int a=  billService.OptimizationUpdate(map,user);
-            return  this.ajaxDoneSuccess("调整成功");
+            int a = billService.OptimizationUpdate(map, user);
+            return this.ajaxDoneSuccess("调整成功");
 
-        }
-        else
-        {
-            return  this.ajaxDoneError("未登录");
+        } else {
+            return this.ajaxDoneError("未登录");
         }
 
 
@@ -239,61 +227,55 @@ public class BillController extends BaseController {
 
     /**
      * 调整停止
+     *
      * @param request
      * @return
      */
-    @RequestMapping(value = "/updateYBYstate",method = RequestMethod.POST)
+    @RequestMapping(value = "/updateYBYstate", method = RequestMethod.POST)
     @ResponseBody
-    public  ResultMessage updateYBYstate(HttpServletRequest request)
-    {
+    public ResultMessage updateYBYstate(HttpServletRequest request) {
         //getParameterMap()，获得请求参数map
-        Map<String,String[]> map= request.getParameterMap();
-        LoginUser user=this.getCurrentAccount();
-        if(user!=null)
-        {
+        Map<String, String[]> map = request.getParameterMap();
+        LoginUser user = this.getCurrentAccount();
+        if (user != null) {
 
-            int a=  billService.updateYBYstate(map,user);
-            if(a==1)
-            {
-                return  this.ajaxDoneSuccess("调整成功");
-            }
-            else
-            {
-                return  this.ajaxDoneError("系统错误，请稍后再试！");
+            int a = billService.updateYBYstate(map, user);
+            if (a == 1) {
+                return this.ajaxDoneSuccess("调整成功");
+            } else {
+                return this.ajaxDoneError("系统错误，请稍后再试！");
             }
 
-        }
-        else
-        {
-            return  this.ajaxDoneError("未登录");
+        } else {
+            return this.ajaxDoneError("未登录");
         }
 
 
     }
+
     /**
      * 待审核订单（审核）
+     *
      * @param request
      * @return
      */
     @RequestMapping(value = "/pendingAudit")
-    public  String pendingAudit(HttpServletRequest request,ModelMap model)
-    {
+    public String pendingAudit(HttpServletRequest request, ModelMap model) {
         Map<String, Object> bms = new HashMap<>();
         LoginUser user = this.getCurrentAccount();
-        if(user.hasRole("SUPER_ADMIN"))
-        {
+        if (user.hasRole("SUPER_ADMIN")) {
             //操作员
-            long ret=3;
-            Map<String,Long> params=new HashMap<>();
-            params.put("role",ret);
-            List<User> userList=userService.getUserAll(params);
-            model.put("userList",userList);
+            long ret = 3;
+            Map<String, Long> params = new HashMap<>();
+            params.put("role", ret);
+            List<User> userList = userService.getUserAll(params);
+            model.put("userList", userList);
             //渠道商
-            long ret1=4;
-           Map<String,Long> params1=new HashMap<>();
-            params1.put("role",ret1);
-            List<User>  distributorList=userService.getUserAll(params1);
-            model.put("distributorList",distributorList);
+            long ret1 = 4;
+            Map<String, Long> params1 = new HashMap<>();
+            params1.put("role", ret1);
+            List<User> distributorList = userService.getUserAll(params1);
+            model.put("distributorList", distributorList);
         }
         bms.put("user", user);
         model.addAttribute("bmsModel", bms);
@@ -302,215 +284,183 @@ public class BillController extends BaseController {
 
     /**
      * 订单table表格获取数据
+     *
      * @param limit
      * @param offset
      * @return
      */
     @RequestMapping(value = "/getBillDetails")
     @ResponseBody
-    public Map<String,Object> getBillDetails( int limit, int offset,int way, String sortOrder, String sortName,
-     String website,String keywords,String searchName,String searchUserName,
-      String state,String state2,String searchStandard) throws UnsupportedEncodingException {
-        offset=(offset-1)*limit;
-       Map<String, Object> params = this.getSearchRequest(); //查询参数
-        LoginUser loginUser=this.getCurrentAccount();
-        if(!keywords.isEmpty())
-        {
-            try{
-                keywords = new String(keywords.getBytes("ISO-8859-1"),"utf-8");
-            }
-            catch (UnsupportedEncodingException e)
-            {
-                    e.printStackTrace();
-            }
-            params.put("keywords",keywords);
-        }
-        if(!website.isEmpty())
-        {
-            params.put("website",website);
-        }
-        if(!searchName.isEmpty())
-        {
-            try{
-                searchName = new String(searchName.getBytes("ISO-8859-1"),"utf-8");
-            }
-            catch (UnsupportedEncodingException e)
-            {
+    public Map<String, Object> getBillDetails(int limit, int offset, int way, String sortOrder, String sortName,
+                                              String website, String keywords, String searchName, String searchUserName,
+                                              String state, String state2, String searchStandard) throws UnsupportedEncodingException {
+        offset = (offset - 1) * limit;
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        LoginUser loginUser = this.getCurrentAccount();
+        if (!keywords.isEmpty()) {
+            try {
+                keywords = new String(keywords.getBytes("ISO-8859-1"), "utf-8");
+            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            params.put("searchName",searchName);
+            params.put("keywords", keywords);
         }
-        if(!loginUser.hasRole("CUSTOMER"))
-        {
-            if(!searchUserName.isEmpty())
-            {
-                params.put("searchUserNameId",searchUserName);
+        if (!website.isEmpty()) {
+            params.put("website", website);
+        }
+        if (!searchName.isEmpty()) {
+            try {
+                searchName = new String(searchName.getBytes("ISO-8859-1"), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            params.put("searchName", searchName);
+        }
+        if (!loginUser.hasRole("CUSTOMER")) {
+            if (!searchUserName.isEmpty()) {
+                params.put("searchUserNameId", searchUserName);
             }
         }
-        if(!state.isEmpty())
-        {
-            params.put("state",state);
+        if (!state.isEmpty()) {
+            params.put("state", state);
         }
-        if(!state2.isEmpty())
-        {
-            params.put("state2",state2);
+        if (!state2.isEmpty()) {
+            params.put("state2", state2);
         }
-        if(!searchStandard.isEmpty())
-        {
-            params.put("searchStandard",searchStandard);
+        if (!searchStandard.isEmpty()) {
+            params.put("searchStandard", searchStandard);
         }
-        if(sortName!=null)
-        {
-            params.put("sortName",sortName);
-            params.put("sortOrder",sortOrder);
+        if (sortName != null) {
+            params.put("sortName", sortName);
+            params.put("sortOrder", sortOrder);
         }
 
-        LoginUser user=this.getCurrentAccount();
-        params.put("limit",limit);
-        params.put("offset",offset);
-        params.put("way",way);
+        LoginUser user = this.getCurrentAccount();
+        params.put("limit", limit);
+        params.put("offset", offset);
+        params.put("way", way);
 
-        Map<String, Object> modelMap=billService.getBillDetails(params,user);
-        return  modelMap;
+        Map<String, Object> modelMap = billService.getBillDetails(params, user);
+        return modelMap;
     }
 
 
     /**
      * 客户订单table表格获取数据
+     *
      * @param limit
      * @param offset
      * @return
      */
     @RequestMapping(value = "/getCustomerBill")
     @ResponseBody
-    public Map<String,Object> getCustomerBill( int limit, int offset,String sortOrder, String sortName,
-     String website,String keywords,String searchName,String searchUserName,
-     String state,String state2,String searchStandard)
-    {
-        LoginUser user=this.getCurrentAccount();
+    public Map<String, Object> getCustomerBill(int limit, int offset, String sortOrder, String sortName,
+                                               String website, String keywords, String searchName, String searchUserName,
+                                               String state, String state2, String searchStandard) {
+        LoginUser user = this.getCurrentAccount();
         int way;
-        if(user.hasRole("DISTRIBUTOR"))
-        {
-            way=3;
+        if (user.hasRole("DISTRIBUTOR")) {
+            way = 3;
+        } else {
+            way = 2;
         }
-        else
-        {
-            way=2;
-        }
-        offset=(offset-1)*limit;
+        offset = (offset - 1) * limit;
         // Page<Bill> page = this.getPageRequest();    //分页对象
         Map<String, Object> params = this.getSearchRequest(); //查询参数
-        if(!keywords.isEmpty())
-        {
-            try{
-                keywords = new String(keywords.getBytes("ISO-8859-1"),"utf-8");
-            }
-            catch (UnsupportedEncodingException e)
-            {
+        if (!keywords.isEmpty()) {
+            try {
+                keywords = new String(keywords.getBytes("ISO-8859-1"), "utf-8");
+            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            params.put("keywords",keywords);
+            params.put("keywords", keywords);
         }
-        if(!website.isEmpty())
-        {
-            params.put("website",website);
+        if (!website.isEmpty()) {
+            params.put("website", website);
         }
-        if(!searchName.isEmpty())
-        {
-            try{
-                searchName = new String(searchName.getBytes("ISO-8859-1"),"utf-8");
-            }
-            catch (UnsupportedEncodingException e)
-            {
+        if (!searchName.isEmpty()) {
+            try {
+                searchName = new String(searchName.getBytes("ISO-8859-1"), "utf-8");
+            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            params.put("searchName",searchName);
+            params.put("searchName", searchName);
         }
-        if(!searchUserName.isEmpty())
-        {
-            params.put("searchUserNameId",searchUserName);
+        if (!searchUserName.isEmpty()) {
+            params.put("searchUserNameId", searchUserName);
         }
-        if(!state.isEmpty())
-        {
-            params.put("state",state);
+        if (!state.isEmpty()) {
+            params.put("state", state);
         }
-        if(!state2.isEmpty())
-        {
-            params.put("state2",state2);
+        if (!state2.isEmpty()) {
+            params.put("state2", state2);
         }
-        if(!searchStandard.isEmpty())
-        {
-            params.put("searchStandard",searchStandard);
+        if (!searchStandard.isEmpty()) {
+            params.put("searchStandard", searchStandard);
         }
-        if(sortName!=null)
-        {
-            params.put("sortName",sortName);
-            params.put("sortOrder",sortOrder);
+        if (sortName != null) {
+            params.put("sortName", sortName);
+            params.put("sortOrder", sortOrder);
         }
-        params.put("limit",limit);
-        params.put("offset",offset);
-        params.put("way",way);
-        Map<String, Object> modelMap=billService.getBillDetails(params,user);
-        return  modelMap;
+        params.put("limit", limit);
+        params.put("offset", offset);
+        params.put("way", way);
+        Map<String, Object> modelMap = billService.getBillDetails(params, user);
+        return modelMap;
     }
 
     /**
-     *  相同价提交
+     * 相同价提交
+     *
      * @return
      */
-    @RequestMapping(value = "/list/sameprice",method = RequestMethod.POST)
+    @RequestMapping(value = "/list/sameprice", method = RequestMethod.POST)
     @ResponseBody
     public ResultMessage samePrice(HttpServletRequest request) {
 
         //getParameterMap()，获得请求参数map
-        Map<String,String[]> map= request.getParameterMap();
+        Map<String, String[]> map = request.getParameterMap();
         LoginUser user = this.getCurrentAccount();
-        String errorDetails=billService.saveSameBill(map,user);
+        String errorDetails = billService.saveSameBill(map, user);
         return this.ajaxDoneSuccess(errorDetails);
     }
 
     /**
      * 不同价导入
+     *
      * @return
      */
-    @RequestMapping(value = "/list/diffrentprice",method = RequestMethod.POST)
+    @RequestMapping(value = "/list/diffrentprice", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMessage diffrentprice(HttpServletRequest request)
-    {
+    public ResultMessage diffrentprice(HttpServletRequest request) {
         //getParameterMap()，获得请求参数map
-        Map<String,String[]> map= request.getParameterMap();
+        Map<String, String[]> map = request.getParameterMap();
         LoginUser user = this.getCurrentAccount();
-       String  errorDetails= billService.savaDiffrentBill( map,user );
+        String errorDetails = billService.savaDiffrentBill(map, user);
 
         return this.ajaxDoneSuccess(errorDetails);
     }
 
     /**
      * 调整价格
+     *
      * @return
      */
-    @RequestMapping(value = "/billList/updatePrice",method = RequestMethod.POST)
+    @RequestMapping(value = "/billList/updatePrice", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMessage updatePrice( HttpServletRequest request, HttpServletResponse response)
-    {
-        Map<String, String[]> params= request.getParameterMap();
+    public ResultMessage updatePrice(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String[]> params = request.getParameterMap();
         LoginUser user = this.getCurrentAccount();
-        if (user!=null)
-        {
-            int a=billService.updateBillPrice(params,user);
-            if(a==0)
-            {
-                return  this.ajaxDoneSuccess("调整成功!");
-            }
-            else
-            {
-                return  this.ajaxDoneError("未知错误,请稍后再试!");
+        if (user != null) {
+            int a = billService.updateBillPrice(params, user);
+            if (a == 0) {
+                return this.ajaxDoneSuccess("调整成功!");
+            } else {
+                return this.ajaxDoneError("未知错误,请稍后再试!");
             }
 
-        }
-       else
-        {
-            return  this.ajaxDoneError("未登录");
+        } else {
+            return this.ajaxDoneError("未登录");
         }
 
 
@@ -518,110 +468,95 @@ public class BillController extends BaseController {
 
     /**
      * 渠道商审核订单
+     *
      * @param request
      * @param response
      * @return
      */
-    @RequestMapping(value = "/billList/distributorPrice",method = RequestMethod.POST)
+    @RequestMapping(value = "/billList/distributorPrice", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMessage distributorPrice( HttpServletRequest request, HttpServletResponse response)
-    {
-        Map<String, String[]> params= request.getParameterMap();
+    public ResultMessage distributorPrice(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String[]> params = request.getParameterMap();
 
         User user = this.getCurrentAccount();
-        if(user!=null)
-        {
-            int a=billService.distributorPrice(params,user);
-            if(a==0)
-            {
-                return  this.ajaxDoneSuccess("成功！");
-            }
-
-            else
-            {
-                return  this.ajaxDoneError("订单信息有误，无法审核！");
+        if (user != null) {
+            int a = billService.distributorPrice(params, user);
+            if (a == 0) {
+                return this.ajaxDoneSuccess("成功！");
+            } else {
+                return this.ajaxDoneError("订单信息有误，无法审核！");
             }
         }
-        return  this.ajaxDoneError("未登录");
+        return this.ajaxDoneError("未登录");
 
     }
+
     /**
      * 管理员审核订单
+     *
      * @param request
      * @param response
      * @return
      */
-    @RequestMapping(value = "/billList/adminPrice",method = RequestMethod.POST)
+    @RequestMapping(value = "/billList/adminPrice", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMessage adminPrice( HttpServletRequest request, HttpServletResponse response)
-    {
-        Map<String, String[]> params= request.getParameterMap();
+    public ResultMessage adminPrice(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String[]> params = request.getParameterMap();
 
         User user = this.getCurrentAccount();
-        if(user!=null)
-        {
-            int a=billService.adminPrice(params,user);
-            if(a==0)
-            {
-                return  this.ajaxDoneSuccess("审核成功！");
-            }
-
-            else
-            {
-                return  this.ajaxDoneError("订单信息有误，无法审核！");
+        if (user != null) {
+            int a = billService.adminPrice(params, user);
+            if (a == 0) {
+                return this.ajaxDoneSuccess("审核成功！");
+            } else {
+                return this.ajaxDoneError("订单信息有误，无法审核！");
             }
 
         }
-        return  this.ajaxDoneError("未登录");
+        return this.ajaxDoneError("未登录");
 
     }
 
     /**
      * 优化停止
+     *
      * @param request
      * @return
      */
-   @RequestMapping(value ="/billList/optimizationStop")
-   @ResponseBody
-    public  ResultMessage optimizationStop(HttpServletRequest request)
-    {
-        Map<String, String[]> params= request.getParameterMap();
-        LoginUser user=this.getCurrentAccount();
-        if(user!=null)
-        {
+    @RequestMapping(value = "/billList/optimizationStop")
+    @ResponseBody
+    public ResultMessage optimizationStop(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap();
+        LoginUser user = this.getCurrentAccount();
+        if (user != null) {
 
-            int a=  billService.optimizationStop(params,user);
-            return  this.ajaxDoneSuccess("操作成功");
+            int a = billService.optimizationStop(params, user);
+            return this.ajaxDoneSuccess("操作成功");
 
-        }
-        else
-        {
-            return  this.ajaxDoneError("未登录");
+        } else {
+            return this.ajaxDoneError("未登录");
         }
 
     }
 
     /**
      * 启动优化
+     *
      * @param request
      * @return
      */
-    @RequestMapping(value ="/billList/optimizationStart")
+    @RequestMapping(value = "/billList/optimizationStart")
     @ResponseBody
-    public  ResultMessage optimizationStart(HttpServletRequest request)
-    {
-        Map<String, String[]> params= request.getParameterMap();
-        LoginUser user=this.getCurrentAccount();
-        if(user!=null)
-        {
+    public ResultMessage optimizationStart(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap();
+        LoginUser user = this.getCurrentAccount();
+        if (user != null) {
 
-            int a=  billService.optimizationStart(params,user);
-            return  this.ajaxDoneSuccess("操作成功");
+            int a = billService.optimizationStart(params, user);
+            return this.ajaxDoneSuccess("操作成功");
 
-        }
-        else
-        {
-            return  this.ajaxDoneError("未登录");
+        } else {
+            return this.ajaxDoneError("未登录");
         }
 
     }
@@ -629,154 +564,135 @@ public class BillController extends BaseController {
 
     /**
      * 待审核订单table表格获取数据(确认审核页面)
+     *
      * @param limit
      * @param offset
      * @return
      */
     @RequestMapping(value = "/pendingAuditList")
     @ResponseBody
-    public Map<String,Object> pendingAuditList(HttpServletRequest request,@RequestParam(required = true) int limit,
-                                               @RequestParam(required = true)int offset,String website,String keywords,
-                                               String searchName,String searchUserName ,String sortOrder, String sortName)
-    {
+    public Map<String, Object> pendingAuditList(HttpServletRequest request, @RequestParam(required = true) int limit,
+                                                @RequestParam(required = true) int offset, String website, String keywords,
+                                                String searchName, String searchUserName, String sortOrder, String sortName) {
 
-        offset=(offset-1)*limit;
-         Map<String, Object> params = this.getSearchRequest(); //查询参数
-        LoginUser user=this.getCurrentAccount();
+        offset = (offset - 1) * limit;
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        LoginUser user = this.getCurrentAccount();
 
-        params.put("limit",limit);
-        params.put("offset",offset);
-        if(!keywords.isEmpty())
-        {
-            try{
-                keywords = new String(keywords.getBytes("ISO-8859-1"),"utf-8");
-            }
-            catch (UnsupportedEncodingException e)
-            {
+        params.put("limit", limit);
+        params.put("offset", offset);
+        if (!keywords.isEmpty()) {
+            try {
+                keywords = new String(keywords.getBytes("ISO-8859-1"), "utf-8");
+            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            params.put("keywords",keywords);
+            params.put("keywords", keywords);
         }
-        if(!website.isEmpty())
-        {
-            params.put("website",website);
+        if (!website.isEmpty()) {
+            params.put("website", website);
         }
-        if(!searchName.isEmpty())
-        {
-            try{
-                searchName = new String(searchName.getBytes("ISO-8859-1"),"utf-8");
-            }
-            catch (UnsupportedEncodingException e)
-            {
+        if (!searchName.isEmpty()) {
+            try {
+                searchName = new String(searchName.getBytes("ISO-8859-1"), "utf-8");
+            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            params.put("searchName",searchName);
+            params.put("searchName", searchName);
         }
-        if(!searchUserName.isEmpty())
-        {
-            params.put("searchUserNameId",searchUserName);
+        if (!searchUserName.isEmpty()) {
+            params.put("searchUserNameId", searchUserName);
         }
-        if(sortName!=null)
-        {
-            params.put("sortName",sortName);
-            params.put("sortOrder",sortOrder);
+        if (sortName != null) {
+            params.put("sortName", sortName);
+            params.put("sortOrder", sortOrder);
         }
 
-        Map<String, Object> modelMap=billService.pendingAuditList(params,user);
-        return  modelMap;
+        Map<String, Object> modelMap = billService.pendingAuditList(params, user);
+        return modelMap;
     }
+
     /**
      * 待审核订单（预览）
+     *
      * @param request
      * @return
      */
     @RequestMapping(value = "/pendingAuditView")
-    public  String pendingAuditView(HttpServletRequest request,ModelMap model)
-    {
-        User user=this.getCurrentAccount();
-        Map<String,Long> params=new HashMap<>();
+    public String pendingAuditView(HttpServletRequest request, ModelMap model) {
+        User user = this.getCurrentAccount();
+        Map<String, Long> params = new HashMap<>();
         //查询当前登录对象对应的客户
-        params.put("createId",user.getId());
-        List<User> userList=userService.userCreater(params);
-        model.put("userList",userList);
+        params.put("createId", user.getId());
+        List<User> userList = userService.userCreater(params);
+        model.put("userList", userList);
         return "/bill/billPendingAuditView";
     }
+
     /**
      * 待审核订单预览
+     *
      * @param limit
      * @param offset
      * @return
      */
     @RequestMapping(value = "/pendingAuditViewList")
     @ResponseBody
-    public Map<String,Object> pendingAuditViewList(HttpServletRequest request,@RequestParam(required = true) int limit,
-                                                   @RequestParam(required = true)int offset,String website,String keywords,
-                                                   String searchName,String searchUserName, String state)
-    {
+    public Map<String, Object> pendingAuditViewList(HttpServletRequest request, @RequestParam(required = true) int limit,
+                                                    @RequestParam(required = true) int offset, String website, String keywords,
+                                                    String searchName, String searchUserName, String state) {
 
-        LoginUser user=this.getCurrentAccount();
+        LoginUser user = this.getCurrentAccount();
 
 
         int way;
-        if(user.hasRole("DISTRIBUTOR"))
-        {
-            way=3;
+        if (user.hasRole("DISTRIBUTOR")) {
+            way = 3;
+        } else {
+            way = 2;
         }
-        else
-        {
-            way=2;
-        }
-        offset=(offset-1)*limit;
+        offset = (offset - 1) * limit;
         Map<String, Object> params = this.getSearchRequest(); //查询参数
 
-        if(!keywords.isEmpty())
-        {
-            try{
-                keywords = new String(keywords.getBytes("ISO-8859-1"),"utf-8");
-            }
-            catch (UnsupportedEncodingException e)
-            {
+        if (!keywords.isEmpty()) {
+            try {
+                keywords = new String(keywords.getBytes("ISO-8859-1"), "utf-8");
+            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            params.put("keywords",keywords);
+            params.put("keywords", keywords);
         }
-        if(!website.isEmpty())
-        {
-            params.put("website",website);
+        if (!website.isEmpty()) {
+            params.put("website", website);
         }
-        if(!searchName.isEmpty())
-        {
-            try{
-                searchName = new String(searchName.getBytes("ISO-8859-1"),"utf-8");
-            }
-            catch (UnsupportedEncodingException e)
-            {
+        if (!searchName.isEmpty()) {
+            try {
+                searchName = new String(searchName.getBytes("ISO-8859-1"), "utf-8");
+            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            params.put("searchName",searchName);
+            params.put("searchName", searchName);
         }
-        if(!searchUserName.isEmpty())
-        {
-            params.put("searchUserNameId",searchUserName);
+        if (!searchUserName.isEmpty()) {
+            params.put("searchUserNameId", searchUserName);
         }
-        if(!state.isEmpty())
-        {
-            params.put("state",state);
+        if (!state.isEmpty()) {
+            params.put("state", state);
         }
-        if(user.hasRole("AGENT"))
-        {
-            params.put("state2",0);
+        if (user.hasRole("AGENT")) {
+            params.put("state2", 0);
         }
-        params.put("limit",limit);
-        params.put("offset",offset);
-        params.put("way",way);
+        params.put("limit", limit);
+        params.put("offset", offset);
+        params.put("way", way);
 
-        Map<String, Object> modelMap=billService.getBillDetails(params,user);
-        return  modelMap;
+        Map<String, Object> modelMap = billService.getBillDetails(params, user);
+        return modelMap;
     }
 
     /**
      * 价格详情
+     *
      * @param request
      * @param limit
      * @param offset
@@ -784,39 +700,34 @@ public class BillController extends BaseController {
      * @param way
      * @return
      */
-    @RequestMapping(value = "/getPriceDetails",method = RequestMethod.GET)
+    @RequestMapping(value = "/getPriceDetails", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String,Object> getPriceDetails(HttpServletRequest request,@RequestParam(required = true) int limit,
-                                              @RequestParam(required = true) int offset, @RequestParam(required = true) String billId,
-                                              @RequestParam(required = true) String way)
-    {
-         LoginUser user=this.getCurrentAccount();
-         if(!billId.isEmpty())
-         {
-             offset=(offset-1)*limit;
-             Map<String,Object> map=billService.getPriceDetails(limit,offset,billId,user,way);
-             return map;
-         }
-        else
-         {
-             return  null;
+    public Map<String, Object> getPriceDetails(HttpServletRequest request, @RequestParam(required = true) int limit,
+                                               @RequestParam(required = true) int offset, @RequestParam(required = true) String billId,
+                                               @RequestParam(required = true) String way) {
+        LoginUser user = this.getCurrentAccount();
+        if (!billId.isEmpty()) {
+            offset = (offset - 1) * limit;
+            Map<String, Object> map = billService.getPriceDetails(limit, offset, billId, user, way);
+            return map;
+        } else {
+            return null;
 
-         }
+        }
     }
 
     /**
      * 订单反馈
+     *
      * @param request
      * @param modelMap
      * @return
      */
-    @RequestMapping(value = "/billFeedback",method = RequestMethod.GET)
-    public  String billFeedback(HttpServletRequest request,ModelMap modelMap)
-    {
-        String website=request.getParameter("website");
-         LoginUser loginUser=this.getCurrentAccount();
-        if(loginUser!=null)
-        {
+    @RequestMapping(value = "/billFeedback", method = RequestMethod.GET)
+    public String billFeedback(HttpServletRequest request, ModelMap modelMap) {
+        String website = request.getParameter("website");
+        LoginUser loginUser = this.getCurrentAccount();
+        if (loginUser != null) {
             billService.billFeedback(website);
         }
         return "/bill/billFeedback";
@@ -824,30 +735,31 @@ public class BillController extends BaseController {
 
     /**
      * 审核订单
+     *
      * @param model
      * @param way
      * @return
      */
     @RequestMapping(value = "/billApplyStop")
-    public  String billApplyStop(ModelMap model)
-    {
+    public String billApplyStop(ModelMap model) {
 
-            Map<String, Object> bms = new HashMap<>();
-            LoginUser user = this.getCurrentAccount();
-            bms.put("user", user);
-            model.addAttribute("bmsModel", bms);
+        Map<String, Object> bms = new HashMap<>();
+        LoginUser user = this.getCurrentAccount();
+        bms.put("user", user);
+        model.addAttribute("bmsModel", bms);
 
         return "/bill/billApplyStop";
     }
+
     /**
      * 审核订单
+     *
      * @param model
      * @param
      * @return
      */
     @RequestMapping(value = "/billApplyStopPass")
-    public  String billApplyStopPass(ModelMap model)
-    {
+    public String billApplyStopPass(ModelMap model) {
 
         Map<String, Object> bms = new HashMap<>();
         LoginUser user = this.getCurrentAccount();
@@ -859,128 +771,222 @@ public class BillController extends BaseController {
 
     /**
      * 申请停单
+     *
      * @param request
      * @return
      */
-    @RequestMapping(value ="/applyStopBillConfirm")
+    @RequestMapping(value = "/applyStopBillConfirm")
     @ResponseBody
-    public  ResultMessage applyStopBillConfirm(HttpServletRequest request)
-    {
-        Map<String, String[]> params= request.getParameterMap();
-        LoginUser user=this.getCurrentAccount();
-        if(user!=null)
-        {
+    public ResultMessage applyStopBillConfirm(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap();
+        LoginUser user = this.getCurrentAccount();
+        if (user != null) {
 
-            int a=  billService.applyStopBillConfirm(params,user);
-            return  this.ajaxDoneSuccess("操作成功");
+            int a = billService.applyStopBillConfirm(params, user);
+            return this.ajaxDoneSuccess("操作成功");
 
-        }
-        else
-        {
-            return  this.ajaxDoneError("未登录");
+        } else {
+            return this.ajaxDoneError("未登录");
         }
 
     }
+
     /**
      * 申请停单通过
+     *
      * @param request
      * @return
      */
-    @RequestMapping(value ="/applyStopBillPass")
+    @RequestMapping(value = "/applyStopBillPass")
     @ResponseBody
-    public  ResultMessage applyStopBillPass(HttpServletRequest request)
-    {
-        Map<String, String[]> params= request.getParameterMap();
-        LoginUser user=this.getCurrentAccount();
-        if(user!=null)
-        {
+    public ResultMessage applyStopBillPass(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap();
+        LoginUser user = this.getCurrentAccount();
+        if (user != null) {
 
-            int a=  billService.applyStopBillPass(params,user);
-            return  this.ajaxDoneSuccess("操作成功");
+            int a = billService.applyStopBillPass(params, user);
+            return this.ajaxDoneSuccess("操作成功");
 
-        }
-        else
-        {
-            return  this.ajaxDoneError("未登录");
+        } else {
+            return this.ajaxDoneError("未登录");
         }
 
     }
 
     /**
      * 审核订单table数据
+     *
      * @param
      * @param
      * @return
      */
     @RequestMapping(value = "/billApplyStopTable")
     @ResponseBody
-    public   Map<String,Object> billApplyStopTable(int limit, int offset,String sortOrder, String sortName)
-    {
-        offset=(offset-1)*limit;
+    public Map<String, Object> billApplyStopTable(int limit, int offset, String sortOrder, String sortName) {
+        offset = (offset - 1) * limit;
         Map<String, Object> params = this.getSearchRequest(); //查询参数
-        LoginUser user=this.getCurrentAccount();
+        LoginUser user = this.getCurrentAccount();
 
-        params.put("limit",limit);
-        params.put("offset",offset);
-        if(user.hasRole("SUPER_ADMIN"))
-        {
-            params.put("way",2);
-        }
-        else
-        {
-            params.put("way",1);
+        params.put("limit", limit);
+        params.put("offset", offset);
+        if (user.hasRole("SUPER_ADMIN")) {
+            params.put("way", 2);
+        } else {
+            params.put("way", 1);
         }
 
-        if(user.hasRole("DISTRIBUTOR"))
-        {
-            params.put("applyState",2);
+        if (user.hasRole("DISTRIBUTOR")) {
+            params.put("applyState", 2);
+        } else {
+            params.put("applyState", 1);
         }
-       else
-        {
-            params.put("applyState",1);
-        }
-        params.put("state",2);
-        Map<String, Object> modelMap=billService.getBillDetails(params,user);
-        return  modelMap;
+        params.put("state", 2);
+        Map<String, Object> modelMap = billService.getBillDetails(params, user);
+        return modelMap;
 
     }
 
     /**
      * 审核通过table数据
+     *
      * @param
      * @param
      * @return
      */
     @RequestMapping(value = "/billApplyStopPassTable")
     @ResponseBody
-    public   Map<String,Object> billApplyStopPassTable(int limit, int offset,String sortOrder, String sortName)
-    {
-        offset=(offset-1)*limit;
+    public Map<String, Object> billApplyStopPassTable(int limit, int offset, String sortOrder, String sortName) {
+        offset = (offset - 1) * limit;
         Map<String, Object> params = this.getSearchRequest(); //查询参数
-        LoginUser user=this.getCurrentAccount();
+        LoginUser user = this.getCurrentAccount();
 
-        params.put("limit",limit);
-        params.put("offset",offset);
-        if(user.hasRole("SUPER_ADMIN"))
-        {
-            params.put("way",2);
-        }
-        else
-        {
-            params.put("way",1);
+        params.put("limit", limit);
+        params.put("offset", offset);
+        if (user.hasRole("SUPER_ADMIN")) {
+            params.put("way", 2);
+        } else {
+            params.put("way", 1);
         }
 
-        if(user.hasRole("DISTRIBUTOR"))
-        {
-            params.put("applyState",1);
+        if (user.hasRole("DISTRIBUTOR")) {
+            params.put("applyState", 1);
+        } else {
+            params.put("applyState", 2);
         }
-        else
-        {
-            params.put("applyState",2);
-        }
-        params.put("state",2);
-        Map<String, Object> modelMap=billService.getBillDetails(params,user);
-        return  modelMap;
+        params.put("state", 2);
+        Map<String, Object> modelMap = billService.getBillDetails(params, user);
+        return modelMap;
 
+    }
+
+    /**
+     * 优化结算
+     *
+     * @param modelMap
+     * @return
+     */
+    @RequestMapping(value = "/billOptimizationSettlement")
+    public String billOptimizationSettlement(ModelMap model) {
+
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> bms = billService.billOptimizationSettlement(loginUser);
+        model.addAttribute("bmsModel", bms);
+        return "/bill/billOptimizationSettlement";
+
+    }
+
+    //导出excel(实例)
+    @RequestMapping(value = "/export.controller")
+    public void export(String ids, HttpServletResponse response) throws IOException {
+        // 只是让浏览器知道要保存为什么文件而已，真正的文件还是在流里面的数据，你设定一个下载类型并不会去改变流里的内容。
+        //而实际上只要你的内容正确，文件后缀名之类可以随便改，就算你指定是下载excel文件，下载时我也可以把他改成pdf等。
+        System.out.println(ids);
+        response.setContentType("application/vnd.ms-excel");
+        // 传递中文参数编码
+        String codedFileName = java.net.URLEncoder.encode("中文", "UTF-8");
+        response.setHeader("content-disposition", "attachment;filename=" + codedFileName + ".xls");
+        List<User> list = new ArrayList<User>();
+        String[] array = ids.split(",");
+        int[] id = new int[array.length];
+        for (int i = 0; i < id.length; i++) {
+            // User user = service.getById(Integer.valueOf(array[i]));
+
+            // 将数据添加到list中
+            // list.add(user);
+        }
+        // 定义一个工作薄
+        Workbook workbook = new HSSFWorkbook();
+        // 创建一个sheet页
+        Sheet sheet = workbook.createSheet("学生信息");
+        // 创建一行
+        Row row = sheet.createRow(0);
+        // 在本行赋值 以0开始
+        row.createCell(0).setCellValue("编号");
+        row.createCell(1).setCellValue("姓名");
+        row.createCell(2).setCellValue("性别");
+        row.createCell(3).setCellValue("年龄");
+        // 定义样式
+        CellStyle cellStyle = workbook.createCellStyle();
+        // 格式化日期
+        //cellStyle.setDataFormat(HSSFDataFormat.getBuiltinFormat("m/d/yy"));
+        // 遍历输出
+        for (int i = 1; i <= list.size(); i++) {
+            User user1 = list.get(i - 1);
+            row = sheet.createRow(i);
+
+
+        }
+        OutputStream fOut = response.getOutputStream();
+        workbook.write(fOut);
+        fOut.flush();
+        fOut.close();
+    }
+
+    @RequestMapping(value = "uploadPrice")
+    public String importUser(HttpServletRequest request,MultipartFile file) {
+        String fileType = "";
+        try {
+            String fileName = file.getOriginalFilename();
+            fileType = fileName.substring(fileName.lastIndexOf(".") + 1,
+                    fileName.lastIndexOf(".") + 4);
+        } catch (Exception e) {
+
+            fileType = "";
+        }
+        if (!fileType.toLowerCase().equals("xls")) {
+
+            return "导入的文件格式不正确，应该不是excel文件";
+        }
+        HSSFWorkbook wb = null;
+        try {
+            wb = new HSSFWorkbook(file.getInputStream());
+            // logger.debug(wb.getNumberOfSheets());
+            HSSFSheet sheet = wb.getSheetAt(0);
+
+            for(int i = sheet.getFirstRowNum();i<=sheet.getLastRowNum();i++){
+                HSSFRow row = sheet.getRow(i);
+                //在这里匹配数据库
+                String website=row.getCell(0).toString();
+                String keywords=row.getCell(1).toString();
+                Bill bill=new Bill();//组包
+
+
+              /*  row.getCell()*/
+                Iterator cells = row.cellIterator();
+                while(cells.hasNext()){
+                    HSSFCell cell = (HSSFCell) cells.next();
+
+                }
+            }
+
+
+            return "";
+
+        } catch (Exception e) {
+
+
+        }
+
+        return  "";
     }
 }

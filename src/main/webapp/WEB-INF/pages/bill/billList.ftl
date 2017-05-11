@@ -94,6 +94,31 @@
     <div class="cls">
     </div>
 </div>
+<form id= "uploadForm">
+    <p >指定文件名： <input type="text" name="filename" value= ""/></p >
+    <p >上传文件： <input type="file" name="file"/></ p>
+    <input type="button" value="上传" onclick="doUpload()" />
+</form>
+<script>
+    function doUpload() {
+        var formData = new FormData($( "#uploadForm" )[0]);
+        $.ajax({
+            url:CTX+ '/order/uploadPrice' ,
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (returndata) {
+                alert(returndata);
+            },
+            error: function (returndata) {
+                alert(returndata);
+            }
+        });
+    }
+</script>
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-primary" id="list-panel">

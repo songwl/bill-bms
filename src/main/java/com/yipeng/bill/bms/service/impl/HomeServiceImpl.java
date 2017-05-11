@@ -72,7 +72,7 @@ public class HomeServiceImpl implements HomeService {
         String seriesNowMonth="";
         Calendar calendar1 = Calendar.getInstance();
         calendar1.setTime(dateNow); // 设置为当前时间
-        calendar1.set(Calendar.MONTH, calendar.get(Calendar.MONTH)+1); // 设置为下一个月
+        calendar1.set(Calendar.MONTH, calendar1.get(Calendar.MONTH)+1); // 设置为下一个月
         //下一个月的日期
         Date nextMonth=null;
         try {
@@ -255,7 +255,7 @@ public class HomeServiceImpl implements HomeService {
                 {
                     MaxYbyNew=keywordsCount;
                 }
-                if(MaxYbyNewCost<=keywordsCount)
+                if(MaxYbyNewCost<=keywordsSum)
                 {
                     MaxYbyNewCost=keywordsSum;
                 }
@@ -452,7 +452,7 @@ public class HomeServiceImpl implements HomeService {
                 {
                     MaxYbyNew=keywordsCount;
                 }
-                if(MaxYbyNewCost<=keywordsCount)
+                if(MaxYbyNewCost<=keywordsSum)
                 {
                     MaxYbyNewCost=keywordsSum;
                 }
@@ -651,7 +651,7 @@ public class HomeServiceImpl implements HomeService {
                 {
                     MaxYbyNew=keywordsCount;
                 }
-                if(MaxYbyNewCost<=keywordsCount)
+                if(MaxYbyNewCost<=keywordsSum)
                 {
                     MaxYbyNewCost=keywordsSum;
                 }

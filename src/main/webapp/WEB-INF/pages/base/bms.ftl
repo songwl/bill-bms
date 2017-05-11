@@ -75,11 +75,11 @@
                 </a>
                 <ul class="dropdown-menu userDetails">
 
-                    <li clas="updateUser">
+                  <#--  <li clas="updateUser">
                         <a class="dlg-user-edit-info">
                             <i class="icon-user"></i> 基本资料
                         </a>
-                    </li>
+                    </li>-->
 
                     <li class="updatePwd">
                         <a class="dlg-user-edit-pwd">
@@ -194,6 +194,12 @@
                                         关键词排名
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="${ctx}/order/billOptimizationSettlement">
+                                        优化结算
+                                    </a>
+                                </li>
+
                                 <li>
                                     <a href="${ctx}/order/billApplyStop">
                                         停单待审核列表

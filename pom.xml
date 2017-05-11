@@ -100,6 +100,8 @@
             <artifactId>spring-aspects</artifactId>
             <version>${spring.version}</version>
         </dependency>
+
+
         <!--spring 框架-->
 
         <!-- apache -->
@@ -108,8 +110,12 @@
             <artifactId>commons-collections</artifactId>
             <version>3.2.1</version>
         </dependency>
-
-
+        <!-- poi -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.9</version>
+        </dependency>
 
         <!--Json依赖-->
         <dependency>

@@ -184,7 +184,7 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 col-md-2 hidden-xs">
+    <#--<div class="col-sm-6 col-md-2 hidden-xs">
         <div class="statbox widget box box-shadow">
             <div class="widget-content">
                 <div class="visual cyan">
@@ -198,7 +198,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
     <div class="col-sm-6 col-md-2 hidden-xs">
         <div class="statbox widget box box-shadow">
             <div class="widget-content">
@@ -210,25 +210,6 @@
                 </div>
                 <div class="value">
                 ${bmsModel.sougouCompleteness}%
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<div class="row row-bg">
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual green">
-                    <i class="fa fa-tasks"></i>
-                </div>
-                <div class="title">
-                    搜狗手机完成率
-                </div>
-                <div class="value">
-                ${bmsModel.sougouWapWapCompleteness}%
                 </div>
             </div>
         </div>
@@ -248,7 +229,27 @@
             </div>
         </div>
     </div>
+
 </div>
+
+<#--<div class="row row-bg">
+  &lt;#&ndash;  <div class="col-sm-6 col-md-2 hidden-xs">
+        <div class="statbox widget box box-shadow">
+            <div class="widget-content">
+                <div class="visual green">
+                    <i class="fa fa-tasks"></i>
+                </div>
+                <div class="title">
+                    搜狗手机完成率
+                </div>
+                <div class="value">
+                ${bmsModel.sougouWapWapCompleteness}%
+                </div>
+            </div>
+        </div>
+    </div>&ndash;&gt;
+
+</div>-->
 
 
 <div id="container1" style="width: 100%; height: 400px; float:left;;"></div>

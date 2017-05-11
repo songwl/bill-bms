@@ -53,6 +53,7 @@ $(document).ready(function () {
         $(".updatePwdDiv").slideUp();
 
     })
+
     //信息修改
     $(".updateUser").click(function () {
         $(".modal-backdrop").show();

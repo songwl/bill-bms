@@ -113,6 +113,13 @@ var TableInit = function () {
 
                 },
                 {
+                    field: 'userNameByKehu',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '子级客户',
+
+                },
+                {
                     field: 'keywords',
                     align: 'center',
                     valign: 'middle',
@@ -123,6 +130,7 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '网址',
+                    sortable: true,
 
                 }, {
                     field: 'searchName',

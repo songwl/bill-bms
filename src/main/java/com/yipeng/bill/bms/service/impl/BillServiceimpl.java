@@ -36,6 +36,8 @@ import java.beans.Encoder;
 import java.io.*;
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -404,12 +406,29 @@ public class BillServiceimpl implements BillService {
                 billDetails.setId(bill.getId());
                 User user1= userMapper.selectByPrimaryKey(bill.getUpdateUserId());
                 billDetails.setUserName(user1.getUserName());
+                 //通过单价表里面的inmemberId获取outMembenId  从而获取客户名
+                BillPrice billPrice=new BillPrice();
+                billPrice.setBillId(bill.getId());
+                billPrice.setInMemberId(user1.getId());
+                List<BillPrice>  billPriceList=billPriceMapper.selectByBillPrice(billPrice);
+                //判断是否为空
+                if(!CollectionUtils.isEmpty(billPriceList))
+                {
+                    //查询对应客户
+                    User kehuName=userMapper.selectByPrimaryKey(billPriceList.get(0).getOutMemberId());
+                    billDetails.setUserNameByKehu(kehuName.getUserName());
+                }
+
+
+
                 billDetails.setKeywords(bill.getKeywords());
                 billDetails.setWebsite(bill.getWebsite());
                 //查出搜索引擎
                 BillSearchSupport billSearchSupport=  billSearchSupportMapper.selectByBillId(bill.getId());
                 billDetails.setSearchName(billSearchSupport.getSearchSupport());
-                billDetails.setCreateTime(DateUtils.formatDate(bill.getCreateTime()));
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+                billDetails.setCreateTime(sdf.format(bill.getCreateTime()));
                 billDetails.setUpdateUserId(bill.getUpdateUserId());
                 billDetails.setFirstRanking(bill.getFirstRanking());
                 billDetails.setNewRanking(bill.getNewRanking());
@@ -1873,4 +1892,252 @@ public class BillServiceimpl implements BillService {
 
         return 0;
     }
+
+    @Override
+    public Map<String, Object> billOptimizationSettlement(LoginUser loginUser) {
+        //返回对象
+        Map<String, Object> map=new HashMap<>();
+        //查询参数
+        Map<String, Object> params=new HashMap<>();
+        params.put("userId",loginUser.getCreateUserId());
+        //本月消费
+        Double MonthConsumption=MonthConsumption(params);
+        if(MonthConsumption!=null)
+        { map.put("MonthConsumption",MonthConsumption);
+        }
+        else
+        {
+            map.put("MonthConsumption","0.00");
+        }
+
+
+
+        //本日消费
+        Double DayConsumption=DayConsumption(params);
+        if(DayConsumption!=null)
+        { map.put("DayConsumption",DayConsumption);
+        }
+        else
+        {
+            map.put("DayConsumption","0.00");
+        }
+        //获取上一个月
+        DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+        //转换时间
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String daynow=formatter.format(new Date());
+        //当前时间
+        Date dateNow=null;
+        try {
+            dateNow = format1.parse(daynow);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dateNow); // 设置为当前时间
+        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1); // 设置为上一个月
+        //上一个月的日期
+        Date preMonth=null;
+        try {
+            preMonth = format1.parse( formatter.format(calendar.getTime()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //上一个月的天数
+        int monthPreCount=0;
+        monthPreCount=getDaysOfMonth(preMonth);
+        //上个月消费
+        String seriesLastMonthSum="";
+        //循环获取上个月每天的达标数
+        Map<String,Object> dateMap=new  HashMap<>();
+        dateMap.put("userId",loginUser.getCreateUserId());
+        //判断Y轴任务数的显示
+        int MaxYbylast=0;
+        //判断Y轴消费的显示
+        double MaxYbylastCost=0;
+        //某个月的第一天和最后一天
+        Map<String, String> maps = getFirstday_Lastday_Month(dateNow);
+        String fistDay=maps.get("first");
+        //将第一日转换为Date格式
+        Date fistDate=null;
+        try {
+            fistDate = format1.parse(fistDay);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        for(int i=0;i<monthPreCount;i++)
+        {
+            calendar.setTime(fistDate);
+            calendar.add(Calendar.DAY_OF_MONTH, i);
+            Date tomorrow = calendar.getTime();
+            String str=formatter.format(tomorrow);
+            dateMap.put("date",str);
+            Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
+
+            //比较消费最大数
+            if(MaxYbylastCost<=keywordsSum)
+            {
+                MaxYbylastCost=keywordsSum;
+            }
+            seriesLastMonthSum+=keywordsSum+",";
+
+        }
+        //上个月的达标数
+        //下一个月的日期
+
+        map.put("seriesLastMonthSum",seriesLastMonthSum);
+
+        //判断Y轴的显示
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.setTime(dateNow); // 设置为当前时间
+        calendar1.set(Calendar.MONTH, calendar1.get(Calendar.MONTH)+1); // 设置为下一个月
+        //下一个月的日期
+        Date nextMonth=null;
+        try {
+            nextMonth = format1.parse( formatter.format(calendar1.getTime()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Map<String, String> mapss = getFirstday_Lastday_Month(nextMonth);
+        String fistDaysNow=mapss.get("first");
+        //将第一日转换为Date格式
+        Date fistDateNow=null;
+        try {
+            fistDateNow = format1.parse(fistDaysNow);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        int MaxYbyNew=0;
+        double MaxYbyNewCost=0;
+        String seriesNowMonthSum="";
+        int monthNowCount = calendar1.get(Calendar.DAY_OF_MONTH);
+        for(int i=0;i<monthNowCount;i++)
+        {
+            calendar.setTime(fistDateNow);
+            calendar.add(Calendar.DAY_OF_MONTH, i);
+            Date tomorrow = calendar.getTime();
+            String str1=formatter.format(tomorrow);
+            dateMap.put("date",str1);
+            Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
+
+            if(MaxYbyNewCost<=keywordsSum)
+            {
+                MaxYbyNewCost=keywordsSum;
+            }
+            seriesNowMonthSum+=keywordsSum+",";
+
+        }
+
+
+        String yAxisSum="";
+        if(MaxYbyNewCost!=0)
+        {
+            yAxisSum=getYAxisSum(MaxYbyNewCost);
+        }
+        else
+        {
+            yAxisSum=getYAxisSum(MaxYbylastCost);
+        }
+
+        map.put("yAxisSum",yAxisSum);
+
+        map.put("seriesNowMonthSum",seriesNowMonthSum);
+        return map;
+    }
+
+    /**
+     * 批量修改价格
+     * @param bill
+     * @param loginUser
+     * @return
+     */
+    @Override
+    public int uploadPrice(Bill bill, LoginUser loginUser) {
+        return 0;
+    }
+
+    //本月总消费
+    public  Double MonthConsumption(Map<String, Object> params)
+    {
+        Calendar now =Calendar.getInstance();
+        params.put("year",now.get(Calendar.YEAR));
+        params.put("month",now.get(Calendar.MONTH)+1);
+        Double sum=billCostMapper.MonthConsumption(params);
+        return sum;
+    }
+    //今日消费
+    public  Double DayConsumption(Map<String, Object> params)
+    {
+        Calendar now =Calendar.getInstance();
+        params.put("year",now.get(Calendar.YEAR));
+        params.put("month",now.get(Calendar.MONTH)+1);
+        params.put("day",now.get(Calendar.DATE));
+        Double sum=billCostMapper.MonthConsumption(params);
+        return sum;
+    }
+
+
+    //获取一个月的天数
+    public static int getDaysOfMonth(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+    }
+
+    /**
+     * 某一个月第一天和最后一天
+     * @param date
+     * @return
+     */
+    private static Map<String, String> getFirstday_Lastday_Month(Date date) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH, -1);
+        Date theDate = calendar.getTime();
+
+        //上个月第一天
+        GregorianCalendar gcLast = (GregorianCalendar) Calendar.getInstance();
+        gcLast.setTime(theDate);
+        gcLast.set(Calendar.DAY_OF_MONTH, 1);
+        String day_first = df.format(gcLast.getTime());
+        StringBuffer str = new StringBuffer().append(day_first).append(" 00:00:00");
+        day_first = str.toString();
+
+        //上个月最后一天
+        calendar.add(Calendar.MONTH, 1);    //加一个月
+        calendar.set(Calendar.DATE, 1);        //设置为该月第一天
+        calendar.add(Calendar.DATE, -1);    //再减一天即为上个月最后一天
+        String day_last = df.format(calendar.getTime());
+        StringBuffer endStr = new StringBuffer().append(day_last).append(" 23:59:59");
+        day_last = endStr.toString();
+
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("first", day_first);
+        map.put("last", day_last);
+        return map;
+    }
+
+    public String getYAxisSum(double max)
+    {
+        String yAxis="";
+        if(max<=100)
+        {
+            yAxis="0,10,20,30,40,50,60,70,80,90";
+        }
+        else if(max<=200&&max>100)
+        {
+
+            yAxis="100,110,120,130,14,150,160,170,180,190";
+        }
+        else if(max<=300&&max>200)
+        {
+            yAxis="210,220,230,240,250,260,270,280,290,300";
+        }
+
+        return yAxis;
+    }
+
+
+
 }

@@ -70,6 +70,11 @@ public class BillCallCostServiceImpl implements BillCallCostService {
             //判断排名
             for (BillPrice billPrice : billPriceList) {
                 if (billPrice.getBillRankingStandard().intValue()>=newRanking){ //最新排名在次设置的排名,即达到排名优化标准
+
+
+
+
+
                     BillCost billCost = new BillCost();
                     billCost.settBillId(bill.getId());
                     billCost.settBillPriceId(billPrice.getId());

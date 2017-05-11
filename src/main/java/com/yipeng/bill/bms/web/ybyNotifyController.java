@@ -37,7 +37,7 @@ public class ybyNotifyController extends  BaseController{
     {
         Md5_UrlEncode md5_urlEncode=new Md5_UrlEncode();
       //api编号
-        String apiToken="05FEF02A7833380DC7E3354E9DB37F08";
+        String apiToken="91A684A075E4EEFB359C08059B9677F5";
         String wSign=null;
         //加密
         try {
@@ -80,7 +80,7 @@ public class ybyNotifyController extends  BaseController{
         else
         {
             System.out.print("对比错误");
-            return "2";
+            return "签名验证失败！";
         }
 
 

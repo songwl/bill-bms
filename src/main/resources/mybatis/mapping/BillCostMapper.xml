@@ -154,6 +154,9 @@
     where a.bill_id=b.t_bill_id
     AND a.id=b.t_bill_price_id
     AND a.in_member_id=#{userId,jdbcType=BIGINT}
+    <if test="outUserId != null">
+      AND a.out_member_id=#{outUserId,jdbcType=BIGINT}
+    </if>
     and year(b.cost_date)=#{year,jdbcType=INTEGER}
     and month(b.cost_date)=#{month,jdbcType=INTEGER}
     <if test="day != null">

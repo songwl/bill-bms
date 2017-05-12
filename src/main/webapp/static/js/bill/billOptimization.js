@@ -43,15 +43,23 @@ $(document).ready(function () {
                     type:"post",
                     url:CTX+"/order/updateYBYstate",
                     data:{selectContent:selectContent,length:len,state:state},
+                    beforeSend: function () {
+                        $(".pload").show();
+                        $(".modal-backdrop").show();
+                    },
                     success:function (result) {
                         if(result.code==200)
                         {
                             alert(result.message);
                             $('#myTable').bootstrapTable('refresh');
+                            $(".pload").hide();
+                            $(".modal-backdrop").hide();
                         }
                         else
                         {
                             alert(result.message);
+                            $(".pload").hide();
+                            $(".modal-backdrop").hide();
                         }
 
                     }
@@ -74,15 +82,23 @@ $(document).ready(function () {
                   type:"post",
                   url:CTX+"/order/updateYBYstate",
                   data:{selectContent:selectContent,length:len,state:state},
+                  beforeSend: function () {
+                      $(".pload").show();
+                      $(".modal-backdrop").show();
+                  },
                   success:function (result) {
                       if(result.code==200)
                       {
                           alert(result.message);
                           $('#myTable').bootstrapTable('refresh');
+                          $(".pload").hide();
+                          $(".modal-backdrop").hide();
                       }
                       else
                       {
                           alert(result.message);
+                          $(".pload").hide();
+                          $(".modal-backdrop").hide();
                       }
 
                   }
@@ -110,12 +126,17 @@ $(document).ready(function () {
                     type:"post",
                     url:CTX+"/order/OptimizationUpdate",
                     data:{selectContent:selectContent,length:len,num:num},
+                    beforeSend: function () {
+                        $(".pload").show();
+
+                    },
                     success:function (result) {
                           if(result.code==200)
                           {
                               alert(result.message);
                               $('#myTable').bootstrapTable('refresh');
                               $(".modal-backdrop").hide();
+                              $(".pload").hide();
                               $(".OptimizationUpdateDiv").slideUp();
 
                           }
@@ -279,8 +300,8 @@ var TableInit = function () {
             cache: false,                       //是否使用缓存，默认为true，
             pagination: true,                   //是否显示分页（*）
             pageNumber: 1,                       //初始化加载第一页，默认第一页
-            pageSize: 20,                       //每页的记录行数（*）
-            pageList: [20, 50, 100],        //可供选择的每页的行数（*）
+            pageSize: 50,                       //每页的记录行数（*）
+            pageList: [100,200,300,500,1000],        //可供选择的每页的行数（*）
             sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
             queryParams: oTableInit.queryParams,//传递参数（*）
             queryParamsType: "",
@@ -412,14 +433,15 @@ var TableInit = function () {
                         }
                         else if(value>0)
                         {
-                            a="<span>"+value+"</span>&nbsp;&nbsp;<img src='/bill/static/img/up.ico' style='width:12px;height:12px;'>";
+                            a="<span>"+value+"</span>&nbsp;&nbsp;<img src='/static/img/up.ico' style='width:12px;height:12px;'>";
                         }
                         else
                         {
-                            a="<span>" + value +"</span>&nbsp;&nbsp;<img src='/bill/static/img/down.ico' style='width:12px;height:12px;'>";
+                            a="<span>" + value +"</span>&nbsp;&nbsp;<img src='/static/img/down.ico' style='width:12px;height:12px;'>";
                         }
                         return a;
-                    }
+                    },
+                    visible:false
                 },
 
                 {

@@ -194,5 +194,20 @@
       AND  create_time = #{createTime,jdbcType=TIMESTAMP}
     </if>
   </select>
-
+  <select id="selectByBillPriceList"  resultMap="BaseResultMap">
+    select DISTINCT b.*
+    from t_bill as a,t_bill_price as b,t_bill_search_support as d,t_user_role as e
+    where a.id=b.bill_id  AND  a.id=d.bill_id AND b.in_member_id=e.user_id
+    AND a.state=#{state,jdbcType=BIGINT}
+    AND b.in_member_id=#{userId,jdbcType=BIGINT}
+    <if test="website!= null">
+      AND a.website =#{website,jdbcType=VARCHAR}
+    </if>
+    <if test="keywords!= null">
+      AND a.keywords =#{keywords,jdbcType=VARCHAR}
+    </if>
+    <if test="searchName != null">
+      AND  d.search_support= #{searchName,jdbcType=VARCHAR}
+    </if>
+  </select>
 </mapper>

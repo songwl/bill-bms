@@ -316,10 +316,20 @@ public class BillServiceimpl implements BillService {
 
 
                         Bill bill=new Bill();
+                        //判断搜索引擎
                         if(dfsearch[0].equals("360")||dfsearch[0].equals("搜狗"))
                         {
-                            String urls="http://"+dfurls[i];
-                            bill.setWebsite(urls);
+
+                            //判断http:// 前缀
+                            String urlStr=dfurls[i].substring(0,7);
+                            if ("http://".equals(urlStr)) {
+                                bill.setWebsite(dfurls[i]);
+                            }
+                            else
+                            {
+                                String urls="http://"+dfurls[i];
+                                bill.setWebsite(urls);
+                            }
                         }
                         else
                         {
@@ -1900,6 +1910,7 @@ public class BillServiceimpl implements BillService {
         //查询参数
         Map<String, Object> params=new HashMap<>();
         params.put("userId",loginUser.getCreateUserId());
+        params.put("outUserId",loginUser.getId());
         //本月消费
         Double MonthConsumption=MonthConsumption(params);
         if(MonthConsumption!=null)
@@ -1909,9 +1920,6 @@ public class BillServiceimpl implements BillService {
         {
             map.put("MonthConsumption","0.00");
         }
-
-
-
         //本日消费
         Double DayConsumption=DayConsumption(params);
         if(DayConsumption!=null)
@@ -1951,6 +1959,7 @@ public class BillServiceimpl implements BillService {
         //循环获取上个月每天的达标数
         Map<String,Object> dateMap=new  HashMap<>();
         dateMap.put("userId",loginUser.getCreateUserId());
+        dateMap.put("outMemberId",loginUser.getId());
         //判断Y轴任务数的显示
         int MaxYbylast=0;
         //判断Y轴消费的显示
@@ -2052,8 +2061,66 @@ public class BillServiceimpl implements BillService {
      * @return
      */
     @Override
-    public int uploadPrice(Bill bill, LoginUser loginUser) {
+    public int uploadPrice(List<String[]> fileList, LoginUser loginUser) {
+      if (!CollectionUtils.isEmpty(fileList))
+      {
+          int updateCount=0;
+          //循环EXCEL表格
+
+          for (int i=0;i<fileList.size();i++)
+          {
+              //获取参数
+               String keyword=fileList.get(i)[1];
+               String website=fileList.get(i)[2];
+               String searchName=fileList.get(i)[3];
+              BigDecimal price1= new BigDecimal(fileList.get(i)[7]) ;
+              BigDecimal price2= new BigDecimal(fileList.get(i)[8]) ;
+              int standardDays=Integer.parseInt(fileList.get(i)[10]);
+              //组包
+               Map<String,Object> params=new HashMap<>();
+               params.put("userId",1);
+               params.put("state",2);
+               params.put("keywords",keyword);
+               params.put("website",website);
+               params.put("searchName",searchName);
+               //查询价格
+               List<BillPrice> billPriceList=billPriceMapper.selectByBillPriceList(params);
+               Bill bill=billMapper.selectByBillByUpdateStandardDays(params);
+               if(!CollectionUtils.isEmpty(billPriceList)&&bill!=null)
+               {
+                   //修改价格
+                   BillPrice billPrice=new BillPrice();
+                   billPrice.setId(billPriceList.get(0).getId());
+                   billPrice.setPrice(price1);
+                   billPriceMapper.updateByPrimaryKeySelective(billPrice);
+                   //修改达标天数
+                   bill.setStandardDays(standardDays);
+                   billMapper.updateByPrimaryKeySelective(bill);
+
+                   //判断第二个价格是否存在
+                   if (!price2.equals(BigDecimal.ZERO))
+                   {
+                       if (billPriceList.size()==1)
+                       {
+                           BillPrice billPrice1=new BillPrice();
+                           billPrice1.setBillId(billPriceList.get(0).getBillId());
+                           billPrice1.setInMemberId(billPriceList.get(0).getInMemberId());
+                           billPrice1.setOutMemberId(billPriceList.get(0).getOutMemberId());
+                           billPrice1.setPrice(price2);
+                           billPrice1.setCreateTime(new Date());
+                           billPrice1.setBillRankingStandard(new Long(20));
+                           billPriceMapper.insert(billPrice1);
+                       }
+                   }
+                       updateCount++;
+               }
+
+          }
+          return updateCount;
+      }
         return 0;
+
+
     }
 
     //本月总消费

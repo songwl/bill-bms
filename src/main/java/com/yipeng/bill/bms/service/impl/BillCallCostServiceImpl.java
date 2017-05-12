@@ -50,7 +50,7 @@ public class BillCallCostServiceImpl implements BillCallCostService {
             }
             userPriceMap.get(userId).add(billPrice);
         }
-
+        //判断是否扣费
         Boolean bool=false;
         //3.根据最新的排名计算价钱,产生消费
         int newRanking = bill.getNewRanking().intValue();
@@ -70,10 +70,6 @@ public class BillCallCostServiceImpl implements BillCallCostService {
             //判断排名
             for (BillPrice billPrice : billPriceList) {
                 if (billPrice.getBillRankingStandard().intValue()>=newRanking){ //最新排名在次设置的排名,即达到排名优化标准
-
-
-
-
 
                     BillCost billCost = new BillCost();
                     billCost.settBillId(bill.getId());
@@ -102,7 +98,7 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                         fundItem.setChangeTime(new Date());
                         fundItem.setItemType("cost"); //消费
                         fundItemMapper.insert(fundItem);
-                        //新增达标天数
+                        //新增达标天数（已经扣费）
                         bool=true;
                        // bill.setStandardDays(bill.getStandardDays()+1);
                         //billMapper.updateByPrimaryKeySelective(bill);
@@ -128,6 +124,9 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                         break; //不需要再往后
                     }
 
+                }
+                else {
+                    bool=false;
                 }
 
             }

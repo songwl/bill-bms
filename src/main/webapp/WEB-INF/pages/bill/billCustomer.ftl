@@ -95,7 +95,7 @@
                     <div class="cls"></div>
                 </div>
 
-                <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%">
+                <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%;font-size: 13px;font-family: "微软雅黑">
                 </table>
             </div>
 

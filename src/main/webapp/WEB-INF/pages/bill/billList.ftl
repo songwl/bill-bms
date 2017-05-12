@@ -94,31 +94,7 @@
     <div class="cls">
     </div>
 </div>
-<form id= "uploadForm">
-    <p >指定文件名： <input type="text" name="filename" value= ""/></p >
-    <p >上传文件： <input type="file" name="file"/></ p>
-    <input type="button" value="上传" onclick="doUpload()" />
-</form>
-<script>
-    function doUpload() {
-        var formData = new FormData($( "#uploadForm" )[0]);
-        $.ajax({
-            url:CTX+ '/order/uploadPrice' ,
-            type: 'POST',
-            data: formData,
-            async: false,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (returndata) {
-                alert(returndata);
-            },
-            error: function (returndata) {
-                alert(returndata);
-            }
-        });
-    }
-</script>
+
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-primary" id="list-panel">
@@ -134,7 +110,7 @@
                     </div>
                     <div class="cls"></div>
                 </div>
-                <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%">
+                <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%;font-size: 13px;font-family: "微软雅黑">
                 </table>
             </div>
 
@@ -256,7 +232,7 @@
                                 <label>任务消费记录</label>
                                 <div class="widget box">
                                     <div class="widget-header">
-                                        <h4>(0条记录)</h4>
+
                                     </div>
                                     <div class="widget-content">
                                         <table id="pricetable"  class="table table-striped  table-condensed table-responsive" >
@@ -287,6 +263,37 @@
             </div>
         </div>
     </div>
+<div class="pload" style="position:absolute;top:45%;left: 50%; z-index:2200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none;"></div>
+    <#if  bmsModel.user.hasRole("SUPER_ADMIN")>
+<form id= "uploadForm" enctype="multipart/form-data">
+    <p >上传文件： <input type="file" name="file"/></ p>
+    <input type="button" value="上传" onclick="doUpload()" />
+</form>
+<script>
+    function doUpload() {
+        var formData = new FormData($( "#uploadForm" )[0]);
+        $.ajax({
+            url:CTX+ '/order/uploadPrice' ,
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+                $(".pload").show();
 
+                $(".modal-backdrop").show();
+            },
+            success: function (result) {
+                $(".pload").hide();
+                $(".modal-backdrop").hide();
+                alert(result.message);
+
+            }
+        });
+    }
+</script>
+</#if>
 <!--详情end-->
 </@base.html>

@@ -105,7 +105,7 @@ public class RemoteServiceImpl implements RemoteService {
         String body = "";
 
         //创建httpclient对象
-        CloseableHttpClient client = HttpClients.createDefault();
+         CloseableHttpClient client = HttpClients.createDefault();
         //创建post方式请求对象
         HttpPost httpPost = new HttpPost(url);
 

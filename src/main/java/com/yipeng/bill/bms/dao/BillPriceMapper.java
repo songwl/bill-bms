@@ -3,6 +3,7 @@ package com.yipeng.bill.bms.dao;
 import com.yipeng.bill.bms.domain.BillPrice;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BillPriceMapper {
     int deleteByPrimaryKey(Long id);
@@ -20,4 +21,5 @@ public interface BillPriceMapper {
    int selectBillCount(Long UserId);
    Long selectByBillPriceOutMemberId(BillPrice billPrice);
     List<BillPrice>  selectByBillPriceSingle(BillPrice record);
+    List<BillPrice>  selectByBillPriceList(Map<String,Object> params);
 }

@@ -18,14 +18,12 @@ import com.yipeng.bill.bms.service.UserService;
 import com.yipeng.bill.bms.vo.BillDetails;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -942,51 +941,129 @@ public class BillController extends BaseController {
         fOut.close();
     }
 
-    @RequestMapping(value = "uploadPrice")
-    public String importUser(HttpServletRequest request,MultipartFile file) {
-        String fileType = "";
-        try {
-            String fileName = file.getOriginalFilename();
-            fileType = fileName.substring(fileName.lastIndexOf(".") + 1,
-                    fileName.lastIndexOf(".") + 4);
-        } catch (Exception e) {
+    /**
+     * 批量导入价格
+     * @param request
+     * @param file
+     * @return
+     */
+    @RequestMapping(value = "/uploadPrice")
+    @ResponseBody
+    public ResultMessage importUser(HttpServletRequest request,MultipartFile file) {
+        LoginUser loginUser=this.getCurrentAccount();
 
-            fileType = "";
-        }
-        if (!fileType.toLowerCase().equals("xls")) {
-
-            return "导入的文件格式不正确，应该不是excel文件";
-        }
-        HSSFWorkbook wb = null;
-        try {
-            wb = new HSSFWorkbook(file.getInputStream());
-            // logger.debug(wb.getNumberOfSheets());
-            HSSFSheet sheet = wb.getSheetAt(0);
-
-            for(int i = sheet.getFirstRowNum();i<=sheet.getLastRowNum();i++){
-                HSSFRow row = sheet.getRow(i);
-                //在这里匹配数据库
-                String website=row.getCell(0).toString();
-                String keywords=row.getCell(1).toString();
-                Bill bill=new Bill();//组包
-
-
-              /*  row.getCell()*/
-                Iterator cells = row.cellIterator();
-                while(cells.hasNext()){
-                    HSSFCell cell = (HSSFCell) cells.next();
-
-                }
+        List<String[]> fileList=parseFile(file);
+        if(fileList.size()>0)
+        {
+            try{
+                int a=billService.uploadPrice(fileList,loginUser);
+                return  ajaxDoneSuccess("成功更新"+a+"条记录！");
+            }
+            catch (Exception e)
+            {
+                return   ajaxDoneError("未知错误！");
             }
 
-
-            return "";
-
-        } catch (Exception e) {
-
+        }
+        else
+        {
+            return  ajaxDoneError("未知错误！");
 
         }
 
-        return  "";
+    }
+
+
+    /**
+     * 功能描述:解析excel文件 <br>
+     * 〈功能详细描述〉
+     *
+     * @param file
+     * @return 返回excel中每行值得列表
+     * @see [相关类/方法](可选)
+     * @since [产品/模块版本](可选)
+     */
+    public static List<String[]> parseFile(MultipartFile file) {
+        List<String[]> list = new ArrayList<>();
+        try {
+            //新建WorkBook
+            Workbook wb = WorkbookFactory.create(file.getInputStream());
+            //获取Sheet（工作薄）总个数
+            int sheetNumber = wb.getNumberOfSheets();
+            for (int i = 0; i < sheetNumber; i++) {
+                //获取Sheet（工作薄）
+                Sheet sheet = wb.getSheetAt(i);
+                //开始行数
+                int firstRow = sheet.getFirstRowNum();
+                //结束行数
+                int lastRow = sheet.getLastRowNum();
+                //判断该Sheet（工作薄)是否为空
+                boolean isEmpty = false;
+                if (firstRow == lastRow) {
+                    isEmpty = true;
+                }
+                if (!isEmpty) {
+                    for (int j = firstRow + 1; j <= lastRow; j++) {
+                        //获取一行
+                        Row row = sheet.getRow(j);
+                        if (row != null) {
+                            //开始列数
+                            int firstCell = row.getFirstCellNum();
+                            //结束列数
+                            int lastCell = row.getLastCellNum();
+                            //判断该行是否为空
+                            String[] value = new String[lastCell];
+                            if (firstCell != lastCell) {
+                                for (int k = firstCell; k < lastCell; k++) {
+                                    //获取一个单元格
+                                    Cell cell = row.getCell(k);
+                                    if (cell == null) {
+                                        continue;
+                                    }
+                                    cell.setCellType(Cell.CELL_TYPE_STRING);
+                                    Object str = null;
+                                    //获取单元格，值的类型
+                                    int cellType = cell.getCellType();
+
+                                    if (cellType == Cell.CELL_TYPE_NUMERIC) {
+                                        str = cell.getNumericCellValue();
+                                    } else if (cellType == 1) {
+                                        str = cell.getStringCellValue();
+                                    } else if (cellType == 2) {
+                                    } else if (cellType == 4) {
+                                        str = cell.getBooleanCellValue();
+                                    }
+                                    value[k] = str.toString();
+                                }
+                            }
+                            //每一行循环完对应的就是一个用户故事的所有属性全部拿到
+                            list.add(value);
+                        }
+                    }
+                }
+            }
+            //wb.close();
+        } catch (IOException e) {
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+
+        List<String[]> emptyRows = new ArrayList<>();
+        for(String[] row:list) {
+            boolean isEmpty =true;
+            for(String cell : row) {
+                if(!StringUtils.isEmpty(cell)){
+                    isEmpty = false;
+                    break;
+                }
+            }
+            if(isEmpty) {
+                emptyRows.add(row);
+            }
+        }
+        list.removeAll(emptyRows);
+        return list;
     }
 }

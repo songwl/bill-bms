@@ -98,4 +98,6 @@ public interface BillMapper {
     //审核订单预览
     List<Bill>  selectByBillAudit(Map<String,Object> params);
 
+    Bill  selectByBillByUpdateStandardDays(Map<String,Object> params);
+
 }

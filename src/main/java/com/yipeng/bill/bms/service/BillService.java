@@ -130,5 +130,5 @@ public interface BillService {
      * @param loginUser
      * @return
      */
-    int uploadPrice(Bill bill,LoginUser loginUser);
+    int uploadPrice(List<String[]> fileList,LoginUser loginUser);
 }

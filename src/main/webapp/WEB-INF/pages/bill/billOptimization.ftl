@@ -110,7 +110,7 @@
                     <div class="cls"></div>
                 </div>
 
-                <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%">
+                <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%;font-size: 13px;font-family: "微软雅黑">
                 </table>
             </div>
         </div>
@@ -151,4 +151,7 @@
     </div>
 </div>
 <!--优化调整end-->
+<div class="pload" style="position:absolute;top:45%;left: 50%; z-index:2200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none;"></div>
+<div class="modal-backdrop in" style="display: none">
+</div>
 </@base.html>

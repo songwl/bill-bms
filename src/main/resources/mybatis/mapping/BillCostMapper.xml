@@ -257,4 +257,36 @@
       AND  c.bill_ascription=#{billAascription,jdbcType=BIGINT}
     </if>
   </select>
+
+
+  <select id="selectByDayCost"  resultMap="BaseResultMap">
+    SELECT b.* from t_bill_price as a,t_bill_cost as b
+    where a.bill_id=b.t_bill_id
+    AND a.id=b.t_bill_price_id
+    AND b.t_bill_id=#{billId,jdbcType=BIGINT}
+    AND a.out_member_id=#{userIdDayCost,jdbcType=BIGINT}
+    and year(b.cost_date)=#{year,jdbcType=INTEGER}
+    and month(b.cost_date)=#{month,jdbcType=INTEGER}
+   and DAY(b.cost_date) = #{day,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByDayCostPriceId"  resultMap="BaseResultMap">
+    SELECT b.* from t_bill_price as a,t_bill_cost as b
+    where a.bill_id=b.t_bill_id
+    AND a.id=b.t_bill_price_id
+    AND b.t_bill_price_id=#{priceId,jdbcType=BIGINT}
+    and year(b.cost_date)=#{year,jdbcType=INTEGER}
+    and month(b.cost_date)=#{month,jdbcType=INTEGER}
+    and DAY(b.cost_date) = #{day,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByCostByOutId"  resultMap="BaseResultMap">
+    SELECT b.* from t_bill_price as a,t_bill_cost as b
+    where a.bill_id=b.t_bill_id
+    AND a.id=b.t_bill_price_id
+    AND a.out_member_id=#{outMemberId,jdbcType=BIGINT}
+    and year(b.cost_date)=#{year,jdbcType=INTEGER}
+    and month(b.cost_date)=#{month,jdbcType=INTEGER}
+    and DAY(b.cost_date) = #{day,jdbcType=INTEGER}
+  </select>
 </mapper>

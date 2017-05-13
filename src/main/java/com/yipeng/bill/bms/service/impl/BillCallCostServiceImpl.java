@@ -1,11 +1,13 @@
 package com.yipeng.bill.bms.service.impl;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.service.BillCallCostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -66,87 +68,159 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                     return r1.compareTo(r2);
                 }
             });
+            Map<String, Object> params=new HashMap<>();
+           //判断当前订单今天是否产生了消费记录
+            //组包
+            Calendar now =Calendar.getInstance();
+            params.put("year",now.get(Calendar.YEAR));
+            params.put("month",now.get(Calendar.MONTH)+1);
+            params.put("day",now.get(Calendar.DATE));
+            params.put("billId",bill.getId());
+            params.put("userIdDayCost",userId);
 
-            //判断排名
-            for (BillPrice billPrice : billPriceList) {
-                if (billPrice.getBillRankingStandard().intValue()>=newRanking){ //最新排名在次设置的排名,即达到排名优化标准
-
-                    BillCost billCost = new BillCost();
-                    billCost.settBillId(bill.getId());
-                    billCost.settBillPriceId(billPrice.getId());
-                    billCost.setCostAmount(billPrice.getPrice()); //消费金额
-                    billCost.setCostDate(new Date()); //消费日期
-                    billCost.setRanking(newRanking);
-                    billCostMapper.insert(billCost);
-                    //4.从资金账号扣减余额
-                    FundAccount fundAccount = fundAccountMapper.selectByUserId(userId);
-                    if(fundAccount==null)
-                    {
-                        FundAccount fundAccount1=new FundAccount();
-                        fundAccount1.setUserId(userId);
-                        fundAccount1.setCreateUserId(userId);
-                        fundAccount1.setCreateTime(new Date());
-                        fundAccount1.setBalance(new BigDecimal(0));
-                        int a= fundAccountMapper.insert(fundAccount1);
-                        fundAccountMapper.reduceBalance(fundAccount1.getId(), billPrice.getPrice()); //扣减余额
-                        //创建资金消费流水
-                        FundItem fundItem = new FundItem();
-                        fundItem.setFundAccountId(fundAccount.getId());
-                        fundItem.setChangeAmount(billCost.getCostAmount());
-                        FundAccount fundAccount2 = fundAccountMapper.selectByPrimaryKey(fundAccount1.getId());
-                        fundItem.setBalance(fundAccount2.getBalance());
-                        fundItem.setChangeTime(new Date());
-                        fundItem.setItemType("cost"); //消费
-                        fundItemMapper.insert(fundItem);
-                        //新增达标天数（已经扣费）
-                        bool=true;
-                       // bill.setStandardDays(bill.getStandardDays()+1);
-                        //billMapper.updateByPrimaryKeySelective(bill);
+            //查询
+            List<BillCost> billCostList=billCostMapper.selectByDayCost(params);
+            //进行判断
+            if(!CollectionUtils.isEmpty(billCostList))//今日已消费
+            {
+                Boolean boolDaBiao=false;
+                BillPrice billPriceNow=new BillPrice();//当前单价对象
+              //判断这一次的排名是否达标（上升或者下降）
+                for (BillPrice billPrice : billPriceList) {
+                    if (billPrice.getBillRankingStandard().intValue()>=newRanking) { //最新排名在次设置的排名,即达到排名优化标准
+                        boolDaBiao=true;
+                        billPriceNow=billPrice;
                         break;
-
                     }
                     else
                     {
-                        fundAccountMapper.reduceBalance(fundAccount.getId(), billPrice.getPrice()); //扣减余额
-                        //创建资金消费流水
-                        FundItem fundItem = new FundItem();
-                        fundItem.setFundAccountId(fundAccount.getId());
-                        fundItem.setChangeAmount(billCost.getCostAmount());
-                        FundAccount fundAccount2 = fundAccountMapper.selectByPrimaryKey(fundAccount.getId());
-                        fundItem.setBalance(fundAccount2.getBalance());
-                        fundItem.setChangeTime(new Date());
-                        fundItem.setItemType("cost"); //消费
-                        fundItemMapper.insert(fundItem);
-                        //新增达标天数
-                        bool=true;
-                        //bill.setStandardDays(bill.getStandardDays()+1);
-                        //billMapper.updateByPrimaryKeySelective(bill);
-                        break; //不需要再往后
+                        boolDaBiao=false;
+                    }
+                }
+                if (boolDaBiao)//当前达标
+                {
+                      params.put("priceId",billPriceNow.getId());
+                      BillCost billCost=billCostMapper.selectByDayCostPriceId(params);
+                      //判断当前扣费表是否存在当前消费
+                    if (billCost!=null)//存在(说明上午的达标标准和下午的标准在一个区间)
+                    {
+                         return 1;
+                    }
+                    else//不存在
+                    {
+
+                        //查询上一次的扣费是多少
+                        params.put("outMemberId",billPriceNow.getOutMemberId());
+                        BillCost billCostLast=billCostMapper.selectByCostByOutId(params);
+                        // 修改客户约余额
+                        FundAccount fundAccount=new FundAccount();
+                        fundAccount.setUserId(billPriceNow.getOutMemberId());
+                        BigDecimal result=fundAccount.getBalance().add(billCostLast.getCostAmount());//余额加上上次扣费
+                        result=result.subtract(billPriceNow.getPrice());//再减去本次扣费
+                        fundAccount.setBalance(result);
+                        fundAccountMapper.updateByPrimaryKeySelective(fundAccount);//更新数据库
+
+
+                        //修改扣费记录
+                        billCost.setId(billCostLast.getId());
+                        billCost.setCostAmount(billPriceNow.getPrice());
+                        billCost.setRanking(Integer.parseInt(billPriceNow.getBillRankingStandard().toString()));
+                        billCostMapper.updateByPrimaryKeySelective(billCost);
                     }
 
                 }
-                else {
-                    bool=false;
+                else//未达标（将消费记录消除）
+                {
+
                 }
 
             }
-        }
-        //判断是否达标
-        if(bool)
-        {
-            //达标天数加一天
-            bill.setStandardDays(bill.getStandardDays()+1);
-            if(bill.getChangeRanking()!=null)
+            else//今日未消费
             {
-                bill.setChangeRanking(bill.getChangeRanking()-bill.getNewRanking());
-            }
-            else
-            {
-                bill.setChangeRanking(bill.getNewRanking());
+                //判断排名
+                for (BillPrice billPrice : billPriceList) {
+                    if (billPrice.getBillRankingStandard().intValue()>=newRanking){ //最新排名在次设置的排名,即达到排名优化标准
+
+                        BillCost billCost = new BillCost();
+                        billCost.settBillId(bill.getId());
+                        billCost.settBillPriceId(billPrice.getId());
+                        billCost.setCostAmount(billPrice.getPrice()); //消费金额
+                        billCost.setCostDate(new Date()); //消费日期
+                        billCost.setRanking(newRanking);
+                        billCostMapper.insert(billCost);
+                        //4.从资金账号扣减余额
+                        FundAccount fundAccount = fundAccountMapper.selectByUserId(userId);
+                        if(fundAccount==null)
+                        {
+                            FundAccount fundAccount1=new FundAccount();
+                            fundAccount1.setUserId(userId);
+                            fundAccount1.setCreateUserId(userId);
+                            fundAccount1.setCreateTime(new Date());
+                            fundAccount1.setBalance(new BigDecimal(0));
+                            int a= fundAccountMapper.insert(fundAccount1);
+                            fundAccountMapper.reduceBalance(fundAccount1.getId(), billPrice.getPrice()); //扣减余额
+                            //创建资金消费流水
+                            FundItem fundItem = new FundItem();
+                            fundItem.setFundAccountId(fundAccount.getId());
+                            fundItem.setChangeAmount(billCost.getCostAmount());
+                            FundAccount fundAccount2 = fundAccountMapper.selectByPrimaryKey(fundAccount1.getId());
+                            fundItem.setBalance(fundAccount2.getBalance());
+                            fundItem.setChangeTime(new Date());
+                            fundItem.setItemType("cost"); //消费
+                            fundItemMapper.insert(fundItem);
+                            //新增达标天数（已经扣费）
+                            bool=true;
+                            // bill.setStandardDays(bill.getStandardDays()+1);
+                            //billMapper.updateByPrimaryKeySelective(bill);
+                            break;
+
+                        }
+                        else
+                        {
+                            fundAccountMapper.reduceBalance(fundAccount.getId(), billPrice.getPrice()); //扣减余额
+                            //创建资金消费流水
+                            FundItem fundItem = new FundItem();
+                            fundItem.setFundAccountId(fundAccount.getId());
+                            fundItem.setChangeAmount(billCost.getCostAmount());
+                            FundAccount fundAccount2 = fundAccountMapper.selectByPrimaryKey(fundAccount.getId());
+                            fundItem.setBalance(fundAccount2.getBalance());
+                            fundItem.setChangeTime(new Date());
+                            fundItem.setItemType("cost"); //消费
+                            fundItemMapper.insert(fundItem);
+                            //新增达标天数
+                            bool=true;
+                            //bill.setStandardDays(bill.getStandardDays()+1);
+                            //billMapper.updateByPrimaryKeySelective(bill);
+                            break; //不需要再往后
+                        }
+
+                    }
+                    else {
+                        bool=false;
+                    }
+
+                }
+                if(bool)
+                {
+                    //达标天数加一天
+                    bill.setStandardDays(bill.getStandardDays()+1);
+                    if(bill.getChangeRanking()!=null)
+                    {
+                        bill.setChangeRanking(bill.getChangeRanking()-bill.getNewRanking());
+                    }
+                    else
+                    {
+                        bill.setChangeRanking(bill.getNewRanking());
+                    }
+
+                    billMapper.updateByPrimaryKeySelective(bill);
+                }
             }
 
-            billMapper.updateByPrimaryKeySelective(bill);
+
         }
+        //判断是否达标
+
         return 1;
     }
 

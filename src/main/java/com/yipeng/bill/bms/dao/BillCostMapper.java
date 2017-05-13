@@ -46,4 +46,24 @@ public interface BillCostMapper {
     Double selectByBillCostOfAll(Map<String,Object> params);
 
     Double  selectByBillCostOfDaySum(Map<String,Object> params);
+
+    /**
+     * 扣费  判断当天订单是否消费
+     * @param params
+     * @return
+     */
+    List<BillCost> selectByDayCost(Map<String,Object> params);
+
+    /**
+     * 扣费  通过单价Id判断今日是否存在
+     * @param params
+     * @return
+     */
+       BillCost selectByDayCostPriceId(Map<String,Object> params);
+    /**
+     * 获取上一次的扣费记录
+     * @param params
+     * @return
+     */
+        BillCost selectByCostByOutId(Map<String,Object> params);
 }

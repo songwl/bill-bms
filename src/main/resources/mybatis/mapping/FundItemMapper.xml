@@ -7,6 +7,7 @@
     <result column="change_amount" jdbcType="DECIMAL" property="changeAmount" />
     <result column="change_time" jdbcType="TIMESTAMP" property="changeTime" />
     <result column="item_type" jdbcType="VARCHAR" property="itemType" />
+    <result column="priceId" jdbcType="BIGINT" property="priceId" />
   </resultMap>
 
   <resultMap id="BaseResultMap1" type="com.yipeng.bill.bms.model.FundItemSum">
@@ -19,7 +20,7 @@
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, fund_account_id, change_amount,balance, change_time, item_type
+    id, fund_account_id, change_amount,balance, change_time, item_type,priceId
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -33,9 +34,9 @@
   </delete>
   <insert id="insert" parameterType="com.yipeng.bill.bms.domain.FundItem" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
     insert into t_fund_item (id, fund_account_id, change_amount,balance,
-      change_time, item_type)
+      change_time, item_type,priceId)
     values (#{id,jdbcType=BIGINT}, #{fundAccountId,jdbcType=BIGINT}, #{changeAmount,jdbcType=DECIMAL},#{balance,jdbcType=DECIMAL},
-      #{changeTime,jdbcType=TIMESTAMP}, #{itemType,jdbcType=VARCHAR})
+      #{changeTime,jdbcType=TIMESTAMP}, #{itemType,jdbcType=VARCHAR}, #{priceId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.FundItem">
     insert into t_fund_item
@@ -58,6 +59,9 @@
       <if test="itemType != null">
         item_type,
       </if>
+      <if test="priceId != null">
+        priceId,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -77,6 +81,9 @@
       </if>
       <if test="itemType != null">
         #{itemType,jdbcType=VARCHAR},
+      </if>
+      <if test="priceId != null">
+        #{priceId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -98,6 +105,9 @@
       <if test="itemType != null">
         item_type = #{itemType,jdbcType=VARCHAR},
       </if>
+      <if test="priceId != null">
+        priceId = #{priceId,jdbcType=BIGINT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -107,7 +117,8 @@
       change_amount = #{changeAmount,jdbcType=DECIMAL},
        balance= #{balance,jdbcType=DECIMAL},
       change_time = #{changeTime,jdbcType=TIMESTAMP},
-      item_type = #{itemType,jdbcType=VARCHAR}
+      item_type = #{itemType,jdbcType=VARCHAR},
+      priceId = #{priceId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <!--管理员查看资金流水-->
@@ -140,4 +151,16 @@
     GROUP BY a.change_time,a.fund_account_id,a.item_type
   </select>
   <!--end客户查看资金流水-->
+
+
+  <select id="selectByItemPriceId"  resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    from t_fund_item
+    where
+     priceId=#{priceId,jdbcType=BIGINT}
+    and year(change_time)=#{year,jdbcType=INTEGER}
+    and month(change_time)=#{month,jdbcType=INTEGER}
+    and DAY(change_time) = #{day,jdbcType=INTEGER}
+  </select>
 </mapper>

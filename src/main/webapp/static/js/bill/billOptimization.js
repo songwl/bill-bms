@@ -449,6 +449,7 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '达标天',
+                    sortable: true,
 
                 },
 
@@ -457,6 +458,7 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '日优化',
+                    sortable: true,
 
                 },
                 {
@@ -464,6 +466,7 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '总优化',
+                    sortable: true,
 
                 },
                 {
@@ -482,8 +485,8 @@ var TableInit = function () {
                             a="<span>离线</span>";
                         }
                         return a;
-                    }
-
+                    },
+                    sortable: true
 
                 },
                /* {

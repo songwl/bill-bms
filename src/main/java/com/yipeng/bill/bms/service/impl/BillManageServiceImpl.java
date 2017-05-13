@@ -280,7 +280,7 @@ public class BillManageServiceImpl implements BillManageService {
                     Date now=new Date();
                     int days = (int) ((now.getTime() - date.getTime()) / (1000*3600*24));//两个日期相差的天数
                     billManageList.setOptimizationDays(days);
-                    billManageList.setDayConsumption(dayConsumption);
+                    billManageList.setDayConsumption(Double.parseDouble( df.format(dayConsumption)));
 
 
                 }
@@ -312,10 +312,16 @@ public class BillManageServiceImpl implements BillManageService {
         //渠道商
         else if(loginUser.hasRole("DISTRIBUTOR"))
         {
+            Calendar now =Calendar.getInstance();
+            params.put("year",now.get(Calendar.YEAR));
+            params.put("month",now.get(Calendar.MONTH)+1);
+            params.put("day",now.get(Calendar.DATE));
+
             //查询最新排名的订单
             params.put("userId",loginUser.getId());
             params.put("state",2);
-            params.put("newchange",true);
+
+
             List<Bill> billList=billMapper.selectByNewRanking(params);
             Long total=billMapper.selectByNewRankingCount(params);
             if (!CollectionUtils.isEmpty(billList))

@@ -66,4 +66,6 @@ public class BillCost implements Serializable {
     public void setRanking(Integer ranking) {
         this.ranking = ranking;
     }
+
+
 }

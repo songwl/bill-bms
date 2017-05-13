@@ -2195,7 +2195,7 @@ public class BillServiceimpl implements BillService {
         else if(max<=200&&max>100)
         {
 
-            yAxis="100,110,120,130,14,150,160,170,180,190";
+            yAxis="100,110,120,130,140,150,160,170,180,190";
         }
         else if(max<=300&&max>200)
         {

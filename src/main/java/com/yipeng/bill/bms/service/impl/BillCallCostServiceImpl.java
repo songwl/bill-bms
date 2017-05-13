@@ -31,16 +31,10 @@ public class BillCallCostServiceImpl implements BillCallCostService {
     private FundAccountMapper fundAccountMapper;
     @Autowired
     private FundItemMapper fundItemMapper;
-    @Autowired
-    private  BillOptimizationMapper billOptimizationMapper;
+
     @Override
     public int updateCallCost(Bill bill) {
-        //生成优化点击次数记录
-        BillOptimization billOptimization=new BillOptimization();
-        billOptimization.setBillId(bill.getId());
-        billOptimization.setOptimizationCount(bill.getDayOptimization());
-        billOptimization.setOptimizationDate(new Date());
-        billOptimizationMapper.insert(billOptimization);
+
         //2.根据计算单Bill查询单价BillPrice
         List<BillPrice> prices = billPriceMapper.selectByBillId(bill.getId());
 
@@ -104,33 +98,56 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                       //判断当前扣费表是否存在当前消费
                     if (billCost!=null)//存在(说明上午的达标标准和下午的标准在一个区间)
                     {
-                         return 1;
+                         //什么也不做
                     }
                     else//不存在
                     {
-
                         //查询上一次的扣费是多少
                         params.put("outMemberId",billPriceNow.getOutMemberId());
                         BillCost billCostLast=billCostMapper.selectByCostByOutId(params);
                         // 修改客户约余额
-                        FundAccount fundAccount=new FundAccount();
-                        fundAccount.setUserId(billPriceNow.getOutMemberId());
+                        FundAccount fundAccount=fundAccountMapper.selectByUserId(userId);
                         BigDecimal result=fundAccount.getBalance().add(billCostLast.getCostAmount());//余额加上上次扣费
                         result=result.subtract(billPriceNow.getPrice());//再减去本次扣费
                         fundAccount.setBalance(result);
                         fundAccountMapper.updateByPrimaryKeySelective(fundAccount);//更新数据库
-
-
+                        //修改资金流水
+                         params.put("priceId",billCostLast.gettBillPriceId());
+                         FundItem fundItem =fundItemMapper.selectByItemPriceId(params);
+                         fundItem.setPriceId(billPriceNow.getId());
+                         fundItem.setChangeAmount(billPriceNow.getPrice());
+                         fundItem.setBalance(fundAccount.getBalance());
+                         fundItem.setChangeTime(new Date());
+                         fundItemMapper.updateByPrimaryKeySelective(fundItem);
                         //修改扣费记录
-                        billCost.setId(billCostLast.getId());
-                        billCost.setCostAmount(billPriceNow.getPrice());
-                        billCost.setRanking(Integer.parseInt(billPriceNow.getBillRankingStandard().toString()));
-                        billCostMapper.updateByPrimaryKeySelective(billCost);
+                        billCostLast.setCostAmount(billPriceNow.getPrice());
+                        billCostLast.setRanking(newRanking);
+                        billCostLast.settBillPriceId(billPriceNow.getId());
+                        billCostLast.setCostDate(new Date());
+                        billCostMapper.updateByPrimaryKeySelective(billCostLast);
+
                     }
 
                 }
                 else//未达标（将消费记录消除）
                 {
+                    //先查出今日对应的消费记录
+                    params.put("outMemberId",userId);
+                    BillCost billCostLast=billCostMapper.selectByCostByOutId(params);
+                    //查出资金流水记录
+                    params.put("priceId",billCostLast.gettBillPriceId());
+                    FundItem fundItem =fundItemMapper.selectByItemPriceId(params);
+                     //查出当前用户的余额
+                    FundAccount fundAccount = fundAccountMapper.selectByUserId(userId);
+                    fundAccount.setBalance(fundAccount.getBalance().add(billCostLast.getCostAmount()));//客户追加扣费记录
+                     fundAccountMapper.updateByPrimaryKeySelective(fundAccount);
+
+                    billCostMapper.deleteByPrimaryKey(billCostLast.getId());//删除扣费记录
+                    fundItemMapper.deleteByPrimaryKey(fundItem.getId());//删除流水记录
+
+                    bill.setStandardDays(bill.getStandardDays()-1);//达标数减一天
+                    billMapper.updateByPrimaryKeySelective(bill);
+
 
                 }
 
@@ -161,10 +178,11 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                             fundAccountMapper.reduceBalance(fundAccount1.getId(), billPrice.getPrice()); //扣减余额
                             //创建资金消费流水
                             FundItem fundItem = new FundItem();
-                            fundItem.setFundAccountId(fundAccount.getId());
+                            fundItem.setFundAccountId(fundAccount1.getId());
                             fundItem.setChangeAmount(billCost.getCostAmount());
                             FundAccount fundAccount2 = fundAccountMapper.selectByPrimaryKey(fundAccount1.getId());
                             fundItem.setBalance(fundAccount2.getBalance());
+                            fundItem.setPriceId(billPrice.getId());
                             fundItem.setChangeTime(new Date());
                             fundItem.setItemType("cost"); //消费
                             fundItemMapper.insert(fundItem);
@@ -184,6 +202,7 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                             fundItem.setChangeAmount(billCost.getCostAmount());
                             FundAccount fundAccount2 = fundAccountMapper.selectByPrimaryKey(fundAccount.getId());
                             fundItem.setBalance(fundAccount2.getBalance());
+                            fundItem.setPriceId(billPrice.getId());
                             fundItem.setChangeTime(new Date());
                             fundItem.setItemType("cost"); //消费
                             fundItemMapper.insert(fundItem);
@@ -204,14 +223,19 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                 {
                     //达标天数加一天
                     bill.setStandardDays(bill.getStandardDays()+1);
-                    if(bill.getChangeRanking()!=null)
+                    bill.setUpdateTime(new Date());
+
+
+
+
+                   /* if(bill.getChangeRanking()!=null)
                     {
                         bill.setChangeRanking(bill.getChangeRanking()-bill.getNewRanking());
                     }
                     else
                     {
                         bill.setChangeRanking(bill.getNewRanking());
-                    }
+                    }*/
 
                     billMapper.updateByPrimaryKeySelective(bill);
                 }

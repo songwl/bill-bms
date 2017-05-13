@@ -104,6 +104,14 @@ var TableInit = function () {
 
                 },
                 {
+                    field: 'keywords',
+                    sortable: true,
+                    align: 'center',
+                    valign: 'middle',
+                    title: '关键词',
+
+                },
+                {
                     field: 'website',
                     sortable: true,
                     align: 'center',
@@ -112,14 +120,7 @@ var TableInit = function () {
 
 
                 },
-                {
-                    field: 'keywords',
-                    sortable: true,
-                    align: 'center',
-                    valign: 'middle',
-                    title: '关键词',
 
-                },
                 {
                     field: 'newRanking',
                     align: 'center',
@@ -133,7 +134,8 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '新增排名',
-                    width:100
+                    width:100,
+                    visible:false
                 },
 
             ],

@@ -517,6 +517,15 @@
       <if test="sortName =='state'">
         ORDER BY a.state ${sortOrder}
       </if>
+      <if test="sortName =='opstate'">
+        ORDER BY a.opstate ${sortOrder}
+      </if>
+      <if test="sortName =='allOptimization'">
+        ORDER BY a.day_optimization ${sortOrder}
+      </if>
+      <if test="sortName =='dayOptimization'">
+        ORDER BY a.all_optimization ${sortOrder}
+      </if>
     </if>
     <if test="offset != null">
       limit #{offset},#{limit}
@@ -1179,6 +1188,10 @@
     INNER  JOIN t_user as e ON b.out_member_id=e.id
     where  1=1
     AND b.in_member_id=#{userId,jdbcType=BIGINT}
+    and year(a.update_time)=#{year,jdbcType=INTEGER}
+    and month(a.update_time)=#{month,jdbcType=INTEGER}
+    and DAY(a.update_time) = #{day,jdbcType=INTEGER}
+    AND  a.standard_days =1
     AND (
     <if test="state != null">
       a.state = #{state,jdbcType=INTEGER}
@@ -1217,9 +1230,7 @@
     <if test="webAppId1 != null">
       AND  a.web_app_id1 = #{webAppId1,jdbcType=INTEGER}
     </if>
-    <if test="standardDays != null">
-      AND  a.standard_days = #{standardDays,jdbcType=INTEGER}
-    </if>
+
     <if test="dayOptimization != null">
       AND  a.day_optimization = #{dayOptimization,jdbcType=INTEGER}
     </if>
@@ -1312,6 +1323,10 @@
     INNER  JOIN t_user as e ON b.out_member_id=e.id
     where  1=1
     AND b.in_member_id=#{userId,jdbcType=BIGINT}
+    and year(a.update_time)=#{year,jdbcType=INTEGER}
+    and month(a.update_time)=#{month,jdbcType=INTEGER}
+    and DAY(a.update_time) = #{day,jdbcType=INTEGER}
+    AND  a.standard_days =1
     AND (
     <if test="state != null">
       a.state = #{state,jdbcType=INTEGER}
@@ -1351,7 +1366,7 @@
       AND  a.web_app_id1 = #{webAppId1,jdbcType=INTEGER}
     </if>
     <if test="standardDays != null">
-      AND  a.standard_days = #{standardDays,jdbcType=INTEGER}
+      AND  a.standard_days =1
     </if>
     <if test="dayOptimization != null">
       AND  a.day_optimization = #{dayOptimization,jdbcType=INTEGER}
@@ -1388,9 +1403,6 @@
     </if>
     <if test="newRanking2 != null">
       AND  a.new_ranking &lt;= #{newRanking2,jdbcType=INTEGER}
-    </if>
-    <if test="newchange != null">
-      AND  a.change_ranking &gt;= 0
     </if>
     <if test="addTime1 != null">
       AND  DATE_FORMAT(a.create_time,'%Y-%m-%d')  &gt;= DATE_FORMAT( #{addTime1,jdbcType=VARCHAR},'%Y-%m-%d')

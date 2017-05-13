@@ -72,6 +72,7 @@
     `balance` DECIMAL(10,2) NULL COMMENT '余额',
     `change_time` DATE NULL COMMENT '变动时间',
     `item_type` VARCHAR(64) NULL COMMENT '消费形式',
+    `priceId` BIGINT  NULL COMMENT '单价Id',
     PRIMARY KEY (`id`)  COMMENT '',
     INDEX `fk_t_fund_item_t_fund_account1_idx` (`fund_account_id` ASC)  COMMENT '',
     CONSTRAINT `fk_t_fund_item_t_fund_account1`
@@ -282,6 +283,6 @@ CREATE TABLE `t_forbidden_words` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `words` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB D
+) ENGINE=InnoDB
 COMMENT = '违禁词库.';
 

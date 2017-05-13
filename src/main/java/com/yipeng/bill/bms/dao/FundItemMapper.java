@@ -31,5 +31,6 @@ public interface FundItemMapper {
     //客户
     List<FundItemSum> selectByCustomer(Map<String,Object> params);
 
-
+    //查询今日单价对象对应的记录
+    FundItem selectByItemPriceId(Map<String,Object> params);
 }

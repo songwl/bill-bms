@@ -1090,9 +1090,14 @@ public class HomeServiceImpl implements HomeService {
 
             yAxis="50,55,60,65,70,75,80,85,90,95";
         }
+        else if(max>100&&max<=200)
+        {
+
+            yAxis="100,110,120,130,140,150,160,170,180,190";
+        }
         else if(max<=300&&max>200)
         {
-            yAxis="210,220,230,240,250,260,270,280,290,300";
+            yAxis="200,210,220,230,240,250,260,270,280,290";
         }
 
         return yAxis;
@@ -1108,7 +1113,7 @@ public class HomeServiceImpl implements HomeService {
         else if(max<=200&&max>100)
         {
 
-            yAxis="100,110,120,130,14,150,160,170,180,190";
+            yAxis="100,110,120,130,140,150,160,170,180,190";
         }
         else if(max<=300&&max>200)
         {

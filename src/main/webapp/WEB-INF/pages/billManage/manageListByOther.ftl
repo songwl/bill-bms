@@ -1,14 +1,14 @@
 <#import "/base/base.ftl" as base>
 <#import "/base/dict.ftl" as dict>
 
-<@base.html "订单管理">
+<@base.html "数据统计">
 
 <script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <script src="${ctx}/static/js/billManage/manageListByOther.js"></script>
 <div class="Navs">
     <div class="nav_L left">
-        <i class="fa fa-home">&nbsp;</i><span>订单管理</span> > <span>订单管理</span>
+        <i class="fa fa-home">&nbsp;</i><span>数据统计</span> > <span>订单管理</span>
     </div>
     <div class="nav_R right" id="divQx">
         <div class="search">

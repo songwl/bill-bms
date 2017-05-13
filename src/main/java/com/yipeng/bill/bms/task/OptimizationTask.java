@@ -1,7 +1,9 @@
 package com.yipeng.bill.bms.task;
 
 import com.yipeng.bill.bms.dao.BillMapper;
+import com.yipeng.bill.bms.dao.BillOptimizationMapper;
 import com.yipeng.bill.bms.domain.Bill;
+import com.yipeng.bill.bms.domain.BillOptimization;
 import com.yipeng.bill.bms.model.Define;
 import com.yipeng.bill.bms.model.Md5_UrlEncode;
 import com.yipeng.bill.bms.service.RemoteService;
@@ -31,6 +33,8 @@ public class OptimizationTask {
     private RemoteService remoteService;
     @Autowired
     private BillMapper billMapper;
+    @Autowired
+    private BillOptimizationMapper billOptimizationMapper;
     public void execute() throws IOException, NoSuchAlgorithmException {
         //统计每日的优化数据
         int offset = 0;
@@ -47,6 +51,14 @@ public class OptimizationTask {
             List<Bill> billList = billMapper.selectBill(params);
             if (!CollectionUtils.isEmpty(billList)) {
                 for (Bill bill : billList) {
+                    //结算一次优化点击次数
+                    //生成优化点击次数记录
+
+                    BillOptimization billOptimization=new BillOptimization();
+                    billOptimization.setBillId(bill.getId());
+                    billOptimization.setOptimizationCount(bill.getDayOptimization());
+                    billOptimization.setOptimizationDate(new Date());
+                    billOptimizationMapper.insert(billOptimization);
                     //日优化
                      int single=bill.getDayOptimization();
                      //总优化

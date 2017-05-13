@@ -22,7 +22,7 @@
     delete from t_bill_cost
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.BillCost">
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.BillCost" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
     insert into t_bill_cost (id, t_bill_id, t_bill_price_id, 
       cost_amount, cost_date, ranking
       )
@@ -284,6 +284,7 @@
     SELECT b.* from t_bill_price as a,t_bill_cost as b
     where a.bill_id=b.t_bill_id
     AND a.id=b.t_bill_price_id
+    AND b.t_bill_id=#{billId,jdbcType=BIGINT}
     AND a.out_member_id=#{outMemberId,jdbcType=BIGINT}
     and year(b.cost_date)=#{year,jdbcType=INTEGER}
     and month(b.cost_date)=#{month,jdbcType=INTEGER}

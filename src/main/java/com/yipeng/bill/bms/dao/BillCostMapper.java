@@ -66,4 +66,11 @@ public interface BillCostMapper {
      * @return
      */
         BillCost selectByCostByOutId(Map<String,Object> params);
+
+    /**
+     * 判断今日消费是否存在
+     * @param params
+     * @return
+     */
+        BillCost selectByDayCostExisit(Map<String,Object> params);
 }

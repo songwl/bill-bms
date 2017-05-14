@@ -17,9 +17,9 @@
             <ref bean="CallCostTaskJob"/>
         </property>
         <property name="cronExpression">
-            <!--上午10点10分计费-->
-            <!--<value>0 */1 * * * ?</value>-->
-            <value>0 40 8,16 * * ? </value> <!--  : 每天11:01,11:02,11:03; 12:01,12:02,12:03分执行任务-->
+
+            <value>0 */2 * * * ?</value>
+        <!--    <value>0 40 8,16 * * ? </value> &lt;!&ndash;  : 每天11:01,11:02,11:03; 12:01,12:02,12:03分执行任务&ndash;&gt;-->
         </property>
     </bean>
     <!--查询初始排名-->

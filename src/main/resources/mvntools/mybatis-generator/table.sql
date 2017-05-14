@@ -165,7 +165,7 @@
     `t_bill_id` BIGINT NOT NULL COMMENT '',
     `t_bill_price_id` BIGINT NOT NULL COMMENT '',
     `cost_amount` DECIMAL(10,2) NULL COMMENT '消费金额',
-    `cost_date` DATE NULL COMMENT '',
+    `cost_date` DATETIME NULL COMMENT '',
     `ranking` INT NULL COMMENT '排名',
     PRIMARY KEY (`id`)  COMMENT '',
     INDEX `fk_t_bill_cost_t_bill1_idx` (`t_bill_id` ASC)  COMMENT '',

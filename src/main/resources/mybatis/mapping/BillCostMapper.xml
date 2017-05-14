@@ -6,7 +6,7 @@
     <result column="t_bill_id" jdbcType="BIGINT" property="tBillId" />
     <result column="t_bill_price_id" jdbcType="BIGINT" property="tBillPriceId" />
     <result column="cost_amount" jdbcType="DECIMAL" property="costAmount" />
-    <result column="cost_date" jdbcType="DATE" property="costDate" />
+    <result column="cost_date" jdbcType="TIMESTAMP" property="costDate" />
     <result column="ranking" jdbcType="INTEGER" property="ranking" />
   </resultMap>
   <sql id="Base_Column_List">
@@ -27,7 +27,7 @@
       cost_amount, cost_date, ranking
       )
     values (#{id,jdbcType=BIGINT}, #{tBillId,jdbcType=BIGINT}, #{tBillPriceId,jdbcType=BIGINT}, 
-      #{costAmount,jdbcType=DECIMAL}, #{costDate,jdbcType=DATE}, #{ranking,jdbcType=INTEGER}
+      #{costAmount,jdbcType=DECIMAL}, #{costDate,jdbcType=TIMESTAMP}, #{ranking,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.BillCost">
@@ -66,7 +66,7 @@
         #{costAmount,jdbcType=DECIMAL},
       </if>
       <if test="costDate != null">
-        #{costDate,jdbcType=DATE},
+        #{costDate,jdbcType=TIMESTAMP},
       </if>
       <if test="ranking != null">
         #{ranking,jdbcType=INTEGER},
@@ -86,7 +86,7 @@
         cost_amount = #{costAmount,jdbcType=DECIMAL},
       </if>
       <if test="costDate != null">
-        cost_date = #{costDate,jdbcType=DATE},
+        cost_date = #{costDate,jdbcType=TIMESTAMP},
       </if>
       <if test="ranking != null">
         ranking = #{ranking,jdbcType=INTEGER},
@@ -99,7 +99,7 @@
     set t_bill_id = #{tBillId,jdbcType=BIGINT},
       t_bill_price_id = #{tBillPriceId,jdbcType=BIGINT},
       cost_amount = #{costAmount,jdbcType=DECIMAL},
-      cost_date = #{costDate,jdbcType=DATE},
+      cost_date = #{costDate,jdbcType=TIMESTAMP},
       ranking = #{ranking,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -113,7 +113,7 @@
     select
     <include refid="Base_Column_List" />
     from t_bill_cost
-    where t_bill_id = #{BillId,jdbcType=BIGINT} AND cost_date=#{date,jdbcType=DATE}
+    where t_bill_id = #{BillId,jdbcType=BIGINT} AND cost_date=#{date,jdbcType=TIMESTAMP}
     <if test="priceId != null">
       and t_bill_price_id= #{priceId,jdbcType=INTEGER}
     </if>
@@ -289,5 +289,15 @@
     and year(b.cost_date)=#{year,jdbcType=INTEGER}
     and month(b.cost_date)=#{month,jdbcType=INTEGER}
     and DAY(b.cost_date) = #{day,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByDayCostExisit"  resultMap="BaseResultMap">
+    SELECT a.* from t_bill_cost as a
+    where
+    a.t_bill_id=#{billId,jdbcType=BIGINT}
+    AND a.t_bill_price_id=#{priceId,jdbcType=BIGINT}
+    and year(a.cost_date)=#{year,jdbcType=INTEGER}
+    and month(a.cost_date)=#{month,jdbcType=INTEGER}
+    and DAY(a.cost_date) = #{day,jdbcType=INTEGER}
   </select>
 </mapper>

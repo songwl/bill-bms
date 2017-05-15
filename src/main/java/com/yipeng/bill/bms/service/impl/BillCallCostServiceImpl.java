@@ -4,10 +4,12 @@ import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.service.BillCallCostService;
+import org.apache.logging.log4j.spi.LoggerContextKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import sun.misc.Lock;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -157,6 +159,7 @@ public class BillCallCostServiceImpl implements BillCallCostService {
             {
                 //判断排名
                 for (BillPrice billPrice : billPriceList) {
+
                     if (billPrice.getBillRankingStandard().intValue()>=newRanking){ //最新排名在次设置的排名,即达到排名优化标准
 
                         //判断今日消费记录是否已经存在
@@ -167,6 +170,7 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                         costParams.put("month",now.get(Calendar.MONTH)+1);
                         costParams.put("day",now.get(Calendar.DATE));
                         BillCost billCostExsit=billCostMapper.selectByDayCostExisit(costParams);
+
                         if(billCostExsit==null)
                         {
 
@@ -176,7 +180,8 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                             billCost.setCostAmount(billPrice.getPrice()); //消费金额
                             billCost.setCostDate(new Date()); //消费日期
                             billCost.setRanking(newRanking);
-                            billCostMapper.insert(billCost);
+                           int ab= billCostMapper.insert(billCost);
+                            System.out.print("当前订单："+bill.getWebsite()+",插入了几条数据："+ab+"，时间："+new Date());
                             //4.从资金账号扣减余额
                             FundAccount fundAccount = fundAccountMapper.selectByUserId(userId);
                             if(fundAccount==null)
@@ -187,11 +192,14 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                                 fundAccount1.setCreateTime(new Date());
                                 fundAccount1.setBalance(new BigDecimal(0));
                                 int a= fundAccountMapper.insert(fundAccount1);
+
                                 fundAccountMapper.reduceBalance(fundAccount1.getId(), billPrice.getPrice()); //扣减余额
                                 //创建资金消费流水
                                 FundItem fundItem = new FundItem();
                                 fundItem.setFundAccountId(fundAccount1.getId());
                                 fundItem.setChangeAmount(billCost.getCostAmount());
+
+
                                 FundAccount fundAccount2 = fundAccountMapper.selectByPrimaryKey(fundAccount1.getId());
                                 fundItem.setBalance(fundAccount2.getBalance());
                                 fundItem.setPriceId(billPrice.getId());
@@ -202,7 +210,7 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                                 bool=true;
                                 // bill.setStandardDays(bill.getStandardDays()+1);
                                 //billMapper.updateByPrimaryKeySelective(bill);
-                                break;
+
 
                             }
                             else
@@ -222,19 +230,21 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                                 bool=true;
                                 //bill.setStandardDays(bill.getStandardDays()+1);
                                 //billMapper.updateByPrimaryKeySelective(bill);
-                                break; //不需要再往后
+                                //不需要再往后
                             }
+                            break;
                         }
-
-
-
-
+                        else
+                        {
+                            break;
+                        }
                     }
                     else {
                         bool=false;
                     }
 
                 }
+
 
             }
 

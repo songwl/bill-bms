@@ -33,7 +33,7 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.yipeng.bill.bms.domain.FundItem" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
-    insert into t_fund_item (id, fund_account_id, change_amount,balance,
+    insert ignore into t_fund_item (id, fund_account_id, change_amount,balance,
       change_time, item_type,priceId)
     values (#{id,jdbcType=BIGINT}, #{fundAccountId,jdbcType=BIGINT}, #{changeAmount,jdbcType=DECIMAL},#{balance,jdbcType=DECIMAL},
       #{changeTime,jdbcType=TIMESTAMP}, #{itemType,jdbcType=VARCHAR}, #{priceId,jdbcType=BIGINT})
@@ -162,5 +162,11 @@
     and year(change_time)=#{year,jdbcType=INTEGER}
     and month(change_time)=#{month,jdbcType=INTEGER}
     and DAY(change_time) = #{day,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByMaxId"    resultType="java.lang.Long">
+    SELECT MAX(id)  from
+    t_fund_item as a
+    where  a.fund_account_id=#{fundAccountId,jdbcType=BIGINT}
   </select>
 </mapper>

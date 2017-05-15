@@ -33,4 +33,6 @@ public interface FundItemMapper {
 
     //查询今日单价对象对应的记录
     FundItem selectByItemPriceId(Map<String,Object> params);
+
+    Long selectByMaxId(Map<String,Object> params);
 }

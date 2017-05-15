@@ -956,7 +956,7 @@
       AND  d.search_support= #{searchName,jdbcType=VARCHAR}
     </if>
     <if test="searchUserNameId != null">
-      AND  b.out_member_id= #{searchUserNameId,jdbcType=VARCHAR}
+      AND  a.out_member_id= #{searchUserNameId,jdbcType=VARCHAR}
     </if>
     <if test="searchStandard != null">
       AND a.new_ranking &lt;= b.bill_ranking_standard
@@ -969,6 +969,14 @@
     from t_bill as a,t_bill_price as b,t_bill_search_support as d,t_user as e
     where a.id=b.bill_id AND  a.id=d.bill_id and b.out_member_id=e.id
     AND b.out_member_id=#{userId,jdbcType=BIGINT}
+    AND (
+    <if test="state != null">
+      a.state = #{state,jdbcType=INTEGER}
+    </if>
+    <if test="state2 != null">
+      OR  state = #{state2,jdbcType=INTEGER}
+    </if>
+    )
     <if test="website != null">
       AND a.website LIKE CONCAT('%',#{website,jdbcType=VARCHAR},'%')
     </if>
@@ -1008,12 +1016,7 @@
     <if test="allOptimization != null">
       AND  a.all_optimization = #{allOptimization,jdbcType=INTEGER}
     </if>
-    <if test="state != null">
-      AND  a.state = #{state,jdbcType=INTEGER}
-    </if>
-    <if test="state2 != null">
-      OR  a.state = #{state2,jdbcType=INTEGER}
-    </if>
+
     <if test="opstate != null">
       AND  a.opstate = #{opstate,jdbcType=INTEGER}
     </if>

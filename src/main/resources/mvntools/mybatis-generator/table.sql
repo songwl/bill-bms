@@ -175,11 +175,7 @@
       REFERENCES `t_bill` (`id`)
       ON DELETE NO ACTION
       ON UPDATE NO ACTION,
-    CONSTRAINT `fk_t_bill_cost_t_bill_price1`
-      FOREIGN KEY (`t_bill_price_id`)
-      REFERENCES `t_bill_price` (`id`)
-      ON DELETE NO ACTION
-      ON UPDATE NO ACTION)
+
   ENGINE = InnoDB
   COMMENT = '计费消费表';
 

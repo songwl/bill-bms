@@ -45,7 +45,7 @@ public class HomeController extends BaseController {
 	@RequestMapping(value = "/home")
 	public String home(ModelMap model) throws Exception {
         LoginUser loginUser=this.getCurrentAccount();
-		Map<String, Object> bms=homeService.homeDetails(loginUser);
+		Map<String, Object> bms=new HashMap<>();
 		/*Map<String, Object> bms=new HashMap<>();*/
 		bms.put("user", loginUser);
 		model.addAttribute("bmsModel", bms);
@@ -53,7 +53,16 @@ public class HomeController extends BaseController {
 		return "/home/home";
 	}
 
-	//uploadFile
+	@RequestMapping(value = "/homeDetails")
+	@ResponseBody
+	public Map<String, Object> homeDetails(ModelMap model) throws Exception {
+		LoginUser loginUser=this.getCurrentAccount();
+		Map<String, Object> bms=homeService.homeDetails(loginUser);
+		model.addAttribute("bmsModel", bms);
+		return bms;
+	}
+
+
 
 
 }

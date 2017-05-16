@@ -21,8 +21,8 @@
                     <div class="title">
                         客户数
                     </div>
-                    <div class="value">
-                    ${bmsModel.UserCount}
+                    <div class="value" id="UserCount">
+
                     </div>
                 </div>
             </div>
@@ -38,8 +38,8 @@
                     <div class="title">
                         账户余额
                     </div>
-                    <div class="value">
-                        ￥${bmsModel.balance}
+                    <div class="value"  id="balance">
+
                     </div>
                 </div>
             </div>
@@ -55,8 +55,8 @@
                 <div class="title">
                     本月总消费
                 </div>
-                <div class="value">
-                    ￥${bmsModel.MonthConsumption}
+                <div class="value" id="MonthConsumption">
+
                 </div>
             </div>
         </div>
@@ -70,8 +70,8 @@
                 <div class="title">
                     累计任务数
                 </div>
-                <div class="value">
-                ${bmsModel.AllbillCount}
+                <div class="value" id="AllbillCount">
+
                 </div>
             </div>
         </div>
@@ -82,11 +82,11 @@
                 <div class="visual cyan">
                     <i class="fa fa-tasks"></i>
                 </div>
-                <div class="title">
+                <div class="title" >
                     当前任务数
                 </div>
-                <div class="value">
-                ${bmsModel.billCount}
+                <div class="value" id="billCount">
+
                 </div>
             </div>
         </div>
@@ -100,8 +100,8 @@
                 <div class="title">
                     今日消费
                 </div>
-                <div class="value">
-                    ￥${bmsModel.DayConsumption}
+                <div class="value" id="DayConsumption">
+
                 </div>
             </div>
         </div>
@@ -115,8 +115,8 @@
                 <div class="title">
                     今日达标任务
                 </div>
-                <div class="value">
-                ${bmsModel.standardSum}
+                <div class="value" id="standardSum">
+
                 </div>
             </div>
         </div>
@@ -133,8 +133,8 @@
                 <div class="title">
                     总完成率
                 </div>
-                <div class="value">
-                ${bmsModel.AllCompleteness}%
+                <div class="value" id="AllCompleteness">
+
                 </div>
             </div>
         </div>
@@ -148,8 +148,8 @@
                 <div class="title">
                     百度完成率
                 </div>
-                <div class="value">
-                ${bmsModel.baiduCompleteness}%
+                <div class="value" id="baiduCompleteness">
+
                 </div>
             </div>
         </div>
@@ -163,8 +163,8 @@
                 <div class="title">
                     百度手机完成率
                 </div>
-                <div class="value">
-                ${bmsModel.baiduWapCompleteness}%
+                <div class="value" id="baiduWapCompleteness">
+
                 </div>
             </div>
         </div>
@@ -178,8 +178,8 @@
                 <div class="title">
                     360完成率
                 </div>
-                <div class="value">
-                ${bmsModel.sanliulingCompleteness}%
+                <div class="value" id="sanliulingCompleteness">
+
                 </div>
             </div>
         </div>
@@ -208,8 +208,8 @@
                 <div class="title">
                     搜狗完成率
                 </div>
-                <div class="value">
-                ${bmsModel.sougouCompleteness}%
+                <div class="value" id="sougouCompleteness">
+
                 </div>
             </div>
         </div>
@@ -223,8 +223,8 @@
                 <div class="title">
                     神马完成率
                 </div>
-                <div class="value">
-                ${bmsModel.shenmaCompleteness}%
+                <div class="value" id="shenmaCompleteness">
+
                 </div>
             </div>
         </div>
@@ -255,52 +255,57 @@
 <div id="container1" style="width: 100%; height: 400px; float:left;;"></div>
     <#if bmsModel.user.hasRole("SUPER_ADMIN")>
     <div id="container" style="width: 100%; height: 400px; float:left;;"></div>
-    <script>
-        $(function () {
-            var chart = new Highcharts.Chart('container', {
-                title: {
-                    text: '任务达标数量走势图 ',
-                    x: -20
-                },
 
-                xAxis: {
-                    categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10','11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31']
-
-                },
-                yAxis: {
-                    floor: 0,
-                    gridLineColor: '#197F07',
-                    gridLineWidth: 1,
-                    tickPositions:[${bmsModel.yAxis}],
-                    ceiling: 20,
-                    title: {
-                        text: '单位 (个)'
-                    }
-                },
-                tooltip: {
-                    valueSuffix: ''
-                },
-                legend: {
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'middle',
-                    borderWidth: 0
-                },
-                series: [{
-                    name: '上月',
-                    data: [${bmsModel.seriesLastMonth}]
-                }, {
-                    name: '本月',
-                    data: [${bmsModel.seriesNowMonth}]
-                },  ]
-            })
-        });
-    </script>
     </#if>
-<script>
-    $(function () {
+<script type="text/javascript">
+
+
+    //异步加载首页数据，解决加载慢的问题
+
+        $.ajax({
+            type:'get',
+            async: true,
+            url:CTX+'/homeDetails',
+            success:function (result) {
+                $("#UserCount").html(result.UserCount);
+                $("#balance").html("¥"+result.balance);
+                $("#MonthConsumption").html("¥"+result.MonthConsumption);
+                $("#AllbillCount").html(result.AllbillCount);
+                $("#billCount").html(result.billCount);
+                $("#DayConsumption").html("¥"+result.DayConsumption);
+                $("#standardSum").html(result.standardSum);
+                $("#AllCompleteness").html(result.AllCompleteness+"%");
+                $("#baiduCompleteness").html(result.baiduCompleteness+"%");
+                $("#baiduWapCompleteness").html(result.baiduWapCompleteness+"%");
+                $("#sanliulingCompleteness").html(result.sanliulingCompleteness+"%");
+                $("#sougouCompleteness").html(result.sougouCompleteness);
+                $("#shenmaCompleteness").html(result.shenmaCompleteness+"%");
+               // var json = eval("(" + result.yAxisSum + ")");
+
+                container1(result);
+
+            }
+        })
+        function container1(result) {
+        var arr=result.yAxisSum.split(',');
+        var arr1=result.seriesLastMonthSum.split(',');
+        var arr2=result.seriesNowMonthSum.split(',');
+        var aa=[];
+        var aa1=[];
+        var aa2=[];
+        $.each(arr,function (i,item) {
+            aa.push(item-0);
+        })
+        $.each(arr1,function (i,item) {
+            aa1.push(item-0);
+        })
+        $.each(arr2,function (i,item) {
+            aa2.push(item-0);
+        })
         var chart1 = new Highcharts.Chart('container1', {
+
             title: {
+
                 text: '任务消费走势图 ',
                 x: -20
             },
@@ -313,7 +318,7 @@
                 floor: 0,
                 gridLineColor: '#197F07',
                 gridLineWidth: 1,
-                tickPositions:[${bmsModel.yAxisSum}],
+                tickPositions:aa,
                 ceiling: 20,
                 title: {
                     text: '单位 (元)'
@@ -330,14 +335,67 @@
             },
             series: [{
                 name: '上月',
-                data: [${bmsModel.seriesLastMonthSum}]
+                data: aa1
             }, {
                 name: '本月',
-                data: [${bmsModel.seriesNowMonthSum}]
+                data: aa2
             },  ]
         })
-    });
 
-</script>
+        var str1=result.yAxis.split(',');
+        var str2=result.seriesLastMonth.split(',');
+        var str3=result.seriesNowMonth.split(',');
+        var bb1=[];
+        var bb2=[];
+        var bb3=[];
+        $.each(str1,function (i,item) {
+            bb1.push(item-0);
+        })
+        $.each(str2,function (i,item) {
+            bb2.push(item-0);
+        })
+        $.each(str3,function (i,item) {
+            bb3.push(item-0);
+        })
+        var chart = new Highcharts.Chart('container', {
+                title: {
+                    text: '任务达标数量走势图 ',
+                    x: -20
+                },
+
+                xAxis: {
+                    categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10','11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31']
+
+                },
+                yAxis: {
+                    floor: 0,
+                    gridLineColor: '#197F07',
+                    gridLineWidth: 1,
+                    tickPositions:bb1,
+                    ceiling: 20,
+                    title: {
+                        text: '单位 (个)'
+                    }
+                },
+                tooltip: {
+                    valueSuffix: ''
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'right',
+                    verticalAlign: 'middle',
+                    borderWidth: 0
+                },
+                series: [{
+                    name: '上月',
+                    data:bb2
+                }, {
+                    name: '本月',
+                    data: bb3
+                },  ]
+            })
+
+    }
+ </script>
 
 </@base.html>

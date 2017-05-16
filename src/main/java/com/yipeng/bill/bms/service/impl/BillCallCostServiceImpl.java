@@ -41,6 +41,7 @@ public class BillCallCostServiceImpl implements BillCallCostService {
         List<BillPrice> prices = billPriceMapper.selectByBillId(bill.getId());
         //判断是否扣费
         Boolean bool=false;
+        BigDecimal  costPrice=new BigDecimal(0);
         Map<Long,List<BillPrice>> userPriceMap = new HashMap<>();
         for (BillPrice billPrice : prices) {
             Long userId = billPrice.getOutMemberId(); //付款人
@@ -192,8 +193,6 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                                 fundAccount1.setCreateTime(new Date());
                                 fundAccount1.setBalance(new BigDecimal(0));
                                 int a= fundAccountMapper.insert(fundAccount1);
-
-                                fundAccountMapper.reduceBalance(fundAccount1.getId(), billPrice.getPrice()); //扣减余额
                                 //创建资金消费流水
                                 FundItem fundItem = new FundItem();
                                 fundItem.setFundAccountId(fundAccount1.getId());
@@ -206,16 +205,9 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                                 fundItem.setChangeTime(new Date());
                                 fundItem.setItemType("cost"); //消费
                                 fundItemMapper.insert(fundItem);
-                                //新增达标天数（已经扣费）
-                                bool=true;
-                                // bill.setStandardDays(bill.getStandardDays()+1);
-                                //billMapper.updateByPrimaryKeySelective(bill);
-
-
                             }
                             else
                             {
-                                fundAccountMapper.reduceBalance(fundAccount.getId(), billPrice.getPrice()); //扣减余额
                                 //创建资金消费流水
                                 FundItem fundItem = new FundItem();
                                 fundItem.setFundAccountId(fundAccount.getId());
@@ -226,12 +218,10 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                                 fundItem.setChangeTime(new Date());
                                 fundItem.setItemType("cost"); //消费
                                 fundItemMapper.insert(fundItem);
-                                //新增达标天数
-                                bool=true;
-                                //bill.setStandardDays(bill.getStandardDays()+1);
-                                //billMapper.updateByPrimaryKeySelective(bill);
-                                //不需要再往后
+
                             }
+                            bool=true;
+                            costPrice=billPrice.getPrice();
                             break;
                         }
                         else
@@ -247,6 +237,14 @@ public class BillCallCostServiceImpl implements BillCallCostService {
 
 
             }
+            //扣减余额
+            if (bool)
+            {
+                FundAccount fundAccount=fundAccountMapper.selectByUserId(userId);
+
+                fundAccountMapper.reduceBalance(fundAccount.getId(), costPrice); //扣减余额
+            }
+
 
 
         }
@@ -256,6 +254,8 @@ public class BillCallCostServiceImpl implements BillCallCostService {
             //达标天数加一天
             bill.setStandardDays(bill.getStandardDays()+1);
             bill.setUpdateTime(new Date());
+
+            billMapper.updateByPrimaryKeySelective(bill);
 
 
 
@@ -269,7 +269,6 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                         bill.setChangeRanking(bill.getNewRanking());
                     }*/
 
-            billMapper.updateByPrimaryKeySelective(bill);
         }
         return 1;
     }

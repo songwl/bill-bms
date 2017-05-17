@@ -98,99 +98,6 @@ public class HomeServiceImpl implements HomeService {
         if(loginUser.hasRole("SUPER_ADMIN"))
         {
 
-            //客户数
-            Role role=roleMapper.selectByRoleCode("DISTRIBUTOR");
-            params.put("roleId",role.getId());
-
-            Long count=UserCount(params);
-            map.put("UserCount",count);
-            //本月消费
-            Double MonthConsumption=MonthConsumption(params);
-            map.put("MonthConsumption",MonthConsumption);
-            params.put("state",2);
-
-            //本日消费
-            Double DayConsumption=DayConsumption(params);
-            map.put("DayConsumption",DayConsumption);
-
-            //当前任务数
-            Long billCount=billMapper.getBillListCount(params);
-            map.put("billCount",billCount);
-            //累计任务数
-            params.put("state2",3);
-            Long AllbillCount=billMapper.getBillListCount(params);
-            map.put("AllbillCount",AllbillCount);
-            //今日达标数
-            //1,先获取对应所有的订单
-            Map<String,Object> billparam=new HashMap<>();
-            billparam.put("userId",loginUser.getId());
-            billparam.put("state",2);
-            //订单数（优化中）
-            List<Bill> billList=billMapper.selectByInMemberId(billparam);
-            //判断哪些订单今日达标
-            int standardSum=0;//今天达标数
-            if(billList.size()>0)
-            {
-                for (Bill bill:billList
-                        ) {
-                    //对应订单排名标准
-                    BillPrice billPrice=new BillPrice();
-                    billPrice.setBillId(bill.getId());
-                    billPrice.setInMemberId(loginUser.getId());
-                    List<BillPrice> billPriceList=new ArrayList<>();
-                    billPriceList=billPriceMapper.selectByBillPrice(billPrice);
-                    //判断今日订单达到哪个标准
-                    for (BillPrice item:billPriceList
-                            ) {
-                        if(bill.getNewRanking()<=item.getBillRankingStandard())
-                        {
-                            standardSum+=1;
-                            break;
-                        }
-                    }
-                }
-            }
-            map.put("standardSum",standardSum);
-
-            DecimalFormat df = new DecimalFormat("0.00");//格式化小数
-            //总完成率(今日达标数/总订单数)
-            double AllCompleteness=0;
-            if(billList.size()>0)
-            {
-                AllCompleteness=((double)standardSum/billList.size())*100;
-            }
-
-            map.put("AllCompleteness",df.format(AllCompleteness));
-            //百度完成率
-            String baidu="百度";
-            Double baiduCompleteness=searchCompleteness(baidu,loginUser);
-            map.put("baiduCompleteness",df.format(baiduCompleteness));
-            //百度wap完成率
-            String baiduWap="手机百度";
-            Double baiduWapCompleteness=searchCompleteness(baiduWap,loginUser);
-            map.put("baiduWapCompleteness",df.format(baiduWapCompleteness));
-            //360完成率
-            String sanliuling="360";
-            Double sanliulingCompleteness=searchCompleteness(sanliuling,loginUser);
-            map.put("sanliulingCompleteness",df.format(sanliulingCompleteness));
-
-            //搜狗完成率
-            String sougou="搜狗";
-            Double sougouCompleteness=searchCompleteness(sougou,loginUser);
-            map.put("sougouCompleteness",df.format(sougouCompleteness));
-
-            //手机360
-            String sanliulingWap="手机360";
-            Double sanliulingWapCompleteness=searchCompleteness(sanliulingWap,loginUser);
-            map.put("sanliulingWapCompleteness",df.format(sanliulingWapCompleteness));
-            //手机搜狗
-            String sougouWap="手机搜狗";
-            Double sougouWapWapCompleteness=searchCompleteness(sougouWap,loginUser);
-            map.put("sougouWapWapCompleteness",df.format(sougouWapWapCompleteness));
-            //手机搜狗
-            String shenma="神马";
-            Double shenmaCompleteness=searchCompleteness(shenma,loginUser);
-            map.put("shenmaCompleteness",df.format(shenmaCompleteness));
             //某个月的第一天和最后一天
             Map<String, String> maps = getFirstday_Lastday_Month(dateNow);
             String fistDay=maps.get("first");
@@ -294,101 +201,7 @@ public class HomeServiceImpl implements HomeService {
         //渠道商和代理商
         else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
         {
-            //账户余额
-            FundAccount fundAccount=fundAccountMapper.selectByUserId(loginUser.getId());
-            if (fundAccount==null)
-            {
 
-                map.put("balance",0);
-            }
-            else
-            {
-                map.put("balance",fundAccount.getBalance());
-
-            }
-            //月总消费
-            Double MonthConsumption=MonthConsumption(params);
-            map.put("MonthConsumption",MonthConsumption);
-            //本日消费
-            Double DayConsumption=DayConsumption(params);
-            map.put("DayConsumption",DayConsumption);
-            //当前任务数
-            params.put("state",2);
-            Long billCount=billMapper.getBillListCount(params);
-            map.put("billCount",billCount);
-            //累计任务数
-            params.put("state2",3);
-            Long AllbillCount=billMapper.getBillListCount(params);
-            map.put("AllbillCount",AllbillCount);
-
-            //今日达标数
-            //1,先获取对应所有的订单
-            Map<String,Object> billparam=new HashMap<>();
-            billparam.put("userId",loginUser.getId());
-            billparam.put("state",2);
-            List<Bill> billList=billMapper.selectByInMemberId(billparam);
-            //判断哪些订单今日达标
-            int standardSum=0;//今天达标数
-            if(billList.size()>0)
-            {
-                for (Bill bill:billList
-                        ) {
-                    //对应订单排名标准
-                    BillPrice billPrice=new BillPrice();
-                    billPrice.setBillId(bill.getId());
-                    billPrice.setInMemberId(loginUser.getId());
-                    List<BillPrice> billPriceList=new ArrayList<>();
-                    billPriceList=billPriceMapper.selectByBillPrice(billPrice);
-                    //判断今日订单达到哪个标准
-                    for (BillPrice item:billPriceList
-                            ) {
-                        if(bill.getNewRanking()<=item.getBillRankingStandard())
-                        {
-                            standardSum+=1;
-                            break;
-                        }
-                    }
-                }
-            }
-            map.put("standardSum",standardSum);
-
-            DecimalFormat df = new DecimalFormat("0.00");//格式化小数
-            //总完成率(今日达标数/总订单数)
-            double AllCompleteness=0;
-            if(billList.size()>0)
-            {
-                AllCompleteness=((double)standardSum/billList.size())*100;
-            }
-            map.put("AllCompleteness",df.format(AllCompleteness));
-            //百度完成率
-            String baidu="百度";
-            Double baiduCompleteness=searchCompleteness(baidu,loginUser);
-            map.put("baiduCompleteness",df.format(baiduCompleteness));
-            //百度wap完成率
-            String baiduWap="手机百度";
-            Double baiduWapCompleteness=searchCompleteness(baiduWap,loginUser);
-            map.put("baiduWapCompleteness",df.format(baiduWapCompleteness));
-            //360完成率
-            String sanliuling="360";
-            Double sanliulingCompleteness=searchCompleteness(sanliuling,loginUser);
-            map.put("sanliulingCompleteness",df.format(sanliulingCompleteness));
-
-            //搜狗完成率
-            String sougou="搜狗";
-            Double sougouCompleteness=searchCompleteness(sougou,loginUser);
-            map.put("sougouCompleteness",df.format(sougouCompleteness));
-            //手机360
-            String sanliulingWap="手机360";
-            Double sanliulingWapCompleteness=searchCompleteness(sanliulingWap,loginUser);
-            map.put("sanliulingWapCompleteness",df.format(sanliulingWapCompleteness));
-            //手机搜狗
-            String sougouWap="手机搜狗";
-            Double sougouWapWapCompleteness=searchCompleteness(sougouWap,loginUser);
-            map.put("sougouWapWapCompleteness",df.format(sougouWapWapCompleteness));
-            //手机搜狗
-            String shenma="神马";
-            Double shenmaCompleteness=searchCompleteness(shenma,loginUser);
-            map.put("shenmaCompleteness",df.format(shenmaCompleteness));
             //某个月的第一天和最后一天
             Map<String, String> maps = getFirstday_Lastday_Month(dateNow);
             String fistDay=maps.get("first");
@@ -417,23 +230,19 @@ public class HomeServiceImpl implements HomeService {
                 Date tomorrow = calendar.getTime();
                 String str=formatter.format(tomorrow);
                 dateMap.put("date",str);
-                int keywordsCount=billCostMapper.selectByBillCostOfDay(dateMap);
+
                 Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
-                //比较达标最大数
-                if(MaxYbylast<=keywordsCount)
-                {
-                    MaxYbylast=keywordsCount;
-                }
+
                 //比较消费最大数
                 if(MaxYbylastCost<=keywordsSum)
                 {
                     MaxYbylastCost=keywordsSum;
                 }
-                seriesLastMonth+=keywordsCount+",";
+
                 seriesLastMonthSum+=keywordsSum+",";
             }
             //上个月的达标数
-            map.put("seriesLastMonth",seriesLastMonth);
+
             map.put("seriesLastMonthSum",seriesLastMonthSum);
             //判断Y轴的显示
             int MaxYbyNew=0;
@@ -446,18 +255,14 @@ public class HomeServiceImpl implements HomeService {
                 Date tomorrow = calendar.getTime();
                 String str1=formatter.format(tomorrow);
                 dateMap.put("date",str1);
-                int keywordsCount=billCostMapper.selectByBillCostOfDay(dateMap);
+
                 Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
-                //比较达标最大数
-                if(MaxYbyNew<=keywordsCount)
-                {
-                    MaxYbyNew=keywordsCount;
-                }
+
                 if(MaxYbyNewCost<=keywordsSum)
                 {
                     MaxYbyNewCost=keywordsSum;
                 }
-                seriesNowMonth+=keywordsCount+",";
+
                 seriesNowMonthSum+=keywordsSum+",";
             }
             String yAxis="";
@@ -478,113 +283,14 @@ public class HomeServiceImpl implements HomeService {
             {
                 yAxisSum=getYAxisSum(MaxYbylastCost);
             }
-
-
-            map.put("yAxis",yAxis);
             map.put("yAxisSum",yAxisSum);
-            map.put("seriesNowMonth",seriesNowMonth);
             map.put("seriesNowMonthSum",seriesNowMonthSum);
             return map;
         }
         //操作员
         else  if (loginUser.hasRole("COMMISSIONER"))
         {
-            //客户数
-            params.put("ascription",loginUser.getId());
-            params.put("inMemberId",loginUser.getCreateUserId());
-            Long UserCount=userMapper.getUserBillAscriptionCount(params);
-            map.put("UserCount",UserCount);
-            //当前任务数
-            params.put("state",2);
-            params.put("userId",loginUser.getCreateUserId());
-            params.put("billAscription",loginUser.getId());
-            Long billCount=billMapper.getBillListCount(params);
-            map.put("billCount",billCount);
-            //累计任务数
-            params.put("state2",3);
-            Long AllbillCount=billMapper.getBillListCount(params);
-            map.put("AllbillCount",AllbillCount);
 
-            //月总消费
-            Calendar now =Calendar.getInstance();
-            params.put("year",now.get(Calendar.YEAR));
-            params.put("month",now.get(Calendar.MONTH)+1);
-            params.put("createId",loginUser.getCreateUserId());
-            Double sum=billCostMapper.MonthConsumptionCommissioner(params);
-            map.put("MonthConsumption",sum);
-            //今日消费
-            params.put("day",now.get(Calendar.DATE));
-            Double sum1=billCostMapper.MonthConsumptionCommissioner(params);
-            map.put("DayConsumption",sum1);
-
-            //今日达标数
-            //1,先获取对应所有的订单
-            Map<String,Object> billparam=new HashMap<>();
-            billparam.put("userId",loginUser.getCreateUserId());
-            billparam.put("billAscription",loginUser.getCreateUserId());
-            billparam.put("state",2);
-            List<Bill> billList=billMapper.selectByInMemberId(params);
-            //判断哪些订单今日达标
-            int standardSum=0;//今天达标数
-            if(billList.size()>0)
-            {
-                for (Bill bill:billList
-                        ) {
-                    //对应订单排名标准
-                    BillPrice billPrice=new BillPrice();
-                    billPrice.setBillId(bill.getId());
-                    billPrice.setInMemberId(loginUser.getCreateUserId());
-                    List<BillPrice> billPriceList=new ArrayList<>();
-                    billPriceList=billPriceMapper.selectByBillPrice(billPrice);
-                    //判断今日订单达到哪个标准
-                    for (BillPrice item:billPriceList
-                            ) {
-                        if(bill.getNewRanking()<=item.getBillRankingStandard())
-                        {
-                            standardSum+=1;
-                            break;
-                        }
-                    }
-                }
-            }
-            map.put("standardSum",standardSum);
-
-            DecimalFormat df = new DecimalFormat("0.00");//格式化小数
-            //总完成率(今日达标数/总订单数)
-            double AllCompleteness=0;
-            if(billList.size()>0)
-            {
-                AllCompleteness=((double)standardSum/billList.size())*100;
-            }
-            map.put("AllCompleteness",df.format(AllCompleteness));
-            //百度完成率
-            String baidu="百度";
-            Double baiduCompleteness=searchCompletenessBycmm(baidu,loginUser);
-            map.put("baiduCompleteness",df.format(baiduCompleteness));
-            //百度wap完成率
-            String baiduWap="手机百度";
-            Double baiduWapCompleteness=searchCompletenessBycmm(baiduWap,loginUser);
-            map.put("baiduWapCompleteness",df.format(baiduWapCompleteness));
-            //360完成率
-            String sanliuling="360";
-            Double sanliulingCompleteness=searchCompletenessBycmm(sanliuling,loginUser);
-            map.put("sanliulingCompleteness",df.format(sanliulingCompleteness));
-            //搜狗完成率
-            String sougou="搜狗";
-            Double sougouCompleteness=searchCompletenessBycmm(sougou,loginUser);
-            map.put("sougouCompleteness",df.format(sougouCompleteness));
-            //手机360
-            String sanliulingWap="手机360";
-            Double sanliulingWapCompleteness=searchCompletenessBycmm(sanliulingWap,loginUser);
-            map.put("sanliulingWapCompleteness",df.format(sanliulingWapCompleteness));
-            //手机搜狗
-            String sougouWap="手机搜狗";
-            Double sougouWapWapCompleteness=searchCompletenessBycmm(sougouWap,loginUser);
-            map.put("sougouWapWapCompleteness",df.format(sougouWapWapCompleteness));
-            //神马
-            String shenma="神马";
-            Double shenmaCompleteness=searchCompletenessBycmm(shenma,loginUser);
-            map.put("shenmaCompleteness",df.format(shenmaCompleteness));
             //某个月的第一天和最后一天
             Map<String, String> maps = getFirstday_Lastday_Month(dateNow);
             String fistDay=maps.get("first");
@@ -613,50 +319,38 @@ public class HomeServiceImpl implements HomeService {
                 Date tomorrow = calendar.getTime();
                 String str=formatter.format(tomorrow);
                 dateMap.put("date",str);
-                int keywordsCount=billCostMapper.selectByBillCostOfDay(dateMap);
+
                 Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
-                //比较达标最大数
-                if(MaxYbylast<=keywordsCount)
-                {
-                    MaxYbylast=keywordsCount;
-                }
-                seriesLastMonth+=keywordsCount+",";
+
                 //比较消费最大数
                 if(MaxYbylastCost<=keywordsSum)
                 {
                     MaxYbylastCost=keywordsSum;
                 }
-                seriesLastMonth+=keywordsCount+",";
+
                 seriesLastMonthSum+=keywordsSum+",";
 
             }
-            //上个月的达标数
-            map.put("seriesLastMonth",seriesLastMonth);
+
             map.put("seriesLastMonthSum",seriesLastMonthSum);
-            //判断Y轴的显示
+
             //判断Y轴的显示
             int MaxYbyNew=0;
             double MaxYbyNewCost=0;
             String seriesNowMonthSum="";
-            for(int i=0;i<monthNowCount;i++)
+            for(int i=0;i<=monthNowCount-1;i++)
             {
                 calendar.setTime(fistDateNow);
                 calendar.add(Calendar.DAY_OF_MONTH, i);
                 Date tomorrow = calendar.getTime();
                 String str1=formatter.format(tomorrow);
                 dateMap.put("date",str1);
-                int keywordsCount=billCostMapper.selectByBillCostOfDay(dateMap);
+
                 Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
-                //比较达标最大数
-                if(MaxYbyNew<=keywordsCount)
-                {
-                    MaxYbyNew=keywordsCount;
-                }
                 if(MaxYbyNewCost<=keywordsSum)
                 {
-                    MaxYbyNewCost=keywordsSum;
+                     MaxYbyNewCost=keywordsSum;
                 }
-                seriesNowMonth+=keywordsCount+",";
                 seriesNowMonthSum+=keywordsSum+",";
             }
             String yAxis="";
@@ -678,107 +372,13 @@ public class HomeServiceImpl implements HomeService {
                 yAxisSum=getYAxisSum(MaxYbylastCost);
             }
 
-
-            map.put("yAxis",yAxis);
             map.put("yAxisSum",yAxisSum);
-            map.put("seriesNowMonth",seriesNowMonth);
             map.put("seriesNowMonthSum",seriesNowMonthSum);
             return map;
         }
         else if (loginUser.hasRole("CUSTOMER"))
         {
-            //账户余额
-            FundAccount fundAccount=fundAccountMapper.selectByUserId(loginUser.getId());
-            if (fundAccount==null)
-            {
 
-                map.put("balance",0);
-            }
-            else
-            {
-                map.put("balance",fundAccount.getBalance());
-
-            }
-            //月总消费
-            Calendar now =Calendar.getInstance();
-            params.put("year",now.get(Calendar.YEAR));
-            params.put("month",now.get(Calendar.MONTH)+1);
-            Double sum=billCostMapper.MonthConsumptionCustomer(params);
-            map.put("MonthConsumption",sum);
-            //今日消费
-            params.put("day",now.get(Calendar.DATE));
-            Double sum1=billCostMapper.MonthConsumptionCustomer(params);
-            map.put("DayConsumption",sum1);
-            //当前任务数
-            params.put("state",2);
-            Long billCount=billMapper.getBillListByCmmCount(params);
-            map.put("billCount",billCount);
-            //累计任务数
-            params.put("state2",3);
-            Long AllbillCount=billMapper.getBillListByCmmCount(params);
-            map.put("AllbillCount",AllbillCount);
-            //今日达标数
-            List<Bill> billList=billMapper.getBillCountByCmm(params);
-            int standardSum=0;//今天达标数
-            if(billList.size()>0)//判断哪些订单今日达标
-            {
-                for (Bill bill:billList
-                        ) {
-                    //对应订单排名标准
-                    BillPrice billPrice=new BillPrice();
-                    billPrice.setBillId(bill.getId());
-                    billPrice.setOutMemberId(loginUser.getId());
-                    List<BillPrice> billPriceList=new ArrayList<>();
-                    billPriceList=billPriceMapper.selectByBillPrice(billPrice);
-                    //判断今日订单达到哪个标准
-                    for (BillPrice item:billPriceList
-                            ) {
-                        if(bill.getNewRanking()<=item.getBillRankingStandard())
-                        {
-                            standardSum+=1;
-                            break;
-                        }
-                    }
-                }
-            }
-            map.put("standardSum",standardSum);
-
-            DecimalFormat df = new DecimalFormat("0.00");//格式化小数
-            //总完成率(今日达标数/总订单数)
-            double AllCompleteness=0;
-            if(billList.size()>0)
-            {
-                AllCompleteness=((double)standardSum/billList.size())*100;
-            }
-            map.put("AllCompleteness",df.format(AllCompleteness));
-            //百度完成率
-            String baidu="百度";
-            Double baiduCompleteness=searchCompletenessBycus(baidu,loginUser);
-            map.put("baiduCompleteness",df.format(baiduCompleteness));
-            //百度wap完成率
-            String baiduWap="手机百度";
-            Double baiduWapCompleteness=searchCompletenessBycus(baiduWap,loginUser);
-            map.put("baiduWapCompleteness",df.format(baiduWapCompleteness));
-            //360完成率
-            String sanliuling="360";
-            Double sanliulingCompleteness=searchCompletenessBycus(sanliuling,loginUser);
-            map.put("sanliulingCompleteness",df.format(sanliulingCompleteness));
-            //搜狗完成率
-            String sougou="搜狗";
-            Double sougouCompleteness=searchCompletenessBycus(sougou,loginUser);
-            map.put("sougouCompleteness",df.format(sougouCompleteness));
-            //手机360
-            String sanliulingWap="手机360";
-            Double sanliulingWapCompleteness=searchCompletenessBycus(sanliulingWap,loginUser);
-            map.put("sanliulingWapCompleteness",df.format(sanliulingWapCompleteness));
-            //手机搜狗
-            String sougouWap="手机搜狗";
-            Double sougouWapWapCompleteness=searchCompletenessBycus(sougouWap,loginUser);
-            map.put("sougouWapWapCompleteness",df.format(sougouWapWapCompleteness));
-            //神马
-            String shenma="神马";
-            Double shenmaCompleteness=searchCompletenessBycus(shenma,loginUser);
-            map.put("shenmaCompleteness",df.format(shenmaCompleteness));
             //某个月的第一天和最后一天
             Map<String, String> maps = getFirstday_Lastday_Month(dateNow);
             String fistDay=maps.get("first");
@@ -882,8 +482,417 @@ public class HomeServiceImpl implements HomeService {
         return null;
     }
 
+    @Override
+    public Map<String, Object> userCount(LoginUser loginUser) {
+        Map<String, Object> map=new HashMap<>();//视图返回对象
+        Map<String, Object> params=new HashMap<>();//查询参数对象
+        params.put("userId",loginUser.getId());
+        if(loginUser.hasRole("SUPER_ADMIN")) {
+            //客户数
+            Role role=roleMapper.selectByRoleCode("DISTRIBUTOR");
+            params.put("roleId",role.getId());
+
+            Long count=UserCount(params);
+            map.put("UserCount",count);
+        }
+        //操作员
+        else  if (loginUser.hasRole("COMMISSIONER")) {
+            params.put("ascription",loginUser.getId());
+            params.put("inMemberId",loginUser.getCreateUserId());
+            Long UserCount=userMapper.getUserBillAscriptionCount(params);
+            map.put("UserCount",UserCount);
+
+        }
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> balance(LoginUser loginUser) {
+        Map<String, Object> map=new HashMap<>();//视图返回对象
+        //账户余额
+        FundAccount fundAccount=fundAccountMapper.selectByUserId(loginUser.getId());
+        if (fundAccount==null)
+        {
+
+            map.put("balance",0);
+        }
+        else
+        {
+            map.put("balance",fundAccount.getBalance());
+
+        }
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> MonthConsumption(LoginUser loginUser) {
+        Map<String, Object> map=new HashMap<>();//视图返回对象
+        Map<String, Object> params=new HashMap<>();//查询参数对象
+        params.put("userId",loginUser.getId());
+        if(loginUser.hasRole("SUPER_ADMIN")) {
+            //本月消费
+            Double MonthConsumption=MonthConsumption(params);
+            map.put("MonthConsumption",MonthConsumption);
+        }
+        //渠道商和代理商
+        else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")) {
+            //月总消费
+
+            Double MonthConsumption=MonthConsumption(params);
+            map.put("MonthConsumption",MonthConsumption);
+        }
+        //操作员
+        else  if (loginUser.hasRole("COMMISSIONER"))
+        {
+            Calendar now =Calendar.getInstance();
+            params.put("year",now.get(Calendar.YEAR));
+            params.put("month",now.get(Calendar.MONTH)+1);
+            params.put("createId",loginUser.getCreateUserId());
+            params.put("ascription",loginUser.getId());
+            params.put("inMemberId",loginUser.getCreateUserId());
+            Double sum=billCostMapper.MonthConsumptionCommissioner(params);
+            map.put("MonthConsumption",sum);
+        }
+        else
+        {
+            Calendar now =Calendar.getInstance();
+            params.put("year",now.get(Calendar.YEAR));
+            params.put("month",now.get(Calendar.MONTH)+1);
+            Double sum=billCostMapper.MonthConsumptionCustomer(params);
+            map.put("MonthConsumption",sum);
+        }
+            return map;
+    }
+    //本日消费
+    @Override
+    public Map<String, Object> DayConsumption(LoginUser loginUser) {
+        Map<String, Object> map=new HashMap<>();
+        Map<String, Object> params=new HashMap<>();
+        Calendar now =Calendar.getInstance();
+        params.put("year",now.get(Calendar.YEAR));
+        params.put("month",now.get(Calendar.MONTH)+1);
+        params.put("day",now.get(Calendar.DATE));
+        params.put("userId",loginUser.getId());
+        if(loginUser.hasRole("SUPER_ADMIN"))
+        {
+
+            Double DayConsumption=DayConsumption(params);
+            map.put("DayConsumption",DayConsumption);
+        }
+        //渠道商和代理商
+        else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+        {
+            Double DayConsumption=DayConsumption(params);
+            map.put("DayConsumption",DayConsumption);
+        }
+        //操作员
+        else  if (loginUser.hasRole("COMMISSIONER"))
+        {
+            params.put("ascription",loginUser.getId());
+            params.put("inMemberId",loginUser.getCreateUserId());
+            params.put("createId",loginUser.getCreateUserId());
+            Double sum1=billCostMapper.MonthConsumptionCommissioner(params);
+            map.put("DayConsumption",sum1);
+
+        }
+        else if (loginUser.hasRole("CUSTOMER"))
+        {
+            Double sum1=billCostMapper.MonthConsumptionCustomer(params);
+            map.put("DayConsumption",sum1);
+        }
 
 
+            return map;
+    }
+
+    //任务数
+    @Override
+    public Map<String, Object> billCount(LoginUser loginUser) {
+        Map<String, Object> map=new HashMap<>();
+        Map<String, Object> params=new HashMap<>();
+        params.put("userId",loginUser.getId());
+        params.put("state",2);
+        if(loginUser.hasRole("SUPER_ADMIN"))
+        {
+            Long billCount=billMapper.getBillListCount(params);
+            map.put("billCount",billCount);
+        }
+        //渠道商和代理商
+        else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+        {
+
+            Long billCount=billMapper.getBillListCount(params);
+            map.put("billCount",billCount);
+        }
+        //操作员
+        else  if (loginUser.hasRole("COMMISSIONER"))
+        {
+            params.put("userId",loginUser.getCreateUserId());
+            params.put("billAscription",loginUser.getId());
+            Long billCount=billMapper.getBillListCount(params);
+            map.put("billCount",billCount);
+        }
+        else if (loginUser.hasRole("CUSTOMER")) {
+            Long billCount=billMapper.getBillListByCmmCount(params);
+            map.put("billCount",billCount);
+        }
+        return map;
+    }
+
+    //累计任务数
+    @Override
+    public Map<String, Object> AllbillCount(LoginUser loginUser) {
+        Map<String, Object> map=new HashMap<>();
+        Map<String, Object> params=new HashMap<>();
+        params.put("userId",loginUser.getId());
+        params.put("state",2);
+        params.put("state2",3);
+        if(loginUser.hasRole("SUPER_ADMIN"))
+        {
+            Long billCount=billMapper.getBillListCount(params);
+            map.put("AllbillCount",billCount);
+        }
+        //渠道商和代理商
+        else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+        {
+
+            Long billCount=billMapper.getBillListCount(params);
+            map.put("AllbillCount",billCount);
+        }
+        //操作员
+        else  if (loginUser.hasRole("COMMISSIONER"))
+        {
+            params.put("userId",loginUser.getCreateUserId());
+            params.put("billAscription",loginUser.getId());
+            Long billCount=billMapper.getBillListCount(params);
+            map.put("AllbillCount",billCount);
+        }
+        else if (loginUser.hasRole("CUSTOMER")) {
+            Long billCount=billMapper.getBillListByCmmCount(params);
+            map.put("AllbillCount",billCount);
+        }
+        return map;
+    }
+
+    //今日达标数
+    @Override
+    public Map<String, Object> standardSum(LoginUser loginUser) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        DecimalFormat df = new DecimalFormat("0.00");//格式化小数
+        Map<String, Object> map=new HashMap<>();
+        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+        {
+            //1,先获取对应所有的订单
+            Map<String,Object> billListparams=new HashMap<>();
+            billListparams.put("userId",loginUser.getId());
+            billListparams.put("state",2);
+            //订单数（优化中）
+            List<Bill> billList=billMapper.selectByInMemberId(billListparams);
+            Map<String,Object> billparam=new HashMap<>();
+            billparam.put("userId",loginUser.getId());
+            Date tomorrow = calendar.getTime();
+            String str1=formatter.format(tomorrow);
+            billparam.put("date",str1);
+            int keywordsCount=billCostMapper.selectByBillCostOfDay(billparam);
+            map.put("standardSum",keywordsCount);
+
+            //总完成率(今日达标数/总订单数)
+            double AllCompleteness=0;
+            if(billList.size()>0)
+            {
+                AllCompleteness=((double)keywordsCount/billList.size())*100;
+            }
+            else
+            {
+                AllCompleteness=0.00;
+            }
+            map.put("AllCompleteness",df.format(AllCompleteness));
+
+        }
+        //操作员
+        else  if (loginUser.hasRole("COMMISSIONER"))
+        {
+            //1,先获取对应所有的订单
+            Map<String,Object> billparam=new HashMap<>();
+            billparam.put("userId",loginUser.getCreateUserId());
+            billparam.put("billAscription",loginUser.getId());
+            billparam.put("state",2);
+            List<Bill> billList=billMapper.selectByInMemberId(billparam);
+            Date tomorrow = calendar.getTime();
+            String str1=formatter.format(tomorrow);
+            billparam.put("date",str1);
+            int keywordsCount=billCostMapper.selectByBillCostOfDay(billparam);
+            map.put("standardSum",keywordsCount);
+            //总完成率(今日达标数/总订单数)
+            double AllCompleteness=0;
+            if(billList.size()>0)
+            {
+                AllCompleteness=((double)keywordsCount/billList.size())*100;
+            }
+            else
+            {
+                AllCompleteness=0.00;
+            }
+            map.put("AllCompleteness",df.format(AllCompleteness));
+        }
+        else if (loginUser.hasRole("CUSTOMER"))
+        {
+            Map<String,Object> billListparams=new HashMap<>();
+            billListparams.put("state",2);
+            billListparams.put("userId",loginUser.getId());
+            List<Bill> billList=billMapper.getBillCountByCmm(billListparams);
+
+            Map<String,Object> dateMap=new  HashMap<>();
+            dateMap.put("outMemberId",loginUser.getId());
+            Date tomorrow = calendar.getTime();
+            String str1=formatter.format(tomorrow);
+            dateMap.put("date",str1);
+            int keywordsCount=billCostMapper.selectByBillCostOfDay(dateMap);
+            map.put("standardSum",keywordsCount);
+        }
+        return map;
+    }
+
+    //百度完成率
+    @Override
+    public Map<String, Object> baiduCompleteness(LoginUser loginUser) {
+        Map<String, Object> map=new HashMap<>();
+        DecimalFormat df = new DecimalFormat("0.00");//格式化小数
+        String baidu="百度";
+        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+        {
+
+            Double baiduCompleteness=searchCompleteness(baidu,loginUser);
+            map.put("baiduCompleteness",df.format(baiduCompleteness));
+        }
+        //操作员
+        else  if (loginUser.hasRole("COMMISSIONER"))
+        {
+
+            Double baiduCompleteness=searchCompletenessBycmm(baidu,loginUser);
+            map.put("baiduCompleteness",df.format(baiduCompleteness));
+        }
+        else if (loginUser.hasRole("CUSTOMER"))
+        {
+
+            Double baiduCompleteness=searchCompletenessBycus(baidu,loginUser);
+            map.put("baiduCompleteness",df.format(baiduCompleteness));
+        }
+        return map;
+    }
+    //手机百度完成率
+    @Override
+    public Map<String, Object> baiduWapCompleteness(LoginUser loginUser) {
+        Map<String, Object> map=new HashMap<>();
+        DecimalFormat df = new DecimalFormat("0.00");//格式化小数
+        String baiduWap="手机百度";
+        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+        {
+
+            Double baiduWapCompleteness=searchCompleteness(baiduWap,loginUser);
+            map.put("baiduWapCompleteness",df.format(baiduWapCompleteness));
+
+        }
+        //操作员
+        else  if (loginUser.hasRole("COMMISSIONER"))
+        {
+
+            Double baiduWapCompleteness=searchCompletenessBycmm(baiduWap,loginUser);
+            map.put("baiduWapCompleteness",df.format(baiduWapCompleteness));
+
+        }
+        else if (loginUser.hasRole("CUSTOMER"))
+        {
+
+            Double baiduWapCompleteness=searchCompletenessBycus(baiduWap,loginUser);
+            map.put("baiduWapCompleteness",df.format(baiduWapCompleteness));
+        }
+        return map;
+    }
+    //360
+    @Override
+    public Map<String, Object> sanliulingCompleteness(LoginUser loginUser) {
+        Map<String, Object> map=new HashMap<>();
+        DecimalFormat df = new DecimalFormat("0.00");//格式化小数
+        String sanliuling="360";
+        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+        {
+
+            Double sanliulingCompleteness=searchCompleteness(sanliuling,loginUser);
+            map.put("sanliulingCompleteness",df.format(sanliulingCompleteness));
+
+        }
+        //操作员
+        else  if (loginUser.hasRole("COMMISSIONER"))
+        {
+
+            Double sanliulingCompleteness=searchCompletenessBycmm(sanliuling,loginUser);
+            map.put("sanliulingCompleteness",df.format(sanliulingCompleteness));;
+
+        }
+        else if (loginUser.hasRole("CUSTOMER"))
+        {
+
+            Double sanliulingCompleteness=searchCompletenessBycus(sanliuling,loginUser);
+            map.put("sanliulingCompleteness",df.format(sanliulingCompleteness));
+        }
+        return map;
+    }
+   //搜狗
+    @Override
+    public Map<String, Object> sougouCompleteness(LoginUser loginUser) {
+        Map<String, Object> map=new HashMap<>();
+        DecimalFormat df = new DecimalFormat("0.00");//格式化小数
+        String sougou="搜狗";
+        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+        {
+
+            Double sougouCompleteness=searchCompleteness(sougou,loginUser);
+            map.put("sougouCompleteness",df.format(sougouCompleteness));
+
+        }
+        //操作员
+        else  if (loginUser.hasRole("COMMISSIONER"))
+        {
+            Double sougouCompleteness=searchCompletenessBycmm(sougou,loginUser);
+            map.put("sougouCompleteness",df.format(sougouCompleteness));
+
+        }
+        else if (loginUser.hasRole("CUSTOMER"))
+        {
+            Double sougouCompleteness=searchCompletenessBycus(sougou,loginUser);
+            map.put("sougouCompleteness",df.format(sougouCompleteness));
+        }
+        return map;
+    }
+//神马
+    @Override
+    public Map<String, Object> shenmaCompleteness(LoginUser loginUser) {
+        Map<String, Object> map=new HashMap<>();
+        DecimalFormat df = new DecimalFormat("0.00");//格式化小数
+        String shenma="神马";
+        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+        {
+
+            Double shenmaCompleteness=searchCompleteness(shenma,loginUser);
+            map.put("shenmaCompleteness",df.format(shenmaCompleteness));
+
+        }
+        //操作员
+        else  if (loginUser.hasRole("COMMISSIONER"))
+        {
+            Double shenmaCompleteness=searchCompletenessBycmm(shenma,loginUser);
+            map.put("shenmaCompleteness",df.format(shenmaCompleteness));
+
+        }
+        else if (loginUser.hasRole("CUSTOMER"))
+        {
+            Double shenmaCompleteness=searchCompleteness(shenma,loginUser);
+            map.put("shenmaCompleteness",df.format(shenmaCompleteness));
+        }
+        return map;
+    }
 
 
     //客户数
@@ -1274,8 +1283,42 @@ public class HomeServiceImpl implements HomeService {
         {
             yAxis="1900,1910,1920,1930,1940,1950,1960,1970,1980,1990";
         }
-
-
+        else if(max<=2100&&max>2000)
+        {
+            yAxis="2000,2010,2020,2030,2040,2050,2060,2070,2080,2090";
+        }
+        else if(max<=2200&&max>2100)
+        {
+            yAxis="2100,2110,2120,2130,2140,2150,2160,2170,2180,2190";
+        }
+        else if(max<=2300&&max>2200)
+        {
+            yAxis="2200,2210,2220,2230,2240,2250,2260,2270,2280,2290";
+        }
+        else if(max<=2400&&max>2300)
+        {
+            yAxis="2300,2310,2320,2330,2340,2350,2360,2370,2380,2390";
+        }
+        else if(max<=2500&&max>2400)
+        {
+            yAxis="2400,2410,2420,2430,2440,2450,2460,2470,2480,2490";
+        }
+        else if(max<=2600&&max>2500)
+        {
+            yAxis="2500,2510,2520,2530,2540,2550,2560,2570,2580,2590";
+        }
+        else if(max<=2700&&max>2600)
+        {
+            yAxis="2600,2610,2620,2630,2640,2650,2660,2670,2680,2690";
+        }
+        else if(max<=2800&&max>2700)
+        {
+            yAxis="2700,2710,2720,2730,2740,2750,2760,2770,2780,2790";
+        }
+        else if(max<=2900&&max>2800)
+        {
+            yAxis="2800,2810,2820,2830,2840,2850,2860,2870,2880,2890";
+        }
 
         return yAxis;
     }

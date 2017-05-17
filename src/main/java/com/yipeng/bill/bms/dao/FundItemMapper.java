@@ -35,4 +35,7 @@ public interface FundItemMapper {
     FundItem selectByItemPriceId(Map<String,Object> params);
 
     Long selectByMaxId(Map<String,Object> params);
+
+    FundItem selectByDayFunItem(Map<String,Object> params);
+
 }

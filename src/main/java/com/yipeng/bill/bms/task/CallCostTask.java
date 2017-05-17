@@ -2,6 +2,7 @@ package com.yipeng.bill.bms.task;
 
 import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
+import com.yipeng.bill.bms.service.BillAccountAndItemService;
 import com.yipeng.bill.bms.service.BillCallCostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -19,7 +20,10 @@ public class CallCostTask {
 
     @Autowired
     private BillCallCostService billCallCostService;
-
+    @Autowired
+     private BillAccountAndItemService billAccountAndItemService;
+    @Autowired
+    private  BillPriceMapper billPriceMapper;
     public void execute(){
         int offset = 0;
         int limit = 50; //每次查询50条
@@ -44,6 +48,21 @@ public class CallCostTask {
 
             offset += limit; //查询下一页
 
+        }
+        Map<String,Object> map=new  HashMap<>();
+        Calendar now =Calendar.getInstance();
+        map.put("year",now.get(Calendar.YEAR));
+        map.put("month",now.get(Calendar.MONTH)+1);
+        map.put("day",now.get(Calendar.DATE));
+        //在这里开始计算流水和用户余额
+        List<BillPrice> billPriceList=billPriceMapper.selectByOutmemberList();//获取今日所有人付款人
+        if(!CollectionUtils.isEmpty(billPriceList))
+        {
+            for (BillPrice item:billPriceList
+                    ) {
+                map.put("userId",item.getOutMemberId());
+                billAccountAndItemService.BillAccountAndItem(map);
+            }
         }
 
 

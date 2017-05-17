@@ -22,4 +22,6 @@ public interface BillPriceMapper {
    Long selectByBillPriceOutMemberId(BillPrice billPrice);
     List<BillPrice>  selectByBillPriceSingle(BillPrice record);
     List<BillPrice>  selectByBillPriceList(Map<String,Object> params);
+
+    List<BillPrice> selectByOutmemberList();
 }

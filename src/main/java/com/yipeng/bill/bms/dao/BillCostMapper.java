@@ -73,4 +73,11 @@ public interface BillCostMapper {
      * @return
      */
         BillCost selectByDayCostExisit(Map<String,Object> params);
+
+    /**
+     * 获取每个付款人的消费
+     * @param params
+     * @return
+     */
+    Double selectByUseDayCost(Map<String,Object> params);
 }

@@ -17,7 +17,7 @@ public class FundItem implements Serializable {
 
     private String itemType;
 
-    private Long priceId;
+
 
 
     private static final long serialVersionUID = 1L;
@@ -70,11 +70,5 @@ public class FundItem implements Serializable {
         this.itemType = itemType == null ? null : itemType.trim();
     }
 
-    public Long getPriceId() {
-        return priceId;
-    }
 
-    public void setPriceId(Long priceId) {
-        this.priceId = priceId;
-    }
 }

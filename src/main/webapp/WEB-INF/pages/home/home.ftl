@@ -53,9 +53,24 @@
                     <i class="fa fa-dollar"></i>
                 </div>
                 <div class="title">
-                    本月总消费
+                    客户本月消费
                 </div>
                 <div class="value" id="MonthConsumption">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-2 hidden-xs">
+        <div class="statbox widget box box-shadow">
+            <div class="widget-content">
+                <div class="visual red">
+                    <i class="fa fa-dollar"></i>
+                </div>
+                <div class="title">
+                   客户今日消费
+                </div>
+                <div class="value" id="DayConsumption">
 
                 </div>
             </div>
@@ -91,21 +106,7 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual red">
-                    <i class="fa fa-dollar"></i>
-                </div>
-                <div class="title">
-                    今日消费
-                </div>
-                <div class="value" id="DayConsumption">
 
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="col-sm-6 col-md-2 hidden-xs">
         <div class="statbox widget box box-shadow">
             <div class="widget-content">
@@ -134,7 +135,7 @@
                     总完成率
                 </div>
                 <div class="value" id="AllCompleteness">
-
+                      0.00%
                 </div>
             </div>
         </div>
@@ -149,7 +150,7 @@
                     百度完成率
                 </div>
                 <div class="value" id="baiduCompleteness">
-
+                    0.00%
                 </div>
             </div>
         </div>
@@ -164,7 +165,7 @@
                     百度手机完成率
                 </div>
                 <div class="value" id="baiduWapCompleteness">
-
+                    0.00%
                 </div>
             </div>
         </div>
@@ -179,7 +180,7 @@
                     360完成率
                 </div>
                 <div class="value" id="sanliulingCompleteness">
-
+                    0.00%
                 </div>
             </div>
         </div>
@@ -209,7 +210,7 @@
                     搜狗完成率
                 </div>
                 <div class="value" id="sougouCompleteness">
-
+                    0.00%
                 </div>
             </div>
         </div>
@@ -224,7 +225,7 @@
                     神马完成率
                 </div>
                 <div class="value" id="shenmaCompleteness">
-
+                    0.00%
                 </div>
             </div>
         </div>
@@ -261,26 +262,135 @@
 
 
     //异步加载首页数据，解决加载慢的问题
-
+        //1,客户数
         $.ajax({
+            type: 'get',
+            async: true,
+            url: CTX + '/userCount',
+            success: function (result) {
+                $("#UserCount").html(result.UserCount);
+            }
+        });
+        //2,余额
+        $.ajax({
+            type: 'get',
+            async: true,
+            url: CTX + '/balance',
+            success: function (result) {
+                $("#balance").html("¥"+result.balance);
+            }
+        });
+        //3，月总消费
+        $.ajax({
+            type: 'get',
+            async: true,
+            url: CTX + '/MonthConsumption',
+            success: function (result) {
+                if(result.MonthConsumption==null)
+                {
+                    $("#MonthConsumption").html("¥0.00");
+                }
+                else
+                {
+                    $("#MonthConsumption").html("¥"+result.MonthConsumption);
+                }
+            }
+        });
+    //4，本日消费
+    $.ajax({
+        type: 'get',
+        async: true,
+        url: CTX + '/DayConsumption',
+        success: function (result) {
+            if(result.DayConsumption==null)
+            {
+                $("#DayConsumption").html("¥0.00");
+            }
+            else
+            {
+                $("#DayConsumption").html("¥"+result.DayConsumption);
+            }
+        }
+    });
+    //5，当前任务数
+    $.ajax({
+        type: 'get',
+        async: true,
+        url: CTX + '/billCount',
+        success: function (result) {
+            $("#billCount").html(result.billCount);
+        }
+    });
+    //6，累计任务数
+    $.ajax({
+        type: 'get',
+        async: true,
+        url: CTX + '/AllbillCount',
+        success: function (result) {
+            $("#AllbillCount").html(result.AllbillCount);
+        }
+    });
+    //7，达标数
+    $.ajax({
+        type: 'get',
+        async: true,
+        url: CTX + '/standardSum',
+        success: function (result) {
+            $("#standardSum").html(result.standardSum);
+            $("#AllCompleteness").html(result.AllCompleteness+"%");
+        }
+    });
+    //8，百度
+    $.ajax({
+        type: 'get',
+        async: true,
+        url: CTX + '/baiduCompleteness',
+        success: function (result) {
+            $("#baiduCompleteness").html(result.baiduCompleteness+"%");
+
+        }
+    });
+    //9，手机百度
+    $.ajax({
+        type: 'get',
+        async: true,
+        url: CTX + '/baiduWapCompleteness',
+        success: function (result) {
+            $("#baiduWapCompleteness").html(result.baiduWapCompleteness+"%");
+        }
+    });
+    //10，360
+    $.ajax({
+        type: 'get',
+        async: true,
+        url: CTX + '/sanliulingCompleteness',
+        success: function (result) {
+            $("#sanliulingCompleteness").html(result.sanliulingCompleteness+"%");
+        }
+    });
+    //11，搜狗
+    $.ajax({
+        type: 'get',
+        async: true,
+        url: CTX + '/sougouCompleteness',
+        success: function (result) {
+            $("#sougouCompleteness").html(result.sougouCompleteness+"%");
+        }
+    });
+    //12，神马
+    $.ajax({
+        type: 'get',
+        async: true,
+        url: CTX + '/shenmaCompleteness',
+        success: function (result) {
+            $("#shenmaCompleteness").html(result.shenmaCompleteness+"%");
+        }
+    });
+    $.ajax({
             type:'get',
             async: true,
             url:CTX+'/homeDetails',
             success:function (result) {
-                $("#UserCount").html(result.UserCount);
-                $("#balance").html("¥"+result.balance);
-                $("#MonthConsumption").html("¥"+result.MonthConsumption);
-                $("#AllbillCount").html(result.AllbillCount);
-                $("#billCount").html(result.billCount);
-                $("#DayConsumption").html("¥"+result.DayConsumption);
-                $("#standardSum").html(result.standardSum);
-                $("#AllCompleteness").html(result.AllCompleteness+"%");
-                $("#baiduCompleteness").html(result.baiduCompleteness+"%");
-                $("#baiduWapCompleteness").html(result.baiduWapCompleteness+"%");
-                $("#sanliulingCompleteness").html(result.sanliulingCompleteness+"%");
-                $("#sougouCompleteness").html(result.sougouCompleteness);
-                $("#shenmaCompleteness").html(result.shenmaCompleteness+"%");
-               // var json = eval("(" + result.yAxisSum + ")");
 
                 container1(result);
 

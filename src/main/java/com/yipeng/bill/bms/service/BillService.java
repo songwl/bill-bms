@@ -117,12 +117,7 @@ public interface BillService {
      */
     int applyStopBillPass(Map<String, String[]>  params,LoginUser user);
 
-    /**
-     * 优化结算
-     * @param
-     * @return
-     */
-    Map<String,Object> billOptimizationSettlement(LoginUser user);
+
 
     /**
      * 批量修改价格（云客订单）
@@ -131,4 +126,16 @@ public interface BillService {
      * @return
      */
     int uploadPrice(List<String[]> fileList,LoginUser loginUser);
+
+    /**
+     * 优化结算
+     * @param
+     * @return
+     */
+    Map<String,Object> billOptimizationSettlement(LoginUser user);
+
+    Map<String,Object> userBalance(LoginUser user);//优化结算(用户余额)
+
+    Map<String,Object> yearConsumption(LoginUser user);//优化结算(年度消费)
+    Map<String,Object> lastMonthConsumption(LoginUser user);//优化结算(上月消费)
 }

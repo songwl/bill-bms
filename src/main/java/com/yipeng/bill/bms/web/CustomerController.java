@@ -198,7 +198,7 @@ public class CustomerController extends  BaseController{
      */
     @RequestMapping(value="/fundAccountList")
     @ResponseBody
-    public Map<String,Object> fundAccountList() {
+    public Map<String,Object> fundAccountList(int limit,int offset) {
          LoginUser user=this.getCurrentAccount();
          if(user!=null)
          {

@@ -18,6 +18,51 @@
                     <i class="fa fa-dollar"></i>
                 </div>
                 <div class="title">
+                    账户余额
+                </div>
+                <div class="value" id="userBalance">
+                    ￥0.00
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-2 hidden-xs">
+        <div class="statbox widget box box-shadow">
+            <div class="widget-content">
+                <div class="visual red">
+                    <i class="fa fa-dollar"></i>
+                </div>
+                <div class="title">
+                    年度结算
+                </div>
+                <div class="value" id="yearConsumption">
+                    ￥0.00
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-2 hidden-xs">
+        <div class="statbox widget box box-shadow">
+            <div class="widget-content">
+                <div class="visual red">
+                    <i class="fa fa-dollar"></i>
+                </div>
+                <div class="title">
+                    上月结算
+                </div>
+                <div class="value" id="">
+                    ￥0.00
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-2 hidden-xs">
+        <div class="statbox widget box box-shadow">
+            <div class="widget-content">
+                <div class="visual red">
+                    <i class="fa fa-dollar"></i>
+                </div>
+                <div class="title">
                     本月结算
                 </div>
                 <div class="value">
@@ -51,6 +96,53 @@
 
 <div id="container" style="width: 100%; height: 400px; float:left;;"></div>
 <script>
+    $.ajax({
+        type: 'get',
+        async: true,
+        url: CTX + '/order/userBalance',
+        success: function (result) {
+
+            if(result.userBalance==null)
+            {
+                $("#userBalance").html("¥0.00");
+            }
+            else
+            {
+                $("#userBalance").html("¥"+result.userBalance);
+            }
+        }
+    });
+    $.ajax({
+        type: 'get',
+        async: true,
+        url: CTX + '/order/yearConsumption',
+        success: function (result) {
+            if(result.yearSum==null)
+            {
+                $("#yearConsumption").html("¥0.00");
+            }
+            else
+            {
+                $("#yearConsumption").html("¥"+result.yearSum);
+            }
+        }
+    });
+    $.ajax({
+        type: 'get',
+        async: true,
+        url: CTX + '/order/lastMonthConsumption',
+        success: function (result) {
+            if(result.lastMonthSum==null)
+            {
+                $("#lastMonthConsumption").html("¥0.00");
+            }
+            else
+            {
+                $("#lastMonthConsumption").html("¥"+result.lastMonthSum);
+            }
+        }
+    });
+
     $(function () {
         var chart1 = new Highcharts.Chart('container', {
             title: {

@@ -66,6 +66,8 @@ public class BillServiceimpl implements BillService {
     private RemoteService remoteService;
     @Autowired
     private ForbiddenWordsMapper forbiddenWordsMapper;
+    @Autowired
+    private  FundAccountMapper fundAccountMapper;
     Md5_UrlEncode md5_urlEncode=new Md5_UrlEncode();
     /**
      * 相同价导入
@@ -1079,19 +1081,27 @@ public class BillServiceimpl implements BillService {
                {
                    params.put("userId",user.getId());
                }
-
-
-                   List<Bill> billList=billMapper.selectByOutMemberId(params);
+               //订单数
+               List<Bill> billList=billMapper.selectByOutMemberId(params);
                Long total;
+               //判断当前登录的角色
                if (user.hasRole("CUSTOMER"))
                {
                    total =billMapper.getBillListByCmmCount(params);
                }
                else
                {
+                   // 判断搜索的客户是什么角色
+                   Long  userId=Long.parseLong(params.get("userId").toString());
+                   UserRole userRole=userRoleMapper.selectByUserId(userId);
+                   if (userRole.getRoleId().longValue()==6)
+                   {
+                       params.remove("userId");
+                       params.put("outMemberId",userId);
+                   }
+
                    total =billMapper.getBillListCount(params);
                }
-
                for (Bill bill: billList
                        ) {
                    i++;
@@ -1903,6 +1913,11 @@ public class BillServiceimpl implements BillService {
         return 0;
     }
 
+    /**
+     * 用户结算页面
+     * @param loginUser
+     * @return
+     */
     @Override
     public Map<String, Object> billOptimizationSettlement(LoginUser loginUser) {
         //返回对象
@@ -2055,6 +2070,50 @@ public class BillServiceimpl implements BillService {
     }
 
     /**
+     * 用户结算页面（用户余额）
+     * @param loginUser
+     * @return
+     */
+    @Override
+    public Map<String, Object> userBalance(LoginUser loginUser) {
+        Map<String, Object> map=new HashMap<>();
+        FundAccount fundAccount=fundAccountMapper.selectByUserId(loginUser.getId());
+        if (fundAccount!=null)
+        {
+            map.put("userBalance",fundAccount.getBalance());
+        }
+        else
+        {
+            map.put("userBalance",0);
+        }
+        return map;
+    }
+
+    /**
+     * 用户结算页面（年度消费）
+     * @param loginUser
+     * @return
+     */
+    @Override
+    public Map<String, Object>  yearConsumption(LoginUser loginUser) {
+        Map<String,Object> params=new HashMap<>();
+        params.put("outUserId",loginUser.getId());
+        Double yearSum=YearConsumption(params);
+        params.put("yearSum",yearSum);
+        return params;
+    }
+
+    @Override
+    public Map<String, Object> lastMonthConsumption(LoginUser loginUser) {
+        Map<String,Object> params=new HashMap<>();
+        params.put("outUserId",loginUser.getId());
+        Double lastMonthSum=lastMConsumption(params);
+        params.put("lastMonthSum",lastMonthSum);
+        return params;
+    }
+
+
+    /**
      * 批量修改价格
      * @param bill
      * @param loginUser
@@ -2123,12 +2182,29 @@ public class BillServiceimpl implements BillService {
 
     }
 
+    //年度总消费
+    public  Double YearConsumption(Map<String, Object> params)
+    {
+        Calendar now =Calendar.getInstance();
+        params.put("year",now.get(Calendar.YEAR));
+        Double sum=billCostMapper.MonthConsumption(params);
+        return sum;
+    }
     //本月总消费
     public  Double MonthConsumption(Map<String, Object> params)
     {
         Calendar now =Calendar.getInstance();
         params.put("year",now.get(Calendar.YEAR));
         params.put("month",now.get(Calendar.MONTH)+1);
+        Double sum=billCostMapper.MonthConsumption(params);
+        return sum;
+    }
+    //上月总消费
+    public  Double lastMConsumption(Map<String, Object> params)
+    {
+        Calendar now =Calendar.getInstance();
+        params.put("year",now.get(Calendar.YEAR));
+        params.put("month",now.get(Calendar.MONTH));
         Double sum=billCostMapper.MonthConsumption(params);
         return sum;
     }
@@ -2188,19 +2264,104 @@ public class BillServiceimpl implements BillService {
     public String getYAxisSum(double max)
     {
         String yAxis="";
-        if(max<=100)
+        if(max<=50)
         {
-            yAxis="0,10,20,30,40,50,60,70,80,90";
+            yAxis="0,5,10,15,20,25,30,35,40,45";
         }
-        else if(max<=200&&max>100)
+        else if(max<=100&&max>50)
+        {
+
+            yAxis="50,55,60,65,70,75,80,85,90,95";
+        }
+        else if(max>100&&max<=200)
         {
 
             yAxis="100,110,120,130,140,150,160,170,180,190";
         }
         else if(max<=300&&max>200)
         {
-            yAxis="210,220,230,240,250,260,270,280,290,300";
+            yAxis="200,210,220,230,240,250,260,270,280,290";
         }
+        else if(max<=400&&max>300)
+        {
+            yAxis="300,310,320,330,340,350,360,370,380,390";
+        }
+        else if(max<=500&&max>400)
+        {
+            yAxis="400,410,420,430,440,450,460,470,480,490";
+        }
+        else if(max<=600&&max>500)
+        {
+            yAxis="500,510,520,530,540,550,560,570,580,590";
+        }
+        else if(max<=700&&max>600)
+        {
+            yAxis="600,610,620,630,640,650,660,670,680,690";
+        }
+        else if(max<=800&&max>700)
+        {
+            yAxis="700,710,720,730,740,750,760,770,780,790";
+        }
+
+        else if(max<=900&&max>800)
+        {
+            yAxis="800,810,820,830,840,850,860,870,880,890";
+        }
+
+        else if(max<=1000&&max>900)
+        {
+            yAxis="900,910,920,930,940,950,960,970,980,990";
+        }
+        else if(max<=2000&&max>1000)
+        {
+            yAxis="1100,1200,1300,1400,1500,1600,1700,1800,1900,2000";
+        }
+        else if(max<=3000&&max>2000)
+        {
+            yAxis="2100,2200,2300,2400,2500,2600,2700,2800,2900,3000";
+        }
+
+        else if(max<=4000&&max>3000)
+        {
+            yAxis="3100,3200,3300,3400,3500,3600,3700,3800,3900,4000";
+        }
+        else if(max<=5000&&max>4000)
+        {
+            yAxis="4100,4200,4300,4400,4500,4600,4700,4800,4900,5000";
+        }
+        else if(max<=5000&&max>4000)
+        {
+            yAxis="5100,5200,5300,5400,5500,5600,5700,5800,5900,6000";
+        }
+
+        else if(max<=6000&&max>5000)
+        {
+            yAxis="5100,5200,5300,5400,5500,5600,5700,5800,5900,5000";
+        }
+
+        else if(max<=7000&&max>6000)
+        {
+            yAxis="6100,6200,6300,6400,6500,6600,6700,6800,6900,7000";
+        }
+
+        else if(max<=8000&&max>7000)
+        {
+            yAxis="7100,7200,7300,7400,7500,7600,7700,7800,7900,8000";
+        }
+
+        else if(max<=9000&&max>8000)
+        {
+            yAxis="8100,8200,8300,8400,8500,8600,8700,8800,8900,9000";
+        }
+
+        else if(max<=10000&&max>9000)
+        {
+            yAxis="9100,9200,9300,9400,9500,9600,9700,9800,9900,10000";
+        }
+
+
+
+
 
         return yAxis;
     }

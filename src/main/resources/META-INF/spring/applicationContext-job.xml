@@ -17,7 +17,6 @@
             <ref bean="CallCostTaskJob"/>
         </property>
         <property name="cronExpression">
-
           <!-- <value>0 */1 * * * ?</value>-->
         <value>0 30 9,16 * * ? </value>  <!-- : 每天11:01,11:02,11:03; 12:01,12:02,12:03分执行任务-->
         </property>

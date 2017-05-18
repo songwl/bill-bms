@@ -153,12 +153,16 @@
     SELECT SUM(b.cost_amount) from t_bill_price as a,t_bill_cost as b
     where a.bill_id=b.t_bill_id
     AND a.id=b.t_bill_price_id
-    AND a.in_member_id=#{userId,jdbcType=BIGINT}
+    <if test="userId != null">
+      AND a.in_member_id=#{userId,jdbcType=BIGINT}
+    </if>
     <if test="outUserId != null">
       AND a.out_member_id=#{outUserId,jdbcType=BIGINT}
     </if>
     and year(b.cost_date)=#{year,jdbcType=INTEGER}
-    and month(b.cost_date)=#{month,jdbcType=INTEGER}
+    <if test="month != null">
+      and month(b.cost_date)=#{month,jdbcType=INTEGER}
+    </if>
     <if test="day != null">
     and DAY(b.cost_date) = #{day,jdbcType=INTEGER}
     </if>

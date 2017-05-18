@@ -796,7 +796,12 @@
     select COUNT(DISTINCT a.id)
     from t_bill as a,t_bill_price as b,t_bill_search_support as d
     where a.id=b.bill_id  AND  a.id=d.bill_id
-    AND b.in_member_id=#{userId,jdbcType=BIGINT}
+    <if test="userId != null">
+      AND b.in_member_id=#{userId,jdbcType=BIGINT}
+    </if>
+    <if test="outMemberId != null">
+      AND b.out_member_id=#{outMemberId,jdbcType=BIGINT}
+    </if>
     AND (
     <if test="state != null">
       a.state = #{state,jdbcType=INTEGER}

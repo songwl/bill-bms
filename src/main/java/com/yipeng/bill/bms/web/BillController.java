@@ -881,7 +881,7 @@ public class BillController extends BaseController {
     /**
      * 优化结算
      *
-     * @param modelMap
+     * @param
      * @return
      */
     @RequestMapping(value = "/billOptimizationSettlement")
@@ -891,6 +891,49 @@ public class BillController extends BaseController {
         Map<String, Object> bms = billService.billOptimizationSettlement(loginUser);
         model.addAttribute("bmsModel", bms);
         return "/bill/billOptimizationSettlement";
+
+    }
+    /**
+     * 优化结算(用户余额)     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/userBalance")
+    @ResponseBody
+    public Map<String, Object> userBalance(ModelMap model) {
+
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> bms = billService.userBalance(loginUser);
+        return bms;
+
+    }
+
+    /**
+     * 优化结算(年度结算)     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/yearConsumption")
+    @ResponseBody
+    public Map<String, Object> yearConsumption() {
+
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> bms = billService.yearConsumption(loginUser);
+        return bms;
+
+    }
+    /**
+     * 优化结算(年度结算)     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/lastMonthConsumption")
+    @ResponseBody
+    public Map<String, Object> lastMonthConsumption() {
+
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> bms = billService.lastMonthConsumption(loginUser);
+        return bms;
 
     }
 

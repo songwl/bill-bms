@@ -151,7 +151,7 @@ public class HomeController extends BaseController {
 	public Map<String, Object> sanliulingCompleteness(ModelMap model) throws Exception {
 		LoginUser loginUser=this.getCurrentAccount();
 		Map<String, Object> bms=homeService.sanliulingCompleteness(loginUser);
-		model.addAttribute("bmsModel", bms);
+
 		return bms;
 	}
 	//搜狗
@@ -160,7 +160,6 @@ public class HomeController extends BaseController {
 	public Map<String, Object> sougouCompleteness(ModelMap model) throws Exception {
 		LoginUser loginUser=this.getCurrentAccount();
 		Map<String, Object> bms=homeService.sougouCompleteness(loginUser);
-		model.addAttribute("bmsModel", bms);
 		return bms;
 	}
 	//神马
@@ -169,7 +168,7 @@ public class HomeController extends BaseController {
 	public Map<String, Object> shenmaCompleteness(ModelMap model) throws Exception {
 		LoginUser loginUser=this.getCurrentAccount();
 		Map<String, Object> bms=homeService.shenmaCompleteness(loginUser);
-		model.addAttribute("bmsModel", bms);
+
 		return bms;
 	}
 }

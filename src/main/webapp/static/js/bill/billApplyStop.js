@@ -149,9 +149,7 @@ $(function () {
     var oTable1 = new TableInit();
     oTable1.Init();
 
-    //2.初始化Button的点击事件
-    var oButtonInit = new ButtonInit();
-    oButtonInit.Init();
+
 
 
 });

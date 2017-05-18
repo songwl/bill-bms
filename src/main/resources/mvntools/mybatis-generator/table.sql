@@ -282,3 +282,12 @@ CREATE TABLE `t_forbidden_words` (
 ) ENGINE=InnoDB
 COMMENT = '违禁词库.';
 
+CREATE TABLE `logs` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `userId` bigint(20) NOT NULL,
+  `optype` int(11) NOT NULL,
+  `opobj` varchar(255) CHARACTER SET latin1 NOT NULL,
+  `opremake` varchar(255) CHARACTER SET latin1 NOT NULL,
+  `createtime` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='日志表';

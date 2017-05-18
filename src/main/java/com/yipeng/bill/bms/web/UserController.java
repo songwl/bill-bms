@@ -7,6 +7,7 @@ import com.yipeng.bill.bms.model.CaptchaUtil;
 import com.yipeng.bill.bms.service.UserRoleService;
 import com.yipeng.bill.bms.service.UserService;
 import com.yipeng.bill.bms.vo.LoginUser;
+import org.aspectj.weaver.ast.Var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import sun.misc.Cache;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -207,4 +209,7 @@ public class UserController extends BaseController {
         // 输出打web页面
         ImageIO.write(util.getImage(), "jpg", response.getOutputStream());
     }
+
+
+
 }

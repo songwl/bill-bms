@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yipeng.bill.bms.dao.LogsMapper">
+  <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.Logs">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="userId" jdbcType="BIGINT" property="userid" />
+    <result column="optype" jdbcType="INTEGER" property="optype" />
+    <result column="opobj" jdbcType="VARCHAR" property="opobj" />
+    <result column="opremake" jdbcType="VARCHAR" property="opremake" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, userId, optype, opobj, opremake, createtime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from logs
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from logs
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.Logs">
+    insert into logs (id, userId, optype, 
+      opobj, opremake, createtime
+      )
+    values (#{id,jdbcType=BIGINT}, #{userid,jdbcType=BIGINT}, #{optype,jdbcType=INTEGER}, 
+      #{opobj,jdbcType=VARCHAR}, #{opremake,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.Logs">
+    insert into logs
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userid != null">
+        userId,
+      </if>
+      <if test="optype != null">
+        optype,
+      </if>
+      <if test="opobj != null">
+        opobj,
+      </if>
+      <if test="opremake != null">
+        opremake,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="optype != null">
+        #{optype,jdbcType=INTEGER},
+      </if>
+      <if test="opobj != null">
+        #{opobj,jdbcType=VARCHAR},
+      </if>
+      <if test="opremake != null">
+        #{opremake,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.Logs">
+    update logs
+    <set>
+      <if test="userid != null">
+        userId = #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="optype != null">
+        optype = #{optype,jdbcType=INTEGER},
+      </if>
+      <if test="opobj != null">
+        opobj = #{opobj,jdbcType=VARCHAR},
+      </if>
+      <if test="opremake != null">
+        opremake = #{opremake,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.Logs">
+    update logs
+    set userId = #{userid,jdbcType=BIGINT},
+      optype = #{optype,jdbcType=INTEGER},
+      opobj = #{opobj,jdbcType=VARCHAR},
+      opremake = #{opremake,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

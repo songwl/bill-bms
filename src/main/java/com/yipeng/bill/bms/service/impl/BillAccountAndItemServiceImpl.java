@@ -1,11 +1,9 @@
 package com.yipeng.bill.bms.service.impl;
 
-import com.yipeng.bill.bms.dao.BillCostMapper;
-import com.yipeng.bill.bms.dao.BillPriceMapper;
-import com.yipeng.bill.bms.dao.FundAccountMapper;
-import com.yipeng.bill.bms.dao.FundItemMapper;
+import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.FundAccount;
 import com.yipeng.bill.bms.domain.FundItem;
+import com.yipeng.bill.bms.domain.Logs;
 import com.yipeng.bill.bms.service.BillAccountAndItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,13 +20,14 @@ import java.util.Map;
 public class BillAccountAndItemServiceImpl implements BillAccountAndItemService {
     @Autowired
     private BillPriceMapper billPriceMapper;
-
     @Autowired
     private BillCostMapper billCostMapper;
     @Autowired
     private FundItemMapper fundItemMapper;
     @Autowired
     private FundAccountMapper fundAccountMapper;
+    @Autowired
+    private LogsMapper logsMapper;
     @Override
     public int BillAccountAndItem(Map<String, Object> params) {
         Calendar now =Calendar.getInstance();
@@ -67,9 +66,17 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
                 if (fundItem==null)
                 {
                     //先扣余额
-                    BigDecimal aa=fundAccount.getBalance();
+                    BigDecimal lastAccount=fundAccount.getBalance();
                     fundAccount.setBalance(fundAccount.getBalance().subtract(new BigDecimal(cost)));
                     fundAccountMapper.updateByPrimaryKeySelective(fundAccount);
+                    Logs logs=new Logs();
+                    logs.setOpobj(params.get("userId").toString());
+                    logs.setOpremake("今日第一次"+"期初余额："+lastAccount+"发生金额："+cost+"结余金额："+lastAccount.subtract(new BigDecimal(cost)));
+                    logs.setOptype(1);
+                    logs.setUserid(new Long(1));
+                    logs.setCreatetime(new Date());
+                    logsMapper.insert(logs);
+
                     //产生资金明细
                     FundAccount fundAccountNow= fundAccountMapper.selectByUserId(Long.parseLong(params.get("userId").toString()));//客户当前余额
                     FundItem fundItemNow=new FundItem();
@@ -85,8 +92,16 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
                 else
                 {
                     //修改余额
+                    BigDecimal lastAccount1=fundAccount.getBalance();
                     fundAccount.setBalance((fundAccount.getBalance().add(fundItem.getChangeAmount()).subtract(new BigDecimal(cost))));
                     fundAccountMapper.updateByPrimaryKeySelective(fundAccount);
+                    Logs logs=new Logs();
+                    logs.setOpobj(params.get("userId").toString());
+                    logs.setOpremake("aaa"+"xxx："+lastAccount1+"x"+fundItem.getChangeAmount()+"1："+cost+"2："+lastAccount1.add(fundItem.getChangeAmount()).subtract(new BigDecimal(cost)));
+                    logs.setOptype(1);
+                    logs.setUserid(new Long(1));
+                    logs.setCreatetime(new Date());
+                    logsMapper.insert(logs);
                     //更改资金流水
                     fundItem.setChangeAmount(new BigDecimal(cost));
                     fundItemMapper.updateByPrimaryKeySelective(fundItem);

@@ -44,14 +44,15 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
                 //创建用户资金表
                 FundAccount fundAccount1=new FundAccount();
                 fundAccount1.setUserId(Long.parseLong(params.get("userId").toString()));
-                fundAccount1.setBalance(new BigDecimal(cost));
+                BigDecimal balance=new BigDecimal(0);
+                fundAccount1.setBalance(balance.subtract(new BigDecimal(cost)));
                 fundAccount1.setCreateTime(new Date());
                 fundAccount1.setCreateUserId(Long.parseLong(params.get("userId").toString()));
                 fundAccountMapper.insert(fundAccount1);
                 //创建流水明细表
                 FundItem fundItem=new FundItem();
                 fundItem.setChangeAmount(new BigDecimal(cost));
-                fundItem.setBalance(fundAccount1.getBalance());
+                fundItem.setBalance(balance.subtract(new BigDecimal(cost)));
                 fundItem.setChangeTime(new Date());
                 fundItem.setFundAccountId(fundAccount1.getId());
                 fundItem.setItemType("cost");
@@ -68,10 +69,10 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
                     //先扣余额
                     BigDecimal lastAccount=fundAccount.getBalance();
                     fundAccount.setBalance(fundAccount.getBalance().subtract(new BigDecimal(cost)));
-                    fundAccountMapper.updateByPrimaryKeySelective(fundAccount);
+                    fundAccountMapper.updateByPrimaryKey(fundAccount);
                     Logs logs=new Logs();
                     logs.setOpobj(params.get("userId").toString());
-                    logs.setOpremake("今日第一次"+"期初余额："+lastAccount+"发生金额："+cost+"结余金额："+lastAccount.subtract(new BigDecimal(cost)));
+                    logs.setOpremake("今日第一次"+"期初余额："+Double.parseDouble(lastAccount.toString())+"发生金额："+cost.toString()+"结余金额："+ Double.parseDouble(lastAccount.subtract(new BigDecimal(cost)).toString()) );
                     logs.setOptype(1);
                     logs.setUserid(new Long(1));
                     logs.setCreatetime(new Date());
@@ -97,7 +98,7 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
                     fundAccountMapper.updateByPrimaryKeySelective(fundAccount);
                     Logs logs=new Logs();
                     logs.setOpobj(params.get("userId").toString());
-                    logs.setOpremake("aaa"+"xxx："+lastAccount1+"x"+fundItem.getChangeAmount()+"1："+cost+"2："+lastAccount1.add(fundItem.getChangeAmount()).subtract(new BigDecimal(cost)));
+                    logs.setOpremake("今天第二次扣费"+"期初余额："+Double.parseDouble(lastAccount1.toString())+"流水历史：:"+fundItem.getChangeAmount()+"发生金额："+cost+"结余金额："+Double.parseDouble((lastAccount1.add(fundItem.getChangeAmount()).subtract(new BigDecimal(cost))).toString()));
                     logs.setOptype(1);
                     logs.setUserid(new Long(1));
                     logs.setCreatetime(new Date());

@@ -291,3 +291,17 @@ CREATE TABLE `logs` (
   `createtime` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='日志表';
+
+CREATE TABLE `searchenginecompletionrate` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `userId` bigint(20) NOT NULL,
+  `allCompleteness` double DEFAULT NULL,
+  `baiduCompleteness` double DEFAULT NULL,
+  `baiduWapCompleteness` double DEFAULT NULL,
+  `sanliulingCompleteness` double DEFAULT NULL,
+  `sougouCompleteness` double DEFAULT NULL,
+  `shenmaCompleteness` double DEFAULT NULL,
+  `createTime` date DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `fk_searchEngine_idx` (`userId`,`createTime`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

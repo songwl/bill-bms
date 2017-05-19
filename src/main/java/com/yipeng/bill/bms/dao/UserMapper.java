@@ -41,19 +41,19 @@ public interface UserMapper {
      * @return
      */
     List<User> getUserByCreateId(Long userId);
-
+    //待审核客户
     List<User> selectByReviewUser(Map<String,Object> params);
-
+  //待审核客户数量
     Long  selectByReviewUserCount();
- 
-
-
+    //用户权限
     List<User> getUserRoleByCreateId(Map<String,Object> params);
+    //用户权限个数
     Long getUserRoleByCreateIdCount(Map<String,Object> params);
 
     List<User> getUserBillAscription(Map<String,Object> params);
     Long getUserBillAscriptionCount(Map<String,Object> params);
 
     List<User> getSearchUserBillAscription(Map<String,Object> params);
+
  
 }

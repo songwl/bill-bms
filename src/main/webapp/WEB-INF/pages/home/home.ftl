@@ -413,7 +413,12 @@
             aa2.push(item-0);
         })
         var chart1 = new Highcharts.Chart('container1', {
-
+            chart: {
+                type:'spline'
+            },
+            credits: {
+                        enabled:false//不显示highCharts版权信息
+                    },
             title: {
 
                 text: '任务消费走势图 ',
@@ -434,9 +439,6 @@
                     text: '单位 (元)'
                 }
             },
-            tooltip: {
-                valueSuffix: ''
-            },
             legend: {
                 layout: 'vertical',
                 align: 'right',
@@ -445,7 +447,11 @@
             },
             series: [{
                 name: '上月',
-                data: aa1
+                data: aa1,
+                color:'#ff0000',
+                marker: {
+                    symbol: 'square'//点形状
+                },
             }, {
                 name: '本月',
                 data: aa2

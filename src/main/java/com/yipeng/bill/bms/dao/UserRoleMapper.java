@@ -1,9 +1,11 @@
 package com.yipeng.bill.bms.dao;
 
+import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.domain.UserRole;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface UserRoleMapper {
@@ -25,5 +27,6 @@ public interface UserRoleMapper {
     UserRole selectByUserId(Long userId);
     int getCount(Long roleId);
 
-
+    //所有用户
+    List<UserRole>   selectByAllUserRole(Map<String,Object> params);
 }

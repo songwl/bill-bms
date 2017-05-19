@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yipeng.bill.bms.dao.SearchenginecompletionrateMapper">
+  <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.Searchenginecompletionrate">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="userId" jdbcType="BIGINT" property="userid" />
+    <result column="allCompleteness" jdbcType="DOUBLE" property="allcompleteness" />
+    <result column="baiduCompleteness" jdbcType="DOUBLE" property="baiducompleteness" />
+    <result column="baiduWapCompleteness" jdbcType="DOUBLE" property="baiduwapcompleteness" />
+    <result column="sanliulingCompleteness" jdbcType="DOUBLE" property="sanliulingcompleteness" />
+    <result column="sougouCompleteness" jdbcType="DOUBLE" property="sougoucompleteness" />
+    <result column="shenmaCompleteness" jdbcType="DOUBLE" property="shenmacompleteness" />
+    <result column="createTime" jdbcType="DATE" property="createtime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, userId, allCompleteness, baiduCompleteness, baiduWapCompleteness, sanliulingCompleteness, 
+    sougouCompleteness, shenmaCompleteness, createTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from searchenginecompletionrate
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from searchenginecompletionrate
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.Searchenginecompletionrate">
+    insert into searchenginecompletionrate (id, userId, allCompleteness, 
+      baiduCompleteness, baiduWapCompleteness, 
+      sanliulingCompleteness, sougouCompleteness, 
+      shenmaCompleteness, createTime)
+    values (#{id,jdbcType=BIGINT}, #{userid,jdbcType=BIGINT}, #{allcompleteness,jdbcType=DOUBLE}, 
+      #{baiducompleteness,jdbcType=DOUBLE}, #{baiduwapcompleteness,jdbcType=DOUBLE}, 
+      #{sanliulingcompleteness,jdbcType=DOUBLE}, #{sougoucompleteness,jdbcType=DOUBLE}, 
+      #{shenmacompleteness,jdbcType=DOUBLE}, #{createtime,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.Searchenginecompletionrate">
+    insert into searchenginecompletionrate
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userid != null">
+        userId,
+      </if>
+      <if test="allcompleteness != null">
+        allCompleteness,
+      </if>
+      <if test="baiducompleteness != null">
+        baiduCompleteness,
+      </if>
+      <if test="baiduwapcompleteness != null">
+        baiduWapCompleteness,
+      </if>
+      <if test="sanliulingcompleteness != null">
+        sanliulingCompleteness,
+      </if>
+      <if test="sougoucompleteness != null">
+        sougouCompleteness,
+      </if>
+      <if test="shenmacompleteness != null">
+        shenmaCompleteness,
+      </if>
+      <if test="createtime != null">
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="allcompleteness != null">
+        #{allcompleteness,jdbcType=DOUBLE},
+      </if>
+      <if test="baiducompleteness != null">
+        #{baiducompleteness,jdbcType=DOUBLE},
+      </if>
+      <if test="baiduwapcompleteness != null">
+        #{baiduwapcompleteness,jdbcType=DOUBLE},
+      </if>
+      <if test="sanliulingcompleteness != null">
+        #{sanliulingcompleteness,jdbcType=DOUBLE},
+      </if>
+      <if test="sougoucompleteness != null">
+        #{sougoucompleteness,jdbcType=DOUBLE},
+      </if>
+      <if test="shenmacompleteness != null">
+        #{shenmacompleteness,jdbcType=DOUBLE},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.Searchenginecompletionrate">
+    update searchenginecompletionrate
+    <set>
+      <if test="userid != null">
+        userId = #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="allcompleteness != null">
+        allCompleteness = #{allcompleteness,jdbcType=DOUBLE},
+      </if>
+      <if test="baiducompleteness != null">
+        baiduCompleteness = #{baiducompleteness,jdbcType=DOUBLE},
+      </if>
+      <if test="baiduwapcompleteness != null">
+        baiduWapCompleteness = #{baiduwapcompleteness,jdbcType=DOUBLE},
+      </if>
+      <if test="sanliulingcompleteness != null">
+        sanliulingCompleteness = #{sanliulingcompleteness,jdbcType=DOUBLE},
+      </if>
+      <if test="sougoucompleteness != null">
+        sougouCompleteness = #{sougoucompleteness,jdbcType=DOUBLE},
+      </if>
+      <if test="shenmacompleteness != null">
+        shenmaCompleteness = #{shenmacompleteness,jdbcType=DOUBLE},
+      </if>
+      <if test="createtime != null">
+        createTime = #{createtime,jdbcType=DATE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.Searchenginecompletionrate">
+    update searchenginecompletionrate
+    set userId = #{userid,jdbcType=BIGINT},
+      allCompleteness = #{allcompleteness,jdbcType=DOUBLE},
+      baiduCompleteness = #{baiducompleteness,jdbcType=DOUBLE},
+      baiduWapCompleteness = #{baiduwapcompleteness,jdbcType=DOUBLE},
+      sanliulingCompleteness = #{sanliulingcompleteness,jdbcType=DOUBLE},
+      sougouCompleteness = #{sougoucompleteness,jdbcType=DOUBLE},
+      shenmaCompleteness = #{shenmacompleteness,jdbcType=DOUBLE},
+      createTime = #{createtime,jdbcType=DATE}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

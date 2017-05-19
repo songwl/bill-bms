@@ -141,8 +141,8 @@
        注意，table里面很多参数都是对javaModelGenerator，context等元素的默认属性的一个复写；
        -->
         <!-- 不生成Example -->
-        <table tableName="logs"
-               domainObjectName="Logs"
+        <table tableName="searchenginecompletionrate"
+               domainObjectName="Searchenginecompletionrate"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

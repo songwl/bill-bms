@@ -101,4 +101,15 @@
    WHERE role_id = #{roleId,jdbcType=BIGINT}
   </select>
 
+
+
+  <select id="selectByAllUserRole"  resultMap="BaseResultMap">
+    select
+    a.*
+    from t_user_role as a ,t_user as b
+    where
+    a.user_id=b.id
+    AND
+    b.status = #{status,jdbcType=BIT}
+  </select>
 </mapper>

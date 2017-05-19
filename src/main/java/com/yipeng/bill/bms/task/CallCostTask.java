@@ -4,6 +4,8 @@ import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.service.BillAccountAndItemService;
 import com.yipeng.bill.bms.service.BillCallCostService;
+import com.yipeng.bill.bms.service.SearchRateService;
+import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
@@ -24,6 +26,11 @@ public class CallCostTask {
      private BillAccountAndItemService billAccountAndItemService;
     @Autowired
     private  BillPriceMapper billPriceMapper;
+    @Autowired
+    private  UserRoleMapper userRoleMapper;
+
+    @Autowired
+    private SearchRateService searchRateService;
     public void execute(){
         int offset = 0;
         int limit = 50; //每次查询50条
@@ -63,6 +70,16 @@ public class CallCostTask {
                 map.put("userId",item.getOutMemberId());
                 billAccountAndItemService.BillAccountAndItem(map);
             }
+        }
+
+          Map<String,Object> userMap=new HashMap<>();
+          userMap.put("status",1);
+          List<UserRole> userRoleList=userRoleMapper.selectByAllUserRole(userMap);
+
+        for (UserRole userRole:userRoleList
+             ) {
+
+           int a=searchRateService.updateSearchRate(userRole);
         }
 
 

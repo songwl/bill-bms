@@ -35,6 +35,9 @@ public class HomeServiceImpl implements HomeService {
     private FundAccountMapper fundAccountMapper;
     @Autowired
     private  BillPriceMapper billPriceMapper;
+    @Autowired
+    private   SearchenginecompletionrateMapper searchenginecompletionrateMapper;
+
     /**
      * 首页详情
      * @param loginUser
@@ -180,7 +183,6 @@ public class HomeServiceImpl implements HomeService {
             {
                 yAxis=getYAxis(MaxYbylast);
             }
-
             String yAxisSum="";
             if(MaxYbyNewCost!=0)
             {
@@ -190,7 +192,6 @@ public class HomeServiceImpl implements HomeService {
             {
                 yAxisSum=getYAxisSum(MaxYbylastCost);
             }
-
             map.put("yAxis",yAxis);
             map.put("yAxisSum",yAxisSum);
 
@@ -482,6 +483,12 @@ public class HomeServiceImpl implements HomeService {
         return null;
     }
 
+
+
+
+
+
+
     @Override
     public Map<String, Object> userCount(LoginUser loginUser) {
         Map<String, Object> map=new HashMap<>();//视图返回对象
@@ -537,7 +544,6 @@ public class HomeServiceImpl implements HomeService {
         //渠道商和代理商
         else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")) {
             //月总消费
-
             Double MonthConsumption=MonthConsumption(params);
             map.put("MonthConsumption",MonthConsumption);
         }
@@ -604,7 +610,6 @@ public class HomeServiceImpl implements HomeService {
 
             return map;
     }
-
     //任务数
     @Override
     public Map<String, Object> billCount(LoginUser loginUser) {
@@ -638,7 +643,6 @@ public class HomeServiceImpl implements HomeService {
         }
         return map;
     }
-
     //累计任务数
     @Override
     public Map<String, Object> AllbillCount(LoginUser loginUser) {
@@ -673,7 +677,6 @@ public class HomeServiceImpl implements HomeService {
         }
         return map;
     }
-
     //今日达标数
     @Override
     public Map<String, Object> standardSum(LoginUser loginUser) {
@@ -753,7 +756,6 @@ public class HomeServiceImpl implements HomeService {
         }
         return map;
     }
-
     //百度完成率
     @Override
     public Map<String, Object> baiduCompleteness(LoginUser loginUser) {
@@ -893,8 +895,6 @@ public class HomeServiceImpl implements HomeService {
         }
         return map;
     }
-
-
     //客户数
     public Long UserCount(Map<String, Object> params)
     {
@@ -1003,7 +1003,6 @@ public class HomeServiceImpl implements HomeService {
 
         return Completeness;
     }
-
     //搜索引擎完成率（客户）
     public  Double searchCompletenessBycus(String search, LoginUser loginUser)
     {
@@ -1045,7 +1044,6 @@ public class HomeServiceImpl implements HomeService {
 
         return Completeness;
     }
-
     //获取一个月的天数
     public static int getDaysOfMonth(Date date) {
         Calendar calendar = Calendar.getInstance();
@@ -1086,7 +1084,6 @@ public class HomeServiceImpl implements HomeService {
         map.put("last", day_last);
         return map;
     }
-
 
     public String getYAxis(int max)
     {

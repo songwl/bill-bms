@@ -63,12 +63,18 @@ public class CallCostTask {
         map.put("day",now.get(Calendar.DATE));
         //在这里开始计算流水和用户余额
         List<BillPrice> billPriceList=billPriceMapper.selectByOutmemberList();//获取今日所有人付款人
-        if(!CollectionUtils.isEmpty(billPriceList))
-        {
-            for (BillPrice item:billPriceList
-                    ) {
-                map.put("userId",item.getOutMemberId());
-                billAccountAndItemService.BillAccountAndItem(map);
+        if(!CollectionUtils.isEmpty(billPriceList)) {
+
+            try {
+                for (BillPrice item : billPriceList
+                        ) {
+
+                    map.put("userId", item.getOutMemberId());
+                    if (billAccountAndItemService.BillAccountAndItem(map) == 1) ;
+
+                }
+            } catch (Exception e) {
+                System.out.print(e);
             }
         }
 

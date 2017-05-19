@@ -5,6 +5,7 @@ import com.yipeng.bill.bms.domain.FundAccount;
 import com.yipeng.bill.bms.domain.FundItem;
 import com.yipeng.bill.bms.domain.Logs;
 import com.yipeng.bill.bms.service.BillAccountAndItemService;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by Administrator on 2017/5/17.
@@ -28,6 +30,8 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
     private FundAccountMapper fundAccountMapper;
     @Autowired
     private LogsMapper logsMapper;
+
+    private volatile  ReentrantLock lock = new ReentrantLock();
     @Override
     public int BillAccountAndItem(Map<String, Object> params) {
         Calendar now =Calendar.getInstance();
@@ -66,17 +70,26 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
                 FundItem fundItem=fundItemMapper.selectByDayFunItem(params);//判断今日是否存在今日消费
                 if (fundItem==null)
                 {
+
                     //先扣余额
                     BigDecimal lastAccount=fundAccount.getBalance();
-                    fundAccount.setBalance(fundAccount.getBalance().subtract(new BigDecimal(cost)));
-                    fundAccountMapper.updateByPrimaryKey(fundAccount);
                     Logs logs=new Logs();
                     logs.setOpobj(params.get("userId").toString());
-                    logs.setOpremake("今日第一次"+"期初余额："+Double.parseDouble(lastAccount.toString())+"发生金额："+cost.toString()+"结余金额："+ Double.parseDouble(lastAccount.subtract(new BigDecimal(cost)).toString()) );
+                    logs.setOpremake("今日第一次。"+"期初余额："+Double.parseDouble(lastAccount.toString())+"发生金额："+
+                            cost.toString()+"结余金额："+ Double.parseDouble(lastAccount.subtract(new BigDecimal(cost)).toString()) );
                     logs.setOptype(1);
                     logs.setUserid(new Long(1));
                     logs.setCreatetime(new Date());
-                    logsMapper.insert(logs);
+                    int a=logsMapper.insert(logs);
+                    fundAccount.setBalance(fundAccount.getBalance().subtract(new BigDecimal(cost)));
+                    synchronized (this)
+                    {
+                        lock.lock();
+                        fundAccountMapper.updateByPrimaryKey(fundAccount);
+                        lock.unlock();
+                    }
+
+
 
                     //产生资金明细
                     FundAccount fundAccountNow= fundAccountMapper.selectByUserId(Long.parseLong(params.get("userId").toString()));//客户当前余额
@@ -86,26 +99,42 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
                     fundItemNow.setItemType("cost");
                     fundItemNow.setFundAccountId(fundAccount.getId());
                     fundItemNow.setChangeTime(new Date());
-                    fundItemMapper.insert(fundItemNow);
-                    return  1;
+                    synchronized (this)
+                    {
+                        lock.lock();
+                        int aa= fundItemMapper.insert(fundItemNow);
+                        lock.unlock();
+                    }
+
+
+                      return  1;
 
                 }
                 else
                 {
-                    //修改余额
-                    BigDecimal lastAccount1=fundAccount.getBalance();
-                    fundAccount.setBalance((fundAccount.getBalance().add(fundItem.getChangeAmount()).subtract(new BigDecimal(cost))));
-                    fundAccountMapper.updateByPrimaryKeySelective(fundAccount);
-                    Logs logs=new Logs();
-                    logs.setOpobj(params.get("userId").toString());
-                    logs.setOpremake("今天第二次扣费"+"期初余额："+Double.parseDouble(lastAccount1.toString())+"流水历史：:"+fundItem.getChangeAmount()+"发生金额："+cost+"结余金额："+Double.parseDouble((lastAccount1.add(fundItem.getChangeAmount()).subtract(new BigDecimal(cost))).toString()));
-                    logs.setOptype(1);
-                    logs.setUserid(new Long(1));
-                    logs.setCreatetime(new Date());
-                    logsMapper.insert(logs);
-                    //更改资金流水
-                    fundItem.setChangeAmount(new BigDecimal(cost));
-                    fundItemMapper.updateByPrimaryKeySelective(fundItem);
+                    synchronized (this) {
+
+                        //修改余额
+                        BigDecimal lastAccount1 = fundAccount.getBalance();
+                        fundAccount.setBalance((fundAccount.getBalance().add(fundItem.getChangeAmount()).subtract(new BigDecimal(cost))));
+                        lock.lock();
+                        fundAccountMapper.updateByPrimaryKeySelective(fundAccount);
+                        lock.unlock();
+                        Logs logs = new Logs();
+                        logs.setOpobj(params.get("userId").toString());
+                        logs.setOpremake("今天第二次扣费" + "期初余额：" + Double.parseDouble(lastAccount1.toString()) + "流水历史：:" + fundItem.getChangeAmount() + "发生金额：" + cost + "结余金额：" + Double.parseDouble((lastAccount1.add(fundItem.getChangeAmount()).subtract(new BigDecimal(cost))).toString()));
+                        logs.setOptype(1);
+                        logs.setUserid(new Long(1));
+                        logs.setCreatetime(new Date());
+                        lock.lock();
+                        logsMapper.insert(logs);
+                        lock.unlock();
+                        //更改资金流水
+                        fundItem.setChangeAmount(new BigDecimal(cost));
+                        lock.lock();
+                        fundItemMapper.updateByPrimaryKeySelective(fundItem);
+                        lock.unlock();
+                    }
                     return  1;
                 }
 

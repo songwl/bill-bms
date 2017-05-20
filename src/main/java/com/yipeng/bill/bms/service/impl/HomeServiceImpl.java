@@ -1,10 +1,7 @@
 package com.yipeng.bill.bms.service.impl;
 
 import com.yipeng.bill.bms.dao.*;
-import com.yipeng.bill.bms.domain.Bill;
-import com.yipeng.bill.bms.domain.BillPrice;
-import com.yipeng.bill.bms.domain.FundAccount;
-import com.yipeng.bill.bms.domain.Role;
+import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.service.HomeService;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,6 +93,41 @@ public class HomeServiceImpl implements HomeService {
 
 
         Map<String, Object> map=new HashMap<>();
+        //查询今日的搜索引擎完成率
+        Map<String, Object> searchMap=new HashMap<>();//搜索引擎完成率查询对象
+        Calendar now = Calendar.getInstance();
+        searchMap.put("year",now.get(Calendar.YEAR));
+        searchMap.put("month",now.get(Calendar.MONTH)+1);
+        searchMap.put("day",now.get(Calendar.DATE));
+        searchMap.put("userId",loginUser.getId());
+        Searchenginecompletionrate searchenginecompletionrate=searchenginecompletionrateMapper.selectByUsedIdAndDay(searchMap);
+        if(searchenginecompletionrate!=null)
+        {
+            map.put("search",searchenginecompletionrate);
+        }
+        else {
+            searchMap.put("day",now.get(Calendar.DATE)-1);
+            Searchenginecompletionrate searchenginecompletionrateLast=searchenginecompletionrateMapper.selectByUsedIdAndDay(searchMap);
+            if(searchenginecompletionrateLast!=null)
+            {
+                map.put("search",searchenginecompletionrateLast);
+            }
+            else
+            {
+                Searchenginecompletionrate searchenginecompletionrateNull=new Searchenginecompletionrate();
+                searchenginecompletionrateNull.setAllcompleteness(0.00);
+                searchenginecompletionrateNull.setBaiducompleteness(0.00);
+                searchenginecompletionrateNull.setBaiduwapcompleteness(0.00);
+                searchenginecompletionrateNull.setSanliulingcompleteness(0.00);
+                searchenginecompletionrateNull.setShenmacompleteness(0.00);
+                searchenginecompletionrateNull.setSougoucompleteness(0.00);
+                map.put("search",searchenginecompletionrateNull);
+            }
+        }
+
+
+
+
         Map<String, Object> params=new HashMap<>();
         params.put("userId",loginUser.getId());
         if(loginUser.hasRole("SUPER_ADMIN"))
@@ -484,11 +516,6 @@ public class HomeServiceImpl implements HomeService {
     }
 
 
-
-
-
-
-
     @Override
     public Map<String, Object> userCount(LoginUser loginUser) {
         Map<String, Object> map=new HashMap<>();//视图返回对象
@@ -753,6 +780,18 @@ public class HomeServiceImpl implements HomeService {
             dateMap.put("date",str1);
             int keywordsCount=billCostMapper.selectByBillCostOfDay(dateMap);
             map.put("standardSum",keywordsCount);
+            //总完成率(今日达标数/总订单数)
+            double AllCompleteness=0;
+            if(billList.size()>0)
+            {
+                AllCompleteness=((double)keywordsCount/billList.size())*100;
+            }
+            else
+            {
+                AllCompleteness=0.00;
+            }
+            map.put("AllCompleteness",df.format(AllCompleteness));
+
         }
         return map;
     }

@@ -51,7 +51,8 @@ public class BillController extends BaseController {
     private BillService billService;
     @Autowired
     private UserService userService;
-
+    @Autowired
+    private  UserMapper userMapper;
     /**
      * 上下层
      *
@@ -600,7 +601,8 @@ public class BillController extends BaseController {
             params.put("searchName", searchName);
         }
         if (!searchUserName.isEmpty()) {
-            params.put("searchUserNameId", searchUserName);
+            User user1=userMapper.selectByUserName(searchUserName);
+            params.put("searchUserNameId", user1.getId());
         }
         if (sortName != null) {
             params.put("sortName", sortName);

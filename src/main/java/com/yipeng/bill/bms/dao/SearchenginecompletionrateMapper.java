@@ -2,6 +2,8 @@ package com.yipeng.bill.bms.dao;
 
 import com.yipeng.bill.bms.domain.Searchenginecompletionrate;
 
+import java.util.Map;
+
 public interface SearchenginecompletionrateMapper {
     int deleteByPrimaryKey(Long id);
 
@@ -14,4 +16,7 @@ public interface SearchenginecompletionrateMapper {
     int updateByPrimaryKeySelective(Searchenginecompletionrate record);
 
     int updateByPrimaryKey(Searchenginecompletionrate record);
+
+    //查询今日是否存在记录
+    Searchenginecompletionrate selectByUsedIdAndDay(Map<String,Object> params);
 }

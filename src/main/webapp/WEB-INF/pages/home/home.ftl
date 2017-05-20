@@ -135,7 +135,7 @@
                     总完成率
                 </div>
                 <div class="value" id="AllCompleteness">
-                      0.00%
+
                 </div>
             </div>
         </div>
@@ -150,7 +150,7 @@
                     百度完成率
                 </div>
                 <div class="value" id="baiduCompleteness">
-                    0.00%
+
                 </div>
             </div>
         </div>
@@ -165,7 +165,7 @@
                     百度手机完成率
                 </div>
                 <div class="value" id="baiduWapCompleteness">
-                    0.00%
+
                 </div>
             </div>
         </div>
@@ -180,7 +180,7 @@
                     360完成率
                 </div>
                 <div class="value" id="sanliulingCompleteness">
-                    0.00%
+
                 </div>
             </div>
         </div>
@@ -210,7 +210,7 @@
                     搜狗完成率
                 </div>
                 <div class="value" id="sougouCompleteness">
-                    0.00%
+
                 </div>
             </div>
         </div>
@@ -225,7 +225,7 @@
                     神马完成率
                 </div>
                 <div class="value" id="shenmaCompleteness">
-                    0.00%
+
                 </div>
             </div>
         </div>
@@ -256,7 +256,6 @@
 <div id="container1" style="width: 100%; height: 400px; float:left;;"></div>
     <#if bmsModel.user.hasRole("SUPER_ADMIN")>
     <div id="container" style="width: 100%; height: 400px; float:left;;"></div>
-
     </#if>
 <script type="text/javascript">
 
@@ -337,63 +336,22 @@
         url: CTX + '/standardSum',
         success: function (result) {
             $("#standardSum").html(result.standardSum);
-            $("#AllCompleteness").html(result.AllCompleteness+"%");
-        }
-    });
-    //8，百度
-    $.ajax({
-        type: 'get',
-        async: true,
-        url: CTX + '/baiduCompleteness',
-        success: function (result) {
-            $("#baiduCompleteness").html(result.baiduCompleteness+"%");
 
         }
     });
-    //9，手机百度
-    $.ajax({
-        type: 'get',
-        async: true,
-        url: CTX + '/baiduWapCompleteness',
-        success: function (result) {
-            $("#baiduWapCompleteness").html(result.baiduWapCompleteness+"%");
-        }
-    });
-    //10，360
-    $.ajax({
-        type: 'get',
-        async: true,
-        url: CTX + '/sanliulingCompleteness',
-        success: function (result) {
-            $("#sanliulingCompleteness").html(result.sanliulingCompleteness+"%");
-        }
-    });
-    //11，搜狗
-    $.ajax({
-        type: 'get',
-        async: true,
-        url: CTX + '/sougouCompleteness',
-        success: function (result) {
-            $("#sougouCompleteness").html(result.sougouCompleteness+"%");
-        }
-    });
-    //12，神马
-    $.ajax({
-        type: 'get',
-        async: true,
-        url: CTX + '/shenmaCompleteness',
-        success: function (result) {
-            $("#shenmaCompleteness").html(result.shenmaCompleteness+"%");
-        }
-    });
+
     $.ajax({
             type:'get',
             async: true,
             url:CTX+'/homeDetails',
             success:function (result) {
-
+                $("#AllCompleteness").html(result.search.allcompleteness+"%");
+                $("#baiduCompleteness ").html(result.search.baiducompleteness +"%");
+                $("#baiduWapCompleteness ").html(result.search.baiduwapcompleteness+"%");
+                $("#sanliulingCompleteness ").html(result.search.sanliulingcompleteness+"%");
+                $("#sougouCompleteness ").html(result.search.sougoucompleteness+"%");
+                $("#shenmaCompleteness").html(result.search.shenmacompleteness+"%");
                 container1(result);
-
             }
         })
         function container1(result) {
@@ -413,9 +371,7 @@
             aa2.push(item-0);
         })
         var chart1 = new Highcharts.Chart('container1', {
-            chart: {
-                type:'spline'
-            },
+
             credits: {
                         enabled:false//不显示highCharts版权信息
                     },
@@ -504,9 +460,11 @@
                 },
                 series: [{
                     name: '上月',
+                    color:'#ff0000',
                     data:bb2
                 }, {
                     name: '本月',
+
                     data: bb3
                 },  ]
             })

@@ -29,7 +29,7 @@
  border-left:1px solid #d9d9d9;
  border-right:1px solid #d9d9d9;
  border-bottom:1px solid #d9d9d9;
-
+color:#525252;
 }
 .nav_L 
 {
@@ -98,10 +98,12 @@ clear:both;
 .Nav_Left {
    float:left; 
    display:inline-block;
+    color:#525252;
 }
 .Nav_Right {
 float:right;
 display:inline-block;
+    color:#525252;
 
 }
 #continue,#stop,#all {

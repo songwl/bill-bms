@@ -324,10 +324,10 @@ select{background:#fff!important}
 *{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
 :after,:before{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}
 html{font-size:10px;-webkit-tap-highlight-color:rgba(0,0,0,0)}
-body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;line-height:1.42857143;color:#333;}
+body{font-family:"'微软雅黑', "Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, Verdana, sans-serif, 'Tahoma'",Helvetica,Arial,sans-serif;font-size:14px;line-height:1.42857143;color:#333;}
 button,input,select,textarea{font-family:inherit;font-size:inherit;line-height:inherit}
-a{color:#fff;text-decoration:none}
-a:focus,a:hover{color:#23527c;text-decoration:underline}
+a{color:#f4e5f5;text-decoration:none}
+
 a:focus{outline:thin dotted;outline:5px auto -webkit-focus-ring-color;outline-offset:-2px}
 figure{margin:0}
 img{vertical-align:middle}

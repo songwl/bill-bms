@@ -4,6 +4,7 @@ import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.service.SearchRateService;
 import com.yipeng.bill.bms.vo.LoginUser;
+import org.hibernate.validator.internal.engine.messageinterpolation.parser.ELState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,36 +31,50 @@ public class SearchRateServiceImpl implements SearchRateService {
     @Override
     public int updateSearchRate(UserRole userRole) {
         DecimalFormat df = new DecimalFormat("0.00");//格式化小数
-        try{
-
-         Searchenginecompletionrate searchenginecompletionrate=new Searchenginecompletionrate();
-        //组合对象
-        searchenginecompletionrate.setUserid(userRole.getUserId());
-
-        double allcompleteness=allcompleteness(userRole);//总完成率
-        searchenginecompletionrate.setAllcompleteness(Double.parseDouble(df.format(allcompleteness)));
-
-        double baiducompleteness=baiduCompleteness(userRole);//百度完成率
-        searchenginecompletionrate.setBaiducompleteness(Double.parseDouble(df.format(baiducompleteness)));
-
-        double baiduwapcompleteness=baiduWapCompleteness(userRole);//手机百度完成率
-        searchenginecompletionrate.setBaiduwapcompleteness(Double.parseDouble(df.format(baiduwapcompleteness)));
-
-        double sanliulingcompleteness=sanliulingCompleteness(userRole);//360
-        searchenginecompletionrate.setSanliulingcompleteness(Double.parseDouble(df.format(sanliulingcompleteness)));
-
-        double sougouCompleteness=sougouCompleteness(userRole);//搜狗
-        searchenginecompletionrate.setSougoucompleteness(Double.parseDouble(df.format(sougouCompleteness)));
-
-        double shenmaCompleteness=shenmaCompleteness(userRole);//神马
-        searchenginecompletionrate.setShenmacompleteness(Double.parseDouble(df.format(shenmaCompleteness)));
-
-        searchenginecompletionrate.setCreatetime(new Date());
-
-         searchenginecompletionrateMapper.insert(searchenginecompletionrate);
-        }catch (Exception e)
+        double all=allcompleteness(userRole);//总完成率
+        double baidu=baiduCompleteness(userRole);//百度完成率
+        double baiduwap=baiduWapCompleteness(userRole);//手机百度完成率
+        double sanliuling=sanliulingCompleteness(userRole);//360
+        double sougou=sougouCompleteness(userRole);//搜狗
+        double shenma=shenmaCompleteness(userRole);//神马
+        Map<String,Object> params=new HashMap<>();//查询参数对象
+        Calendar now =Calendar.getInstance();
+        params.put("year",now.get(Calendar.YEAR));
+        params.put("month",now.get(Calendar.MONTH)+1);
+        params.put("day",now.get(Calendar.DATE));
+        params.put("userId",userRole.getUserId());
+        Searchenginecompletionrate searchenginecompletionrateExsits=searchenginecompletionrateMapper.selectByUsedIdAndDay(params);//查询对象
+        if (searchenginecompletionrateExsits==null)//如果今天没有记录 则insert
         {
-            throw e;
+            Searchenginecompletionrate searchenginecompletionrate=new Searchenginecompletionrate();
+            try{
+
+            searchenginecompletionrate.setUserid(userRole.getUserId());
+            searchenginecompletionrate.setAllcompleteness(Double.parseDouble(df.format(all)));
+            searchenginecompletionrate.setBaiducompleteness(Double.parseDouble(df.format(baidu)));
+            searchenginecompletionrate.setBaiduwapcompleteness(Double.parseDouble(df.format(baiduwap)));
+            searchenginecompletionrate.setSanliulingcompleteness(Double.parseDouble(df.format(sanliuling)));
+            searchenginecompletionrate.setSougoucompleteness(Double.parseDouble(df.format(sougou)));
+            searchenginecompletionrate.setShenmacompleteness(Double.parseDouble(df.format(shenma)));
+            searchenginecompletionrate.setCreatetime(new Date());
+            searchenginecompletionrateMapper.insert(searchenginecompletionrate);
+            }catch (Exception e)
+            {
+                searchenginecompletionrateMapper.updateByPrimaryKeySelective(searchenginecompletionrate);
+            }
+
+        }
+        else//更新今日记录
+        {
+            searchenginecompletionrateExsits.setAllcompleteness(all);
+            searchenginecompletionrateExsits.setAllcompleteness(Double.parseDouble(df.format(all)));
+            searchenginecompletionrateExsits.setBaiducompleteness(Double.parseDouble(df.format(baidu)));
+            searchenginecompletionrateExsits.setBaiduwapcompleteness(Double.parseDouble(df.format(baiduwap)));
+            searchenginecompletionrateExsits.setSanliulingcompleteness(Double.parseDouble(df.format(sanliuling)));
+            searchenginecompletionrateExsits.setSougoucompleteness(Double.parseDouble(df.format(sougou)));
+            searchenginecompletionrateExsits.setShenmacompleteness(Double.parseDouble(df.format(shenma)));
+            searchenginecompletionrateExsits.setCreatetime(new Date());
+            searchenginecompletionrateMapper.updateByPrimaryKey(searchenginecompletionrateExsits);
         }
         return 0;
     }

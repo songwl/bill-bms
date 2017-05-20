@@ -32,7 +32,14 @@ $("#searchButton").click(function () {
     {
         searchName=null;
     }
-
+    if($("#searchUserName option:selected").text()!="--请选择--")
+    {
+        searchUserName=$("#searchUserName option:selected").text();
+    }
+    else
+    {
+        searchUserName=null;
+    }
 
 
     $('#myTable').bootstrapTable('refresh');

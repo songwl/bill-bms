@@ -139,4 +139,14 @@
       createTime = #{createtime,jdbcType=DATE}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="selectByUsedIdAndDay"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from searchenginecompletionrate
+    where userId = #{userId,jdbcType=BIGINT}
+    and year(createTime)=#{year,jdbcType=INTEGER}
+    and month(createTime)=#{month,jdbcType=INTEGER}
+    and DAY(createTime) = #{day,jdbcType=INTEGER}
+  </select>
 </mapper>

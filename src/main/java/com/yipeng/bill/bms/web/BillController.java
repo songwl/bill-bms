@@ -277,6 +277,13 @@ public class BillController extends BaseController {
             List<User> distributorList = userService.getUserAll(params1);
             model.put("distributorList", distributorList);
         }
+        else
+        {
+
+            String way="2";
+            List<User> userList = userService.getSearchUser(user,way);//获取搜索框对应的客户
+            model.put("distributorList", userList);
+        }
         bms.put("user", user);
         model.addAttribute("bmsModel", bms);
         return "/bill/billPendingAudit";

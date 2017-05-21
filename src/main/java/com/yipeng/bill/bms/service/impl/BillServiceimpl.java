@@ -452,7 +452,7 @@ public class BillServiceimpl implements BillService {
                 billDetails.setState(bill.getState());
                 billDetailsList.add(billDetails);
             }
-            Long total=billMapper.selectAllCount(1);
+            Long total=billMapper.selectByBillAuditCount(params);
             Map<String,Object> map=new HashMap<>();
             map.put("total",total);
             map.put("rows",billDetailsList);
@@ -474,6 +474,19 @@ public class BillServiceimpl implements BillService {
                 billDetails.setId(bill.getId());
                 User user1= userMapper.selectByPrimaryKey(bill.getUpdateUserId());
                 billDetails.setUserName(user1.getUserName());
+                //通过单价表里面的inmemberId获取outMembenId  从而获取客户名
+                BillPrice billPrice=new BillPrice();
+                billPrice.setBillId(bill.getId());
+                billPrice.setInMemberId(user1.getId());
+                List<BillPrice>  billPriceList=billPriceMapper.selectByBillPrice(billPrice);
+                //判断是否为空
+                if(!CollectionUtils.isEmpty(billPriceList))
+                {
+                    //查询对应客户
+                    User kehuName=userMapper.selectByPrimaryKey(billPriceList.get(0).getOutMemberId());
+                    billDetails.setUserNameByKehu(kehuName.getUserName());
+                }
+
                 billDetails.setKeywords(bill.getKeywords());
                 billDetails.setWebsite(bill.getWebsite());
                 //查出搜索引擎

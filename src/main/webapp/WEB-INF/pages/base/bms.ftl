@@ -235,7 +235,7 @@
 					<#if bmsModel.user.hasRole("DISTRIBUTOR")>
                         <li class="" style="border-bottom: 1px solid #3d3d3d;">
                             <a href="javascript:;">
-                                <i class="fa fa-star-o"></i><span class="title"> 客户管理 </span><span class="arrow "></span>
+                                <i class="fa fa-star-o"></i><span class="title"> 客户方管理 </span><span class="arrow "></span>
                             </a>
                             <ul class="sub-menu" style="background: #293038;">
                                 <li>

@@ -4,6 +4,7 @@
 <@base.html "系统概况">
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <script src="${ctx}/static/js/public/highcharts.js"></script>
+<script src="${ctx}/static/js/billManage/getNewRanking.js"></script>
 <div class="Navs">
     <div class="nav_L left">
         <i class="fa fa-home">&nbsp;</i><span>管理后台</span> > <span>系统概况</span>
@@ -253,10 +254,70 @@
 </div>-->
 
 
-<div id="container1" style="width: 100%; height: 400px; float:left;;"></div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget box">
+            <div class="widget-header" style="text-align:left;">
+                <h4>
+                    <i class="fa fa-line-chart"></i>任务消费走势
+                </h4>
+                <div class="toolbar no-padding">
+                    <div class="btn-group">
+                        <span class="btn btn-xs widget-collapse">
+                            <i class="icon-angle-down"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div id="container1" style="width: 100%; height: 400px; float:left;;"></div>
+        </div>
+    </div>
+</div>
     <#if bmsModel.user.hasRole("SUPER_ADMIN")>
-    <div id="container" style="width: 100%; height: 400px; float:left;;"></div>
+<div class="row" STYLE="margin-top: 15px;">
+    <div class="col-md-12">
+        <div class="widget box">
+            <div class="widget-header"  style="text-align:left;">
+                <h4>
+                    <i class="fa fa-line-chart"></i>任务达标走势
+                </h4>
+                <div class="toolbar no-padding">
+                    <div class="btn-group">
+                        <span class="btn btn-xs widget-collapse">
+                            <i class="icon-angle-down"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+                <div id="container" style="width: 100%; height: 400px; float:left;;"></div>
+
+        </div>
+    </div>
+</div>
     </#if>
+<div class="row" STYLE="margin-top: 15px;">
+    <div class="col-md-12">
+        <div class="widget box">
+            <div class="widget-header" style="text-align:left;">
+                <h4>
+                    <i class="fa fa-plus"></i>新增排名
+                </h4>
+                <div class="toolbar no-padding">
+                    <div class="btn-group">
+                        <span class="btn btn-xs widget-collapse">
+                            <i class="icon-angle-down"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%">
+
+            </table>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
 
 
@@ -371,9 +432,14 @@
             aa2.push(item-0);
         })
         var chart1 = new Highcharts.Chart('container1', {
-
+            chart: {
+                borderColor: '#D9D9D9',
+                borderWidth: 1,
+                type: 'line'
+            },
             credits: {
-                        enabled:false//不显示highCharts版权信息
+                        enabled:false,//不显示highCharts版权信息
+
                     },
             title: {
 
@@ -430,6 +496,15 @@
             bb3.push(item-0);
         })
         var chart = new Highcharts.Chart('container', {
+            chart: {
+                borderColor: '#D9D9D9',
+                borderWidth:1,
+                type: 'line'
+            },
+            credits: {
+                enabled:false,//不显示highCharts版权信息
+
+            },
                 title: {
                     text: '任务达标数量走势图 ',
                     x: -20

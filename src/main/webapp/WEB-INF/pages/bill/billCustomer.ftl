@@ -399,12 +399,12 @@
     </div>
 </div>
 
-    <div class="bootbox modal in billExamineDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
+ <div class="bootbox modal in billExamineDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
         <div class="modal-dialog" style="width: 990px;">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="bootbox-close-button close">×</button>
-                    <h4 class="modal-title">审核</h4>
+                    <h4 class="modal-title">调价</h4>
                 </div>
                 <div class="modal-body" style="max-height: 574px;">
                     <div class="bootbox-body">
@@ -415,11 +415,11 @@
                         </style>
                         <div>
                             <div class="alert alert-info fade in">
-                                <i class="icon-remove close" data-dismiss="alert"></i>录入价格的时候请按对应的顺序录入，请谨慎录入。顺序（排名1，价格1，排名2，价格2,......）
+                                录入价格的时候请按对应的顺序录入，请谨慎录入。顺序（排名1，价格1，排名2，价格2,......）
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="height:30px;">
                             <div class="form-group" style="margin-top:30px;">
-                                <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 82px;">
                                     前
                                     <span class="red">N</span>名<span class="required">*</span>
                                 </label>
@@ -427,7 +427,7 @@
                                     <input name="updaterankend"   style="width: 35px;">
                                 </div>
 
-                                <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 68px;">
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 82px;">
                                     <span>元/天</span><span class="required">*</span>
                                 </label>
                                 <div class="" style="width: 35px;float: left;">
@@ -456,7 +456,7 @@
                                 </div>
 
                                 <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 68px;">
-                                    <span>元/天</span><span class="required">*</span>
+                                    <span>元/天</span><span class="required"></span>
                                 </label>
                                 <div class="" style="width: 35px;float: left;">
                                     <input name="updateprice2"   style="width: 35px;">

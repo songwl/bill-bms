@@ -312,7 +312,7 @@ public class BillManageServiceImpl implements BillManageService {
         //渠道商
         else if(loginUser.hasRole("DISTRIBUTOR"))
         {
-            Calendar now =Calendar.getInstance();
+                Calendar now =Calendar.getInstance();
             params.put("year",now.get(Calendar.YEAR));
             params.put("month",now.get(Calendar.MONTH)+1);
             params.put("day",now.get(Calendar.DATE));

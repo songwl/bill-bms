@@ -61,7 +61,7 @@
     </div>
 </div>
 <div class="modal-backdrop in " style="display: none "></div>
-    <#if  bmsModel.user.hasRole("DISTRIBUTOR ")>
+    <#if  bmsModel.user.hasRole("DISTRIBUTOR")>
     <div class="bootbox modal in billExamineDiv " tabindex="-1 " role="dialog " style="display: none; " aria-hidden="false ">
         <div class="modal-dialog " style="width: 990px; ">
             <div class="modal-content ">
@@ -131,14 +131,14 @@
     </div>
     </#if>
 <!--管理员审核-->
-    <#if  bmsModel.user.hasRole("SUPER_ADMIN ")>
+    <#if  bmsModel.user.hasRole("SUPER_ADMIN")>
     <div class="bootbox modal in billExamineDiv " tabindex="-1 " role="dialog " style="display: none; " aria-hidden="false ">
     <div class="modal-dialog " style="width: 990px; ">
     <div class="modal-content ">
         <div class="modal-header ">
             <button type="button " class="bootbox-close-button close ">×</button>
             <h4 class="modal-title ">审核</h4></div>
-    <div class="modal-body " style="max-height: 374px; ">
+      <div class="modal-body " style="max-height: 574px; ">
         <div class="bootbox-body ">
             <style type="text/css ">
                 .modal-dialog {

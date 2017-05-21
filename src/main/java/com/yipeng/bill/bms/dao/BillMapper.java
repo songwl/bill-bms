@@ -97,6 +97,8 @@ public interface BillMapper {
 
     //审核订单预览
     List<Bill>  selectByBillAudit(Map<String,Object> params);
+    //审核订单预览的个数
+    Long selectByBillAuditCount(Map<String,Object> params);
 
     Bill  selectByBillByUpdateStandardDays(Map<String,Object> params);
 

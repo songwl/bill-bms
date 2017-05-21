@@ -87,16 +87,13 @@ var TableInit = function () {
                     checkbox: true
                 },{
                     field: 'displayId',
-                    sortable: true,
                     align: 'center',
                     valign: 'middle',
                     title: '序号',
                     width:100
-
                 },
                 {
                     field: 'id',
-                    sortable: true,
                     align: 'center',
                     valign: 'middle',
                     title: 'sql序号',
@@ -105,7 +102,6 @@ var TableInit = function () {
                 },
                 {
                     field: 'keywords',
-                    sortable: true,
                     align: 'center',
                     valign: 'middle',
                     title: '关键词',
@@ -113,7 +109,6 @@ var TableInit = function () {
                 },
                 {
                     field: 'website',
-                    sortable: true,
                     align: 'center',
                     valign: 'middle',
                     title: '网址',
@@ -125,7 +120,6 @@ var TableInit = function () {
                     field: 'newRanking',
                     align: 'center',
                     valign: 'middle',
-                    sortable: true,
                     title: '最新排名',
                     width:100
 

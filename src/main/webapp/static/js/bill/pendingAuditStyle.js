@@ -20,8 +20,9 @@ $("#billExamine").click(function () {
         alert('请选择一列数据!');
 
     }else{
-        $(".modal-backdrop").show();
         $(".billExamineDiv").slideDown();
+        $(".modal-backdrop").show();
+
 
     }
 })

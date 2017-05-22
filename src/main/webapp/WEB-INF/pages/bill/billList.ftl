@@ -2,6 +2,12 @@
 <#import "/base/dict.ftl" as dict>
 
 <@base.html "关键词优化">
+<link href="${ctx}/static/css/public/bootstrap.min.css" rel="stylesheet">
+<link href="${ctx}/static/css/public/bootstrap-table.css" rel="stylesheet">
+<script src="${ctx}/static/js/public/jquery.js"></script>
+<script src="${ctx}/static/js/public/bootstrap.min.js"></script>
+<script src="${ctx}/static/js/public/bootstrap-table.js"></script>
+<script src="${ctx}/static/js/public/bootstrap-table-zh-CN.js"></script>
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <script src="${ctx}/static/js/public/pace.js"></script>
 <script src="${ctx}/static/js/bill/billList.js"></script>

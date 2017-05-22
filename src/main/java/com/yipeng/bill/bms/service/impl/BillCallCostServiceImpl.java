@@ -42,6 +42,7 @@ public class BillCallCostServiceImpl implements BillCallCostService {
         List<BillPrice> prices = billPriceMapper.selectByBillId(bill.getId());
         //判断是否扣费
         Boolean bool=false;
+        Boolean daBiaoBool=false;//第二次达标
         Map<Long,List<BillPrice>> userPriceMap = new HashMap<>();
         for (BillPrice billPrice : prices) {
             Long userId = billPrice.getOutMemberId(); //付款人
@@ -125,8 +126,7 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                     params.put("outMemberId",userId);
                     BillCost billCostLast=billCostMapper.selectByCostByOutId(params);
                     billCostMapper.deleteByPrimaryKey(billCostLast.getId());//删除扣费记录
-                    bill.setStandardDays(bill.getStandardDays()-1);//达标数减一天
-                    billMapper.updateByPrimaryKeySelective(bill);
+                    daBiaoBool=true;
 
 
                 }
@@ -184,10 +184,6 @@ public class BillCallCostServiceImpl implements BillCallCostService {
             //达标天数加一天
             bill.setStandardDays(bill.getStandardDays()+1);
             bill.setUpdateTime(new Date());
-
-
-
-
                    /* if(bill.getChangeRanking()!=null)
                     {
                         bill.setChangeRanking(bill.getChangeRanking()-bill.getNewRanking());
@@ -197,6 +193,11 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                         bill.setChangeRanking(bill.getNewRanking());
                     }*/
 
+            billMapper.updateByPrimaryKeySelective(bill);
+        }
+        if (daBiaoBool)
+        {
+            bill.setStandardDays(bill.getStandardDays()-1);//达标数减一天
             billMapper.updateByPrimaryKeySelective(bill);
         }
         return 1;

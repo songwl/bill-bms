@@ -41,7 +41,7 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
         Double cost=billCostMapper.selectByUseDayCost(params);
         if (cost!=0)
         {
-            synchronized(this) {
+
                 //获取当前用户的FUNDACCOUNT
                 FundAccount fundAccount = fundAccountMapper.selectByUserId(Long.parseLong(params.get("userId").toString()));
                 if (fundAccount == null) {
@@ -62,49 +62,51 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
                     fundItem.setItemType("cost");
                     fundItemMapper.insert(fundItem);
                     return 1;
-                } else {
+                }
+                else {
                     //获取今日的FUNDITEM
                     params.put("fundAccountId", fundAccount.getId());
                     FundItem fundItem = fundItemMapper.selectByDayFunItem(params);//判断今日是否存在今日消费
+
                     if (fundItem == null) {
 
-                        //先扣余额
-                        BigDecimal lastAccount = fundAccount.getBalance();
-                        Logs logs = new Logs();
-                        logs.setOpobj(params.get("userId").toString());
-                        logs.setOpremake("今日第一次。" + "期初余额：" + Double.parseDouble(lastAccount.toString()) + "发生金额：" +
-                                cost.toString() + "结余金额：" + Double.parseDouble(lastAccount.subtract(new BigDecimal(cost)).toString()));
-                        logs.setOptype(1);
-                        logs.setUserid(new Long(1));
-                        logs.setCreatetime(new Date());
-                        int a = logsMapper.insert(logs);
-                        fundAccount.setBalance(fundAccount.getBalance().subtract(new BigDecimal(cost)));
+                            synchronized(this) {
+                            //先扣余额 
+                            BigDecimal lastAccount = fundAccount.getBalance();
+                            Logs logs = new Logs();
+                            logs.setOpobj(params.get("userId").toString());
+                            logs.setOpremake("今日第一次。" + "期初余额：" + Double.parseDouble(lastAccount.toString()) + "发生金额：" +
+                                    cost.toString() + "结余金额：" + Double.parseDouble(lastAccount.subtract(new BigDecimal(cost)).toString()));
+                            logs.setOptype(1);
+                            logs.setUserid(new Long(1));
+                            logs.setCreatetime(new Date());
+                            int a = logsMapper.insert(logs);
+                            fundAccount.setBalance(fundAccount.getBalance().subtract(new BigDecimal(cost)));
 
-                        fundAccountMapper.updateByPrimaryKey(fundAccount);
+                            fundAccountMapper.updateByPrimaryKey(fundAccount);
 
 
-                        //产生资金明细
-                        FundAccount fundAccountNow = fundAccountMapper.selectByUserId(Long.parseLong(params.get("userId").toString()));//客户当前余额
-                        FundItem fundItemNow = new FundItem();
-                        fundItemNow.setBalance(fundAccountNow.getBalance());
-                        fundItemNow.setChangeAmount(new BigDecimal(cost));
-                        fundItemNow.setItemType("cost");
-                        fundItemNow.setFundAccountId(fundAccount.getId());
-                        fundItemNow.setChangeTime(new Date());
+                            //产生资金明细
+                            FundAccount fundAccountNow = fundAccountMapper.selectByUserId(Long.parseLong(params.get("userId").toString()));//客户当前余额
+                            FundItem fundItemNow = new FundItem();
+                            fundItemNow.setBalance(fundAccountNow.getBalance());
+                            fundItemNow.setChangeAmount(new BigDecimal(cost));
+                            fundItemNow.setItemType("cost");
+                            fundItemNow.setFundAccountId(fundAccount.getId());
+                            fundItemNow.setChangeTime(new Date());
 
-                        try{
+                            try {
 
-                            int aa = fundItemMapper.insert(fundItemNow);
+                                int aa = fundItemMapper.insert(fundItemNow);
+                            } catch (Exception e) {
+                                int aa = fundItemMapper.updateByPrimaryKeySelective(fundItemNow);
+                            }
                         }
-                        catch (Exception e)
-                        {
-                            int aa = fundItemMapper.updateByPrimaryKeySelective(fundItemNow);
-                        }
-
 
                         return 1;
 
-                    } else {
+                    }
+                    else {
 
 
                         //修改余额
@@ -127,7 +129,7 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
                     }
 
                 }
-            }
+
         }
         //判断fundItem今日是否存在
         else {

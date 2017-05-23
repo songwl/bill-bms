@@ -112,32 +112,69 @@
   </update>
   <!--管理员查看资金流水-->
   <select id="selectByAdmin"   resultMap="BaseResultMap1">
-   SELECT a.*,sum(a.change_amount) as dayAccountSum from t_fund_item as a,t_fund_account as b,t_user_role as c
+   SELECT a.* from t_fund_item as a,t_fund_account as b,t_user_role as c
     where a.fund_account_id=b.id
      and b.user_id=c.user_id
      and c.role_id=#{roleId,jdbcType=BIGINT}
-      GROUP BY a.change_time,a.fund_account_id,a.item_type
+     ORDER BY a.change_time DESC
+    limit #{offset},#{limit}
+  </select>
+  <select id="selectByAdminCount"   resultType="java.lang.Long">
+    SELECT COUNT(a.id) from t_fund_item as a,t_fund_account as b,t_user_role as c
+    where a.fund_account_id=b.id
+    and b.user_id=c.user_id
+    and c.role_id=#{roleId,jdbcType=BIGINT}
   </select>
   <!--end管理员查看资金流水-->
+  <!--专员查看资金流水-->
+  <select id="selectByZhuanYuan"   resultMap="BaseResultMap1">
+   SELECT  DISTINCT a.* from t_fund_item as a,t_fund_account as b,t_user_role as c,t_bill_price as d,t_bill as e
+    where a.fund_account_id=b.id
+     and b.user_id=c.user_id
+     and b.user_id=d.out_member_id
+     and d.bill_id=e.id
+     and c.role_id=#{roleId,jdbcType=BIGINT}
+     and e.bill_ascription=#{userId,jdbcType=BIGINT}
+    ORDER BY a.change_time DESC
+    limit #{offset},#{limit}
+  </select>
+  <select id="selectByZhuanYuanCount"   resultType="java.lang.Long">
+   SELECT COUNT(DISTINCT a.id)  from t_fund_item as a,t_fund_account as b,t_user_role as c,t_bill_price as d,t_bill as e
+    where a.fund_account_id=b.id
+     and b.user_id=c.user_id
+     and b.user_id=d.out_member_id
+     and d.bill_id=e.id
+     and c.role_id=#{roleId,jdbcType=BIGINT}
+     and e.bill_ascription=#{userId,jdbcType=BIGINT}
+  </select>
+  <!--end专员查看资金流水-->
 
   <!--渠道商和代理商查看资金流水-->
   <select id="selectByDAgent"   resultMap="BaseResultMap1">
-    SELECT a.*,sum(a.change_amount) as dayAccountSum from
+    SELECT a.* from
      t_fund_item as a,t_fund_account as b,t_user as c
     where a.fund_account_id=b.id
     and b.user_id=c.id
     and c.create_user_id=#{createId,jdbcType=BIGINT}
-    GROUP BY a.change_time,a.fund_account_id,a.item_type
+    ORDER BY a.change_time DESC
+    limit #{offset},#{limit}
+  </select>
+  <select id="selectByDAgentCount"   resultType="java.lang.Long">
+    SELECT COUNT(a.id) from
+    t_fund_item as a,t_fund_account as b,t_user as c
+    where a.fund_account_id=b.id
+    and b.user_id=c.id
+    and c.create_user_id=#{createId,jdbcType=BIGINT}
   </select>
   <!--end渠道商和代理商查看资金流水-->
 
   <!--客户查看资金流水-->
   <select id="selectByCustomer"   resultMap="BaseResultMap1">
-    SELECT a.*,sum(a.change_amount) as dayAccountSum from
+    SELECT a.*  from
     t_fund_item as a,t_fund_account as b
     where a.fund_account_id=b.id
     and b.user_id=#{userId,jdbcType=BIGINT}
-    GROUP BY a.change_time,a.fund_account_id,a.item_type
+    limit #{offset},#{limit}
   </select>
   <!--end客户查看资金流水-->
 

@@ -513,40 +513,65 @@ public class CustomerServiceImpl implements CustomerService{
     public Map<String, Object> fundAccountList(Map<String, Object> params,LoginUser user) {
        //判断角色获取对应的客户
           //管理员
+        Long offset=Long.parseLong(params.get("offset").toString()) ;
+        Long i=offset;
             if(user.hasRole("SUPER_ADMIN"))
             {
                   Role role=roleMapper.selectByRoleCode("DISTRIBUTOR");
                   params.put("roleId",role.getId());
                   List<FundItemSum> fundItemSumList= fundItemMapper.selectByAdmin(params);
-
-                for (FundItemSum item :fundItemSumList
+                 for (FundItemSum item :fundItemSumList
                      ) {
+                    i++;
                     FundAccount fundAccount=fundAccountMapper.selectByPrimaryKey(item.getFundAccountId());
+                    item.setId(i);
                     if(fundAccount!=null)
                     {
                         User user1=userMapper.selectByPrimaryKey(fundAccount.getUserId());
                         item.setUserName(user1.getUserName());
                     }
                 }
+                Long total=fundItemMapper.selectByAdminCount(params);
                 Map<String,Object> map=new HashMap<>();
                 map.put("rows",fundItemSumList);
+                map.put("total",total);
                 return map;
             }
             //操作员
             else if(user.hasRole("COMMISSIONER"))
             {
-
-                return  null;
+                Role role=roleMapper.selectByRoleCode("DISTRIBUTOR");
+                params.put("roleId",role.getId());
+                params.put("userId",user.getId());
+                List<FundItemSum> fundItemSumList= fundItemMapper.selectByZhuanYuan(params);
+                for (FundItemSum item :fundItemSumList
+                        ) {
+                    i++;
+                    FundAccount fundAccount=fundAccountMapper.selectByPrimaryKey(item.getFundAccountId());
+                    item.setId(i);
+                    if(fundAccount!=null)
+                    {
+                        User user1=userMapper.selectByPrimaryKey(fundAccount.getUserId());
+                        item.setUserName(user1.getUserName());
+                    }
+                }
+                Long total=fundItemMapper.selectByZhuanYuanCount(params);
+                Map<String,Object> map=new HashMap<>();
+                map.put("rows",fundItemSumList);
+                map.put("total",total);
+                return map;
             }
             //渠道商和代理商
             else if(user.hasRole("DISTRIBUTOR")||user.hasRole("AGENT"))
             {
                params.put("createId",user.getId());
 
-                List<FundItemSum> fundItemSumList= fundItemMapper.selectByDAgent(params);
+                    List<FundItemSum> fundItemSumList= fundItemMapper.selectByDAgent(params);
 
                 for (FundItemSum item :fundItemSumList
                         ) {
+                    i++;
+                    item.setId(i);
                     FundAccount fundAccount=fundAccountMapper.selectByPrimaryKey(item.getFundAccountId());
                     if(fundAccount!=null)
                     {
@@ -554,8 +579,10 @@ public class CustomerServiceImpl implements CustomerService{
                         item.setUserName(user1.getUserName());
                     }
                 }
+                Long total=fundItemMapper.selectByDAgentCount(params);
                 Map<String,Object> map=new HashMap<>();
                 map.put("rows",fundItemSumList);
+                map.put("total",total);
                 return map;
 
             }

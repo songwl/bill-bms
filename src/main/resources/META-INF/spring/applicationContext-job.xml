@@ -39,24 +39,23 @@
         </property>
     </bean>
 
- <!--   &lt;!&ndash;查询新排名&ndash;&gt;
-    <bean id="newRankingTask" class="com.yipeng.bill.bms.task.NewRankingTask"></bean>
-    <bean id="NewRankingTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="newRankingTask"/>
+ <!--   &lt;!&ndash;查询新排名&ndash;&gt;-->
+    <bean id="callBillClickStatisticsTask" class="com.yipeng.bill.bms.task.CallBillClickStatisticsTask"></bean>
+    <bean id="CallBillClickStatisticsTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="callBillClickStatisticsTask"/>
         <property name="targetMethod" value="execute"/>
         <property name="concurrent" value="false"/>
     </bean>
-    <bean id="newRankingTaskJobTrigger"
+    <bean id="callBillClickStatisticsTaskJobTrigger"
           class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail">
-            <ref bean="NewRankingTaskJob"/>
+            <ref bean="CallBillClickStatisticsTaskJob"/>
         </property>
         <property name="cronExpression">
-            &lt;!&ndash;每6小时&ndash;&gt;
-            <value>0 6 * * * ?</value>
+            <value>0 36 9,16 * * ? </value>
         </property>
     </bean>
--->
+
     <!--统计总优化-->
     <bean id="optimizationTask" class="com.yipeng.bill.bms.task.OptimizationTask"></bean>
     <bean id="OptimizationTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -82,7 +81,7 @@
         <property name="triggers">
             <list>
                 <ref bean="callCostTaskJobTrigger"/>
-               <!-- <ref bean="rankingTaskJobTrigger"/>-->
+                <ref bean="callBillClickStatisticsTaskJobTrigger"/>
                 <ref bean="callSearchTaskJobTrigger"/>
                 <ref bean="optimizationTaskJobTrigger"/>
             </list>

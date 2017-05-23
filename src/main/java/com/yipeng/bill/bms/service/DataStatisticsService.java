@@ -17,7 +17,7 @@ public interface DataStatisticsService {
      * @param user
      * @return
      */
-    List<BillOptimizations> getBillOptimization(Map<String,Object> params, LoginUser user);
+    List<BillOptimizations> getBillOptimization();
 
     /**
      * 渠道商数据

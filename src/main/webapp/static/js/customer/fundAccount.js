@@ -35,7 +35,7 @@ var TableInit = function () {
             minimumCountColumns: 2,             //最少允许的列数
             clickToSelect: true,                //是否启用点击选中行
             height: 700,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
-            uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+            uniqueId: "id",                     //每一行的唯一标识，一般为主键列
             rowStyle: function (row, index) {
                 //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
                 var strclass = "";
@@ -52,7 +52,7 @@ var TableInit = function () {
                     checkbox: true
                 },{
                     field: 'id',
-                    sortable: true,
+
                     align: 'center',
                     valign: 'middle',
                     title: '序号',
@@ -60,7 +60,7 @@ var TableInit = function () {
                 },
                 {
                     field: 'fundItemId',
-                    sortable: true,
+
                     align: 'center',
                     valign: 'middle',
                     title: 'sql序号',
@@ -69,7 +69,7 @@ var TableInit = function () {
                 },
                 {
                     field: 'userName',
-                    sortable: true,
+
                     align: 'center',
                     valign: 'middle',
                     title: '客户',
@@ -79,7 +79,7 @@ var TableInit = function () {
                     field: 'itemType',
                     align: 'center',
                     valign: 'middle',
-                    sortable: true,
+
                     title: '交易类别',
                     formatter:function (value,row,index) {
                         var a="";
@@ -99,10 +99,17 @@ var TableInit = function () {
                     }
 
                 }, {
-                    field: 'dayAccountSum',
+                    field: 'changeAmount',
                     align: 'center',
                     valign: 'middle',
                     title: '变动',
+
+                },
+                {
+                    field: 'balance',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '余额',
 
                 },
                 {
@@ -112,9 +119,6 @@ var TableInit = function () {
                     title: '变动时间',
 
                 }
-
-
-
 
             ],
 

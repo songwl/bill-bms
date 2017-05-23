@@ -42,6 +42,7 @@ public interface BillCostMapper {
 
     int  selectByBillCostOfDay(Map<String,Object> params);
     Double selectByBillCostOfWeek(Map<String,Object> params);
+    Double selectByBillCostOfMonthNow(Map<String,Object> params);
     Double selectByBillCostOfMonth(Map<String,Object> params);
     Double selectByBillCostOfAll(Map<String,Object> params);
 

@@ -115,22 +115,27 @@ public class BillServiceimpl implements BillService {
                 //不是违禁词  就添加
                 if(ForbiddenWordsBool)
                 {
-                    //先查询是否订单已经存在
-                    Map<String, Object> params1 = new HashMap();
-                    params1.put("website", urls[i]);
-                    params1.put("keywords", keywords[i]);
-                    List<Bill> billList = billMapper.selectAllSelective(params1);
                     Map<String,Object> map=new HashMap<>();
+                    String urlss=urls[i];
                     if(search[0].equals("360")||search[0].equals("搜狗"))
                     {
                         String urlStr=urls[i].substring(0,7);
-                        if ("http://".equals(urlStr))
+                        String urlLast=urls[i].substring(urls[i].length()-1,urls[i].length());
+                        if ("http://".equals(urlStr)&&"/".equals(urlLast))
                         {
                             map.put("url",urls[i]);
                         }
                         else
                         {
-                            String urlss="http://"+urls[i];
+
+                            if(!"http://".equals(urlStr))
+                            {
+                                urlss="http://"+urlss;
+                            }
+                            if(!"/".equals(urlLast))
+                            {
+                                urlss=urlss+"/";
+                            }
                             map.put("url",urlss);
                         }
 
@@ -139,7 +144,11 @@ public class BillServiceimpl implements BillService {
                     {
                         map.put("url",urls[i]);
                     }
-
+                    //先查询是否订单已经存在
+                    Map<String, Object> params1 = new HashMap();
+                    params1.put("website",urlss);
+                    params1.put("keywords", keywords[i]);
+                    List<Bill> billList = billMapper.selectAllSelective(params1);
                     map.put("keywords",keywords[i]);
                     map.put("CreateUserId",user.getId());
                     map.put("search",search[0]);
@@ -234,8 +243,38 @@ public class BillServiceimpl implements BillService {
                 }
 
                 //先查询是否订单已经存在
+
+
+                //判断搜索引擎
+                String urlNew=dfurls[i];
+                if(dfsearch[0].equals("360")||dfsearch[0].equals("搜狗"))
+                {
+
+                    String urlStr=dfurls[i].substring(0,7);
+                    String urlLast=dfurls[i].substring(dfurls[i].length()-1,dfurls[i].length());
+                    if ("http://".equals(urlStr)&&"/".equals(urlLast))
+                    {
+                        urlNew=urlNew;
+                    }
+                    else
+                    {
+
+                        if(!"http://".equals(urlStr))
+                        {
+                            urlNew="http://"+urlNew;
+                        }
+                        if(!"/".equals(urlLast))
+                        {
+                            urlNew=urlNew+"/";
+                        }
+                    }
+                }
+                else
+                {
+                    urlNew=dfurls[i];
+                }
                 Map<String,Object> params1=new HashMap();
-                params1.put("website",dfurls[i]);
+                params1.put("website",urlNew);
                 params1.put("keywords",dfkeywords[i]);
                 List<Bill> billList=billMapper.selectAllSelective(params1);
 
@@ -259,26 +298,7 @@ public class BillServiceimpl implements BillService {
                         {
 
                             Bill bill=new Bill();
-                            //判断搜索引擎
-                            if(dfsearch[0].equals("360")||dfsearch[0].equals("搜狗"))
-                            {
-
-                                //判断http:// 前缀
-                                String urlStr=dfurls[i].substring(0,7);
-                                if ("http://".equals(urlStr)) {
-                                    bill.setWebsite(dfurls[i]);
-                                }
-                                else
-                                {
-                                    String urls="http://"+dfurls[i];
-                                    bill.setWebsite(urls);
-                                }
-                            }
-                            else
-                            {
-                                bill.setWebsite(dfurls[i]);
-                            }
-
+                            bill.setWebsite(urlNew);
                             bill.setKeywords(dfkeywords[i]);
                             bill.setCreateUserId(user.getId());
                             bill.setUpdateUserId(user.getId());
@@ -319,24 +339,7 @@ public class BillServiceimpl implements BillService {
 
                         Bill bill=new Bill();
                         //判断搜索引擎
-                        if(dfsearch[0].equals("360")||dfsearch[0].equals("搜狗"))
-                        {
-
-                            //判断http:// 前缀
-                            String urlStr=dfurls[i].substring(0,7);
-                            if ("http://".equals(urlStr)) {
-                                bill.setWebsite(dfurls[i]);
-                            }
-                            else
-                            {
-                                String urls="http://"+dfurls[i];
-                                bill.setWebsite(urls);
-                            }
-                        }
-                        else
-                        {
-                            bill.setWebsite(dfurls[i]);
-                        }
+                        bill.setWebsite(urlNew);
                         bill.setKeywords(dfkeywords[i]);
                         bill.setCreateUserId(user.getId());
                         bill.setUpdateUserId(user.getId());

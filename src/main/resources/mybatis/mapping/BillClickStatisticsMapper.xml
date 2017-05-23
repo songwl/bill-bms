@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yipeng.bill.bms.dao.BillClickStatisticsMapper">
+  <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.BillClickStatistics">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="week_click" jdbcType="INTEGER" property="weekClick" />
+    <result column="month_click" jdbcType="INTEGER" property="monthClick" />
+    <result column="all_click" jdbcType="INTEGER" property="allClick" />
+    <result column="userId" jdbcType="BIGINT" property="userid" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, week_click, month_click, all_click, userId, create_time, create_user_id, update_time, 
+    update_user_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_bill_click_statistics
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_bill_click_statistics
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.BillClickStatistics">
+    insert into t_bill_click_statistics (id, week_click, month_click, 
+      all_click, userId, create_time, 
+      create_user_id, update_time, update_user_id
+      )
+    values (#{id,jdbcType=BIGINT}, #{weekClick,jdbcType=INTEGER}, #{monthClick,jdbcType=INTEGER}, 
+      #{allClick,jdbcType=INTEGER}, #{userid,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createUserId,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.BillClickStatistics">
+    insert into t_bill_click_statistics
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="weekClick != null">
+        week_click,
+      </if>
+      <if test="monthClick != null">
+        month_click,
+      </if>
+      <if test="allClick != null">
+        all_click,
+      </if>
+      <if test="userid != null">
+        userId,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUserId != null">
+        create_user_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUserId != null">
+        update_user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="weekClick != null">
+        #{weekClick,jdbcType=INTEGER},
+      </if>
+      <if test="monthClick != null">
+        #{monthClick,jdbcType=INTEGER},
+      </if>
+      <if test="allClick != null">
+        #{allClick,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        #{updateUserId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.BillClickStatistics">
+    update t_bill_click_statistics
+    <set>
+      <if test="weekClick != null">
+        week_click = #{weekClick,jdbcType=INTEGER},
+      </if>
+      <if test="monthClick != null">
+        month_click = #{monthClick,jdbcType=INTEGER},
+      </if>
+      <if test="allClick != null">
+        all_click = #{allClick,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null">
+        userId = #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null">
+        create_user_id = #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        update_user_id = #{updateUserId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.BillClickStatistics">
+    update t_bill_click_statistics
+    set week_click = #{weekClick,jdbcType=INTEGER},
+      month_click = #{monthClick,jdbcType=INTEGER},
+      all_click = #{allClick,jdbcType=INTEGER},
+      userId = #{userid,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user_id = #{createUserId,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user_id = #{updateUserId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByDateNow"  resultMap="BaseResultMap">
+    SELECT a.* from t_bill_click_statistics as a
+    where
+     year(a.create_time)=#{year,jdbcType=INTEGER}
+    and month(a.create_time)=#{month,jdbcType=INTEGER}
+    and DAY(a.create_time) = #{day,jdbcType=INTEGER}
+    <if test="userId != null">
+    and  a.userId = #{userId,jdbcType=BIGINT}
+    </if>
+  </select>
+</mapper>

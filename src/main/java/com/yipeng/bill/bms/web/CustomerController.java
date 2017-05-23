@@ -200,10 +200,13 @@ public class CustomerController extends  BaseController{
     @ResponseBody
     public Map<String,Object> fundAccountList(int limit,int offset) {
          LoginUser user=this.getCurrentAccount();
+        offset = (offset - 1) * limit;
          if(user!=null)
          {
 
              Map<String,Object> params=new HashMap<>();
+             params.put("limit",limit);
+             params.put("offset",offset);
              Map<String, Object> modelMap=  customerService.fundAccountList(params,user);
              return  modelMap;
          }

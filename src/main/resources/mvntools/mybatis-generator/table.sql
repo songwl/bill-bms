@@ -305,3 +305,51 @@ CREATE TABLE `searchenginecompletionrate` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `fk_searchEngine_idx` (`userId`,`createTime`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `t_bill_click_statistics` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `week_click` int(11) DEFAULT NULL,
+  `month_click` int(11) DEFAULT NULL,
+  `all_click` int(11) DEFAULT NULL,
+  `userId` bigint(20) NOT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `create_user_id` bigint(20) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `update_user_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='成本统计表';
+
+CREATE TABLE `t_bill_commissioner_statistics` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `userId` bigint(20) DEFAULT NULL,
+  `week_cost` decimal(10,0) DEFAULT NULL,
+  `month_cost` decimal(10,0) DEFAULT NULL,
+  `all_cost` decimal(10,0) DEFAULT NULL,
+  `bill_count` bigint(20) DEFAULT NULL,
+  `bill_approval_rate` decimal(10,0) DEFAULT NULL,
+  `keywords_approval_rate` decimal(10,0) DEFAULT NULL,
+  `bill_month_add_count` int(11) DEFAULT NULL,
+  `user_expect_achievement` decimal(10,0) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `create_user_id` bigint(20) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `update_user_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='专员统计表';
+
+CREATE TABLE `t_bill_distributor_statistics` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `userId` bigint(20) DEFAULT NULL,
+  `week_cost` decimal(10,0) DEFAULT NULL,
+  `month_cost` decimal(10,0) DEFAULT NULL,
+  `all_cost` decimal(10,0) DEFAULT NULL,
+  `bill_count` bigint(20) DEFAULT NULL,
+  `bill_approval_rate` decimal(10,0) DEFAULT NULL,
+  `keywords_approval_rate` decimal(10,0) DEFAULT NULL,
+  `bill_month_add_count` int(11) DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `create_user_id` bigint(20) DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `update_user_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='渠道商统计表';

@@ -11,6 +11,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +26,7 @@ public class DataStatisticsController extends  BaseController{
     @Autowired
     private DataStatisticsService dataStatisticsService;
 
+
     /**
      * 统计调点击数据页面
      * @return
@@ -34,11 +37,9 @@ public class DataStatisticsController extends  BaseController{
         LoginUser loginUser=this.getCurrentAccount();
         if(loginUser!=null)
         {
-            Map<String,Object> params=new HashedMap();
-            params.put("loginUser",loginUser);
-            List<BillOptimizations> optimizationsList=dataStatisticsService.getBillOptimization(params,loginUser);
 
-            modelMap.put("optimizationsList",optimizationsList);
+            List<BillOptimizations> billOptimizationsList=dataStatisticsService.getBillOptimization();
+            modelMap.put("optimizationsList",billOptimizationsList);
         }
 
         return  "/dataStatistics/getBillOptimization";
@@ -60,7 +61,6 @@ public class DataStatisticsController extends  BaseController{
 
             modelMap.put("distributorDataList",distributorDataList);
         }
-
         return  "/dataStatistics/distributorData";
     }
 

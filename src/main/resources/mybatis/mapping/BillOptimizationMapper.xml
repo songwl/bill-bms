@@ -81,27 +81,33 @@
   </update>
 <!--周数据-->
   <select id="selectByBillIdOfWeek"    resultType="java.lang.Integer">
-    select
+   select
     IFNULL(SUM(optimization_count),0)
-    from t_bill_optimization
-    where bill_id = #{billId,jdbcType=BIGINT}
+    from t_bill_optimization as a,t_bill as b
+    where
+    a.bill_id=b.id
+    and b.bill_ascription=#{billAscription,jdbcType=BIGINT}
     AND YEARWEEK(date_format(optimization_date,'%Y-%m-%d')) = YEARWEEK(now())
   </select>
 <!--月数据-->
   <select id="selectByBillIdOfMonth"   resultType="java.lang.Integer">
     select
-      IFNULL(SUM(optimization_count),0)
-    from t_bill_optimization
-    where bill_id = #{billId,jdbcType=BIGINT}
+    IFNULL(SUM(optimization_count),0)
+    from t_bill_optimization as a,t_bill as b
+    where
+    a.bill_id=b.id
+    and b.bill_ascription=#{billAscription,jdbcType=BIGINT}
     AND date_format(optimization_date,'%Y-%m')=date_format(now(),'%Y-%m')
   </select>
 
   <!--总数据-->
   <select id="selectByBillIdOfAll"   resultType="java.lang.Integer">
-    select
-      IFNULL(SUM(optimization_count),0)
-    from t_bill_optimization
-    where bill_id = #{billId,jdbcType=BIGINT}
+      select
+    IFNULL(SUM(optimization_count),0)
+    from t_bill_optimization as a,t_bill as b
+    where
+    a.bill_id=b.id
+    and b.bill_ascription=#{billAscription,jdbcType=BIGINT}
   </select>
 
 </mapper>

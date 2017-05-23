@@ -1688,5 +1688,13 @@
       AND  d.search_support= #{searchName,jdbcType=VARCHAR}
     </if>
   </select>
-
+  <select id="selectBillDabiaoCount"  resultType="java.lang.Integer">
+    SELECT COUNT(a.id) FROM t_bill as a,t_bill_price as b
+    WHERE a.id=b.bill_id
+    and b.out_member_id=#{userId,jdbcType=BIGINT}
+    AND
+    a.new_ranking &lt;=
+    (SELECT MAX(bill_ranking_standard) from t_bill_price
+    )
+  </select>
 </mapper>

@@ -39,7 +39,7 @@
         </property>
     </bean>
 
- <!--   &lt;!&ndash;查询新排名&ndash;&gt;-->
+ <!--   &lt;!&ndash;统计成本&ndash;&gt;-->
     <bean id="callBillClickStatisticsTask" class="com.yipeng.bill.bms.task.CallBillClickStatisticsTask"></bean>
     <bean id="CallBillClickStatisticsTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="callBillClickStatisticsTask"/>
@@ -55,7 +55,22 @@
             <value>0 36 9,16 * * ? </value>
         </property>
     </bean>
-
+    <!--   &lt;!&ndash;统计渠道商&ndash;&gt;-->
+    <bean id="callBillDistributorStatisticsTask" class="com.yipeng.bill.bms.task.CallBillDistributorStatisticsTask"></bean>
+    <bean id="CallBillDistributorStatisticsTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="callBillDistributorStatisticsTask"/>
+        <property name="targetMethod" value="execute"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="callBillDistributorStatisticsTaskJobTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="CallBillDistributorStatisticsTaskJob"/>
+        </property>
+        <property name="cronExpression">
+            <value>0 11 9,0 * * ? </value>
+        </property>
+    </bean>
     <!--统计总优化-->
     <bean id="optimizationTask" class="com.yipeng.bill.bms.task.OptimizationTask"></bean>
     <bean id="OptimizationTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -70,7 +85,7 @@
         </property>
         <property name="cronExpression">
             <!--晚上11点05分-->
-            <value>0 5 23  * * ?</value>
+            <value>0 10 23  * * ?</value>
         </property>
     </bean>
 
@@ -82,6 +97,7 @@
             <list>
                 <ref bean="callCostTaskJobTrigger"/>
                 <ref bean="callBillClickStatisticsTaskJobTrigger"/>
+                <ref bean="callBillDistributorStatisticsTaskJobTrigger"/>
                 <ref bean="callSearchTaskJobTrigger"/>
                 <ref bean="optimizationTaskJobTrigger"/>
             </list>

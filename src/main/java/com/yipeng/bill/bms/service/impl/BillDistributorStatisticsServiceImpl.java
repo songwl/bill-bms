@@ -8,11 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Administrator on 2017/5/23.
@@ -32,12 +30,12 @@ public class BillDistributorStatisticsServiceImpl implements BillDistributorStat
     private BillPriceMapper billPriceMapper;
     @Autowired
     private  BillCostMapper billCostMapper;
+    @Autowired
+    private  BillDistributorStatisticsMapper billDistributorStatisticsMapper;
 
     @Override
     public int insertBillDistributorStatistics() {
-
-        List<DistributorData> distributorDataList=new ArrayList<DistributorData>();
-
+        Calendar now = Calendar.getInstance();
         //先获取所有的渠道商
         Role role=roleMapper.selectByRoleCode("DISTRIBUTOR");
         UserRole userRole=new UserRole();
@@ -62,33 +60,19 @@ public class BillDistributorStatisticsServiceImpl implements BillDistributorStat
                     Double week=0.0;
                     Double month=0.0;
                     Double all=0.0;
-                    int keywordsCount=0;//关键词达标
+
                     //循环所有订单 统计数据
                     Map<String,Object> map1=new HashMap<>();
                     map1.put("userId",item.getUserId());
                     map1.put("roleId",item.getRoleId());
-                    week+=billCostMapper.selectByBillCostOfWeek(map1);
-                    month+=billCostMapper.selectByBillCostOfMonthNow(map1);
-                    all+=billCostMapper.selectByBillCostOfAll(map1);
+                    week=billCostMapper.selectByBillCostOfWeek(map1);
+                    month=billCostMapper.selectByBillCostOfMonthNow(map1);
+                    all=billCostMapper.selectByBillCostOfAll(map1);
+                    //达标数量
+                    Map<String,Object> dabiaoParams=new HashMap<>();
+                    dabiaoParams.put("userId",item.getUserId());
+                    int keywordsCount=billMapper.selectBillDabiaoCount(dabiaoParams);
 
-
-                    for (Bill bill:billList
-                            ) {
-                        //统计关键词达标
-                        List<BillPrice> billPriceList=billPriceMapper.selectByBillId(bill.getId());
-                        if (!CollectionUtils.isEmpty(billPriceList))
-                        {
-                            for (BillPrice priceItem:billPriceList
-                                    ) {
-                                if(bill.getNewRanking()<=priceItem.getBillRankingStandard())
-                                {
-                                    keywordsCount+=1;
-                                    break;
-                                }
-                            }
-                        }
-
-                    }
                     //订单数
                     Long count=billMapper.getBillListCount(map);
                     //统计订单达标率
@@ -122,26 +106,52 @@ public class BillDistributorStatisticsServiceImpl implements BillDistributorStat
                     monthMap.put("state",2);
                     monthMap.put("state2",3);
                     int monthAddCount=billMapper.getBillMonthAdd(monthMap);
+                    //判断今日的数据
+                    Map<String,Object> dayMap=new HashMap<>();
+                    dayMap.put("year",now.get(Calendar.YEAR));
+                    dayMap.put("month",now.get(Calendar.MONTH)+1);
+                    dayMap.put("day",now.get(Calendar.DATE));
+                    dayMap.put("userId",item.getUserId());
+                    BillDistributorStatistics billDistributorStatisticsExsits=billDistributorStatisticsMapper.selectByDayExsits(dayMap);
+                    if(billDistributorStatisticsExsits==null)  //插入到数据库
+                    {
+                        BillDistributorStatistics billDistributorStatistics=new BillDistributorStatistics();
+                        billDistributorStatistics.setUserid(item.getUserId());
+                        billDistributorStatistics.setBillMonthAddCount(monthAddCount);
+                        billDistributorStatistics.setWeekCost(new BigDecimal(week));
+                        billDistributorStatistics.setMonthCost(new BigDecimal(month));
+                        billDistributorStatistics.setAllCost(new BigDecimal(all));
+                        billDistributorStatistics.setBillCount(count);
+                        billDistributorStatistics.setBillApprovalRate(new BigDecimal(billStandard));
+                        billDistributorStatistics.setKeywordsApprovalRate(new BigDecimal(keywordStandard));
+                        billDistributorStatistics.setBillMonthAddCount(monthAddCount);
+                        billDistributorStatistics.setCreateTime(new Date());
+                        billDistributorStatistics.setCreateUserId(item.getUserId());
+                        billDistributorStatisticsMapper.insert(billDistributorStatistics);
 
-                    //视图对象
-                    DistributorData distributorData=new DistributorData();
-                    distributorData.setId(user1.getId());
-                    distributorData.setUserName(user1.getUserName());
-                    distributorData.setWeekCost(week);
-                    distributorData.setMonthCost(month);
-                    distributorData.setAllCost(all);
-                    distributorData.setBillCount(count);
-                    distributorData.setBillStandard(df.format(billStandard));
-                    distributorData.setKeywordsStandard(df.format(keywordStandard));
-                    distributorData.setMonthAddBill(monthAddCount);
-                    //加入到视图集合
-                    distributorDataList.add(distributorData);
+                    }
+                    else
+                    {
+                        billDistributorStatisticsExsits.setUserid(item.getUserId());
+                        billDistributorStatisticsExsits.setBillMonthAddCount(monthAddCount);
+                        billDistributorStatisticsExsits.setWeekCost(new BigDecimal(week));
+                        billDistributorStatisticsExsits.setMonthCost(new BigDecimal(month));
+                        billDistributorStatisticsExsits.setAllCost(new BigDecimal(all));
+                        billDistributorStatisticsExsits.setBillCount(count);
+                        billDistributorStatisticsExsits.setBillApprovalRate(new BigDecimal(billStandard));
+                        billDistributorStatisticsExsits.setKeywordsApprovalRate(new BigDecimal(keywordStandard));
+                        billDistributorStatisticsExsits.setBillMonthAddCount(monthAddCount);
+                        billDistributorStatisticsExsits.setCreateTime(new Date());
+                        billDistributorStatisticsExsits.setCreateUserId(item.getUserId());
+                        billDistributorStatisticsMapper.updateByPrimaryKeySelective(billDistributorStatisticsExsits);
+                    }
+
 
 
 
                 }
             }
         }
-        return  distributorDataList;
+      return  0;
     }
 }

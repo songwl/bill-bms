@@ -205,6 +205,7 @@
   </select>
   <!--月数据-->
   <select id="selectByBillCostOfMonthNow"    resultType="java.lang.Double">
+  select
     IFNULL(SUM(cost_amount),0)
     from t_bill_cost as a,t_bill_price as b,t_user_role as c
     WHERE a.t_bill_price_id=b.id and b.out_member_id=c.user_id
@@ -225,6 +226,7 @@
 
   <!--总数据-->
   <select id="selectByBillCostOfAll"    resultType="java.lang.Double">
+ select
     IFNULL(SUM(cost_amount),0)
     from t_bill_cost as a,t_bill_price as b,t_user_role as c
      WHERE a.t_bill_price_id=b.id and b.out_member_id=c.user_id

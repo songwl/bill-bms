@@ -185,4 +185,23 @@
       update_user_id = #{updateUserId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+<!--判断今日是否存在-->
+  <select id="selectByDayExsits"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_bill_distributor_statistics
+    where  userId=#{userId,jdbcType=BIGINT}
+    and year(create_time)=#{year,jdbcType=INTEGER}
+    and month(create_time)=#{month,jdbcType=INTEGER}
+    and DAY(create_time) = #{day,jdbcType=INTEGER}
+  </select>
+  <!--获取今日数据-->
+  <select id="selectByDay"  resultMap="BaseResultMap">
+    select *
+    from t_bill_distributor_statistics
+    where
+     year(create_time)=#{year,jdbcType=INTEGER}
+    and month(create_time)=#{month,jdbcType=INTEGER}
+    and DAY(create_time) = #{day,jdbcType=INTEGER}
+  </select>
 </mapper>

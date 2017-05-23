@@ -34,7 +34,8 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
     private  BillCostMapper billCostMapper;
     @Autowired
     private BillClickStatisticsMapper billClickStatisticsMapper;
-
+    @Autowired
+    private  BillDistributorStatisticsMapper billDistributorStatisticsMapper;
     /**
      * 调点击
      * @param params
@@ -74,10 +75,34 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
      */
     @Override
     public List<DistributorData> distributorData(Map<String, Object> params, LoginUser user) {
+        List<DistributorData> distributorDataList=new ArrayList<DistributorData>();
         if (user.hasRole("SUPER_ADMIN"))
         {
+            DecimalFormat df = new DecimalFormat("0.00");//格式化小数
+            Map<String, Object> map=new HashMap<>();//搜索引擎完成率查询对象
+            Calendar now = Calendar.getInstance();
+            map.put("year",now.get(Calendar.YEAR));
+            map.put("month",now.get(Calendar.MONTH)+1);
+            map.put("day",now.get(Calendar.DATE));
+           List<BillDistributorStatistics> billDistributorStatisticsList=billDistributorStatisticsMapper.selectByDay(map);
+            for (BillDistributorStatistics item:billDistributorStatisticsList
+                 ) {
+                DistributorData distributorData=new DistributorData();
+                User user1=userMapper.selectByPrimaryKey(item.getUserid());
+                distributorData.setUserName(user1.getUserName());
+                distributorData.setWeekCost(Double.parseDouble(df.format(item.getWeekCost())));
+                distributorData.setMonthCost(Double.parseDouble(df.format(item.getMonthCost())));
+                distributorData.setAllCost(Double.parseDouble(df.format(item.getAllCost())));
+                distributorData.setBillCount(item.getBillCount());
+                distributorData.setMonthAddBill(item.getBillMonthAddCount());
+                distributorData.setKeywordsStandard(df.format(item.getKeywordsApprovalRate()));
+                distributorData.setBillStandard(df.format(item.getBillApprovalRate()));
+                distributorDataList.add(distributorData);
+
+            }
+
         }
-        return null;
+        return distributorDataList;
     }
     /**
      * 操作员数据

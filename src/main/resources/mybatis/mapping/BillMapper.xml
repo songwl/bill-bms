@@ -562,6 +562,9 @@
     <if test="newRanking != null">
       AND  a.new_ranking = #{newRanking,jdbcType=INTEGER}
     </if>
+    <if test="searchStandard != null">
+      AND a.new_ranking &lt;= b.bill_ranking_standard
+    </if>
     <if test="webAppId != null">
       AND  a.web_app_id = #{webAppId,jdbcType=INTEGER}
     </if>
@@ -604,9 +607,6 @@
     <if test="searchUserNameId != null">
       AND  b.out_member_id= #{searchUserNameId,jdbcType=VARCHAR}
     </if>
-    <if test="searchStandard != null">
-      AND a.new_ranking &lt;= b.bill_ranking_standard
-    </if>
     <if test="sortName != null">
       <if test="sortName =='userName'">
         ORDER BY e.user_name ${sortOrder}
@@ -636,7 +636,9 @@
         ORDER BY a.state ${sortOrder}
       </if>
     </if>
-    limit #{offset},#{limit}
+    <if test="offset != null">
+      limit #{offset},#{limit}
+    </if>
   </select>
 
 
@@ -1049,7 +1051,16 @@
     select DISTINCT a.*
     from t_bill as a,t_bill_price as b
     where a.id=b.bill_id
-    AND b.in_member_id=#{userId,jdbcType=BIGINT}
+    AND b.out_member_id=#{userId,jdbcType=BIGINT}
+    AND
+    (
+    <if test="state != null">
+      a.state = #{state,jdbcType=INTEGER}
+    </if>
+    <if test="state2 != null">
+      OR  a.state = #{state2,jdbcType=INTEGER}
+    </if>
+    )
     <if test="website != null">
       AND a.website LIKE CONCAT('%',#{website,jdbcType=VARCHAR},'%')
     </if>
@@ -1088,9 +1099,6 @@
     </if>
     <if test="allOptimization != null">
       AND  a.all_optimization = #{allOptimization,jdbcType=INTEGER}
-    </if>
-    <if test="state != null">
-      AND  a.state = #{state,jdbcType=INTEGER}
     </if>
     <if test="opstate != null">
       AND  a.opstate = #{opstate,jdbcType=INTEGER}
@@ -1689,12 +1697,13 @@
     </if>
   </select>
   <select id="selectBillDabiaoCount"  resultType="java.lang.Integer">
-    SELECT COUNT(a.id) FROM t_bill as a,t_bill_price as b
+    SELECT COUNT(DISTINCT a.id) FROM t_bill as a,t_bill_price as b
     WHERE a.id=b.bill_id
     and b.out_member_id=#{userId,jdbcType=BIGINT}
     AND
     a.new_ranking &lt;=
-    (SELECT MAX(bill_ranking_standard) from t_bill_price
+    (
+    SELECT MAX(bill_ranking_standard) from t_bill_price where out_member_id= #{userId,jdbcType=BIGINT}
     )
   </select>
 </mapper>

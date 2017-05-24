@@ -87,6 +87,7 @@ public class BillDistributorStatisticsServiceImpl implements BillDistributorStat
                         int billCount=0;
                         for (Bill billItem:billList1
                                 ) {
+
                             map.put("website",billItem.getWebsite());
                             map.put("searchStandard",1);
                             List<Bill> billListStandardCount=billMapper.selectByInMemberId(map);
@@ -132,18 +133,20 @@ public class BillDistributorStatisticsServiceImpl implements BillDistributorStat
                     }
                     else
                     {
-                        billDistributorStatisticsExsits.setUserid(item.getUserId());
-                        billDistributorStatisticsExsits.setBillMonthAddCount(monthAddCount);
-                        billDistributorStatisticsExsits.setWeekCost(new BigDecimal(week));
-                        billDistributorStatisticsExsits.setMonthCost(new BigDecimal(month));
-                        billDistributorStatisticsExsits.setAllCost(new BigDecimal(all));
-                        billDistributorStatisticsExsits.setBillCount(count);
-                        billDistributorStatisticsExsits.setBillApprovalRate(new BigDecimal(billStandard));
-                        billDistributorStatisticsExsits.setKeywordsApprovalRate(new BigDecimal(keywordStandard));
-                        billDistributorStatisticsExsits.setBillMonthAddCount(monthAddCount);
-                        billDistributorStatisticsExsits.setCreateTime(new Date());
-                        billDistributorStatisticsExsits.setCreateUserId(item.getUserId());
-                        billDistributorStatisticsMapper.updateByPrimaryKeySelective(billDistributorStatisticsExsits);
+                        BillDistributorStatistics billDistributorStatisticsNew=new BillDistributorStatistics();
+                        billDistributorStatisticsNew.setId(billDistributorStatisticsExsits.getId());
+                        billDistributorStatisticsNew.setUserid(item.getUserId());
+                        billDistributorStatisticsNew.setBillMonthAddCount(monthAddCount);
+                        billDistributorStatisticsNew.setWeekCost(new BigDecimal(week));
+                        billDistributorStatisticsNew.setMonthCost(new BigDecimal(month));
+                        billDistributorStatisticsNew.setAllCost(new BigDecimal(all));
+                        billDistributorStatisticsNew.setBillCount(count);
+                        billDistributorStatisticsNew.setBillApprovalRate(new BigDecimal(billStandard));
+                        billDistributorStatisticsNew.setKeywordsApprovalRate(new BigDecimal(keywordStandard));
+                        billDistributorStatisticsNew.setBillMonthAddCount(monthAddCount);
+                        billDistributorStatisticsNew.setCreateTime(new Date());
+                        billDistributorStatisticsNew.setCreateUserId(item.getUserId());
+                        billDistributorStatisticsMapper.updateByPrimaryKey(billDistributorStatisticsNew);
                     }
 
 

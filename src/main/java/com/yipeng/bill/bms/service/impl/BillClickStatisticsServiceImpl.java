@@ -64,7 +64,7 @@ public class BillClickStatisticsServiceImpl implements BillClickStatisticsServic
                 //判断今日是否存在
                 params.put("userId",item.getUserId());
                 List<BillClickStatistics> billClickStatisticsList=  billClickStatisticsMapper.selectByDateNow(params);
-                if (!CollectionUtils.isEmpty(billClickStatisticsList))
+                if (CollectionUtils.isEmpty(billClickStatisticsList))
                 {
                     //插入数据库
                     BillClickStatistics billClickStatistics=new BillClickStatistics();

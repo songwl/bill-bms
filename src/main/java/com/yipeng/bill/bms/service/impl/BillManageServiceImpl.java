@@ -25,7 +25,7 @@ import java.util.*;
 /**
  * Created by Administrator on 2017/5/2.
  */
-@Service("BillManageService")
+@Service
 public class BillManageServiceImpl implements BillManageService {
 
     @Autowired

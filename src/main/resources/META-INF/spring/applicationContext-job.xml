@@ -52,7 +52,7 @@
             <ref bean="CallBillClickStatisticsTaskJob"/>
         </property>
         <property name="cronExpression">
-            <value>0 36 9,16 * * ? </value>
+            <value>0 8 7,12,18 * * ? </value>
         </property>
     </bean>
     <!--   &lt;!&ndash;统计渠道商&ndash;&gt;-->
@@ -68,7 +68,8 @@
             <ref bean="CallBillDistributorStatisticsTaskJob"/>
         </property>
         <property name="cronExpression">
-            <value>0 11 9,0 * * ? </value>
+            <!-- <value>0 */1 * * * ?</value>-->
+            <value>0 30 6,10,14,17 * * ? </value>
         </property>
     </bean>
     <!--统计总优化-->

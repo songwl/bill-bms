@@ -20,7 +20,7 @@
 <div class="fuji">
     <div class="row">
         <div class="col-sm-6 col-sm-offset-3">
-            <form class="form-horizontal"  role="form" method="post"  action="/bill/userCompany/uploadFile"  enctype="multipart/form-data" >
+            <form class="form-horizontal"  role="form"  id="uploadForm"    enctype="multipart/form-data" >
                 <div class="form-group">
                     <label class="col-sm-3 control-label">绑定域名</label>
                     <div class="col-sm-9">
@@ -94,10 +94,33 @@
                         <input type="file" name="img_url3" data-ref="url2" class="col-sm-10 myfile" value=""/>
                     </div>
                 </div>
-                <button type="submit" id="submit" class="btn btn-default col-sm-2 col-sm-offset-4" style="background: #09C;color: #fff;">提交</button>
+                <button type="button" onclick="doUpload()" class="btn btn-default col-sm-2 col-sm-offset-4" style="background: #09C;color: #fff;">提交</button>
 
         </div>
     </div>
 </div>
+<script>
+    function doUpload() {
+        var formData = new FormData($( "#uploadForm" )[0]);
+        $.ajax({
+            url:CTX+ '/userCompany/uploadFile' ,
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+                $(".pload").show();
+                $(".modal-backdrop").show();
+            },
+            success: function (result) {
+                $(".pload").hide();
+                $(".modal-backdrop").hide();
+                alert(result.message);
 
+            }
+        });
+    }
+</script>
 </@base.html>

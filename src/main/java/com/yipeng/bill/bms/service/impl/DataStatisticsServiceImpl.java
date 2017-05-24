@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -36,6 +37,8 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
     private BillClickStatisticsMapper billClickStatisticsMapper;
     @Autowired
     private  BillDistributorStatisticsMapper billDistributorStatisticsMapper;
+    @Autowired
+    private  BillCommissionerStatisticsMapper billCommissionerStatisticsMapper;
     /**
      * 调点击
      * @param params
@@ -227,6 +230,7 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
                         int nowDay=b.get(Calendar.DAY_OF_MONTH);//当前天数
                         double expect=(month/nowDay)*maxDate;//预计业绩
 
+
                         //视图对象
                         DistributorData distributorData=new DistributorData();
                         distributorData.setId(user1.getId());
@@ -240,14 +244,22 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
                         distributorData.setMonthAddBill(monthAddCount);
                         distributorData.setExpectedPerformance(df.format(expect));
                         //加入到视图集合
-                        distributorDataList.add(distributorData);
 
-
-
+                        BillCommissionerStatistics billCommissionerStatistics=new BillCommissionerStatistics();
+                        billCommissionerStatistics.setUserid(user1.getId());
+                        billCommissionerStatistics.setWeekCost(new BigDecimal(week));
+                        billCommissionerStatistics.setMonthCost(new BigDecimal(month));
+                        billCommissionerStatistics.setAllCost(new BigDecimal(all));
+                        billCommissionerStatistics.setBillCount(count);
+                        billCommissionerStatistics.setBillApprovalRate(new BigDecimal(billStandard));
+                        billCommissionerStatistics.setKeywordsApprovalRate(new BigDecimal(keywordStandard));
+                        billCommissionerStatistics.setBillMonthAddCount(monthAddCount);
+                        billCommissionerStatistics.setUserExpectAchievement(new BigDecimal(expect));
+                        billCommissionerStatisticsMapper.insert(billCommissionerStatistics);
                     }
                 }
             }
-            return  distributorDataList;
+            
         }
         return null;
     }

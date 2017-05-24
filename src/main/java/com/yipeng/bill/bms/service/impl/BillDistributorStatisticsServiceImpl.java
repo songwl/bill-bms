@@ -87,7 +87,6 @@ public class BillDistributorStatisticsServiceImpl implements BillDistributorStat
                         int billCount=0;
                         for (Bill billItem:billList1
                                 ) {
-
                             map.put("website",billItem.getWebsite());
                             map.put("searchStandard",1);
                             List<Bill> billListStandardCount=billMapper.selectByInMemberId(map);

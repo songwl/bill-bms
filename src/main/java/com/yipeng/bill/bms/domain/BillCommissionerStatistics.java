@@ -1,6 +1,7 @@
 package com.yipeng.bill.bms.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class BillCommissionerStatistics implements Serializable {
@@ -8,21 +9,21 @@ public class BillCommissionerStatistics implements Serializable {
 
     private Long userid;
 
-    private Long weekCost;
+    private BigDecimal weekCost;
 
-    private Long monthCost;
+    private BigDecimal monthCost;
 
-    private Long allCost;
+    private BigDecimal allCost;
 
     private Long billCount;
 
-    private Long billApprovalRate;
+    private BigDecimal billApprovalRate;
 
-    private Long keywordsApprovalRate;
+    private BigDecimal keywordsApprovalRate;
 
     private Integer billMonthAddCount;
 
-    private Long userExpectAchievement;
+    private BigDecimal userExpectAchievement;
 
     private Date createTime;
 
@@ -50,27 +51,27 @@ public class BillCommissionerStatistics implements Serializable {
         this.userid = userid;
     }
 
-    public Long getWeekCost() {
+    public BigDecimal getWeekCost() {
         return weekCost;
     }
 
-    public void setWeekCost(Long weekCost) {
+    public void setWeekCost(BigDecimal weekCost) {
         this.weekCost = weekCost;
     }
 
-    public Long getMonthCost() {
+    public BigDecimal getMonthCost() {
         return monthCost;
     }
 
-    public void setMonthCost(Long monthCost) {
+    public void setMonthCost(BigDecimal monthCost) {
         this.monthCost = monthCost;
     }
 
-    public Long getAllCost() {
+    public BigDecimal getAllCost() {
         return allCost;
     }
 
-    public void setAllCost(Long allCost) {
+    public void setAllCost(BigDecimal allCost) {
         this.allCost = allCost;
     }
 
@@ -82,19 +83,19 @@ public class BillCommissionerStatistics implements Serializable {
         this.billCount = billCount;
     }
 
-    public Long getBillApprovalRate() {
+    public BigDecimal getBillApprovalRate() {
         return billApprovalRate;
     }
 
-    public void setBillApprovalRate(Long billApprovalRate) {
+    public void setBillApprovalRate(BigDecimal billApprovalRate) {
         this.billApprovalRate = billApprovalRate;
     }
 
-    public Long getKeywordsApprovalRate() {
+    public BigDecimal getKeywordsApprovalRate() {
         return keywordsApprovalRate;
     }
 
-    public void setKeywordsApprovalRate(Long keywordsApprovalRate) {
+    public void setKeywordsApprovalRate(BigDecimal keywordsApprovalRate) {
         this.keywordsApprovalRate = keywordsApprovalRate;
     }
 
@@ -106,11 +107,11 @@ public class BillCommissionerStatistics implements Serializable {
         this.billMonthAddCount = billMonthAddCount;
     }
 
-    public Long getUserExpectAchievement() {
+    public BigDecimal getUserExpectAchievement() {
         return userExpectAchievement;
     }
 
-    public void setUserExpectAchievement(Long userExpectAchievement) {
+    public void setUserExpectAchievement(BigDecimal userExpectAchievement) {
         this.userExpectAchievement = userExpectAchievement;
     }
 

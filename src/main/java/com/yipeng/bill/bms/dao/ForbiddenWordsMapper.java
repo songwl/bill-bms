@@ -3,6 +3,7 @@ package com.yipeng.bill.bms.dao;
 import com.yipeng.bill.bms.domain.ForbiddenWords;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ForbiddenWordsMapper {
     int deleteByPrimaryKey(Long id);
@@ -18,4 +19,6 @@ public interface ForbiddenWordsMapper {
     int updateByPrimaryKey(ForbiddenWords record);
 
     List<ForbiddenWords> selectBySelective();
+
+    List<ForbiddenWords> selectByWords(Map<String,Object> params);
 }

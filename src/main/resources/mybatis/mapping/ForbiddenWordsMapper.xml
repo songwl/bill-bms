@@ -61,4 +61,12 @@
     <include refid="Base_Column_List" />
     from t_forbidden_words
   </select>
+
+  <select id="selectByWords"   resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_forbidden_words
+    where 1=2
+    ${words}
+  </select>
 </mapper>

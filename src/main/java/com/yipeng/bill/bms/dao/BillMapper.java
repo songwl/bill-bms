@@ -78,6 +78,7 @@ public interface BillMapper {
      * @return
      */
     List<Bill> getBillGroupByWebsite(Map<String,Object> params);
+    List<Bill> getBillGroupByWebsiteTwo(Map<String,Object> params);
 
     /**
      * 本月新增订单数
@@ -92,6 +93,7 @@ public interface BillMapper {
      * @return
      */
     List<Bill>  selectBillGroupByWebsite(Map<String,Object> params);
+
     List<Bill>  selectByNewRanking(Map<String,Object> params);
     Long selectByNewRankingCount(Map<String,Object> params);
 

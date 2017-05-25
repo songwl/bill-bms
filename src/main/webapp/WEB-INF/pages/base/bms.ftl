@@ -418,6 +418,11 @@
                             </a>
                             <ul class="sub-menu"  style="background: #293038;">
                                 <li>
+                                    <a href="${ctx}/optimizationTool/keywordpricesearch">
+                                        关键词价格查询
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="javascript:;">
                                         关键词排名查询
                                     </a>
@@ -427,11 +432,7 @@
                                         关键词指数查询
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        关键词价格查询
-                                    </a>
-                                </li>
+
                                 <li>
                                     <a href="javascript:;">
                                         网址收录查询

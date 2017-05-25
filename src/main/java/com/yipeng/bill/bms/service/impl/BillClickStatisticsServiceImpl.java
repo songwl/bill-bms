@@ -74,7 +74,14 @@ public class BillClickStatisticsServiceImpl implements BillClickStatisticsServic
                     billClickStatistics.setAllClick(all);
                     billClickStatistics.setCreateTime(new Date());
                     billClickStatistics.setCreateUserId(item.getUserId());
-                    billClickStatisticsMapper.insert(billClickStatistics);
+
+                    try{
+                        billClickStatisticsMapper.insert(billClickStatistics);
+                    }
+                    catch (Exception e)
+                    {
+                        throw  e;
+                    }
                 }
                 else
                 {

@@ -32,6 +32,6 @@ public interface DataStatisticsService {
      * @param user
      * @return
      */
-    List<DistributorData> commissionerData(Map<String,Object> params, LoginUser user);
+    List<DistributorData> commissionerData(Map<String,Object> params);
 
 }

@@ -199,4 +199,24 @@
       update_user_id = #{updateUserId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <!--获取单个用户今日数据-->
+  <select id="selectByDay"  resultMap="BaseResultMap">
+    select *
+    from t_bill_commissioner_statistics
+    where
+    year(create_time)=#{year,jdbcType=INTEGER}
+    and month(create_time)=#{month,jdbcType=INTEGER}
+    and DAY(create_time) = #{day,jdbcType=INTEGER}
+    and  userId = #{userId,jdbcType=BIGINT}
+  </select>
+
+  <!--获取所有用户今日数据-->
+  <select id="selectByGetAll"  resultMap="BaseResultMap">
+    select *
+    from t_bill_commissioner_statistics
+    where
+    year(create_time)=#{year,jdbcType=INTEGER}
+    and month(create_time)=#{month,jdbcType=INTEGER}
+    and DAY(create_time) = #{day,jdbcType=INTEGER}
+  </select>
 </mapper>

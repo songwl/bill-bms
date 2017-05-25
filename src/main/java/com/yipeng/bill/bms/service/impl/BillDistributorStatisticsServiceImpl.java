@@ -127,7 +127,14 @@ public class BillDistributorStatisticsServiceImpl implements BillDistributorStat
                         billDistributorStatistics.setBillMonthAddCount(monthAddCount);
                         billDistributorStatistics.setCreateTime(new Date());
                         billDistributorStatistics.setCreateUserId(item.getUserId());
-                        billDistributorStatisticsMapper.insert(billDistributorStatistics);
+                        try {
+                            billDistributorStatisticsMapper.insert(billDistributorStatistics);
+                        }
+                        catch (Exception e)
+                        {
+                            throw  e;
+                        }
+
 
                     }
                     else

@@ -221,8 +221,6 @@ public class BillController extends BaseController {
         } else {
             return this.ajaxDoneError("未登录");
         }
-
-
     }
 
     /**

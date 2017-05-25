@@ -114,10 +114,14 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
      * @return
      */
     @Override
-    public List<DistributorData> commissionerData(Map<String, Object> params, LoginUser user) {
+    public List<DistributorData> commissionerData(Map<String, Object> params) {
 
-        if (user.hasRole("SUPER_ADMIN"))
-        {
+        Map<String, Object> mapCaozuo=new HashMap<>();
+        Calendar now = Calendar.getInstance();
+        mapCaozuo.put("year",now.get(Calendar.YEAR));
+        mapCaozuo.put("month",now.get(Calendar.MONTH)+1);
+        mapCaozuo.put("day",now.get(Calendar.DATE));
+
             List<DistributorData> distributorDataList=new ArrayList<DistributorData>();
 
             //先获取所有的操作员
@@ -152,8 +156,8 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
                             //查询数据（单价ID）
                             BillPrice billPrice=new BillPrice();
                             billPrice.setBillId(bill.getId());
-                            billPrice.setInMemberId(user.getCreateUserId());
-                          List<BillPrice>    billPrices=billPriceMapper.selectByBillPriceSingle(billPrice);
+                            billPrice.setInMemberId(user1.getCreateUserId());
+                            List<BillPrice>    billPrices=billPriceMapper.selectByBillPriceSingle(billPrice);
                             //通过订单ID和单价ID 统计数据
                             for (BillPrice billpriceitem:billPrices
                                     ) {
@@ -188,7 +192,7 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
                         Long count=billMapper.getBillListCount(map);
                         //统计订单达标率
                         //按网址分组的个数  对应的操作员
-                        List<Bill> billList1=billMapper.getBillGroupByWebsite(map);
+                        List<Bill> billList1=billMapper.getBillGroupByWebsiteTwo(map);
                         //订单达标率
                         double billStandard=0;
                         DecimalFormat df = new DecimalFormat("0.00");//格式化小数
@@ -230,37 +234,61 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
                         int nowDay=b.get(Calendar.DAY_OF_MONTH);//当前天数
                         double expect=(month/nowDay)*maxDate;//预计业绩
 
+                         mapCaozuo.put("userId",item.getUserId());
+                        //判断今日的是否存在
+                        BillCommissionerStatistics billCommissionerStatisticsExists=billCommissionerStatisticsMapper.selectByDay(mapCaozuo);
+                        if (billCommissionerStatisticsExists==null)
+                        {
+                            BillCommissionerStatistics billCommissionerStatistics=new BillCommissionerStatistics();
+                            billCommissionerStatistics.setUserid(user1.getId());
+                            billCommissionerStatistics.setWeekCost(new BigDecimal(week));
+                            billCommissionerStatistics.setMonthCost(new BigDecimal(month));
+                            billCommissionerStatistics.setAllCost(new BigDecimal(all));
+                            billCommissionerStatistics.setBillCount(count);
+                            billCommissionerStatistics.setBillApprovalRate(new BigDecimal(billStandard));
+                            billCommissionerStatistics.setKeywordsApprovalRate(new BigDecimal(keywordStandard));
+                            billCommissionerStatistics.setBillMonthAddCount(monthAddCount);
+                            billCommissionerStatistics.setUserExpectAchievement(new BigDecimal(expect));
+                            billCommissionerStatistics.setCreateTime(new Date());
+                            billCommissionerStatistics.setCreateUserId(item.getUserId());
+                            try
+                            {
+                                billCommissionerStatisticsMapper.insert(billCommissionerStatistics);
+                            }
+                            catch (Exception e)
+                            {
+                                throw  e;
+                            }
 
-                        //视图对象
-                        DistributorData distributorData=new DistributorData();
-                        distributorData.setId(user1.getId());
-                        distributorData.setUserName(user1.getUserName());
-                        distributorData.setWeekCost(week);
-                        distributorData.setMonthCost(month);
-                        distributorData.setAllCost(all);
-                        distributorData.setBillCount(count);
-                        distributorData.setBillStandard(df.format(billStandard));
-                        distributorData.setKeywordsStandard(df.format(keywordStandard));
-                        distributorData.setMonthAddBill(monthAddCount);
-                        distributorData.setExpectedPerformance(df.format(expect));
-                        //加入到视图集合
+                        }
+                        else {
+                            billCommissionerStatisticsExists.setId(billCommissionerStatisticsExists.getId());
+                            billCommissionerStatisticsExists.setUserid(user1.getId());
+                            billCommissionerStatisticsExists.setWeekCost(new BigDecimal(week));
+                            billCommissionerStatisticsExists.setMonthCost(new BigDecimal(month));
+                            billCommissionerStatisticsExists.setAllCost(new BigDecimal(all));
+                            billCommissionerStatisticsExists.setBillCount(count);
+                            billCommissionerStatisticsExists.setBillApprovalRate(new BigDecimal(billStandard));
+                            billCommissionerStatisticsExists.setKeywordsApprovalRate(new BigDecimal(keywordStandard));
+                            billCommissionerStatisticsExists.setBillMonthAddCount(monthAddCount);
+                            billCommissionerStatisticsExists.setUserExpectAchievement(new BigDecimal(expect));
 
-                        BillCommissionerStatistics billCommissionerStatistics=new BillCommissionerStatistics();
-                        billCommissionerStatistics.setUserid(user1.getId());
-                        billCommissionerStatistics.setWeekCost(new BigDecimal(week));
-                        billCommissionerStatistics.setMonthCost(new BigDecimal(month));
-                        billCommissionerStatistics.setAllCost(new BigDecimal(all));
-                        billCommissionerStatistics.setBillCount(count);
-                        billCommissionerStatistics.setBillApprovalRate(new BigDecimal(billStandard));
-                        billCommissionerStatistics.setKeywordsApprovalRate(new BigDecimal(keywordStandard));
-                        billCommissionerStatistics.setBillMonthAddCount(monthAddCount);
-                        billCommissionerStatistics.setUserExpectAchievement(new BigDecimal(expect));
-                        billCommissionerStatisticsMapper.insert(billCommissionerStatistics);
+                            try
+                            {
+                                billCommissionerStatisticsMapper.updateByPrimaryKey(billCommissionerStatisticsExists);
+                            }
+                            catch (Exception e)
+                            {
+                                throw  e;
+                            }
+                        }
+
+
                     }
                 }
             }
             
-        }
+
         return null;
     }
 }

@@ -18,7 +18,7 @@
         </property>
         <property name="cronExpression">
           <!-- <value>0 */1 * * * ?</value>-->
-        <value>0 30 9,16 * * ? </value>  <!-- : 每天9:30和16:30分执行任务-->
+        <value>0 17 11,16 * * ? </value>  <!-- : 每天9:30和16:30分执行任务-->
         </property>
     </bean>
     <!--查询初始排名-->
@@ -72,6 +72,25 @@
             <value>0 30 6,10,14,17 * * ? </value>
         </property>
     </bean>
+    <!--   &lt;!&ndash;统计专员&ndash;&gt;-->
+    <bean id="callBillCommissionerStatisticsTask" class="com.yipeng.bill.bms.task.CallBillCommissionerStatisticsTask"></bean>
+    <bean id="CallBillCommissionerStatisticsTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="callBillCommissionerStatisticsTask"/>
+        <property name="targetMethod" value="execute"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="callBillCommissionerStatisticsTaskJobTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="CallBillCommissionerStatisticsTaskJob"/>
+        </property>
+        <property name="cronExpression">
+            <!-- <value>0 */1 * * * ?</value>-->
+            <value>0 22 6,10,14,17 * * ? </value>
+        </property>
+    </bean>
+
+
     <!--统计总优化-->
     <bean id="optimizationTask" class="com.yipeng.bill.bms.task.OptimizationTask"></bean>
     <bean id="OptimizationTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -99,6 +118,7 @@
                 <ref bean="callCostTaskJobTrigger"/>
                 <ref bean="callBillClickStatisticsTaskJobTrigger"/>
                 <ref bean="callBillDistributorStatisticsTaskJobTrigger"/>
+                <ref bean="callBillCommissionerStatisticsTaskJobTrigger"/>
                 <ref bean="callSearchTaskJobTrigger"/>
                 <ref bean="optimizationTaskJobTrigger"/>
             </list>

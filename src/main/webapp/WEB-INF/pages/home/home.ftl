@@ -6,7 +6,7 @@
 <script src="${ctx}/static/js/public/highcharts.js"></script>
 <script src="${ctx}/static/js/billManage/getNewRanking.js"></script>
 <style>
-    .blue {
+    .dashboard-stat {
         border-radius: 5px !important;
     }
 

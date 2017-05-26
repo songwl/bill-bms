@@ -5,6 +5,19 @@
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <script src="${ctx}/static/js/public/highcharts.js"></script>
 <script src="${ctx}/static/js/billManage/getNewRanking.js"></script>
+<style>
+    .blue
+    {
+        border-radius: 5px !important;
+    }
+    .fa
+    {
+        opacity: 0.2;
+    }
+    .details *{
+        font-size:18px !important;
+    }
+</style>
 <div class="Navs">
     <div class="nav_L left">
         <i class="fa fa-home">&nbsp;</i><span>管理后台</span> > <span>系统概况</span>
@@ -14,7 +27,7 @@
 <div class="row row-bg">
     <#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("ADMIN")||bmsModel.user.hasRole("COMMISSIONER")>
         <div class="col-sm-6 col-md-2 hidden-xs">
-            <div class="statbox widget box box-shadow">
+            <div class="dashboard-stat blue">
                 <div class="widget-content">
                     <div class="visual cyan">
                         <i class="fa fa-user"></i>
@@ -30,8 +43,8 @@
         </div>
     </#if>
     <#if bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")||bmsModel.user.hasRole("CUSTOMER")>
-        <div class="col-sm-6 col-md-2 hidden-xs">
-            <div class="statbox widget box box-shadow">
+        <#--<div class="col-sm-6 col-md-2 hidden-xs">
+            <div class="dashboard-stat blue">
                 <div class="widget-content">
                     <div class="visual cyan">
                         <i class="fa fa-user"></i>
@@ -44,82 +57,74 @@
                     </div>
                 </div>
             </div>
+        </div>-->
+        <div class="col-sm-6 col-md-2 hidden-xs">
+            <div class="dashboard-stat blue">
+                <div class="visual">
+
+                    <i class="fa fa-home"></i>
+                </div>
+                <div class="details">
+                    <div class="number">账户余额 </div>
+                    <div class="desc" id="balance"> </div>
+                </div>
+            </div>
         </div>
     </#if>
 
     <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual red">
-                    <i class="fa fa-dollar"></i>
-                </div>
-                <div class="title">
-                    客户本月消费
-                </div>
-                <div class="value" id="MonthConsumption">
-
-                </div>
+        <div class="dashboard-stat blue">
+            <div class="visual">
+                <i class="fa fa-dollar"></i>
+            </div>
+            <div class="details">
+                <div class="number">客户本月消费 </div>
+                <div class="desc" id="MonthConsumption"> </div>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual red">
-                    <i class="fa fa-dollar"></i>
-                </div>
-                <div class="title">
-                   客户今日消费
-                </div>
-                <div class="value" id="DayConsumption">
-
-                </div>
+        <div class="dashboard-stat blue">
+            <div class="visual">
+                <i class="fa fa-dollar"></i>
+            </div>
+            <div class="details">
+                <div class="number">客户今日消费 </div>
+                <div class="desc" id="DayConsumption"> </div>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual green">
-                    <i class="fa fa-tasks"></i>
-                </div>
-                <div class="title">
-                    累计任务数
-                </div>
-                <div class="value" id="AllbillCount">
-
-                </div>
+        <div class="dashboard-stat blue">
+            <div class="visual">
+                <i class="fa fa-tasks"></i>
+            </div>
+            <div class="details">
+                <div class="number">累计任务数 </div>
+                <div class="desc" id="AllbillCount"> </div>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual cyan">
-                    <i class="fa fa-tasks"></i>
-                </div>
-                <div class="title" >
-                    当前任务数
-                </div>
-                <div class="value" id="billCount">
-
-                </div>
+        <div class="dashboard-stat blue">
+            <div class="visual">
+                <i class="fa fa-tasks"></i>
+            </div>
+            <div class="details">
+                <div class="number">当前任务数 </div>
+                <div class="desc" id="billCount"> </div>
             </div>
         </div>
     </div>
 
     <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual green">
-                    <i class="fa fa-tasks"></i>
-                </div>
-                <div class="title">
-                    今日达标任务
-                </div>
-                <div class="value" id="standardSum">
-
-                </div>
+        <div class="dashboard-stat blue">
+            <div class="visual">
+                <i class="fa fa-tasks"></i>
+            </div>
+            <div class="details">
+                <div class="number">今日达标任务 </div>
+                <div class="desc" id="standardSum"> </div>
             </div>
         </div>
     </div>
@@ -127,67 +132,51 @@
 
 <div class="row row-bg">
     <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual cyan">
+            <div class="dashboard-stat blue">
+                <div class="visual">
                     <i class="fa fa-tasks"></i>
                 </div>
-                <div class="title">
-                    总完成率
+                <div class="details">
+                    <div class="number">总完成率 </div>
+                    <div class="desc" id="AllCompleteness"> </div>
                 </div>
-                <div class="value" id="AllCompleteness">
-
-                </div>
+    </div>
+    </div>
+    <div class="col-sm-6 col-md-2 hidden-xs">
+        <div class="dashboard-stat blue">
+            <div class="visual">
+                <i class="fa fa-tasks"></i>
+            </div>
+            <div class="details">
+                <div class="number">百度完成率 </div>
+                <div class="desc" id="baiduCompleteness"> </div>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual red">
-                    <i class="fa fa-tasks"></i>
-                </div>
-                <div class="title">
-                    百度完成率
-                </div>
-                <div class="value" id="baiduCompleteness">
-
-                </div>
+        <div class="dashboard-stat blue">
+            <div class="visual">
+                <i class="fa fa-tasks"></i>
+            </div>
+            <div class="details">
+                <div class="number">百度手机完成率 </div>
+                <div class="desc" id="baiduWapCompleteness"> </div>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual green">
-                    <i class="fa fa-tasks"></i>
-                </div>
-                <div class="title">
-                    百度手机完成率
-                </div>
-                <div class="value" id="baiduWapCompleteness">
-
-                </div>
+        <div class="dashboard-stat blue">
+            <div class="visual">
+                <i class="fa fa-tasks"></i>
             </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual cyan">
-                    <i class="fa fa-tasks"></i>
-                </div>
-                <div class="title">
-                    360完成率
-                </div>
-                <div class="value" id="sanliulingCompleteness">
-
-                </div>
+            <div class="details">
+                <div class="number">360完成率 </div>
+                <div class="desc" id="sanliulingCompleteness"> </div>
             </div>
         </div>
     </div>
     <#--<div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
+        <div class="dashboard-stat blue">
             <div class="widget-content">
                 <div class="visual cyan">
                     <i class="fa fa-tasks"></i>
@@ -202,41 +191,34 @@
         </div>
     </div>-->
     <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual red">
-                    <i class="fa fa-tasks"></i>
-                </div>
-                <div class="title">
-                    搜狗完成率
-                </div>
-                <div class="value" id="sougouCompleteness">
-
-                </div>
+        <div class="dashboard-stat blue">
+            <div class="visual">
+                <i class="fa fa-tasks"></i>
+            </div>
+            <div class="details">
+                <div class="number">搜狗完成率 </div>
+                <div class="desc" id="sougouCompleteness"> </div>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual cyan">
-                    <i class="fa fa-tasks"></i>
-                </div>
-                <div class="title">
-                    神马完成率
-                </div>
-                <div class="value" id="shenmaCompleteness">
-
-                </div>
+        <div class="dashboard-stat blue">
+            <div class="visual">
+                <i class="fa fa-tasks"></i>
+            </div>
+            <div class="details">
+                <div class="number">神马完成率 </div>
+                <div class="desc" id="shenmaCompleteness"> </div>
             </div>
         </div>
     </div>
 
 </div>
+</div>
 
 <#--<div class="row row-bg">
   &lt;#&ndash;  <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
+        <div class="dashboard-stat blue">
             <div class="widget-content">
                 <div class="visual green">
                     <i class="fa fa-tasks"></i>

@@ -56,6 +56,8 @@ public class ybyNotifyController extends  BaseController{
             JsonObject json1=(JsonObject)parser.parse(json.get("Value").toString());
             //获取数据
             String BusinessType=json.get("BusinessType").toString();//任务类型
+
+
             String TaskId=json1.get("TaskId").toString();//任务编号
             String RankFirst=json1.get("RankFirst").toString();//初排
             String RankLast=json1.get("RankLast").toString();//新排

@@ -64,15 +64,15 @@
                                         <tr>
                                             <td colspan="2" style="width:16%;">关键词</td>
                                             <td colspan="2" style="width:16%;">
-                                                <img src="/bill/static/img/cxjg_img1.png" style="width:100px;" /></td>
+                                                <img src="/static/img/cxjg_img1.png" style="width:100px;" /></td>
                                             <td colspan="2" style="width:16%;">
-                                                <img src="/bill/static/img/cxjg_img3.png" style="width:100px;" /></td>
+                                                <img src="/static/img/cxjg_img3.png" style="width:100px;" /></td>
                                             <td colspan="2" style="width:16%;">
-                                                <img src="/bill/static/img/cxjg_img4.png" style="width:100px;" /></td>
+                                                <img src="/static/img/cxjg_img4.png" style="width:100px;" /></td>
                                             <td colspan="2" style="width:16%;">
-                                                <img src="/bill/static/img/cxjg_img5.png" style="width:100px;" /></td>
+                                                <img src="/static/img/cxjg_img5.png" style="width:100px;" /></td>
                                             <td colspan="2" style="width:16%;">
-                                                <img src="/bill/static/img/cxjg_img6.png" style="width:100px;" /></td>
+                                                <img src="/static/img/cxjg_img6.png" style="width:100px;" /></td>
                                         </tr>
                                         <tr>
                                             <td colspan="2"></td>
@@ -80,8 +80,36 @@
                                             <td colspan="2">元/月</td>
                                             <td colspan="2">元/月</td>
                                             <td colspan="2">元/月</td>
-                                            <td colspan="2">元/月</td></tr>
-                                        <tbody id="t_body"></tbody>
+                                            <td colspan="2">元/月</td>
+                                        </tr>
+                                        <tbody id="t_body">
+                                        <tr>
+                                            <td colspan="2">A</td>
+                                            <td colspan="2"></td>
+                                            <td colspan="2"></td>
+                                            <td colspan="2"></td>
+                                            <td colspan="2"></td>
+                                            <td colspan="2"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="2">B</td>
+                                            <td colspan="2"></td>
+                                            <td colspan="2"></td>
+                                            <td colspan="2"></td>
+                                            <td colspan="2"></td>
+                                            <td colspan="2"></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="2">C</td>
+                                            <td colspan="2"></td>
+                                            <td colspan="2"></td>
+                                            <td colspan="2"></td>
+                                            <td colspan="2"></td>
+                                            <td colspan="2"></td>
+                                        </tr>
+                                        </tbody>
                                     </table>
                                 </div>
                             </li>

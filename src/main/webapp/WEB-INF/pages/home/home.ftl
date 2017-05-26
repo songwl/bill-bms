@@ -27,7 +27,7 @@
 <div class="row row-bg">
     <#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("ADMIN")||bmsModel.user.hasRole("COMMISSIONER")>
         <div class="col-sm-6 col-md-2 hidden-xs">
-            <div class="dashboard-stat blue">
+            <div class="dashboard-stat red">
                 <div class="visual">
 
                     <i class="fa fa-user"></i>
@@ -81,7 +81,7 @@
         </div>
     </div>
     <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="dashboard-stat blue">
+        <div class="dashboard-stat green">
             <div class="visual">
                 <i class="fa fa-dollar"></i>
             </div>
@@ -92,7 +92,7 @@
         </div>
     </div>
     <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="dashboard-stat blue">
+        <div class="dashboard-stat purple">
             <div class="visual">
                 <i class="fa fa-tasks"></i>
             </div>
@@ -115,7 +115,7 @@
     </div>
 
     <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="dashboard-stat blue">
+        <div class="dashboard-stat yellow">
             <div class="visual">
                 <i class="fa fa-tasks"></i>
             </div>

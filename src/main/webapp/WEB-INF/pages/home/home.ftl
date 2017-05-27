@@ -10,7 +10,7 @@
         border-radius: 5px !important;
     }
 
-    .fa {
+    .visual > .fa {
         opacity: 0.2;
     }
 
@@ -131,7 +131,7 @@
     <div class="col-sm-6 col-md-2 hidden-xs">
         <div class="dashboard-stat blue">
             <div class="visual">
-                <i class="fa fa-tasks"></i>
+                <i class="fa fa-bar-chart-o"></i>
             </div>
             <div class="details">
                 <div class="number">总完成率</div>
@@ -142,7 +142,7 @@
     <div class="col-sm-6 col-md-2 hidden-xs">
         <div class="dashboard-stat blue">
             <div class="visual">
-                <i class="fa fa-tasks"></i>
+                <i class="fa fa-bar-chart-o"></i>
             </div>
             <div class="details">
                 <div class="number">百度完成率</div>
@@ -153,7 +153,7 @@
     <div class="col-sm-6 col-md-2 hidden-xs">
         <div class="dashboard-stat blue">
             <div class="visual">
-                <i class="fa fa-tasks"></i>
+                <i class="fa fa-bar-chart-o"></i>
             </div>
             <div class="details">
                 <div class="number">百度手机完成率</div>
@@ -164,7 +164,7 @@
     <div class="col-sm-6 col-md-2 hidden-xs">
         <div class="dashboard-stat blue">
             <div class="visual">
-                <i class="fa fa-tasks"></i>
+                <i class="fa fa-bar-chart-o"></i>
             </div>
             <div class="details">
                 <div class="number">360完成率</div>
@@ -190,7 +190,7 @@
     <div class="col-sm-6 col-md-2 hidden-xs">
         <div class="dashboard-stat blue">
             <div class="visual">
-                <i class="fa fa-tasks"></i>
+                <i class="fa fa-bar-chart-o"></i>
             </div>
             <div class="details">
                 <div class="number">搜狗完成率</div>
@@ -201,7 +201,7 @@
     <div class="col-sm-6 col-md-2 hidden-xs">
         <div class="dashboard-stat blue">
             <div class="visual">
-                <i class="fa fa-tasks"></i>
+                <i class="fa fa-bar-chart-o"></i>
             </div>
             <div class="details">
                 <div class="number">神马完成率</div>

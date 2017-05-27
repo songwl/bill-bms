@@ -172,7 +172,7 @@ var TableInit = function () {
             queryParamsType: "",
             minimumCountColumns: 2,             //最少允许的列数
             clickToSelect: true,                //是否启用点击选中行
-            height: 700,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            //height: 700,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
             uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
             rowStyle: function (row, index) {
                 //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];

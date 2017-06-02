@@ -2431,7 +2431,7 @@ public class BillServiceimpl implements BillService {
 
         else if(max<=6000&&max>5000)
         {
-            yAxis="5100,5200,5300,5400,5500,5600,5700,5800,5900,5000";
+            yAxis="5100,5200,5300,5400,5500,5600,5700,5800,5900,6000";
         }
 
         else if(max<=7000&&max>6000)

@@ -12,81 +12,67 @@
 </div>
 <div class="row row-bg">
     <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual red">
-                    <i class="fa fa-dollar"></i>
-                </div>
-                <div class="title">
-                    账户余额
-                </div>
-                <div class="value" id="userBalance">
-                    ￥0.00
-                </div>
+        <div class="dashboard-stat green">
+            <div class="visual">
+                <i class="fa fa-dollar"></i>
             </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual red">
-                    <i class="fa fa-dollar"></i>
-                </div>
-                <div class="title">
-                    年度结算
-                </div>
-                <div class="value" id="yearConsumption">
-                    ￥0.00
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual red">
-                    <i class="fa fa-dollar"></i>
-                </div>
-                <div class="title">
-                    上月结算
-                </div>
-                <div class="value" id="">
-                    ￥0.00
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual red">
-                    <i class="fa fa-dollar"></i>
-                </div>
-                <div class="title">
-                    本月结算
-                </div>
-                <div class="value">
-                    ￥${bmsModel.MonthConsumption}
-                </div>
+            <div class="details">
+                <div class="number">账户余额</div>
+                <div class="desc" id="userBalance">￥0.00</div>
             </div>
         </div>
     </div>
 
     <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="statbox widget box box-shadow">
-            <div class="widget-content">
-                <div class="visual red">
-                    <i class="fa fa-dollar"></i>
-                </div>
-                <div class="title">
-                    今日结算
-                </div>
-                <div class="value">
-                    ￥${bmsModel.DayConsumption}
-                </div>
+        <div class="dashboard-stat green">
+            <div class="visual">
+                <i class="fa fa-dollar"></i>
+            </div>
+            <div class="details">
+                <div class="number">年度结算</div>
+                <div class="desc" id="yearConsumption">￥0.00</div>
             </div>
         </div>
     </div>
+
+    <div class="col-sm-6 col-md-2 hidden-xs">
+        <div class="dashboard-stat green">
+            <div class="visual">
+                <i class="fa fa-dollar"></i>
+            </div>
+            <div class="details">
+                <div class="number">上月结算</div>
+                <div class="desc" id="lastMonthConsumption">￥0.00</div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-sm-6 col-md-2 hidden-xs">
+        <div class="dashboard-stat green">
+            <div class="visual">
+                <i class="fa fa-dollar"></i>
+            </div>
+            <div class="details">
+                <div class="number">本月结算</div>
+                <div class="desc" id="">￥${bmsModel.MonthConsumption}</div>
+            </div>
+        </div>
+    </div>
+
+  >
+    <div class="col-sm-6 col-md-2 hidden-xs">
+        <div class="dashboard-stat green">
+            <div class="visual">
+                <i class="fa fa-dollar"></i>
+            </div>
+            <div class="details">
+                <div class="number">今日结算</div>
+                <div class="desc" id="">￥${bmsModel.DayConsumption}</div>
+            </div>
+        </div>
+    </div>
+
 
 </div>
 

@@ -18,4 +18,6 @@ public interface KeywordsPriceMapper {
     int updateByPrimaryKey(KeywordsPrice record);
 
     List<KeywordsPrice> selectByword(List<String> arrs);
+
+    KeywordsPrice selectByTaskId(int taskid);
 }

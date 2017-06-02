@@ -242,4 +242,11 @@
       (#{item})
     </foreach>
   </select>
+
+  <select id="selectByTaskId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from keywords_price
+    where TaskId = #{taskid,jdbcType=INTEGER}
+  </select>
 </mapper>

@@ -1,12 +1,19 @@
 package com.yipeng.bill.bms.service.impl;
 
+import com.google.gson.JsonObject;
 import com.yipeng.bill.bms.dao.BillMapper;
+import com.yipeng.bill.bms.dao.KeywordsPriceMapper;
 import com.yipeng.bill.bms.domain.Bill;
+import com.yipeng.bill.bms.domain.KeywordsPrice;
 import com.yipeng.bill.bms.service.RankingUpdateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,5 +51,41 @@ public class RankingUpdateServiceImpl implements RankingUpdateService {
             return 0;
         }
 
+    }
+
+    @Autowired
+    private KeywordsPriceMapper keywordsPriceMapper;
+    @Override
+    public int updateKeywords(JsonObject json1) {
+
+        KeywordsPrice keywordsPrice = keywordsPriceMapper.selectByTaskId(Integer.parseInt(json1.get("TaskId").toString()));
+        if(keywordsPrice==null)
+        {
+            return 1;
+        }
+        keywordsPrice.setIndexbaiduall(Integer.parseInt(json1.get("IndexBaiduAll").toString()));
+        keywordsPrice.setIndexbaiduwap(Integer.parseInt(json1.get("IndexBaiduWap").toString()));
+        keywordsPrice.setIndexsoall(Integer.parseInt(json1.get("IndexSoAll").toString()));
+        keywordsPrice.setBaiducollectioncount(Integer.parseInt(json1.get("BaiduCollectionCount").toString()));
+        keywordsPrice.setBaiduhomepagecount(Integer.parseInt(json1.get("BaiduHomepageCount").toString()));
+        keywordsPrice.setDegree(Integer.parseInt(json1.get("Degree").toString()));
+        keywordsPrice.setPricebaidupc(Double.parseDouble(json1.get("PriceBaiduPc").toString()));
+        keywordsPrice.setPricebaiduwap(Double.parseDouble(json1.get("PriceBaiduWap").toString()));
+        keywordsPrice.setPricesopc(Double.parseDouble(json1.get("PriceSoPc").toString()));
+        keywordsPrice.setPricesowap(Double.parseDouble(json1.get("PriceSoWap").toString()));
+        keywordsPrice.setPricesogoupc(Double.parseDouble(json1.get("PriceSogouPc").toString()));
+        keywordsPrice.setPricesogouwap(Double.parseDouble(json1.get("PriceSogouWap").toString()));
+        keywordsPrice.setPricesm(Double.parseDouble(json1.get("PriceSm").toString()));
+        //当前时间
+        Date dateNow = null;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            dateNow = dateFormat.parse(json1.get("UpdateTime").toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        keywordsPrice.setUpdatetime(dateNow);
+        int a = keywordsPriceMapper.updateByPrimaryKeySelective(keywordsPrice);
+        return a > 0 ? 1 : 2;
     }
 }

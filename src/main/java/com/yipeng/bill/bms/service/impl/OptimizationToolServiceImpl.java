@@ -96,7 +96,7 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
             JSONArray array = myJsonObject.getJSONArray("xValue");
             for (int i = 0; i < array.length(); i++) {
                 KeywordsPrice keywordsPrice = new KeywordsPrice();
-                keywordsPrice.setApiid(Integer.parseInt(array.getJSONArray(i).get(0).toString()));
+                keywordsPrice.setTaskid(Integer.parseInt(array.getJSONArray(i).get(0).toString()));
                 keywordsPrice.setKeywords(list.get(i));
                 keywordsprices.add(keywordsPrice);
                 keywordsPriceMapper.insert(keywordsPrice);

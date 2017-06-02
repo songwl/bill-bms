@@ -3,16 +3,27 @@
 <mapper namespace="com.yipeng.bill.bms.dao.KeywordsPriceMapper">
   <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.KeywordsPrice">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="keywords" jdbcType="VARCHAR" property="keywords" />
-    <result column="baidu" jdbcType="VARCHAR" property="baidu" />
-    <result column="sougou" jdbcType="VARCHAR" property="sougou" />
-    <result column="sanliuling" jdbcType="VARCHAR" property="sanliuling" />
-    <result column="sjbaidu" jdbcType="VARCHAR" property="sjbaidu" />
-    <result column="shenma" jdbcType="VARCHAR" property="shenma" />
-    <result column="apiid" jdbcType="INTEGER" property="apiid" />
+    <result column="TaskId" jdbcType="INTEGER" property="taskid" />
+    <result column="IndexBaiduAll" jdbcType="INTEGER" property="indexbaiduall" />
+    <result column="IndexBaiduWap" jdbcType="INTEGER" property="indexbaiduwap" />
+    <result column="IndexSoAll" jdbcType="INTEGER" property="indexsoall" />
+    <result column="BaiduCollectionCount" jdbcType="INTEGER" property="baiducollectioncount" />
+    <result column="BaiduHomepageCount" jdbcType="INTEGER" property="baiduhomepagecount" />
+    <result column="Degree" jdbcType="INTEGER" property="degree" />
+    <result column="PriceBaiduPc" jdbcType="DOUBLE" property="pricebaidupc" />
+    <result column="PriceBaiduWap" jdbcType="DOUBLE" property="pricebaiduwap" />
+    <result column="PriceSoPc" jdbcType="DOUBLE" property="pricesopc" />
+    <result column="PriceSoWap" jdbcType="DOUBLE" property="pricesowap" />
+    <result column="PriceSogouPc" jdbcType="DOUBLE" property="pricesogoupc" />
+    <result column="PriceSogouWap" jdbcType="DOUBLE" property="pricesogouwap" />
+    <result column="PriceSm" jdbcType="DOUBLE" property="pricesm" />
+    <result column="UpdateTime" jdbcType="TIMESTAMP" property="updatetime" />
+    <result column="Keywords" jdbcType="VARCHAR" property="keywords" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, keywords, baidu, sougou, sanliuling, sjbaidu, shenma, apiid
+    id, TaskId, IndexBaiduAll, IndexBaiduWap, IndexSoAll, BaiduCollectionCount, BaiduHomepageCount, 
+    Degree, PriceBaiduPc, PriceBaiduWap, PriceSoPc, PriceSoWap, PriceSogouPc, PriceSogouWap, 
+    PriceSm, UpdateTime, Keywords
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -25,12 +36,18 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.yipeng.bill.bms.domain.KeywordsPrice">
-    insert into keywords_price (id, keywords, baidu, 
-      sougou, sanliuling, sjbaidu, 
-      shenma, apiid)
-    values (#{id,jdbcType=BIGINT}, #{keywords,jdbcType=VARCHAR}, #{baidu,jdbcType=VARCHAR}, 
-      #{sougou,jdbcType=VARCHAR}, #{sanliuling,jdbcType=VARCHAR}, #{sjbaidu,jdbcType=VARCHAR}, 
-      #{shenma,jdbcType=VARCHAR}, #{apiid,jdbcType=INTEGER})
+    insert into keywords_price (id, TaskId, IndexBaiduAll, 
+      IndexBaiduWap, IndexSoAll, BaiduCollectionCount, 
+      BaiduHomepageCount, Degree, PriceBaiduPc, 
+      PriceBaiduWap, PriceSoPc, PriceSoWap, 
+      PriceSogouPc, PriceSogouWap, PriceSm, 
+      UpdateTime, Keywords)
+    values (#{id,jdbcType=BIGINT}, #{taskid,jdbcType=INTEGER}, #{indexbaiduall,jdbcType=INTEGER}, 
+      #{indexbaiduwap,jdbcType=INTEGER}, #{indexsoall,jdbcType=INTEGER}, #{baiducollectioncount,jdbcType=INTEGER}, 
+      #{baiduhomepagecount,jdbcType=INTEGER}, #{degree,jdbcType=INTEGER}, #{pricebaidupc,jdbcType=DOUBLE}, 
+      #{pricebaiduwap,jdbcType=DOUBLE}, #{pricesopc,jdbcType=DOUBLE}, #{pricesowap,jdbcType=DOUBLE}, 
+      #{pricesogoupc,jdbcType=DOUBLE}, #{pricesogouwap,jdbcType=DOUBLE}, #{pricesm,jdbcType=DOUBLE}, 
+      #{updatetime,jdbcType=TIMESTAMP}, #{keywords,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.KeywordsPrice">
     insert into keywords_price
@@ -38,93 +55,184 @@
       <if test="id != null">
         id,
       </if>
+      <if test="taskid != null">
+        TaskId,
+      </if>
+      <if test="indexbaiduall != null">
+        IndexBaiduAll,
+      </if>
+      <if test="indexbaiduwap != null">
+        IndexBaiduWap,
+      </if>
+      <if test="indexsoall != null">
+        IndexSoAll,
+      </if>
+      <if test="baiducollectioncount != null">
+        BaiduCollectionCount,
+      </if>
+      <if test="baiduhomepagecount != null">
+        BaiduHomepageCount,
+      </if>
+      <if test="degree != null">
+        Degree,
+      </if>
+      <if test="pricebaidupc != null">
+        PriceBaiduPc,
+      </if>
+      <if test="pricebaiduwap != null">
+        PriceBaiduWap,
+      </if>
+      <if test="pricesopc != null">
+        PriceSoPc,
+      </if>
+      <if test="pricesowap != null">
+        PriceSoWap,
+      </if>
+      <if test="pricesogoupc != null">
+        PriceSogouPc,
+      </if>
+      <if test="pricesogouwap != null">
+        PriceSogouWap,
+      </if>
+      <if test="pricesm != null">
+        PriceSm,
+      </if>
+      <if test="updatetime != null">
+        UpdateTime,
+      </if>
       <if test="keywords != null">
-        keywords,
-      </if>
-      <if test="baidu != null">
-        baidu,
-      </if>
-      <if test="sougou != null">
-        sougou,
-      </if>
-      <if test="sanliuling != null">
-        sanliuling,
-      </if>
-      <if test="sjbaidu != null">
-        sjbaidu,
-      </if>
-      <if test="shenma != null">
-        shenma,
-      </if>
-      <if test="apiid != null">
-        apiid,
+        Keywords,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
+      <if test="taskid != null">
+        #{taskid,jdbcType=INTEGER},
+      </if>
+      <if test="indexbaiduall != null">
+        #{indexbaiduall,jdbcType=INTEGER},
+      </if>
+      <if test="indexbaiduwap != null">
+        #{indexbaiduwap,jdbcType=INTEGER},
+      </if>
+      <if test="indexsoall != null">
+        #{indexsoall,jdbcType=INTEGER},
+      </if>
+      <if test="baiducollectioncount != null">
+        #{baiducollectioncount,jdbcType=INTEGER},
+      </if>
+      <if test="baiduhomepagecount != null">
+        #{baiduhomepagecount,jdbcType=INTEGER},
+      </if>
+      <if test="degree != null">
+        #{degree,jdbcType=INTEGER},
+      </if>
+      <if test="pricebaidupc != null">
+        #{pricebaidupc,jdbcType=DOUBLE},
+      </if>
+      <if test="pricebaiduwap != null">
+        #{pricebaiduwap,jdbcType=DOUBLE},
+      </if>
+      <if test="pricesopc != null">
+        #{pricesopc,jdbcType=DOUBLE},
+      </if>
+      <if test="pricesowap != null">
+        #{pricesowap,jdbcType=DOUBLE},
+      </if>
+      <if test="pricesogoupc != null">
+        #{pricesogoupc,jdbcType=DOUBLE},
+      </if>
+      <if test="pricesogouwap != null">
+        #{pricesogouwap,jdbcType=DOUBLE},
+      </if>
+      <if test="pricesm != null">
+        #{pricesm,jdbcType=DOUBLE},
+      </if>
+      <if test="updatetime != null">
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
       <if test="keywords != null">
         #{keywords,jdbcType=VARCHAR},
-      </if>
-      <if test="baidu != null">
-        #{baidu,jdbcType=VARCHAR},
-      </if>
-      <if test="sougou != null">
-        #{sougou,jdbcType=VARCHAR},
-      </if>
-      <if test="sanliuling != null">
-        #{sanliuling,jdbcType=VARCHAR},
-      </if>
-      <if test="sjbaidu != null">
-        #{sjbaidu,jdbcType=VARCHAR},
-      </if>
-      <if test="shenma != null">
-        #{shenma,jdbcType=VARCHAR},
-      </if>
-      <if test="apiid != null">
-        #{apiid,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.KeywordsPrice">
     update keywords_price
     <set>
+      <if test="taskid != null">
+        TaskId = #{taskid,jdbcType=INTEGER},
+      </if>
+      <if test="indexbaiduall != null">
+        IndexBaiduAll = #{indexbaiduall,jdbcType=INTEGER},
+      </if>
+      <if test="indexbaiduwap != null">
+        IndexBaiduWap = #{indexbaiduwap,jdbcType=INTEGER},
+      </if>
+      <if test="indexsoall != null">
+        IndexSoAll = #{indexsoall,jdbcType=INTEGER},
+      </if>
+      <if test="baiducollectioncount != null">
+        BaiduCollectionCount = #{baiducollectioncount,jdbcType=INTEGER},
+      </if>
+      <if test="baiduhomepagecount != null">
+        BaiduHomepageCount = #{baiduhomepagecount,jdbcType=INTEGER},
+      </if>
+      <if test="degree != null">
+        Degree = #{degree,jdbcType=INTEGER},
+      </if>
+      <if test="pricebaidupc != null">
+        PriceBaiduPc = #{pricebaidupc,jdbcType=DOUBLE},
+      </if>
+      <if test="pricebaiduwap != null">
+        PriceBaiduWap = #{pricebaiduwap,jdbcType=DOUBLE},
+      </if>
+      <if test="pricesopc != null">
+        PriceSoPc = #{pricesopc,jdbcType=DOUBLE},
+      </if>
+      <if test="pricesowap != null">
+        PriceSoWap = #{pricesowap,jdbcType=DOUBLE},
+      </if>
+      <if test="pricesogoupc != null">
+        PriceSogouPc = #{pricesogoupc,jdbcType=DOUBLE},
+      </if>
+      <if test="pricesogouwap != null">
+        PriceSogouWap = #{pricesogouwap,jdbcType=DOUBLE},
+      </if>
+      <if test="pricesm != null">
+        PriceSm = #{pricesm,jdbcType=DOUBLE},
+      </if>
+      <if test="updatetime != null">
+        UpdateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
       <if test="keywords != null">
-        keywords = #{keywords,jdbcType=VARCHAR},
-      </if>
-      <if test="baidu != null">
-        baidu = #{baidu,jdbcType=VARCHAR},
-      </if>
-      <if test="sougou != null">
-        sougou = #{sougou,jdbcType=VARCHAR},
-      </if>
-      <if test="sanliuling != null">
-        sanliuling = #{sanliuling,jdbcType=VARCHAR},
-      </if>
-      <if test="sjbaidu != null">
-        sjbaidu = #{sjbaidu,jdbcType=VARCHAR},
-      </if>
-      <if test="shenma != null">
-        shenma = #{shenma,jdbcType=VARCHAR},
-      </if>
-      <if test="apiid != null">
-        apiid = #{apiid,jdbcType=INTEGER},
+        Keywords = #{keywords,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.KeywordsPrice">
     update keywords_price
-    set keywords = #{keywords,jdbcType=VARCHAR},
-      baidu = #{baidu,jdbcType=VARCHAR},
-      sougou = #{sougou,jdbcType=VARCHAR},
-      sanliuling = #{sanliuling,jdbcType=VARCHAR},
-      sjbaidu = #{sjbaidu,jdbcType=VARCHAR},
-      shenma = #{shenma,jdbcType=VARCHAR},
-      apiid = #{apiid,jdbcType=INTEGER}
+    set TaskId = #{taskid,jdbcType=INTEGER},
+      IndexBaiduAll = #{indexbaiduall,jdbcType=INTEGER},
+      IndexBaiduWap = #{indexbaiduwap,jdbcType=INTEGER},
+      IndexSoAll = #{indexsoall,jdbcType=INTEGER},
+      BaiduCollectionCount = #{baiducollectioncount,jdbcType=INTEGER},
+      BaiduHomepageCount = #{baiduhomepagecount,jdbcType=INTEGER},
+      Degree = #{degree,jdbcType=INTEGER},
+      PriceBaiduPc = #{pricebaidupc,jdbcType=DOUBLE},
+      PriceBaiduWap = #{pricebaiduwap,jdbcType=DOUBLE},
+      PriceSoPc = #{pricesopc,jdbcType=DOUBLE},
+      PriceSoWap = #{pricesowap,jdbcType=DOUBLE},
+      PriceSogouPc = #{pricesogoupc,jdbcType=DOUBLE},
+      PriceSogouWap = #{pricesogouwap,jdbcType=DOUBLE},
+      PriceSm = #{pricesm,jdbcType=DOUBLE},
+      UpdateTime = #{updatetime,jdbcType=TIMESTAMP},
+      Keywords = #{keywords,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
   <select id="selectByword"  resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
@@ -133,6 +241,5 @@
     <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
       (#{item})
     </foreach>
-
   </select>
 </mapper>

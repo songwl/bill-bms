@@ -28,11 +28,11 @@ function clickff() {
             $.each(result.data, function (index, item) {
                 str += "<tr>";
                 str += "<td colspan=\"2\">" + item.keywords + "</td>";
-                str += item.pricebaidupc == null ? "<td colspan=\"2\"><img src='/static/img/loading.gif'/></td>" : item.pricebaidupc == 0 ? "<td colspan=\"2\">暂无结果</td>" : "<td colspan=\"2\">" + item.pricebaidupc + "元/月</td>";
-                str += item.pricesogoupc == null ? "<td colspan=\"2\"><img src='/static/img/loading.gif'/></td>" : item.pricesogoupc == 0 ? "<td colspan=\"2\">暂无结果</td>" : "<td colspan=\"2\">" + item.pricesogoupc + "元/月</td>";
-                str += item.pricesopc == null ? "<td colspan=\"2\"><img src='/static/img/loading.gif'/></td>" : item.pricesopc == 0 ? "<td colspan=\"2\">暂无结果</td>" : "<td colspan=\"2\">" + item.pricesopc + "元/月</td>";
-                str += item.pricebaiduwap == null ? "<td colspan=\"2\"><img src='/static/img/loading.gif'/></td>" : item.pricebaiduwap == 0 ? "<td colspan=\"2\">暂无结果</td>" : "<td colspan=\"2\">" + item.pricebaiduwap + "元/月</td>";
-                str += item.pricesm == null ? "<td colspan=\"2\"><img src='/static/img/loading.gif'/></td>" : item.pricesm == 0 ? "<td colspan=\"2\">暂无结果</td>" : "<td colspan=\"2\">" + item.pricesm + "元/月</td>";
+                str += item.pricebaidupc == null ? "<td colspan=\"2\"><img src='/static/img/loading.gif'/></td>" : item.pricebaidupc == 0 ? "<td colspan=\"2\">暂无结果</td>" : "<td colspan=\"2\">" + item.pricebaidupc + "元/天</td>";
+                str += item.pricesogoupc == null ? "<td colspan=\"2\"><img src='/static/img/loading.gif'/></td>" : item.pricesogoupc == 0 ? "<td colspan=\"2\">暂无结果</td>" : "<td colspan=\"2\">" + item.pricesogoupc + "元/天</td>";
+                str += item.pricesopc == null ? "<td colspan=\"2\"><img src='/static/img/loading.gif'/></td>" : item.pricesopc == 0 ? "<td colspan=\"2\">暂无结果</td>" : "<td colspan=\"2\">" + item.pricesopc + "元/天</td>";
+                str += item.pricebaiduwap == null ? "<td colspan=\"2\"><img src='/static/img/loading.gif'/></td>" : item.pricebaiduwap == 0 ? "<td colspan=\"2\">暂无结果</td>" : "<td colspan=\"2\">" + item.pricebaiduwap + "元/天</td>";
+                str += item.pricesm == null ? "<td colspan=\"2\"><img src='/static/img/loading.gif'/></td>" : item.pricesm == 0 ? "<td colspan=\"2\">暂无结果</td>" : "<td colspan=\"2\">" + item.pricesm + "元/天</td>";
                 str += "</tr>";
                 if (item.pricebaidupc == null) {
                     flag = false;

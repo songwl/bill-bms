@@ -19,6 +19,10 @@ function clickff() {
         url: CTX + '/optimizationTool/keywordpricesearchClick',
         data: {keywords: keywords},
         success: function (result) {
+            if (result.data == null) {
+                window.clearInterval(clock);
+                return;
+            }
             var str = "";
             var flag = true;
             $.each(result.data, function (index, item) {

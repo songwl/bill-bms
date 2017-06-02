@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -35,6 +38,17 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
 
     @Override
     public List<KeywordsPrice> forbiddenWordsList(String keywords) {
+        /*Date dateNow = null;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            dateNow = dateFormat.parse("2017-5-2 15:32:11");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;*/
+        if (keywords == "") {
+            return null;
+        }
         //获取所输入的关键字
         String[] arr = keywords.split("\n");
         String where = "";
@@ -56,6 +70,9 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
         for (ForbiddenWords item : forbiddenWordsList
                 ) {
             list.remove(item.getWords());//移除违禁词
+        }
+        if (CollectionUtils.isEmpty(list)) {
+            return null;
         }
         List<KeywordsPrice> keywordsprices = keywordsPriceMapper.selectByword(list);//查询本地数据
         //if (!CollectionUtils.isEmpty(keywordsprices)) {

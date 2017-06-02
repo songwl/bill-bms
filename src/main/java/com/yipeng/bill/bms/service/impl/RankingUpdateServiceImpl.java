@@ -57,7 +57,6 @@ public class RankingUpdateServiceImpl implements RankingUpdateService {
     private KeywordsPriceMapper keywordsPriceMapper;
     @Override
     public int updateKeywords(JsonObject json1) {
-
         KeywordsPrice keywordsPrice = keywordsPriceMapper.selectByTaskId(Integer.parseInt(json1.get("TaskId").toString()));
         if(keywordsPrice==null)
         {
@@ -76,15 +75,7 @@ public class RankingUpdateServiceImpl implements RankingUpdateService {
         keywordsPrice.setPricesogoupc(Double.parseDouble(json1.get("PriceSogouPc").toString()));
         keywordsPrice.setPricesogouwap(Double.parseDouble(json1.get("PriceSogouWap").toString()));
         keywordsPrice.setPricesm(Double.parseDouble(json1.get("PriceSm").toString()));
-        //当前时间
-        Date dateNow = null;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try {
-            dateNow = dateFormat.parse(json1.get("UpdateTime").toString());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        keywordsPrice.setUpdatetime(dateNow);
+        keywordsPrice.setUpdatetime(new Date());
         int a = keywordsPriceMapper.updateByPrimaryKeySelective(keywordsPrice);
         return a > 0 ? 1 : 2;
     }

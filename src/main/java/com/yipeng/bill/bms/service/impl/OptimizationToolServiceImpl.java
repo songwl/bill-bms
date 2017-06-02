@@ -38,14 +38,6 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
 
     @Override
     public List<KeywordsPrice> forbiddenWordsList(String keywords) {
-        /*Date dateNow = null;
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try {
-            dateNow = dateFormat.parse("2017-5-2 15:32:11");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;*/
         if (keywords == "") {
             return null;
         }

@@ -116,7 +116,6 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                         billCostLast.settBillPriceId(billPriceNow.getId());
                         billCostLast.setCostDate(new Date());
                         billCostMapper.updateByPrimaryKeySelective(billCostLast);
-
                     }
 
                 }
@@ -166,6 +165,7 @@ public class BillCallCostServiceImpl implements BillCallCostService {
                         {
                             break;
                         }
+
                     }
                     else {
                         bool=false;

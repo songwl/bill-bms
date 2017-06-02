@@ -89,6 +89,8 @@ public interface BillService {
      */
     int optimizationStart(Map<String, String[]>  params,LoginUser user);
 
+    int deleteBill(Map<String, String[]>  params,LoginUser user);
+
     Map<String,Object> getPriceDetails( int limit,int offset,String billId,LoginUser user,String way);
 
     Map<String,Object> billFeedback(String website);

@@ -389,7 +389,8 @@
 
   <select id="selectByInMemberId"  resultMap="BaseResultMap">
     select DISTINCT a.*
-    from t_bill as a   INNER JOIN  t_bill_price as b on a.id=b.bill_id
+    from t_bill as a
+    INNER JOIN  t_bill_price as b on a.id=b.bill_id
    INNER  JOIN  t_bill_search_support as d ON a.id=d.bill_id
     INNER  JOIN t_user as e ON b.out_member_id=e.id
     where  1=1

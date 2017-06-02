@@ -22,6 +22,11 @@
     delete from t_bill_price
     where id = #{id,jdbcType=BIGINT}
   </delete>
+
+  <delete id="deleteByBillId" parameterType="java.lang.Long">
+    delete from t_bill_price
+    where bill_id = #{billId,jdbcType=BIGINT}
+  </delete>
   <insert id="insert" parameterType="com.yipeng.bill.bms.domain.BillPrice">
     insert into t_bill_price (id, bill_id, price, bill_ranking_standard,
       in_member_id, out_member_id, create_time

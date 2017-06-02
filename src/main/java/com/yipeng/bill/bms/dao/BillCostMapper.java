@@ -9,7 +9,7 @@ import java.util.Objects;
 
 public interface BillCostMapper {
     int deleteByPrimaryKey(Long id);
-
+    int deleteByBillId(Long id);
     int insert(BillCost record);
 
     int insertSelective(BillCost record);

@@ -20,6 +20,10 @@
     delete from t_bill_optimization
     where id = #{id,jdbcType=BIGINT}
   </delete>
+  <delete id="deleteByBillId" parameterType="java.lang.Long">
+    delete from t_bill_optimization
+    where bill_id = #{billId,jdbcType=BIGINT}
+  </delete>
   <insert id="insert" parameterType="com.yipeng.bill.bms.domain.BillOptimization">
     insert into t_bill_optimization (id, bill_id, optimization_count, 
       optimization_date)

@@ -566,6 +566,27 @@ public class BillController extends BaseController {
 
     }
 
+    /**
+     * 启动优化
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/billList/deleteBill")
+    @ResponseBody
+    public ResultMessage deleteBill(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap();
+        LoginUser user = this.getCurrentAccount();
+        if (user != null) {
+
+            int a = billService.deleteBill(params, user);
+            return this.ajaxDoneSuccess("删除成功");
+
+        } else {
+            return this.ajaxDoneError("未登录");
+        }
+
+    }
 
     /**
      * 待审核订单table表格获取数据(确认审核页面)

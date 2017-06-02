@@ -22,6 +22,11 @@
     delete from t_bill_cost
     where id = #{id,jdbcType=BIGINT}
   </delete>
+
+  <delete id="deleteByBillId" parameterType="java.lang.Long">
+    delete from t_bill_cost
+    where t_bill_id = #{billId,jdbcType=BIGINT}
+  </delete>
   <insert id="insert" parameterType="com.yipeng.bill.bms.domain.BillCost" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
     insert ignore into t_bill_cost (id, t_bill_id, t_bill_price_id,
       cost_amount, cost_date, ranking

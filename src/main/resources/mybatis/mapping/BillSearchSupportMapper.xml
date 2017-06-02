@@ -19,6 +19,11 @@
     delete from t_bill_search_support
     where id = #{id,jdbcType=BIGINT}
   </delete>
+
+  <delete id="deleteByBillId" parameterType="java.lang.Long">
+    delete from t_bill_search_support
+    where bill_id = #{billId,jdbcType=BIGINT}
+  </delete>
   <insert id="insert" parameterType="com.yipeng.bill.bms.domain.BillSearchSupport">
     insert into t_bill_search_support (id, bill_id, search_support
       )

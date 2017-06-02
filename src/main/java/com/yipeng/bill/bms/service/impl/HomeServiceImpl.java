@@ -44,12 +44,13 @@ public class HomeServiceImpl implements HomeService {
     public Map<String, Object> homeDetails(LoginUser loginUser) {
         //转换时间
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM");
         String daynow=formatter.format(new Date());
         DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
         //当前时间
         Date dateNow=null;
         try {
-            dateNow = format1.parse(daynow);
+            dateNow = formatter1.parse(daynow);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -68,7 +69,7 @@ public class HomeServiceImpl implements HomeService {
         int monthPreCount=0;
         monthPreCount=getDaysOfMonth(preMonth);
 
-        calendar.setTime(dateNow);
+        calendar.setTime(new Date());
         int monthNowCount = calendar.get(Calendar.DAY_OF_MONTH);
         String seriesNowMonth="";
         Calendar calendar1 = Calendar.getInstance();
@@ -1219,6 +1220,48 @@ public class HomeServiceImpl implements HomeService {
         }
 
 
+        else if(max<=11000&&max>10000)
+        {
+            yAxis="10100,10200,10300,10400,10500,10600,10700,10800,10900,11000";
+        }
+
+        else if(max<=12000&&max>11000)
+        {
+            yAxis="11100,11200,11300,11400,11500,11600,11700,11800,11900,12000";
+        }
+        else if(max<=13000&&max>12000)
+        {
+            yAxis="12100,12200,12300,12400,12500,12600,12700,12800,12900,13000";
+        }
+
+        else if(max<=14000&&max>13000)
+        {
+            yAxis="13100,13200,13300,13400,13500,13600,13700,13800,13900,14000";
+        }
+        else if(max<=15000&&max>14000)
+        {
+            yAxis="14100,14200,14300,14400,14500,14600,14700,14800,14900,15000";
+        }
+        else if(max<=16000&&max>15000)
+        {
+            yAxis="15100,15200,15300,15400,15500,15600,15700,15800,15900,16000";
+        }
+        else if(max<=17000&&max>16000)
+        {
+            yAxis="16100,16200,16300,16400,16500,16600,16700,16800,16900,17000";
+        }
+        else if(max<=18000&&max>17000)
+        {
+            yAxis="17100,17200,17300,17400,17500,17600,17700,17800,17900,18000";
+        }
+        else if(max<=19000&&max>18000)
+        {
+            yAxis="18100,18200,18300,18400,18500,18600,18700,18800,18900,19000";
+        }
+        else if(max<=20000&&max>19000)
+        {
+            yAxis="19100,19200,19300,19400,19500,19600,19700,19800,19900,20000";
+        }
 
         return yAxis;
     }
@@ -1316,6 +1359,49 @@ public class HomeServiceImpl implements HomeService {
             yAxis="9100,9200,9300,9400,9500,9600,9700,9800,9900,10000";
         }
 
+
+        else if(max<=11000&&max>10000)
+        {
+            yAxis="10100,10200,10300,10400,10500,10600,10700,10800,10900,11000";
+        }
+
+        else if(max<=12000&&max>11000)
+        {
+            yAxis="11100,11200,11300,11400,11500,11600,11700,11800,11900,12000";
+        }
+        else if(max<=13000&&max>12000)
+        {
+            yAxis="12100,12200,12300,12400,12500,12600,12700,12800,12900,13000";
+        }
+
+        else if(max<=14000&&max>13000)
+        {
+            yAxis="13100,13200,13300,13400,13500,13600,13700,13800,13900,14000";
+        }
+        else if(max<=15000&&max>14000)
+        {
+            yAxis="14100,14200,14300,14400,14500,14600,14700,14800,14900,15000";
+        }
+        else if(max<=16000&&max>15000)
+        {
+            yAxis="15100,15200,15300,15400,15500,15600,15700,15800,15900,16000";
+        }
+        else if(max<=17000&&max>16000)
+        {
+            yAxis="16100,16200,16300,16400,16500,16600,16700,16800,16900,17000";
+        }
+        else if(max<=18000&&max>17000)
+        {
+            yAxis="17100,17200,17300,17400,17500,17600,17700,17800,17900,18000";
+        }
+        else if(max<=19000&&max>18000)
+        {
+            yAxis="18100,18200,18300,18400,18500,18600,18700,18800,18900,19000";
+        }
+        else if(max<=20000&&max>19000)
+        {
+            yAxis="19100,19200,19300,19400,19500,19600,19700,19800,19900,20000";
+        }
 
 
         return yAxis;

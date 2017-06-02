@@ -2,6 +2,8 @@ package com.yipeng.bill.bms.web;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.yipeng.bill.bms.dao.LogsMapper;
+import com.yipeng.bill.bms.domain.Logs;
 import com.yipeng.bill.bms.model.Md5_UrlEncode;
 import com.yipeng.bill.bms.service.RankingUpdateService;
 import jdk.nashorn.internal.parser.JSONParser;
@@ -15,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Administrator on 2017/5/4.
@@ -25,6 +28,8 @@ public class ybyNotifyController extends  BaseController{
 
     @Autowired
     private RankingUpdateService rankingUpdateService;
+    @Autowired
+    private LogsMapper logsMapper;
 
     /**
      * 获取优帮云通知
@@ -35,6 +40,15 @@ public class ybyNotifyController extends  BaseController{
     @ResponseBody
     public  String getYbyNotify(String xAction,String xParam,String xSign)
     {
+        Logs logs=new Logs();
+        logs.setCreatetime(new Date());
+        logs.setOptype(1);
+        logs.setUserid(new Long(1));
+        logs.setOpobj("2");
+        logs.setOpremake("xAction数据:"+xAction+",xParam数据:"+xParam+",xSign数据:"+xSign);
+        logsMapper.insert(logs);
+        System.out.print("xAction数据:"+xAction+",xParam数据:"+xParam+",xSign数据:"+xSign);
+
         Md5_UrlEncode md5_urlEncode=new Md5_UrlEncode();
       //api编号
         String apiToken="91A684A075E4EEFB359C08059B9677F5";
@@ -58,27 +72,34 @@ public class ybyNotifyController extends  BaseController{
             String BusinessType=json.get("BusinessType").toString();//任务类型
 
 
-            String TaskId=json1.get("TaskId").toString();//任务编号
-            String RankFirst=json1.get("RankFirst").toString();//初排
-            String RankLast=json1.get("RankLast").toString();//新排
-            if(RankFirst==null||"".equals(RankFirst)||RankLast==null||"".equals(RankLast))
-            {
-                System.out.print("排名出错:"+xParam);
-                return "排名出错";
+                String TaskId=json1.get("TaskId").toString();//任务编号
+                String RankFirst=json1.get("RankFirst").toString();//初排
+                String RankLast=json1.get("RankLast").toString();//新排
+                if(RankFirst==null||"".equals(RankFirst)||RankLast==null||"".equals(RankLast))
+                {
+                    System.out.print("排名出错:"+xParam);
+                    return "排名出错";
 
+                }
+
+                int a= rankingUpdateService.updateRanking(Integer.parseInt(TaskId),Integer.parseInt(RankLast),Integer.parseInt(RankFirst));
+                if(a==1)
+                {
+                    return "1";
+                }
+                else if(a==0)
+                {
+                    return "1";
+                }
+                else
+                {
+                    return "数据更新失败";
+                }
             }
 
-              int a= rankingUpdateService.updateRanking(Integer.parseInt(TaskId),Integer.parseInt(RankLast),Integer.parseInt(RankFirst));
-            if(a==1)
-            {
-                return "1";
-            }
-            else
-            {
-                return "数据更新失败";
-            }
 
-        }
+
+
         else
         {
             System.out.print("对比错误");

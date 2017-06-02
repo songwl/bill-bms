@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface BillOptimizationMapper {
     int deleteByPrimaryKey(Long id);
-
+    int deleteByBillId(Long id);
     int insert(BillOptimization record);
 
     int insertSelective(BillOptimization record);

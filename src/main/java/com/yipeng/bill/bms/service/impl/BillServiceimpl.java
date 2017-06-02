@@ -68,6 +68,8 @@ public class BillServiceimpl implements BillService {
     private ForbiddenWordsMapper forbiddenWordsMapper;
     @Autowired
     private  FundAccountMapper fundAccountMapper;
+    @Autowired
+     private  BillOptimizationMapper billOptimizationMapper;
     Md5_UrlEncode md5_urlEncode=new Md5_UrlEncode();
     /**
      * 相同价导入
@@ -534,7 +536,7 @@ public class BillServiceimpl implements BillService {
         String[] price=params.get("price");
         String[] price1=params.get("price1");
         String[] price2=params.get("price2");
-        String[] price3=params.get("price3");
+       String[] price3=params.get("price3");
         String[] rankend=params.get("rankend");
         String[] rankend1=params.get("rankend1");
         String[] rankend2=params.get("rankend2");
@@ -547,7 +549,16 @@ public class BillServiceimpl implements BillService {
             //查询单价对象
             BillPrice billPrice=new BillPrice();
             billPrice.setBillId(billId);
-            billPrice.setInMemberId(loginUser.getId());
+            //判断当前登录对象
+            if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+            {
+                billPrice.setInMemberId(loginUser.getId());
+            }
+            else if (loginUser.hasRole("COMMISSIONER"))
+            {
+                billPrice.setInMemberId(loginUser.getCreateUserId());
+            }
+
            List<BillPrice> billPriceList=billPriceMapper.selectByBillPrice(billPrice);
            //判断对象是否为空
             if(!CollectionUtils.isEmpty(billPriceList))
@@ -583,7 +594,16 @@ public class BillServiceimpl implements BillService {
                         billPriceInsert1.setBillRankingStandard(Long.parseLong(rankend1[0]));
                         billPriceInsert1.setPrice(new BigDecimal(price1[0]));
                         billPriceInsert1.setBillId(billId);
-                        billPriceInsert1.setInMemberId(loginUser.getId());
+                        //判断当前登录对象
+                        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+                        {
+                            billPriceInsert1.setInMemberId(loginUser.getId());
+                        }
+                        else if (loginUser.hasRole("COMMISSIONER"))
+                        {
+                            billPriceInsert1.setInMemberId(loginUser.getCreateUserId());
+                        }
+
                         billPriceInsert1.setOutMemberId(billPriceList.get(0).getOutMemberId());
                         billPriceInsert1.setCreateTime(new Date());
                         //修改数据库
@@ -612,7 +632,15 @@ public class BillServiceimpl implements BillService {
                         billPriceInsert3.setBillRankingStandard(Long.parseLong(rankend2[0]));
                         billPriceInsert3.setPrice(new BigDecimal(price2[0]));
                         billPriceInsert3.setBillId(billId);
-                        billPriceInsert3.setInMemberId(loginUser.getId());
+                        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+                        {
+                            billPriceInsert3.setInMemberId(loginUser.getId());
+                        }
+                        else if (loginUser.hasRole("COMMISSIONER"))
+                        {
+                            billPriceInsert3.setInMemberId(loginUser.getCreateUserId());
+                        }
+
                         billPriceInsert3.setOutMemberId(billPriceList.get(0).getOutMemberId());
                         billPriceInsert3.setCreateTime(new Date());
                         //修改数据库
@@ -641,7 +669,15 @@ public class BillServiceimpl implements BillService {
                         billPriceInsert5.setBillRankingStandard(Long.parseLong(rankend3[0]));
                         billPriceInsert5.setPrice(new BigDecimal(price3[0]));
                         billPriceInsert5.setBillId(billId);
-                        billPriceInsert5.setInMemberId(loginUser.getId());
+                        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+                        {
+                            billPriceInsert5.setInMemberId(loginUser.getId());
+                        }
+                        else if (loginUser.hasRole("COMMISSIONER"))
+                        {
+                            billPrice.setInMemberId(loginUser.getCreateUserId());
+                        }
+
                         billPriceInsert5.setOutMemberId(billPriceList.get(0).getOutMemberId());
                         billPriceInsert5.setCreateTime(new Date());
                         //修改数据库
@@ -1638,6 +1674,28 @@ public class BillServiceimpl implements BillService {
         }
         return 0;
     }
+    /**
+     * 删除订单
+     * @param params
+     * @param user
+     * @return
+     */
+    @Override
+    public int deleteBill(Map<String, String[]> params, LoginUser user) {
+        String[] checkboxLength=params.get("length");
+        int  length=Integer.parseInt(checkboxLength[0]);
+        for(int i=0;i<length;i++)
+        {
+            String[] id=params.get("selectContent["+i+"][id]");
+            billSearchSupportMapper.deleteByBillId(Long.parseLong(id[0]));
+            billPriceMapper.deleteByBillId(Long.parseLong(id[0]));
+            billCostMapper.deleteByBillId(Long.parseLong(id[0]));
+            billOptimizationMapper.deleteByBillId(Long.parseLong(id[0]));
+            billMapper.deleteByPrimaryKey(Long.parseLong(id[0]));
+
+        }
+        return 0;
+    }
 
     /**
      * 获取价格
@@ -2374,8 +2432,48 @@ public class BillServiceimpl implements BillService {
         {
             yAxis="9100,9200,9300,9400,9500,9600,9700,9800,9900,10000";
         }
+        else if(max<=11000&&max>10000)
+        {
+            yAxis="10100,10200,10300,10400,10500,10600,10700,10800,10900,11000";
+        }
 
+        else if(max<=12000&&max>11000)
+        {
+            yAxis="11100,11200,11300,11400,11500,11600,11700,11800,11900,12000";
+        }
+        else if(max<=13000&&max>12000)
+        {
+            yAxis="12100,12200,12300,12400,12500,12600,12700,12800,12900,13000";
+        }
 
+        else if(max<=14000&&max>13000)
+        {
+            yAxis="13100,13200,13300,13400,13500,13600,13700,13800,13900,14000";
+        }
+        else if(max<=15000&&max>14000)
+        {
+            yAxis="14100,14200,14300,14400,14500,14600,14700,14800,14900,15000";
+        }
+        else if(max<=16000&&max>15000)
+        {
+            yAxis="15100,15200,15300,15400,15500,15600,15700,15800,15900,16000";
+        }
+        else if(max<=17000&&max>16000)
+        {
+            yAxis="16100,16200,16300,16400,16500,16600,16700,16800,16900,17000";
+        }
+        else if(max<=18000&&max>17000)
+        {
+            yAxis="17100,17200,17300,17400,17500,17600,17700,17800,17900,18000";
+        }
+        else if(max<=19000&&max>18000)
+        {
+            yAxis="18100,18200,18300,18400,18500,18600,18700,18800,18900,19000";
+        }
+        else if(max<=20000&&max>19000)
+        {
+            yAxis="19100,19200,19300,19400,19500,19600,19700,19800,19900,20000";
+        }
 
 
 

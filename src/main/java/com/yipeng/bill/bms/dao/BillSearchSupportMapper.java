@@ -4,7 +4,7 @@ import com.yipeng.bill.bms.domain.BillSearchSupport;
 
 public interface BillSearchSupportMapper {
     int deleteByPrimaryKey(Long id);
-
+    int deleteByBillId(Long id);
     int insert(BillSearchSupport record);
 
     int insertSelective(BillSearchSupport record);

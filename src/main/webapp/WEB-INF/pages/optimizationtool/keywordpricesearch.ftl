@@ -55,35 +55,35 @@
                                     </div>
                                     <div class="price_explanation">
                                         <span class="price_anniu font20">批量查询</span>
-                                </div>
-                                <div class="hg10"></div>
-                                <div class="clear"></div>
-                                <div class="price_interest">
-                                    <div class="price_interest_head">查询结果</div>
-                                    <table width="750" id="biaoge2">
-                                        <tr>
-                                            <td colspan="2" style="width:16%;">关键词</td>
-                                            <td colspan="2" style="width:16%;">
-                                                <img src="/static/img/cxjg_img1.png" style="width:100px;" /></td>
-                                            <td colspan="2" style="width:16%;">
-                                                <img src="/static/img/cxjg_img3.png" style="width:100px;" /></td>
-                                            <td colspan="2" style="width:16%;">
-                                                <img src="/static/img/cxjg_img4.png" style="width:100px;" /></td>
-                                            <td colspan="2" style="width:16%;">
-                                                <img src="/static/img/cxjg_img5.png" style="width:100px;" /></td>
-                                            <td colspan="2" style="width:16%;">
-                                                <img src="/static/img/cxjg_img6.png" style="width:100px;" /></td>
-                                        </tr>
-                                        <tr>
+                                    </div>
+                                    <div class="hg10"></div>
+                                    <div class="clear"></div>
+                                    <div class="price_interest">
+                                        <div class="price_interest_head">查询结果</div>
+                                        <table width="750" id="biaoge2">
+                                            <tr>
+                                                <td colspan="2" style="width:16%;">关键词</td>
+                                                <td colspan="2" style="width:16%;">
+                                                    <img src="/static/img/cxjg_img1.png" style="width:100px;" /></td>
+                                                <td colspan="2" style="width:16%;">
+                                                    <img src="/static/img/cxjg_img3.png" style="width:100px;" /></td>
+                                                <td colspan="2" style="width:16%;">
+                                                    <img src="/static/img/cxjg_img4.png" style="width:100px;" /></td>
+                                                <td colspan="2" style="width:16%;">
+                                                    <img src="/static/img/cxjg_img5.png" style="width:100px;" /></td>
+                                                <td colspan="2" style="width:16%;">
+                                                    <img src="/static/img/cxjg_img6.png" style="width:100px;" /></td>
+                                            </tr>
+                                        <#--<tr>
                                             <td colspan="2"></td>
                                             <td colspan="2">元/月</td>
                                             <td colspan="2">元/月</td>
                                             <td colspan="2">元/月</td>
                                             <td colspan="2">元/月</td>
                                             <td colspan="2">元/月</td>
-                                        </tr>
-                                        <tbody id="t_body">
-                                        <tr>
+                                        </tr>-->
+                                            <tbody id="t_body">
+                                            <#--<tr>
                                             <td colspan="2">A</td>
                                             <td colspan="2"></td>
                                             <td colspan="2"></td>
@@ -108,12 +108,12 @@
                                             <td colspan="2"></td>
                                             <td colspan="2"></td>
                                             <td colspan="2"></td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                        </tr>-->
+                                            </tbody>
+                                        </table>
+                                    </div>
                             </li>
-                          </ul>
+                        </ul>
                     </div>
                 </div>
             </div>

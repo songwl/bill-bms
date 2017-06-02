@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yipeng.bill.bms.dao.KeywordsPriceMapper">
+  <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.KeywordsPrice">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="keywords" jdbcType="VARCHAR" property="keywords" />
+    <result column="baidu" jdbcType="VARCHAR" property="baidu" />
+    <result column="sougou" jdbcType="VARCHAR" property="sougou" />
+    <result column="sanliuling" jdbcType="VARCHAR" property="sanliuling" />
+    <result column="sjbaidu" jdbcType="VARCHAR" property="sjbaidu" />
+    <result column="shenma" jdbcType="VARCHAR" property="shenma" />
+    <result column="apiid" jdbcType="INTEGER" property="apiid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, keywords, baidu, sougou, sanliuling, sjbaidu, shenma, apiid
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from keywords_price
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from keywords_price
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.KeywordsPrice">
+    insert into keywords_price (id, keywords, baidu, 
+      sougou, sanliuling, sjbaidu, 
+      shenma, apiid)
+    values (#{id,jdbcType=BIGINT}, #{keywords,jdbcType=VARCHAR}, #{baidu,jdbcType=VARCHAR}, 
+      #{sougou,jdbcType=VARCHAR}, #{sanliuling,jdbcType=VARCHAR}, #{sjbaidu,jdbcType=VARCHAR}, 
+      #{shenma,jdbcType=VARCHAR}, #{apiid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.KeywordsPrice">
+    insert into keywords_price
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="keywords != null">
+        keywords,
+      </if>
+      <if test="baidu != null">
+        baidu,
+      </if>
+      <if test="sougou != null">
+        sougou,
+      </if>
+      <if test="sanliuling != null">
+        sanliuling,
+      </if>
+      <if test="sjbaidu != null">
+        sjbaidu,
+      </if>
+      <if test="shenma != null">
+        shenma,
+      </if>
+      <if test="apiid != null">
+        apiid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="keywords != null">
+        #{keywords,jdbcType=VARCHAR},
+      </if>
+      <if test="baidu != null">
+        #{baidu,jdbcType=VARCHAR},
+      </if>
+      <if test="sougou != null">
+        #{sougou,jdbcType=VARCHAR},
+      </if>
+      <if test="sanliuling != null">
+        #{sanliuling,jdbcType=VARCHAR},
+      </if>
+      <if test="sjbaidu != null">
+        #{sjbaidu,jdbcType=VARCHAR},
+      </if>
+      <if test="shenma != null">
+        #{shenma,jdbcType=VARCHAR},
+      </if>
+      <if test="apiid != null">
+        #{apiid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.KeywordsPrice">
+    update keywords_price
+    <set>
+      <if test="keywords != null">
+        keywords = #{keywords,jdbcType=VARCHAR},
+      </if>
+      <if test="baidu != null">
+        baidu = #{baidu,jdbcType=VARCHAR},
+      </if>
+      <if test="sougou != null">
+        sougou = #{sougou,jdbcType=VARCHAR},
+      </if>
+      <if test="sanliuling != null">
+        sanliuling = #{sanliuling,jdbcType=VARCHAR},
+      </if>
+      <if test="sjbaidu != null">
+        sjbaidu = #{sjbaidu,jdbcType=VARCHAR},
+      </if>
+      <if test="shenma != null">
+        shenma = #{shenma,jdbcType=VARCHAR},
+      </if>
+      <if test="apiid != null">
+        apiid = #{apiid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.KeywordsPrice">
+    update keywords_price
+    set keywords = #{keywords,jdbcType=VARCHAR},
+      baidu = #{baidu,jdbcType=VARCHAR},
+      sougou = #{sougou,jdbcType=VARCHAR},
+      sanliuling = #{sanliuling,jdbcType=VARCHAR},
+      sjbaidu = #{sjbaidu,jdbcType=VARCHAR},
+      shenma = #{shenma,jdbcType=VARCHAR},
+      apiid = #{apiid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByword"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from keywords_price
+    where 1=2 or keywords in
+    <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+      (#{item})
+    </foreach>
+
+  </select>
+</mapper>

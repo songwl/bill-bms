@@ -353,3 +353,16 @@ CREATE TABLE `t_bill_distributor_statistics` (
   `update_user_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='渠道商统计表';
+
+CREATE TABLE `keywords_price` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `keywords` varchar(255) NOT NULL,
+  `baidu` varchar(255) DEFAULT NULL,
+  `sougou` varchar(255) DEFAULT NULL,
+  `sanliuling` varchar(255) DEFAULT NULL,
+  `sjbaidu` varchar(255) DEFAULT NULL,
+  `shenma` varchar(255) DEFAULT NULL,
+  `apiid` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `weiyi` (`keywords`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8;

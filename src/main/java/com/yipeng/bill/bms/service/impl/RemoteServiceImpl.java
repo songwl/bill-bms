@@ -56,6 +56,19 @@ public class RemoteServiceImpl implements RemoteService {
 
         return result;
     }
+
+    @Override
+    public String getPriceApiId(Map<String, String> params) {
+        String result="";
+        try {
+            result=send(url,params,"UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        return result;
+    }
    //导入优帮云订单
     @Override
     public CustomerOptimizationResult getOptimizationApi(Map<String, String> params) {

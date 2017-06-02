@@ -1,13 +1,17 @@
 package com.yipeng.bill.bms.web;
 
+import com.yipeng.bill.bms.core.model.ResultMessage;
+import com.yipeng.bill.bms.domain.KeywordsPrice;
 import com.yipeng.bill.bms.service.OptimizationToolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/5/25.
@@ -29,11 +33,11 @@ public class OptimizationToolController extends  BaseController{
     }
 
     @RequestMapping(value="/keywordpricesearchClick",method = RequestMethod.POST)
-    public  String keywordpricesearchClick(HttpServletRequest request,@RequestParam(required = true) String keywords)
+    @ResponseBody
+    public ResultMessage keywordpricesearchClick(HttpServletRequest request, @RequestParam(required = true) String keywords)
     {
-          optimizationToolService.forbiddenWordsList(keywords);
+        List<KeywordsPrice> list=optimizationToolService.forbiddenWordsList(keywords);
 
-        return "/optimizationtool/keywordpricesearch";
+        return this.ajaxDone(1,"",list);
     }
-
 }

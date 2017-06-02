@@ -82,9 +82,7 @@ public class ybyNotifyController extends BaseController {
                 int a = rankingUpdateService.updateKeywords(json1);
                 if (a == 1) {
                     return "1";
-                } else if (a == 0) {
-                    return "1";
-                } else {
+                }  else {
                     return "修改失败";
                 }
 

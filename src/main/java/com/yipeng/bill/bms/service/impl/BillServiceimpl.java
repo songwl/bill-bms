@@ -173,10 +173,23 @@ public class BillServiceimpl implements BillService {
                             //查询每个订单对应的搜索引擎名
                             BillSearchSupport billSearchSupport = billSearchSupportMapper.selectByBillId(bill.getId());
                             if (billSearchSupport.getSearchSupport().equals(search[0])) {
-                                bool = false;
-                                errorDetails += +(i + 1) + "网址：" + urls[i] + "  关键词：" + keywords[i] + "已存在！  ";
+                                //判断当前登录对象单价表里是否有对应的记录
+                                BillPrice billPrice=new BillPrice();
+                                billPrice.setBillId(bill.getId());
+                                billPrice.setOutMemberId(Long.parseLong(customerId[0]));
+                                List<BillPrice> billPriceList=  billPriceMapper.selectByBillPrice(billPrice);
+                                //如果当前价格存在
+                                if(!CollectionUtils.isEmpty(billPriceList))
+                                {
+                                    bool = false;
+                                    errorDetails += +(i + 1) + "网址：" + urls[i] + "  关键词：" + keywords[i] + "已存在！  ";
+                                    break;
+                                }
+
 
                             }
+
+
                         }
 
                         if (bool) {
@@ -291,9 +304,17 @@ public class BillServiceimpl implements BillService {
                             BillSearchSupport billSearchSupport=billSearchSupportMapper.selectByBillId(bill.getId());
                             if (billSearchSupport.getSearchSupport().equals(dfsearch[0]))
                             {
-                                bool=false;
-                                errorDetails+=+(i+1)+"网址："+dfurls[i]+"  关键词："+dfkeywords[i]+"已存在！ ";
-                                break;
+                                //判断当前登录对象单价表里是否有对应的记录
+                                BillPrice billPrice=new BillPrice();
+                                billPrice.setBillId(bill.getId());
+                                billPrice.setOutMemberId(Long.parseLong(customerId[0]));
+                                List<BillPrice> billPriceList=  billPriceMapper.selectByBillPrice(billPrice);
+                                //如果当前价格存在
+                                if(!CollectionUtils.isEmpty(billPriceList)) {
+                                    bool = false;
+                                    errorDetails += +(i + 1) + "网址：" + dfurls[i] + "  关键词：" + dfkeywords[i] + "已存在！ ";
+                                    break;
+                                }
                             }
                         }
                         if(bool)
@@ -858,7 +879,7 @@ public class BillServiceimpl implements BillService {
 
                 String[] qurl = {billA.getWebsite()};
                 //组合参数
-                int[] timeSet = { 7,12,15 };
+                int[] timeSet = { 7,15 };
                 JSONObject jsonObj = new JSONObject();
                 jsonObj.put("keyword", qkeyword);
                 jsonObj.put("url", qurl);

@@ -18,7 +18,7 @@
         </property>
         <property name="cronExpression">
           <!-- <value>0 */1 * * * ?</value>-->
-        <value>0 25 9,16 * * ? </value>  <!-- : 每天9:30和16:30分执行任务-->
+        <value>0 15 9,18 * * ? </value>  <!-- : 每天9:30和16:30分执行任务-->
         </property>
     </bean>
     <!--查询初始排名-->

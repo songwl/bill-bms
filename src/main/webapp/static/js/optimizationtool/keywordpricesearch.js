@@ -6,7 +6,8 @@ var clock;
 $(".price_explanation").click(function () {
     keywords = $.trim($("#tKeywordMulti").val());
     clickff();
-    clock = setInterval(clickff, 5000);
+    window.clearInterval(clock);
+    clock = setInterval(clickff, 3000);
 });
 
 function clickff() {
@@ -25,7 +26,9 @@ function clickff() {
             }
             var str = "";
             var flag = true;
+            var strr = "";
             $.each(result.data, function (index, item) {
+                strr += item.keywords + "\n";
                 str += "<tr>";
                 str += "<td colspan=\"2\">" + item.keywords + "</td>";
                 str += item.pricebaidupc == null ? "<td colspan=\"2\"><img src='/static/img/loading.gif'/></td>" : item.pricebaidupc == 0 ? "<td colspan=\"2\">暂无结果</td>" : "<td colspan=\"2\">" + item.pricebaidupc + "元/天</td>";
@@ -39,6 +42,8 @@ function clickff() {
                 }
             });
             $("#t_body").empty().append(str);
+            strr = strr.substr(0, strr.length - 1);
+            $("#tKeywordMulti").val(strr);
             if (flag) {
                 window.clearInterval(clock);
             }

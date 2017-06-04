@@ -117,6 +117,14 @@ var TableInit = function () {
                 },
 
                 {
+                    field: 'searchName',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '搜索引擎',
+
+                },
+
+                {
                     field: 'newRanking',
                     align: 'center',
                     valign: 'middle',
@@ -130,6 +138,12 @@ var TableInit = function () {
                     title: '新增排名',
                     width:100,
                     visible:false
+                },
+                {
+                    field: 'userName',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '客户',
                 },
 
             ],

@@ -214,6 +214,9 @@
     <if test="searchName != null">
       AND  d.search_support= #{searchName,jdbcType=VARCHAR}
     </if>
+    <if test="billAscription != null">
+      AND  a.bill_ascription= #{billAscription,jdbcType=BIGINT}
+    </if>
   </select>
 
   <select id="selectByOutmemberList"  resultMap="BaseResultMap">

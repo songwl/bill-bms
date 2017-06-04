@@ -8,6 +8,8 @@
 <script src="${ctx}/static/js/bill/billListchangePrice.js"></script>
 <script src="${ctx}/static/js/bill/billListsamePrice.js"></script>
 <script src="${ctx}/static/js/bill/billDiffrentPrice.js"></script>
+<script src="${ctx}/static/js/My97DatePicker/WdatePicker.js"></script>
+
 <div class="Navs">
     <div class="nav_L left">
         <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>关键词排名</span>
@@ -32,7 +34,7 @@
     <div class="cls">
     </div>
 </div>
-<div class="Navs2">
+<div class="Navs2" style="height: 105px;">
 
     <div class="nav_R2 right" >
         <div>
@@ -75,6 +77,17 @@
 
         </select>
         <input type="hidden" value="2" id="searchStatechange">
+
+    </div>
+    <div class="nav_R2 right" >
+        <div style="width:70px;text-align: left;">
+           达标天数
+        </div>
+        <input id="standardDays" name="standardDays" class="form-control" value="" style="width: 50px;" type="text" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
+        <div style="width:80px;text-align: left;margin-left: 10px;">
+            增加时间:
+        </div>
+        <input onFocus="WdatePicker({lang:'zh-tw',readOnly:true})" id="addTime"  />
         <span id="searchButton">查询</span>
     </div>
 

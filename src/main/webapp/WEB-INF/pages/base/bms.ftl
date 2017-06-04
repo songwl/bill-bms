@@ -196,13 +196,13 @@
                                 </li>
                                 <li>
                                     <a href="${ctx}/order/billOptimizationSettlement">
-                                        优化结算
+                                        优化方结算
                                     </a>
                                 </li>
 
                                 <li>
                                     <a href="${ctx}/order/billApplyStop">
-                                        停单待审核列表
+                                        停单待审核
                                     </a>
                                 </li>
                             </ul>
@@ -264,7 +264,7 @@
                                 </li>
                                 <li>
                                     <a href="${ctx}/order/billApplyStop">
-                                        停单待审核列表
+                                        停单待审核
                                     </a>
                                 </li>
                             </ul>
@@ -442,7 +442,7 @@
                             </ul>
                         </li>
                     </#if>
-                    <#if bmsModel.user.hasRole("SUPER_ADMIN")>
+                    <#if bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("DISTRIBUTOR")>
                         <li class="" style="border-bottom: 1px solid #3d3d3d;">
                             <a href="javascript:;">
                                 <i class="fa fa-magnet"></i><span class="title"> 自定义桌面 </span><span class="arrow "></span>

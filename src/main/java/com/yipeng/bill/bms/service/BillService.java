@@ -75,6 +75,14 @@ public interface BillService {
     int OptimizationUpdate(Map<String, String[]>  params,LoginUser user);
 
     /**
+     * 订单切换
+     * @param params
+     * @param user
+     * @return
+     */
+    int billChangeCmt(Map<String, String[]>  params,LoginUser user);
+
+    /**
      * 优化停止(主订单状态)
      * @param params
      * @param user
@@ -127,7 +135,7 @@ public interface BillService {
      * @param loginUser
      * @return
      */
-    int uploadPrice(List<String[]> fileList,LoginUser loginUser);
+    String uploadPrice(List<String[]> fileList,LoginUser loginUser);
 
     /**
      * 优化结算

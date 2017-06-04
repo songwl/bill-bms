@@ -1,13 +1,7 @@
 package com.yipeng.bill.bms.service.impl;
 
-import com.yipeng.bill.bms.dao.BillCostMapper;
-import com.yipeng.bill.bms.dao.BillMapper;
-import com.yipeng.bill.bms.dao.BillPriceMapper;
-import com.yipeng.bill.bms.dao.UserMapper;
-import com.yipeng.bill.bms.domain.Bill;
-import com.yipeng.bill.bms.domain.BillCost;
-import com.yipeng.bill.bms.domain.BillPrice;
-import com.yipeng.bill.bms.domain.User;
+import com.yipeng.bill.bms.dao.*;
+import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.model.BillManageList;
 import com.yipeng.bill.bms.service.BillManageService;
 import com.yipeng.bill.bms.vo.BillDetails;
@@ -36,6 +30,10 @@ public class BillManageServiceImpl implements BillManageService {
     private UserMapper userMapper;
     @Autowired
     private BillCostMapper billCostMapper;
+    @Autowired
+    private BillSearchSupportMapper billSearchSupportMapper;
+
+
     /**
      * 管理员订单管理
      * @param params
@@ -333,6 +331,19 @@ public class BillManageServiceImpl implements BillManageService {
                      billDetails.setdisplayId(i);
                      billDetails.setWebsite(item.getWebsite());
                      billDetails.setKeywords(item.getKeywords());
+                     //获取搜索引擎
+                     BillSearchSupport billSearchSupport= billSearchSupportMapper.selectByBillId(item.getId());
+                     billDetails.setSearchName(billSearchSupport.getSearchSupport());
+                     //获取客户
+                     BillPrice billPrice=new BillPrice();
+                     billPrice.setInMemberId(loginUser.getId());
+                     billPrice.setBillId(item.getId());
+                     List<BillPrice> billPriceList= billPriceMapper.selectByBillPrice(billPrice);
+                     if(!CollectionUtils.isEmpty(billPriceList))
+                     {
+                         User user1=userMapper.selectByPrimaryKey(billPriceList.get(0).getOutMemberId());
+                         billDetails.setUserName(user1.getUserName());
+                     }
                      billDetails.setNewRanking(item.getNewRanking());
                      billDetails.setChangeRanking(item.getChangeRanking());
                      billDetailsList.add(billDetails);

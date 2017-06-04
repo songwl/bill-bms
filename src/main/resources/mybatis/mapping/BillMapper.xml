@@ -336,7 +336,7 @@
       AND keywords LIKE #{keywords,jdbcType=VARCHAR}
     </if>
     <if test="createTime != null">
-      AND create_time = #{createTime,jdbcType=TIMESTAMP}
+      AND a.create_time = #{createTime,jdbcType=TIMESTAMP}
     </if>
     <if test="updateTime != null">
       AND update_time = #{updateTime,jdbcType=TIMESTAMP}
@@ -410,7 +410,7 @@
       AND a.keywords LIKE CONCAT('%',#{keywords,jdbcType=VARCHAR},'%')
     </if>
     <if test="createTime != null">
-      AND a.create_time = #{createTime,jdbcType=TIMESTAMP}
+      AND a.create_time LIKE CONCAT('%',#{createTime,jdbcType=TIMESTAMP},'%')
     </if>
     <if test="updateTime != null">
       AND a.update_time = #{updateTime,jdbcType=TIMESTAMP}
@@ -546,7 +546,7 @@
       AND a.keywords LIKE CONCAT('%',#{keywords,jdbcType=VARCHAR},'%')
     </if>
     <if test="createTime != null">
-      AND a.create_time = #{createTime,jdbcType=TIMESTAMP}
+      AND a.create_time LIKE CONCAT('%',#{createTime,jdbcType=TIMESTAMP},'%')
     </if>
     <if test="updateTime != null">
       AND a.update_time = #{updateTime,jdbcType=TIMESTAMP}
@@ -654,8 +654,8 @@
     <if test="keywords != null">
       AND a.keywords LIKE CONCAT('%',#{keywords,jdbcType=VARCHAR},'%')
     </if>
-    <if test="createTime != null">
-      AND a.create_time = #{createTime,jdbcType=TIMESTAMP}
+    <if test="addTime  != null">
+      AND a.create_time LIKE CONCAT('%',#{addTime,jdbcType=TIMESTAMP},'%')
     </if>
     <if test="updateTime != null">
       AND a.update_time = #{updateTime,jdbcType=TIMESTAMP}
@@ -717,6 +717,35 @@
     <if test="searchStandard != null">
       AND a.new_ranking &lt;= b.bill_ranking_standard
     </if>
+    <if test="sortName != null">
+      <if test="sortName =='userName'">
+        ORDER BY e.user_name ${sortOrder}
+      </if>
+      <if test="sortName =='keywords'">
+        ORDER BY a.keywords ${sortOrder}
+      </if>
+      <if test="sortName =='website'">
+        ORDER BY a.website ${sortOrder}
+      </if>
+      <if test="sortName =='searchName'">
+        ORDER BY d.search_support ${sortOrder}
+      </if>
+      <if test="sortName =='createTime'">
+        ORDER BY a.create_time ${sortOrder}
+      </if>
+      <if test="sortName =='firstRanking'">
+        ORDER BY a.first_ranking ${sortOrder}
+      </if>
+      <if test="sortName =='newRanking'">
+        ORDER BY a.new_ranking ${sortOrder}
+      </if>
+      <if test="sortName =='standardDays'">
+        ORDER BY a.standard_days ${sortOrder}
+      </if>
+      <if test="sortName =='state'">
+        ORDER BY a.state ${sortOrder}
+      </if>
+    </if>
     limit #{offset},#{limit}
   </select>
   <select id="selectByCustomerIdCount"  resultType="java.lang.Long">
@@ -730,8 +759,8 @@
     <if test="keywords != null">
       AND a.keywords LIKE #{keywords,jdbcType=VARCHAR}
     </if>
-    <if test="createTime != null">
-      AND a.create_time = #{createTime,jdbcType=TIMESTAMP}
+    <if test="addTime != null">
+      AND a.create_time LIKE CONCAT('%',#{addTime,jdbcType=TIMESTAMP},'%')
     </if>
     <if test="updateTime != null">
       AND a.update_time = #{updateTime,jdbcType=TIMESTAMP}
@@ -820,7 +849,7 @@
       AND a.keywords LIKE CONCAT('%',#{keywords,jdbcType=VARCHAR},'%')
     </if>
     <if test="createTime != null">
-      AND a.create_time = #{createTime,jdbcType=TIMESTAMP}
+      AND a.create_time LIKE CONCAT('%',#{createTime,jdbcType=TIMESTAMP},'%')
     </if>
     <if test="updateTime != null">
       AND a.update_time = #{updateTime,jdbcType=TIMESTAMP}
@@ -1762,6 +1791,9 @@
     <if test="searchName != null">
       AND  d.search_support= #{searchName,jdbcType=VARCHAR}
     </if>
+    <if test="billAscription != null">
+      AND  a.bill_ascription= #{billAscription,jdbcType=BIGINT}
+    </if>
   </select>
   <select id="selectBillDabiaoCount"  resultType="java.lang.Integer">
     SELECT COUNT(DISTINCT a.id) FROM t_bill as a,t_bill_price as b
@@ -1773,4 +1805,5 @@
     SELECT MAX(bill_ranking_standard) from t_bill_price where out_member_id= #{userId,jdbcType=BIGINT}
     )
   </select>
+
 </mapper>

@@ -24,7 +24,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">绑定域名</label>
                     <div class="col-sm-9">
-                        <input type="text" name="website" class="col-sm-10 form-control"   placeholder="域名">
+                        <input type="text" name="website" class="col-sm-10 form-control"   placeholder="绑定域名">
                     </div>
                 </div>
                 <div class="form-group">

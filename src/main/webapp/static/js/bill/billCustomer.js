@@ -8,7 +8,8 @@ var searchUserName=null;
 var searchState=2;
 var searchState2=null;
 var searchStandard=null;
-
+var standardDays=null;
+var addTime=null;
 $(document).ready(function () {
     //显示导入价格内容
     $(".Import").click(function (e) {
@@ -145,6 +146,22 @@ $(document).ready(function () {
         else
         {
             searchStandard=null;
+        }
+        if($("#standardDays").val()!="")
+        {
+            standardDays=$("#standardDays").val();
+        }
+        else
+        {
+            standardDays=null;
+        }
+        if($("#addTime").val()!="")
+        {
+            addTime=$("#addTime").val();
+        }
+        else
+        {
+            addTime=null;
         }
         $('#myTable').bootstrapTable('refresh');
     });
@@ -542,6 +559,7 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '达标天',
+                    sortable: true,
 
                 },
                 {
@@ -597,7 +615,9 @@ var TableInit = function () {
             searchUserName:searchUserName,
             state:searchState,
             state2:searchState2,
-            searchStandard:searchStandard
+            searchStandard:searchStandard,
+            standardDays:standardDays,
+            addTime:addTime
 
         };
         return temp;

@@ -2,17 +2,13 @@
 <#import "/base/dict.ftl" as dict>
 
 <@base.html "关键词优化">
-<link href="${ctx}/static/css/public/bootstrap.min.css" rel="stylesheet">
-<link href="${ctx}/static/css/public/bootstrap-table.css" rel="stylesheet">
-<script src="${ctx}/static/js/public/jquery.js"></script>
-<script src="${ctx}/static/js/public/bootstrap.min.js"></script>
-<script src="${ctx}/static/js/public/bootstrap-table.js"></script>
-<script src="${ctx}/static/js/public/bootstrap-table-zh-CN.js"></script>
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
-<script src="${ctx}/static/js/public/pace.js"></script>
 <script src="${ctx}/static/js/bill/billList.js"></script>
 <script src="${ctx}/static/js/bill/billListchangePrice.js"></script>
 <script src="${ctx}/static/js/bill/billListsamePrice.js"></script>
+<script src="${ctx}/static/js/My97DatePicker/WdatePicker.js"></script>
+<script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
+
 <div class="Navs">
     <div class="nav_L left">
         <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>关键词排名</span>
@@ -33,6 +29,11 @@
                <span>&nbsp;<i class="fa fa-cny"></i>&nbsp;调价</span>
            </div>
        </#if>
+        <#if  bmsModel.user.hasRole("SUPER_ADMIN")>
+            <div id="billChangeClick">
+                <span>&nbsp;<i class="fa fa-users"></i>&nbsp;订单调换</span>
+            </div>
+        </#if>
         <#if  bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")>
             <div id="applyStopBill">
                 <span>&nbsp;<i class="fa fa-trash"></i>&nbsp;申请停单</span>
@@ -46,7 +47,7 @@
     <div class="cls">
     </div>
 </div>
-<div class="Navs2">
+<div class="Navs2" style="height: 105px;">
     <div class="nav_R2 right col-md-11" >
         <input type="hidden" name="type" value="${way}" id="way">
         <div>
@@ -92,10 +93,18 @@
             <option value="3">合作停</option>
         </select>
          <input type="hidden" value="2" id="searchStatechange">
+
+    </div>
+    <div class="nav_R2 right" >
+        <div style="width:70px;text-align: left;">
+            达标天数
+        </div>
+        <input id="standardDays" name="standardDays" class="form-control" value="" style="width: 50px;" type="text" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
+        <div style="width:80px;">
+            增加时间:
+        </div>
+        <input onFocus="WdatePicker({lang:'zh-tw',readOnly:true})" id="createTime"  />
         <span id="searchButton">查询</span>
-
-
-
     </div>
     <div class="cls">
     </div>
@@ -283,10 +292,46 @@
             </div>
         </div>
     </div>
+
+
+<!--订单切换-->
+<div class="bootbox modal in billChangeDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="bootbox-close-button close">×</button>
+                <h4 class="modal-title">订单调换</h4>
+            </div>
+            <div class="modal-body" style="max-height: 374px;">
+                <div class="bootbox-body">
+                    <style type="text/css">
+                        .modal-dialog {
+                            width: 400px;
+                        }
+                    </style>
+                    <form class="form-horizontal row-border" id="edt-form" action="#" novalidate="novalidate">
+                        <div class="form-group">
+                            <div style="margin-left:15px;" class="Amount">操作员列表：</div>
+                            <div style="margin-left:10px;margin-top: 10px;">
+                               <select id="selectlist"></select>
+                            </div>
+                        </div>
+                        <input type="hidden" value="" id="customerId">
+                    </form>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button data-bb-handler="success" type="button" class="btn wzgj-blue billChangecmt" >确定</button>
+                <button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="pload" style="position:absolute;top:45%;left: 50%; z-index:2200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none;"></div>
-    <#if  bmsModel.user.hasRole("SUPER_ADMIN")>
+    <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("COMMISSIONER")>
 <form id= "uploadForm" enctype="multipart/form-data">
-    <p >上传文件： <input type="file" name="file"/></ p>
+    <p >上传文件： <input type="file" name="file"/></p>
     <input type="button" value="上传" onclick="doUpload()" />
 </form>
 <script>

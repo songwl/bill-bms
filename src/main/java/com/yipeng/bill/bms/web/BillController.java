@@ -247,8 +247,6 @@ public class BillController extends BaseController {
         } else {
             return this.ajaxDoneError("未登录");
         }
-
-
     }
 
     /**
@@ -298,7 +296,7 @@ public class BillController extends BaseController {
     @ResponseBody
     public Map<String, Object> getBillDetails(int limit, int offset, int way, String sortOrder, String sortName,
                                               String website, String keywords, String searchName, String searchUserName,
-                                              String state, String state2, String searchStandard) throws UnsupportedEncodingException {
+                                              String state, String state2, String searchStandard,String standardDays,String createTime) throws UnsupportedEncodingException {
         offset = (offset - 1) * limit;
         Map<String, Object> params = this.getSearchRequest(); //查询参数
         LoginUser loginUser = this.getCurrentAccount();
@@ -335,6 +333,12 @@ public class BillController extends BaseController {
         if (!searchStandard.isEmpty()) {
             params.put("searchStandard", searchStandard);
         }
+        if (!standardDays.isEmpty()) {
+            params.put("standardDays", standardDays);
+        }
+        if (!createTime.isEmpty()) {
+            params.put("createTime", createTime);
+        }
         if (sortName != null) {
             params.put("sortName", sortName);
             params.put("sortOrder", sortOrder);
@@ -361,7 +365,7 @@ public class BillController extends BaseController {
     @ResponseBody
     public Map<String, Object> getCustomerBill(int limit, int offset, String sortOrder, String sortName,
                                                String website, String keywords, String searchName, String searchUserName,
-                                               String state, String state2, String searchStandard) {
+                                               String state, String state2, String searchStandard,String standardDays,String addTime) {
         LoginUser user = this.getCurrentAccount();
         int way;
         if (user.hasRole("DISTRIBUTOR")) {
@@ -402,6 +406,12 @@ public class BillController extends BaseController {
         }
         if (!searchStandard.isEmpty()) {
             params.put("searchStandard", searchStandard);
+        }
+        if (!standardDays.isEmpty()) {
+            params.put("standardDays", standardDays);
+        }
+        if (!addTime.isEmpty()) {
+            params.put("addTime", addTime);
         }
         if (sortName != null) {
             params.put("sortName", sortName);
@@ -965,6 +975,43 @@ public class BillController extends BaseController {
 
     }
 
+    /**
+     * 订单切换 （获取操作员列表）    *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/getAllUsers")
+    @ResponseBody
+    public List<User> getAllUsers() {
+        Map<String,Long> params=new HashMap<>();
+        Long role=new Long(3);
+        params.put("role",role);
+        List<User> userList=userService.getUserAll(params);
+        return userList;
+
+    }
+    /**
+     * 订单切换确认
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/billChangeCmt")
+    @ResponseBody
+    public ResultMessage billChangeCmt(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap();
+        LoginUser user = this.getCurrentAccount();
+        if (user != null) {
+
+            int a = billService.billChangeCmt(params, user);
+            return this.ajaxDoneSuccess("调整成功");
+
+        } else {
+            return this.ajaxDoneError("未登录");
+        }
+
+    }
+
     //导出excel(实例)
     @RequestMapping(value = "/export.controller")
     public void export(String ids, HttpServletResponse response) throws IOException {
@@ -1027,12 +1074,12 @@ public class BillController extends BaseController {
         if(fileList.size()>0)
         {
             try{
-                int a=billService.uploadPrice(fileList,loginUser);
-                return  ajaxDoneSuccess("成功更新"+a+"条记录！");
+                String aa=billService.uploadPrice(fileList,loginUser);
+                return  ajaxDoneSuccess(aa);
             }
             catch (Exception e)
             {
-                return   ajaxDoneError("未知错误！");
+                return   ajaxDoneError("错误："+e.getMessage());
             }
 
         }

@@ -36,12 +36,16 @@ public class RankingUpdateServiceImpl implements RankingUpdateService {
         //判断是否为空
         if (!CollectionUtils.isEmpty(billList))
         {
-            //更新排名
-            Bill bill=new Bill();
-            bill.setId(billList.get(0).getId());
-            bill.setNewRanking(RankLast);
-            bill.setFirstRanking(RankFirst);
-            billMapper.updateByPrimaryKeySelective(bill);
+            for (Bill item:billList
+                 ) {
+                //更新排名
+                Bill bill=new Bill();
+                bill.setId(item.getId());
+                bill.setNewRanking(RankLast);
+                bill.setFirstRanking(RankFirst);
+                billMapper.updateByPrimaryKeySelective(bill);
+
+            }
 
             return 1;
         }

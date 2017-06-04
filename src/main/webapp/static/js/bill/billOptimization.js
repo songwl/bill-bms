@@ -382,15 +382,10 @@ var TableInit = function () {
                     title: '初排',
                     formatter:function (value,row,index) {
                         var a="";
-                        if(value>50)
-                        {
-                            a="<span>" +">50"+"</span>";
-                        }
-                        else
-                        {
+
 
                             a="<span>"+value+"</span>";
-                        }
+
                         return a;
                     }
                 },
@@ -406,15 +401,12 @@ var TableInit = function () {
                         {
                             a="<span style='color:#FF0000;font-weight: bold;'>" +value+"</span>";
                         }
-                        else if(value>50)
-                        {
-                            a="<span>" +">50"+"</span>";
-                        }
+
                         else
                         {
                             a="<span>" +value+"</span>";
                         }
-                        return a;
+                        return  a;
                     }
 
 

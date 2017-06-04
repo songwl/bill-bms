@@ -705,7 +705,7 @@ public class BillServiceimpl implements BillService {
                         billPriceMapper.insert(billPriceInsert5);
                     }
                 }
-                return 0;
+
             }
             else
             {
@@ -1531,6 +1531,32 @@ public class BillServiceimpl implements BillService {
         }
         return 0;
     }
+
+    @Override
+    public int billChangeCmt(Map<String, String[]> params, LoginUser user) {
+        String[] checkboxLength=params.get("length");
+        String[] caozuoyuan=params.get("caozuoyuan1");
+        int  length=Integer.parseInt(checkboxLength[0]);
+        String userName=caozuoyuan[0];
+        for(int i=0;i<length;i++) {
+            //获取订单ID
+            String[] id=params.get("selectContent["+i+"][id]");
+            Long  billId=Long.parseLong(id[0]);
+            //获取订单
+            Bill bill=billMapper.selectByPrimaryKey(billId);
+            //获取操作员ID
+            User user1=userMapper.selectByUserName(userName);
+
+            //修改订单的操作员
+            Bill newBill=new Bill();
+            newBill.setId(billId);
+            newBill.setBillAscription(user1.getId());
+            billMapper.updateByPrimaryKeySelective(newBill);
+        }
+
+        return 0;
+    }
+
     /**
      * 优化状态调整
      * @param params
@@ -1993,7 +2019,7 @@ public class BillServiceimpl implements BillService {
             if(user.hasRole("SUPER_ADMIN"))
             {
                 bill.setState(3);
-                bill.setApplyState(null);
+                bill.setApplyState(0);
             }
             else
             {
@@ -2038,6 +2064,15 @@ public class BillServiceimpl implements BillService {
         else
         {
             map.put("DayConsumption","0.00");
+        }
+        //昨日消费
+        Double yesterDayConsumption=yesterDayConsumption(params);
+        if(yesterDayConsumption!=null)
+        { map.put("yesterDayConsumption",yesterDayConsumption);
+        }
+        else
+        {
+            map.put("yesterDayConsumption","0.00");
         }
         //获取上一个月
         DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
@@ -2215,12 +2250,12 @@ public class BillServiceimpl implements BillService {
      * @return
      */
     @Override
-    public int uploadPrice(List<String[]> fileList, LoginUser loginUser) {
+    public String uploadPrice(List<String[]> fileList, LoginUser loginUser) {
       if (!CollectionUtils.isEmpty(fileList))
       {
           int updateCount=0;
           //循环EXCEL表格
-
+           String errorStr="";
           for (int i=0;i<fileList.size();i++)
           {
               //获取参数
@@ -2237,42 +2272,58 @@ public class BillServiceimpl implements BillService {
                params.put("keywords",keyword);
                params.put("website",website);
                params.put("searchName",searchName);
+               params.put("billAscription",loginUser.getId());
+
                //查询价格
                List<BillPrice> billPriceList=billPriceMapper.selectByBillPriceList(params);
-               Bill bill=billMapper.selectByBillByUpdateStandardDays(params);
-               if(!CollectionUtils.isEmpty(billPriceList)&&bill!=null)
-               {
-                   //修改价格
-                   BillPrice billPrice=new BillPrice();
-                   billPrice.setId(billPriceList.get(0).getId());
-                   billPrice.setPrice(price1);
-                   billPriceMapper.updateByPrimaryKeySelective(billPrice);
-                   //修改达标天数
-                   bill.setStandardDays(standardDays);
-                   billMapper.updateByPrimaryKeySelective(bill);
+               List<Bill> bill=billMapper.selectByBillByUpdateStandardDays(params);
 
-                   //判断第二个价格是否存在
-                   if (!price2.equals(BigDecimal.ZERO))
+               if(!CollectionUtils.isEmpty(billPriceList)&&bill!=null&&!CollectionUtils.isEmpty(bill))
+               {
+                   if(bill.size()==1)
                    {
-                       if (billPriceList.size()==1)
+                       //修改价格
+                       BillPrice billPrice=new BillPrice();
+                       billPrice.setId(billPriceList.get(0).getId());
+                       billPrice.setPrice(price1);
+                       billPriceMapper.updateByPrimaryKeySelective(billPrice);
+                       //修改达标天数
+                       bill.get(0).setStandardDays(standardDays);
+                       billMapper.updateByPrimaryKeySelective(bill.get(0));
+
+                       //判断第二个价格是否存在
+                       if (!price2.equals(BigDecimal.ZERO))
                        {
-                           BillPrice billPrice1=new BillPrice();
-                           billPrice1.setBillId(billPriceList.get(0).getBillId());
-                           billPrice1.setInMemberId(billPriceList.get(0).getInMemberId());
-                           billPrice1.setOutMemberId(billPriceList.get(0).getOutMemberId());
-                           billPrice1.setPrice(price2);
-                           billPrice1.setCreateTime(new Date());
-                           billPrice1.setBillRankingStandard(new Long(20));
-                           billPriceMapper.insert(billPrice1);
+                           if (billPriceList.size()==1)
+                           {
+                               BillPrice billPrice1=new BillPrice();
+                               billPrice1.setBillId(billPriceList.get(0).getBillId());
+                               billPrice1.setInMemberId(billPriceList.get(0).getInMemberId());
+                               billPrice1.setOutMemberId(billPriceList.get(0).getOutMemberId());
+                               billPrice1.setPrice(price2);
+                               billPrice1.setCreateTime(new Date());
+                               billPrice1.setBillRankingStandard(new Long(20));
+                               billPriceMapper.insert(billPrice1);
+                           }
                        }
-                   }
                        updateCount++;
+                   }
+                   else
+                   {
+                       errorStr+="关键词："+keyword+","+"网址："+website+"，有重复订单。";
+                       continue;
+                   }
+
+               }
+               else
+               {
+                   errorStr+="关键词："+keyword+","+"网址："+website+"，格式不正确（网址末尾或缺少/）";
                }
 
           }
-          return updateCount;
+          return errorStr+"成功更新："+updateCount+"条记录。";
       }
-        return 0;
+        return null;
 
 
     }
@@ -2310,6 +2361,20 @@ public class BillServiceimpl implements BillService {
         params.put("year",now.get(Calendar.YEAR));
         params.put("month",now.get(Calendar.MONTH)+1);
         params.put("day",now.get(Calendar.DATE));
+        Double sum=billCostMapper.MonthConsumption(params);
+        return sum;
+    }
+
+    //昨日消费
+    public  Double yesterDayConsumption(Map<String, Object> params)
+    {
+        Date date=new Date();//取时间
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        calendar.add(calendar.DATE,-1);//把日期往后增加一天.整数往后推,负数往前移动
+        params.put("year",calendar.get(Calendar.YEAR));
+        params.put("month",calendar.get(Calendar.MONTH)+1);
+        params.put("day",calendar.get(Calendar.DATE));
         Double sum=billCostMapper.MonthConsumption(params);
         return sum;
     }

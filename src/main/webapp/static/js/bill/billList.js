@@ -5,7 +5,8 @@ var searchUserName=null;
 var searchState=2;
 var searchState2=null;
 var searchStandard=null;
-
+var standardDays=null;
+var createTime=null;
 $(document).ready(function () {
     $(function () {
     if($("#way").val()==1)
@@ -24,6 +25,7 @@ $(document).ready(function () {
         $("#billCostDetail").hide();
         $(".changepriceDiv").slideUp();
         $(".billExamineDiv").slideUp();
+        $(".billChangeDiv").slideUp();
     })
     $(".cancel").click(function () {
 
@@ -31,6 +33,7 @@ $(document).ready(function () {
         $("#billCostDetail").hide();
         $(".changepriceDiv").slideUp();
         $(".billExamineDiv").slideUp();
+        $(".billChangeDiv").slideUp();
 
     })
     //显示搜索内容
@@ -62,8 +65,6 @@ $(document).ready(function () {
              searchState=3;
              searchState2=null;
          }
-
-
     })
     //复选框
     $("#btn_update").click(function () {
@@ -119,6 +120,23 @@ $(document).ready(function () {
         else
         {
             searchStandard=null;
+        }
+
+        if($("#standardDays").val()!="")//关键词
+        {
+            standardDays=$.trim($("#standardDays").val())
+        }
+        else
+        {
+            standardDays=null;
+        }
+        if($("#createTime").val()!="")//关键词
+        {
+            createTime=$.trim($("#createTime").val())
+        }
+        else
+        {
+            createTime=null;
         }
         $('#myTable').bootstrapTable('refresh');
     });
@@ -194,6 +212,7 @@ $(document).ready(function () {
         }
 
     })
+
 
     //调价确认
     $(".updatePricecmt").click(function () {
@@ -364,6 +383,63 @@ $(document).ready(function () {
         }
     })
 })
+//订单切换
+$("#billChangeClick").click(function () {
+    var selectContent = $('#myTable').bootstrapTable('getSelections');
+    if(selectContent == "") {
+        alert('请选择一列数据!');
+
+    }else {
+        $.ajax({
+            type:'get',
+            url:CTX+'/order/getAllUsers',
+            success:function (result) {
+                if(result!=null)
+                {
+                var str="";
+                $.each(result,function(index,item)
+                {
+                    str+="<option>"+item.userName+"</option>";
+                });
+                $("#selectlist").empty().append(str);
+                }
+            }
+
+        })
+
+        $(".billChangeDiv").slideDown();
+        $(".modal-backdrop").show();
+
+    }
+})
+//订单切换确认
+$(".billChangecmt").click(function () {
+    var selectContent = $('#myTable').bootstrapTable('getSelections');
+    var len =selectContent.length;
+    var caozuoyuan1=$("#selectlist  option:selected").val();
+
+    $.ajax({
+        type:"post",
+        url:CTX+"/order/billChangeCmt",
+        data:{ selectContent:selectContent,length:len,caozuoyuan1:caozuoyuan1},
+        success:function (result) {
+            if(result.code==200)
+            {
+                alert(result.message);
+                $('#myTable').bootstrapTable('refresh');
+                $(".billChangeDiv").slideUp();
+                $(".modal-backdrop").hide();
+            }
+            else
+            {
+                alert(result.message);
+            }
+        }
+
+    })
+})
+
+
 //申请停单
 $("#applyStopBill").click(function () {
     var selectContent = $('#myTable').bootstrapTable('getSelections');
@@ -428,6 +504,7 @@ var TableInit = function () {
             clickToSelect: true,                //是否启用点击选中行
             //height: 700,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
             uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+            showExport: true,  //是否显示导出
             exportDataType: "basic",
             rowStyle: function (row, index) {
                 //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
@@ -687,7 +764,9 @@ var TableInit = function () {
             searchUserName:searchUserName,
             state:searchState,
             state2:searchState2,
-            searchStandard:searchStandard
+            searchStandard:searchStandard,
+            standardDays:standardDays,
+            createTime:createTime
         };
         return temp;
     }

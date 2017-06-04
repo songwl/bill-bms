@@ -169,7 +169,7 @@ var TableInit = function () {
                     title: '状态',
                     formatter:function (value,row,index) {
                         var  a="<span style='color:#94b86e;'>待审核</span>";
-
+                        $("#length").html(row.length+"条记录");
                         return a;
                     }
                 },

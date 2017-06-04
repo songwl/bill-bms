@@ -436,6 +436,7 @@ public class BillServiceimpl implements BillService {
             params.put("roleId",4);
            //查询所有订单状态为1的
              List<Bill> billList=billMapper.selectByBillAudit(params);
+            Long total=billMapper.selectByBillAuditCount(params);
             for (Bill bill: billList
                  ) {
                 i++;
@@ -476,9 +477,10 @@ public class BillServiceimpl implements BillService {
                 //本月消费（缺）
                 billDetails.setStandardDays(bill.getStandardDays());
                 billDetails.setState(bill.getState());
+                billDetails.setLength(total);
                 billDetailsList.add(billDetails);
             }
-            Long total=billMapper.selectByBillAuditCount(params);
+
             Map<String,Object> map=new HashMap<>();
             map.put("total",total);
             map.put("rows",billDetailsList);
@@ -492,6 +494,7 @@ public class BillServiceimpl implements BillService {
             params.put("state",0);
             //查询所有订单状态为0的
             List<Bill> billList=billMapper.selectAgentBill(params);
+            Long total=billMapper.selectAgentBillCount(params);
             for (Bill bill: billList
                  ) {
                 i++;
@@ -528,9 +531,10 @@ public class BillServiceimpl implements BillService {
                 //本月消费（缺）
                 billDetails.setStandardDays(bill.getStandardDays());
                 billDetails.setState(bill.getState());
+                billDetails.setLength(total);
                 billDetailsList.add(billDetails);
             }
-            Long total=billMapper.selectAgentBillCount(params);
+;
             Map<String,Object> map=new HashMap<>();
             map.put("total",total);
             map.put("rows",billDetailsList);
@@ -1181,6 +1185,7 @@ public class BillServiceimpl implements BillService {
                    //调用方法  加入集合
                    BillDetails billDetails=this.insertBillDetails(bill, user,way);
                    billDetails.setdisplayId(i);
+                   billDetails.setLength(total);
                    billDetailsList.add(billDetails);
                }
                Map<String,Object> map=new HashMap<>();
@@ -1203,6 +1208,7 @@ public class BillServiceimpl implements BillService {
                          //调用方法  加入集合
                          BillDetails billDetails=this.insertBillDetails(bill, user,way);
                          billDetails.setdisplayId(i);
+                         billDetails.setLength(total);
                          billDetailsList.add(billDetails);
                      }
                      Map<String,Object> map=new HashMap<>();
@@ -1231,6 +1237,7 @@ public class BillServiceimpl implements BillService {
                              i++;
                              BillDetails billDetails=this.insertBillDetails(bill, user,way);
                              billDetails.setdisplayId(i);
+                             billDetails.setLength(total);
                              billDetailsList.add(billDetails);
                          }
 
@@ -1254,6 +1261,7 @@ public class BillServiceimpl implements BillService {
                          //调用方法  加入集合
                          BillDetails billDetails=this.insertBillDetails(bill, user,way);
                          billDetails.setdisplayId(i);
+                         billDetails.setLength(total);
                          billDetailsList.add(billDetails);
                      }
                      Map<String,Object> map=new HashMap<>();
@@ -1277,6 +1285,7 @@ public class BillServiceimpl implements BillService {
                        i++;
                        BillDetails billDetails=this.insertBillDetails(bill, user,way);
                        billDetails.setdisplayId(i);
+                        billDetails.setLength(total);
                        billDetailsList.add(billDetails);
 
 

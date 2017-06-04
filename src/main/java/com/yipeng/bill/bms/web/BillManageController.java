@@ -55,7 +55,7 @@ public class BillManageController extends  BaseController {
         Map<String, Object> params=new HashMap<>();
         params.put("limit",limit);
         params.put("offset",offset);
-        Map<String,Object> map=    billManageService.manageListByAdminTable(params,user);
+        Map<String,Object> map=billManageService.manageListByAdminTable(params,user);
         return  map;
     }
 

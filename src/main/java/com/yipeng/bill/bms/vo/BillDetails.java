@@ -32,6 +32,7 @@ public class BillDetails {
     private Integer state;
     private Integer opstate;
     private List<BillPrice> billPriceList;
+    private  Long length;
 
     public  int  getdisplayId(){return  displayId;}
     public int setdisplayId(int displayId){return  this.displayId=displayId;}
@@ -101,5 +102,13 @@ public class BillDetails {
 
     public void setBillPriceList(List<BillPrice> billPriceList)  {
         this.billPriceList = billPriceList;
+    }
+
+    public Long getLength() {
+        return length;
+    }
+
+    public void setLength(Long length) {
+        this.length = length;
     }
 }

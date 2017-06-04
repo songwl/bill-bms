@@ -476,7 +476,9 @@ var TableInit = function () {
                         {
                             a="<span>离线</span>";
                         }
+                        $("#length").html(row.length+"条记录");
                         return a;
+
                     },
                     sortable: true
 

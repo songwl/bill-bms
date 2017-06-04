@@ -350,6 +350,8 @@ public class BillController extends BaseController {
         params.put("way", way);
 
         Map<String, Object> modelMap = billService.getBillDetails(params, user);
+
+
         return modelMap;
     }
 
@@ -746,6 +748,7 @@ public class BillController extends BaseController {
         if (!billId.isEmpty()) {
             offset = (offset - 1) * limit;
             Map<String, Object> map = billService.getPriceDetails(limit, offset, billId, user, way);
+
             return map;
         } else {
             return null;

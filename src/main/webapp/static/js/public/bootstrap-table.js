@@ -1353,16 +1353,8 @@
                     sprintf('<span class="btn-group %s">',
                         this.options.paginationVAlign === 'top' || this.options.paginationVAlign === 'both' ?
                             'dropdown' : 'dropup'),
-                    '<button type="button" class="btn' +
-                    sprintf(' btn-%s', this.options.buttonsClass) +
-                    sprintf(' btn-%s', this.options.iconSize) +
-                    ' dropdown-toggle" data-toggle="dropdown">',
-                    '<span class="page-size">',
-                    $allSelected ? this.options.formatAllRows() : this.options.pageSize,
-                    '</span>',
-                    ' <span class="caret"></span>',
-                    '</button>',
-                    '<ul class="dropdown-menu" role="menu">'
+
+                    '<ul style="display: inline-block;width: 250px;height:30px;" >'
                 ];
 
             if (typeof this.options.pageList === 'string') {
@@ -1384,7 +1376,7 @@
                     } else {
                         active = page === that.options.pageSize ? ' class="active"' : '';
                     }
-                    pageNumber.push(sprintf('<li%s><a href="javascript:void(0)">%s</a></li>', active, page));
+                    pageNumber.push(sprintf('<li%s style="display:inline-block;height:30px;width:50px;float:left;line-height:30px; text-decoration: none;background-color: #fff;border: 1px solid #ddd;text-align:center;"><a href="javascript:void(0)" style="color:#4382CF;">%s</a></li>', active, page));
                 }
             });
             pageNumber.push('</ul></span>');

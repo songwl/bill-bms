@@ -7,6 +7,8 @@ var searchState2=null;
 var searchStandard=null;
 var standardDays=null;
 var createTime=null;
+
+var length;
 $(document).ready(function () {
     $(function () {
     if($("#way").val()==1)
@@ -485,6 +487,7 @@ $(function () {
 });
 var TableInit = function () {
     var oTableInit = new Object();
+   console.log(oTableInit);
     //初始化Table
     oTableInit.Init = function () {
         $('#myTable').bootstrapTable({
@@ -737,7 +740,7 @@ var TableInit = function () {
                     valign: 'middle',
                     formatter:function (value,row,index) {
                         var a="<span style='color:#4382CF;cursor:pointer;' id='details'>详情</span> "  ;
-
+                        $("#length").html(row.length+"条记录");
                         return a;
                     },
                     events:operateEvents
@@ -768,6 +771,7 @@ var TableInit = function () {
             standardDays:standardDays,
             createTime:createTime
         };
+
         return temp;
     }
     window.operateEvents = {
@@ -795,6 +799,7 @@ var TableInit = function () {
                         }
         }
     }
+
     return oTableInit;
 };
 

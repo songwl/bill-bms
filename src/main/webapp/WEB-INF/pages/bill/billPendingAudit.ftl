@@ -45,7 +45,7 @@
             <div class="panel-body">
                 <div class="panel-nav">
                     <div class="Nav_Left">&nbsp;
-                        <i class="fa fa-paper-plane"></i>&nbsp;审核订单</div>
+                        <i class="fa fa-paper-plane"></i>&nbsp;审核订单(<span id="length"></span>)</div>
                     <div class="Nav_Right"></div>
                     <div class="cls"></div>
                 </div>

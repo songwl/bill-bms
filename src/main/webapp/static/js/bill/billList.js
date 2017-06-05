@@ -844,11 +844,10 @@ $(function () {
 
         $('#pricetable').bootstrapTable('refresh');
     });
-    function pageScroll() {
-        window.scrollBy(0,-10);
-        scrolldelay = setTimeout('pageScroll()',100);
-    }
 });
+function pageScroll() {
+    $('body').animate( {scrollTop: 0}, 500);
+}
 
 
 

@@ -43,7 +43,7 @@
             if (!$export.length) {
                 $export = $([
                     '<div class="export btn-group">',
-                    '<button class="btn btn-default dropdown-toggle" type="button" ><i class="glyphicon glyphicon-export icon-share"></i><span id="btndc" data-type="excel">导出</span></button>',
+                    '<button class="btn btn-default dropdown-toggle" type="button" id="btndc" data-type="excel" ><i class="glyphicon glyphicon-export icon-share"></i><span>导出</span></button>',
                         /*'<button class="btn btn-default dropdown-toggle" ' +
                             'data-toggle="dropdown" type="button">',
                             '<i class="glyphicon glyphicon-export icon-share"></i> ',
@@ -56,7 +56,7 @@
                 var $menu = $export.find('.dropdown-menu'),
                     exportTypes = this.options.exportTypes;
 
-                if (typeof this.options.exportTypes === 'string') {
+                /*if (typeof this.options.exportTypes === 'string') {
                     var types = this.options.exportTypes.slice(1, -1).replace(/ /g, '').split(',');
 
                     exportTypes = [];
@@ -72,7 +72,7 @@
                                 '</a>',
                             '</li>'].join(''));
                     }
-                });
+                });*/
 
                 $('#btndc').click(function () {
                     var type = $(this).data('type'),

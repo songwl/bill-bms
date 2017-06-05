@@ -328,7 +328,10 @@
         </div>
     </div>
 </div>
-<a href="#" onclick="pageScroll()">返回顶部</a>
+<#--<a href="#" onclick="$('body').animate( {scrollTop: 0}, 500);" style="position: fixed;right: 18px;bottom: 20px;border: 1px solid;color: #ddd;"><i class="glyphicon glyphicon-arrow-up"></i></a>-->
+<div class="fixed-btn go-top" onclick="$('body').animate( {scrollTop: 0}, 500);" style="display:none;position: fixed;right: 0.8%;bottom: 5%;width: 40px;border: 1px solid #eee;background-color: white;font-size: 24px;z-index: 1040;">
+    <a href="javascript:void(0)" title="返回顶部" style="display: inline-block;width: 40px;height: 40px;text-align: center;color: #64854c;"> <i class="fa fa-angle-up"></i></a>
+</div>
 <div class="pload" style="position:absolute;top:45%;left: 50%; z-index:2200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none;"></div>
     <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("COMMISSIONER")>
 <form id= "uploadForm" enctype="multipart/form-data">

@@ -845,11 +845,32 @@ $(function () {
         $('#pricetable').bootstrapTable('refresh');
     });
 });
-function pageScroll() {
-    $('body').animate( {scrollTop: 0}, 500);
-}
-
-
+$(function () {
+    //绑定滚动条事件
+    //绑定滚动条事件
+    $(window).bind("scroll", function () {
+        var sTop = $(window).scrollTop();
+        var sTop = parseInt(sTop);
+        if (sTop >= 130) {
+            if (!$(".go-top").is(":visible")) {
+                try {
+                    $(".go-top").slideDown();
+                } catch (e) {
+                    $(".go-top").show();
+                }
+            }
+        }
+        else {
+            if ($(".go-top").is(":visible")) {
+                try {
+                    $(".go-top").slideUp();
+                } catch (e) {
+                    $(".go-top").hide();
+                }
+            }
+        }
+    });
+})
 
 
 

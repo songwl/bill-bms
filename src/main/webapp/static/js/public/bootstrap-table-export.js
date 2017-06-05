@@ -43,13 +43,14 @@
             if (!$export.length) {
                 $export = $([
                     '<div class="export btn-group">',
-                        '<button class="btn btn-default dropdown-toggle" ' +
+                    '<button class="btn btn-default dropdown-toggle" type="button" ><i class="glyphicon glyphicon-export icon-share"></i><span id="btndc" data-type="excel">导出</span></button>',
+                        /*'<button class="btn btn-default dropdown-toggle" ' +
                             'data-toggle="dropdown" type="button">',
                             '<i class="glyphicon glyphicon-export icon-share"></i> ',
                             '<span class="caret"></span>',
                         '</button>',
                         '<ul class="dropdown-menu" role="menu">',
-                        '</ul>',
+                        '</ul>',*/
                     '</div>'].join('')).appendTo($btnGroup);
 
                 var $menu = $export.find('.dropdown-menu'),
@@ -73,7 +74,7 @@
                     }
                 });
 
-                $menu.find('li').click(function () {
+                $('#btndc').click(function () {
                     var type = $(this).data('type'),
                         doExport = function () {
                             that.$el.tableExport($.extend({}, that.options.exportOptions, {

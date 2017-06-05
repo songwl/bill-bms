@@ -328,6 +328,7 @@
         </div>
     </div>
 </div>
+<a href="#" onclick="pageScroll()">返回顶部</a>
 <div class="pload" style="position:absolute;top:45%;left: 50%; z-index:2200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none;"></div>
     <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("COMMISSIONER")>
 <form id= "uploadForm" enctype="multipart/form-data">

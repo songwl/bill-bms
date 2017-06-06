@@ -1015,6 +1015,39 @@ public class BillController extends BaseController {
 
     }
 
+    /**
+     * 客户方管理里面的客户方计算页面
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/billClientSideSettlement")
+    public String billClientSideSettlement(ModelMap model) throws Exception {
+        LoginUser loginUser=this.getCurrentAccount();
+        Map<String, Object> bms=new HashMap<>();
+		/*Map<String, Object> bms=new HashMap<>();*/
+        bms.put("user", loginUser);
+        model.addAttribute("bmsModel", bms);
+
+        return "/bill/billClientSideSettlement";
+    }
+
+    /**
+     * 客户方管理里面的客户方计算页面TABLE 获取数据
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/billClientSideSettlementTable")
+    @ResponseBody
+    public Map<String,Object> billClientSideSettlementTable(int limit, int offset, String sortOrder, String sortName) {
+        LoginUser loginUser=this.getCurrentAccount();
+
+
+        return null;
+    }
+
+
     //导出excel(实例)
     @RequestMapping(value = "/export.controller")
     public void export(String ids, HttpServletResponse response) throws IOException {

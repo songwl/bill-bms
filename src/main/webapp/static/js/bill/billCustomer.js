@@ -341,8 +341,8 @@ var TableInit = function () {
             cache: false,                       //是否使用缓存，默认为true，
             pagination: true,                   //是否显示分页（*）
             pageNumber: 1,                       //初始化加载第一页，默认第一页
-            pageSize: 20,                       //每页的记录行数（*）
-            pageList: [20, 50, 100],        //可供选择的每页的行数（*）
+            pageSize: 50,                       //每页的记录行数（*）
+            pageList: [100,200,300,500,1000],        //可供选择的每页的行数（*）
             sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
             queryParams: oTableInit.queryParams,//传递参数（*）
             queryParamsType: "",
@@ -589,7 +589,7 @@ var TableInit = function () {
                     valign: 'middle',
                     formatter:function (value,row,index) {
                         var a="<span style='color:#4382CF;cursor:pointer;' id='details'>详情</span>";
-
+                        $("#length").html(row.length+"条记录");
                         return a;
                     },
                     events:operateEvents

@@ -329,4 +329,15 @@
   and DAY(a.cost_date) = #{day,jdbcType=INTEGER}
   </select>
 
+  <select id="selectByKehuSum"  resultType="java.lang.Double">
+   select sum(cost_amount) from t_bill_cost
+   where t_bill_price_id =(
+    select id from t_bill_price
+    where bill_id in(
+    select bill_id from t_bill_price
+    where in_member_id=#{inmemberId,jdbcType=BIGINT}
+    and out_member_id=#{outmemberId,jdbcType=BIGINT})
+    and out_member_id='2')
+    and cost_date=CURDATE()
+  </select>
 </mapper>

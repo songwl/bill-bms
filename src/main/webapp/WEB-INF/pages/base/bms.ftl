@@ -244,6 +244,11 @@
                                     </a>
                                 </li>
                                 <li>
+                                    <a href="${ctx}/order/billClientSideSettlement">
+                                        客户方结算
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="${ctx}/order/pendingAuditView">
                                         待审核订单
                                     </a>

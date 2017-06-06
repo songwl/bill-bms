@@ -307,6 +307,14 @@ var TableInit = function () {
 
                 },
                 {
+                    field: "standardDays",
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true,
+                    title: '达标天',
+
+                },
+                {
                     field: "opstate",
                     align: 'center',
                     valign: 'middle',
@@ -318,8 +326,6 @@ var TableInit = function () {
 
                         return a;
                     }
-
-
                 },
 
 

@@ -754,10 +754,10 @@
     where a.id=b.bill_id  AND  a.id=d.bill_id AND b.out_member_id=e.user_id
     AND b.in_member_id=#{userId,jdbcType=BIGINT}  AND  e.role_id= #{roleId,jdbcType=BIGINT}
     <if test="website != null">
-      AND a.website LIKE #{website,jdbcType=VARCHAR}
+      AND a.website LIKE CONCAT('%',#{website,jdbcType=VARCHAR},'%')
     </if>
     <if test="keywords != null">
-      AND a.keywords LIKE #{keywords,jdbcType=VARCHAR}
+      AND a.keywords LIKE CONCAT('%',#{keywords,jdbcType=VARCHAR},'%')
     </if>
     <if test="addTime != null">
       AND a.create_time LIKE CONCAT('%',#{addTime,jdbcType=TIMESTAMP},'%')
@@ -1290,7 +1290,7 @@
     <if test="sortName =='webSite'">
       ORDER BY a.website ${sortOrder}
     </if>
-    limit #{offset},#{limit}
+
   </select>
 
   <select id="selectByNewRanking"  resultMap="BaseResultMap">

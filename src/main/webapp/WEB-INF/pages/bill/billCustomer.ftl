@@ -99,7 +99,7 @@
         <div class="panel panel-primary" id="list-panel">
             <div class="panel-body">
                 <div class="panel-nav">
-                    <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;关键词排名</div>
+                    <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;关键词排名(<span id="length"></span>)</div>
                     <div class="Nav_Right">
                         <div id="continue">优化中</div>
                         <div id="stop">合作停</div>

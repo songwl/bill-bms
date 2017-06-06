@@ -333,7 +333,7 @@
     <a href="javascript:void(0)" title="返回顶部" style="display: inline-block;width: 40px;height: 40px;text-align: center;color: #64854c;"> <i class="fa fa-angle-up"></i></a>
 </div>
 <div class="pload" style="position:absolute;top:45%;left: 50%; z-index:2200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none;"></div>
-    <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("COMMISSIONER")>
+  <#--  <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("COMMISSIONER")>
 <form id= "uploadForm" enctype="multipart/form-data">
     <p >上传文件： <input type="file" name="file"/></p>
     <input type="button" value="上传" onclick="doUpload()" />
@@ -363,6 +363,6 @@
         });
     }
 </script>
-</#if>
+</#if>-->
 <!--详情end-->
 </@base.html>

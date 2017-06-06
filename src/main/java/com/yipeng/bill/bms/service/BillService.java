@@ -148,4 +148,6 @@ public interface BillService {
 
     Map<String,Object> yearConsumption(LoginUser user);//优化结算(年度消费)
     Map<String,Object> lastMonthConsumption(LoginUser user);//优化结算(上月消费)
+
+    Map<String,Object> billClientSideSettlementTable(LoginUser loginUser);//客户方结算页面table
 }

@@ -881,7 +881,7 @@ public class BillServiceimpl implements BillService {
                 String wAction = "AddSearchTask";
                 String[] qkeyword = {billA.getKeywords()};
 
-                String[] qurl = {billA.getWebsite()};
+                String[] qurl = {billA.getWebsite().replace(" ","")};
                 //组合参数
                 int[] timeSet = { 7,15 };
                 JSONObject jsonObj = new JSONObject();
@@ -944,7 +944,7 @@ public class BillServiceimpl implements BillService {
                 List<Yby> ybyList=new ArrayList<Yby>();
                 //加密sign
                 Yby yby=new Yby();
-                yby.setKw(billA.getKeywords());
+                yby.setKw(billA.getKeywords().replace(" ",""));
                 yby.setUrl(billA.getWebsite());
                 //判断搜索引擎
                 switch (billSearchSupport.getSearchSupport())
@@ -1110,6 +1110,7 @@ public class BillServiceimpl implements BillService {
                         }
                         else
                         {
+
                             return 1;
                         }
                     }
@@ -2242,6 +2243,11 @@ public class BillServiceimpl implements BillService {
         return params;
     }
 
+    /**
+     *上月消费
+     * @param loginUser
+     * @return
+     */
     @Override
     public Map<String, Object> lastMonthConsumption(LoginUser loginUser) {
         Map<String,Object> params=new HashMap<>();
@@ -2249,6 +2255,13 @@ public class BillServiceimpl implements BillService {
         Double lastMonthSum=lastMConsumption(params);
         params.put("lastMonthSum",lastMonthSum);
         return params;
+    }
+
+    @Override
+    public Map<String, Object> billClientSideSettlementTable(LoginUser loginUser) {
+
+
+        return null;
     }
 
 

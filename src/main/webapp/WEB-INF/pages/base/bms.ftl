@@ -481,6 +481,39 @@
 						</ul>
 					</li>
 
+                    <li class="" style="border-bottom: 1px solid #3d3d3d;">
+                        <a href="javascript:;">
+                            <i class="glyphicon glyphicon-envelope"></i><span class="title"> 信息系统 </span><span class="arrow "></span>
+                        </a>
+                        <ul class="sub-menu"  style="background: #293038;">
+                            <li class="">
+                                <a href="/Message/WriteMail">
+                                    写信息
+                                </a>
+                            </li>
+                            <li class="updatePwd">
+                                <a href="javascript:;">
+                                    收件箱
+                                </a>
+                            </li>
+                            <li class="updatePwd">
+                                <a href="javascript:;">
+                                    发件箱
+                                </a>
+                            </li>
+                            <li class="updatePwd">
+                                <a href="javascript:;">
+                                    草稿箱
+                                </a>
+                            </li>
+                            <li class="updatePwd">
+                                <a href="javascript:;">
+                                    垃圾箱
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
 				</ul>
 			</div>
 		</div>

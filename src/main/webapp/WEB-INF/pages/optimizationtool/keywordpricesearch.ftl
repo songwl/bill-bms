@@ -20,7 +20,7 @@
 </div>
 </div>
 <div class="Navs2">
-    <div class="nav_R2 right col-md-11" >
+    <div class="nav_R2 right col-md-11">
         <div>
             用户名:
         </div>
@@ -28,8 +28,8 @@
         <span style="font-size:13px;text-align:center;cursor:pointer;font-weight:bold;margin-left: 10px;" id="state">
             状态:
         </span>
-        <select style="height: 35px;border: none;border: 1px solid #aaaaaa;"  id="searchState">
-            <option  value="2">--请选择--</option>
+        <select style="height: 35px;border: none;border: 1px solid #aaaaaa;" id="searchState">
+            <option value="2">--请选择--</option>
             <option value="1">正常</option>
             <option value="0">冻结</option>
         </select>
@@ -51,10 +51,16 @@
                             <li class="tab_con" style="display:block;">
                                 <div class="price_batch">
                                     <div class="price_inquire">
-                                        <textarea id="tKeywordMulti" name="tKeywordMulti" cols="" rows="" class="price_text font14" placeholder="一行一个关键词，请不要带空格和特殊符号" style="width:100%;height:100%;"></textarea>
+                                        <textarea id="tKeywordMulti" name="tKeywordMulti" cols="" rows=""
+                                                  class="price_text font14" placeholder="一行一个关键词，请不要带空格和特殊符号"
+                                                  style="width:100%;height:100%;"></textarea>
                                     </div>
                                     <div class="price_explanation">
                                         <span class="price_anniu font20">批量查询</span>
+                                        </br>
+                                        </br>
+                                        </br>
+                                        <button onclick="loopall();">循环所有关键词</button>
                                     </div>
                                     <div class="hg10"></div>
                                     <div class="clear"></div>
@@ -64,15 +70,15 @@
                                             <tr>
                                                 <td colspan="2" style="width:16%;">关键词</td>
                                                 <td colspan="2" style="width:16%;">
-                                                    <img src="/static/img/cxjg_img1.png" style="width:100px;" /></td>
+                                                    <img src="/static/img/cxjg_img1.png" style="width:100px;"/></td>
                                                 <td colspan="2" style="width:16%;">
-                                                    <img src="/static/img/cxjg_img3.png" style="width:100px;" /></td>
+                                                    <img src="/static/img/cxjg_img3.png" style="width:100px;"/></td>
                                                 <td colspan="2" style="width:16%;">
-                                                    <img src="/static/img/cxjg_img4.png" style="width:100px;" /></td>
+                                                    <img src="/static/img/cxjg_img4.png" style="width:100px;"/></td>
                                                 <td colspan="2" style="width:16%;">
-                                                    <img src="/static/img/cxjg_img5.png" style="width:100px;" /></td>
+                                                    <img src="/static/img/cxjg_img5.png" style="width:100px;"/></td>
                                                 <td colspan="2" style="width:16%;">
-                                                    <img src="/static/img/cxjg_img6.png" style="width:100px;" /></td>
+                                                    <img src="/static/img/cxjg_img6.png" style="width:100px;"/></td>
                                             </tr>
                                         <#--<tr>
                                             <td colspan="2"></td>

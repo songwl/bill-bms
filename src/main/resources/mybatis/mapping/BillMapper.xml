@@ -1806,4 +1806,10 @@
     )
   </select>
 
+  <select id="selectAllKeywords" resultType="java.lang.String">
+    SELECT DISTINCT keywords FROM t_bill
+    WHERE keywords NOT IN (
+    SELECT keywords FROM keywords_price) LIMIT 20
+  </select>
+
 </mapper>

@@ -52,4 +52,15 @@ function clickff() {
     })
 }
 
+function loopall() {
+    $.ajax({
+        type: 'post',
+        url: CTX + '/optimizationTool/LoopAllKeywords',
+        data: null,
+        success: function (result) {
+            alert(result);
+        }
+    });
+}
+
 

@@ -105,4 +105,6 @@ public interface BillMapper {
     List<Bill>  selectByBillByUpdateStandardDays(Map<String,Object> params);
     //达标数量
      int selectBillDabiaoCount(Map<String,Object> params);
+
+     List<String> selectAllKeywords();
 }

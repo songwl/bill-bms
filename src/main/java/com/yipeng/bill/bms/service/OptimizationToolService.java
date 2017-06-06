@@ -11,4 +11,5 @@ import java.util.List;
 public interface OptimizationToolService {
 
     List<KeywordsPrice> forbiddenWordsList(String keywords);
+    Boolean LoopAllKeywords();
 }

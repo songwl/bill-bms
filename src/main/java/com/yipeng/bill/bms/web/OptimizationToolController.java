@@ -17,27 +17,33 @@ import java.util.List;
  * Created by Administrator on 2017/5/25.
  */
 @Controller
-@RequestMapping(value ="/optimizationTool")
-public class OptimizationToolController extends  BaseController{
+@RequestMapping(value = "/optimizationTool")
+public class OptimizationToolController extends BaseController {
     @Autowired
     private OptimizationToolService optimizationToolService;
+
     /**
      * 关键词价格查询页面
+     *
      * @param request
      * @return
      */
-    @RequestMapping(value="/keywordpricesearch",method = RequestMethod.GET)
-    public  String keywordpricesearch(HttpServletRequest request)
-    {
+    @RequestMapping(value = "/keywordpricesearch", method = RequestMethod.GET)
+    public String keywordpricesearch(HttpServletRequest request) {
         return "/optimizationtool/keywordpricesearch";
     }
 
-    @RequestMapping(value="/keywordpricesearchClick",method = RequestMethod.POST)
+    @RequestMapping(value = "/keywordpricesearchClick", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMessage keywordpricesearchClick(HttpServletRequest request, @RequestParam(required = true) String keywords)
-    {
-        List<KeywordsPrice> list=optimizationToolService.forbiddenWordsList(keywords);
+    public ResultMessage keywordpricesearchClick(HttpServletRequest request, @RequestParam(required = true) String keywords) {
+        List<KeywordsPrice> list = optimizationToolService.forbiddenWordsList(keywords);
 
-        return this.ajaxDone(1,"",list);
+        return this.ajaxDone(1, "", list);
+    }
+
+    @RequestMapping(value = "/LoopAllKeywords", method = RequestMethod.POST)
+    @ResponseBody
+    public String LoopAllKeywords() {
+        return optimizationToolService.LoopAllKeywords() ? "1" : "0";
     }
 }

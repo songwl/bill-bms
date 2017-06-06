@@ -1,5 +1,6 @@
 package com.yipeng.bill.bms.service.impl;
 
+import com.yipeng.bill.bms.dao.BillMapper;
 import com.yipeng.bill.bms.dao.ForbiddenWordsMapper;
 import com.yipeng.bill.bms.dao.KeywordsPriceMapper;
 import com.yipeng.bill.bms.domain.ForbiddenWords;
@@ -34,6 +35,8 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
 
     @Autowired
     private RemoteServiceImpl remoteService;
+    @Autowired
+    private BillMapper billMapper;
     Md5_UrlEncode md5_urlEncode = new Md5_UrlEncode();
 
     @Override
@@ -113,5 +116,55 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
 
         }
         return keywordsprices;
+    }
+
+    @Override
+    public Boolean LoopAllKeywords() {
+        while (true) {
+            List<String> keywords = billMapper.selectAllKeywords();
+            if (CollectionUtils.isEmpty(keywords)) {
+                break;
+            }
+            //调用接口
+            long time = (long) (System.currentTimeMillis() / 1000);
+            String action = "AddSearchTask";
+            String keyword = "";
+            for (String item : keywords
+                    ) {
+                keyword += "\"" + item + "\",";
+            }
+            //去掉最后面的逗号
+            keyword = keyword.substring(0, keyword.length() - 1);
+            String data = "{\"userId\":" + Define.userId + ",\"time\":" + time + ",\"businessType\":1008,\"keyword\":[" + keyword + "]}";
+            String sign = "";
+            try {
+                //sign验证加密
+                sign = md5_urlEncode.EncoderByMd5(action + Define.token + data).toUpperCase();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+                return false;
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                return false;
+            }
+            //调用接口的参数
+            Map<String, String> priceMap = new HashMap<>();
+            priceMap.put("wAction", action);
+            priceMap.put("wSign", sign);
+            priceMap.put("wParam", data);
+            //调用接口方法
+            String result = remoteService.getPriceApiId(priceMap);
+            JSONObject myJsonObject = new JSONObject(result);
+            JSONArray array = myJsonObject.getJSONArray("xValue");
+            for (int i = 0; i < array.length(); i++) {
+                KeywordsPrice keywordsPrice = new KeywordsPrice();
+                keywordsPrice.setTaskid(Integer.parseInt(array.getJSONArray(i).get(0).toString()));
+                keywordsPrice.setKeywords(keywords.get(i));
+                int num = keywordsPriceMapper.insert(keywordsPrice);
+                if (num == 0)
+                    return false;
+            }
+        }
+        return true;
     }
 }

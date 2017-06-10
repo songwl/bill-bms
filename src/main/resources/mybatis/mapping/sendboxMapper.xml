@@ -16,7 +16,7 @@
     Id, sendUserId, InUserId, mailType, Title, Content, dealtState, affairState, SendTime
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from sendbox
     where Id = #{id,jdbcType=BIGINT}

@@ -1,17 +1,28 @@
 package com.yipeng.bill.bms.dao;
 
-import com.yipeng.bill.bms.domain.inbox;
+import com.yipeng.bill.bms.domain.inBox;
+import com.yipeng.bill.bms.domain.noticepublish;
+import com.yipeng.bill.bms.domain.sendBox;
+import com.yipeng.bill.bms.vo.Feedback;
 
-public interface inboxMapper {
+import java.util.List;
+import java.util.Map;
+
+public interface inBoxMapper {
     int deleteByPrimaryKey(Long id);
 
-    int insert(inbox record);
+    int insert(inBox record);
 
-    int insertSelective(inbox record);
+    int insertSelective(inBox record);
 
-    inbox selectByPrimaryKey(Long id);
+    inBox selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(inbox record);
+    int updateByPrimaryKeySelective(inBox record);
 
-    int updateByPrimaryKey(inbox record);
+    int updateByPrimaryKey(inBox record);
+
+    Long selectCount(Map<String ,Object> params);
+
+    List<Feedback> selectInBox(Map<String,Object> params);
+
 }

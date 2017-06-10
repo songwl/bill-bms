@@ -3,12 +3,12 @@ package com.yipeng.bill.bms.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-public class sendBox implements Serializable {
+public class noticepublish implements Serializable {
     private Long id;
 
-    private String senduserid;
+    private String sendid;
 
-    private String inuserid;
+    private String inrole;
 
     private Integer mailtype;
 
@@ -17,8 +17,6 @@ public class sendBox implements Serializable {
     private String content;
 
     private Integer dealtstate;
-
-    private Integer affairstate;
 
     private Date sendtime;
 
@@ -32,20 +30,20 @@ public class sendBox implements Serializable {
         this.id = id;
     }
 
-    public String getSenduserid() {
-        return senduserid;
+    public String getSendid() {
+        return sendid;
     }
 
-    public void setSenduserid(String senduserid) {
-        this.senduserid = senduserid == null ? null : senduserid.trim();
+    public void setSendid(String sendid) {
+        this.sendid = sendid == null ? null : sendid.trim();
     }
 
-    public String getInuserid() {
-        return inuserid;
+    public String getInrole() {
+        return inrole;
     }
 
-    public void setInuserid(String inuserid) {
-        this.inuserid = inuserid == null ? null : inuserid.trim();
+    public void setInrole(String inrole) {
+        this.inrole = inrole == null ? null : inrole.trim();
     }
 
     public Integer getMailtype() {
@@ -78,14 +76,6 @@ public class sendBox implements Serializable {
 
     public void setDealtstate(Integer dealtstate) {
         this.dealtstate = dealtstate;
-    }
-
-    public Integer getAffairstate() {
-        return affairstate;
-    }
-
-    public void setAffairstate(Integer affairstate) {
-        this.affairstate = affairstate;
     }
 
     public Date getSendtime() {

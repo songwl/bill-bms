@@ -141,8 +141,8 @@
        注意，table里面很多参数都是对javaModelGenerator，context等元素的默认属性的一个复写；
        -->
         <!-- 不生成Example -->
-        <table tableName="InBox"
-               domainObjectName="inbox"
+        <table tableName="MessageReply"
+               domainObjectName="messageReply"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
@@ -262,9 +262,9 @@
             <ignoreColumn column="deptId" delimitedColumnName=""/>
             -->
         </table>
-        <table tableName="SendBox" domainObjectName="sendbox" enableCountByExample="false"
+        <!--<table tableName="sendbox" domainObjectName="sendBox" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
+               selectByExampleQueryId="false"></table>-->
 
         <!--<table tableName="t_bill_optimization" domainObjectName="BillOptimization" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"

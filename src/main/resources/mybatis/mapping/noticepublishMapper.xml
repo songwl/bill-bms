@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yipeng.bill.bms.dao.noticepublishMapper">
+    <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.noticepublish">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="SendId" jdbcType="VARCHAR" property="sendid"/>
+        <result column="InRole" jdbcType="VARCHAR" property="inrole"/>
+        <result column="MailType" jdbcType="INTEGER" property="mailtype"/>
+        <result column="Title" jdbcType="VARCHAR" property="title"/>
+        <result column="Content" jdbcType="VARCHAR" property="content"/>
+        <result column="dealtState" jdbcType="INTEGER" property="dealtstate"/>
+        <result column="SendTime" jdbcType="TIMESTAMP" property="sendtime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, SendId, InRole, MailType, Title, Content, dealtState, SendTime
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from noticepublish
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from noticepublish
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.yipeng.bill.bms.domain.noticepublish">
+    insert into noticepublish (id, SendId, InRole, 
+      MailType, Title, Content, 
+      dealtState, SendTime)
+    values (#{id,jdbcType=BIGINT}, #{sendid,jdbcType=VARCHAR}, #{inrole,jdbcType=VARCHAR}, 
+      #{mailtype,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{dealtstate,jdbcType=INTEGER}, #{sendtime,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.noticepublish">
+        insert into noticepublish
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="sendid != null">
+                SendId,
+            </if>
+            <if test="inrole != null">
+                InRole,
+            </if>
+            <if test="mailtype != null">
+                MailType,
+            </if>
+            <if test="title != null">
+                Title,
+            </if>
+            <if test="content != null">
+                Content,
+            </if>
+            <if test="dealtstate != null">
+                dealtState,
+            </if>
+            <if test="sendtime != null">
+                SendTime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="sendid != null">
+                #{sendid,jdbcType=VARCHAR},
+            </if>
+            <if test="inrole != null">
+                #{inrole,jdbcType=VARCHAR},
+            </if>
+            <if test="mailtype != null">
+                #{mailtype,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="dealtstate != null">
+                #{dealtstate,jdbcType=INTEGER},
+            </if>
+            <if test="sendtime != null">
+                #{sendtime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.noticepublish">
+        update noticepublish
+        <set>
+            <if test="sendid != null">
+                SendId = #{sendid,jdbcType=VARCHAR},
+            </if>
+            <if test="inrole != null">
+                InRole = #{inrole,jdbcType=VARCHAR},
+            </if>
+            <if test="mailtype != null">
+                MailType = #{mailtype,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                Title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                Content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="dealtstate != null">
+                dealtState = #{dealtstate,jdbcType=INTEGER},
+            </if>
+            <if test="sendtime != null">
+                SendTime = #{sendtime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.noticepublish">
+    update noticepublish
+    set SendId = #{sendid,jdbcType=VARCHAR},
+      InRole = #{inrole,jdbcType=VARCHAR},
+      MailType = #{mailtype,jdbcType=INTEGER},
+      Title = #{title,jdbcType=VARCHAR},
+      Content = #{content,jdbcType=VARCHAR},
+      dealtState = #{dealtstate,jdbcType=INTEGER},
+      SendTime = #{sendtime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+    <select id="selectByInUser" resultMap="BaseResultMap">
+      select * from noticepublish where 0=0
+        <if test="type == 1">
+           and InRole =(select create_user_id
+            from t_user where id=#{currentid,jdbcType=VARCHAR})
+        </if>
+        <if test="type == 0">
+            and sendid=#{currentid,jdbcType=VARCHAR}
+        </if>
+        <if test="SearchContent != null">
+            and (Title like CONCAT('%',#{SearchContent,jdbcType=VARCHAR},'%') or Content like CONCAT('%',#{SearchContent,jdbcType=VARCHAR},'%'))
+        </if>
+    order by SendTime desc LIMIT #{offset},#{limit}
+  </select>
+    <select id="getCount" resultType="java.lang.Long">
+        select COUNT(id) from noticepublish where 0=0
+        <if test="type == 1">
+         and InRole =(select create_user_id
+        from t_user where id=#{currentid,jdbcType=VARCHAR})
+        </if>
+        <if test="type == 0">
+         and sendid=#{currentid,jdbcType=VARCHAR}
+        </if>
+        <if test="SearchContent != null">
+            and (Title like CONCAT('%',#{SearchContent,jdbcType=VARCHAR},'%') or Content like CONCAT('%',#{SearchContent,jdbcType=VARCHAR},'%'))
+        </if>
+    </select>
+</mapper>

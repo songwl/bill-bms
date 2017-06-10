@@ -1,13 +1,13 @@
 <#import "/base/base.ftl" as base>
 <#import "/base/dict.ftl" as dict>
-<@base.html "写信息">
+<@base.html "公告发布">
 <link href="${ctx}/static/css/Message/animate.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/custom.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/Index.css" rel="stylesheet">
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <div class="wrapper wrapper-content">
     <div class="row">
-        <div class="col-sm-3">
+        <#--<div class="col-sm-3">
             <div class="ibox float-e-margins">
                 <div class="ibox-content mailbox-content">
                     <div class="file-manager">
@@ -63,26 +63,19 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
         <div class="col-sm-9 animated fadeInRight">
             <div class="mail-box-header">
-                <div class="pull-right tooltip-demo">
-                    <a href="#" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="存为草稿"><i
-                            class="fa fa-pencil"></i> 存为草稿</a>
-                    <a href="#" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="放弃"><i
-                            class="fa fa-times"></i> 放弃</a>
-                </div>
                 <h2>
-                    写信
+                    发布公告
                 </h2>
             </div>
             <div class="mail-box">
 
                 <form class="form-horizontal" method="post" id="f1" name="f1" action="/Message/SendMail">
                     <div class="mail-body">
-                        <div class="form-group">
+                       <#-- <div class="form-group">
                             <label class="col-sm-2 control-label">部门：</label>
-
                             <div class="col-sm-10">
                                 <select style="width:100px;" id="department" name="department">
                                     <option value="-1">--请选择--</option>
@@ -91,25 +84,11 @@
                                     </#list>
 
                                 </select>
-                                &nbsp; &nbsp; &nbsp;
-                                <label class=" control-label">收件人：</label>
-                                <select style="width:100px;" id="User" name="User">
-                                    <option value="-1">--请选择--</option>
-                                </select>
-                                &nbsp; &nbsp; &nbsp;
-                                <label class=" control-label">事务状态：</label>
-                                <select style="width:100px;" id="affairState" name="affairState">
-                                    <option value="-1">--请选择--</option>
-                                    <option value="1">一般</option>
-                                    <option value="2">紧急</option>
-                                    <option value="3">重要</option>
-                                </select>
-                                &nbsp; &nbsp; &nbsp;
-                            <#--@Html.Raw(ViewBag.Select)-->
+                            &lt;#&ndash;@Html.Raw(ViewBag.Select)&ndash;&gt;
                             </div>
 
 
-                        </div>
+                        </div>-->
                         <div class="form-group">
                             <label class="col-sm-2 control-label">主题：</label>
 
@@ -133,9 +112,9 @@
                         <a class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Send"
                            id="Send"><i class="fa fa-reply"></i> 发送</a>
                         <a class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"
-                           title="Discard email"><i class="fa fa-times"></i> 放弃</a>
-                        <a class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"
-                           title="Move to draft folder"><i class="fa fa-pencil"></i> 存为草稿</a>
+                           title="Discard email" href="#" onclick="$('.page-content').empty().load('/Message/SendFeedback');"><i class="fa fa-times"></i> 放弃</a>
+                        <#--<a class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"
+                           title="Move to draft folder"><i class="fa fa-pencil"></i> 存为草稿</a>-->
                     </div>
                     <div class="clearfix"></div>
                 </form>
@@ -169,75 +148,19 @@
 
     $(document).ready(function () {
 
-        MailNum();
-        ReMailNum();
-        $("#department").change(function () {
-            if ($("#department option:selected").val() != "-1") {
-                $("#User").empty();
-                var department = $("#department option:selected").val();
-                $.ajax({
-                    type: 'post',
-                    url: CTX + '/Message/getUser',
-                    data: {deparment: department},
-                    success: function (data) {
-                        str = "<option value='-1'>--请选择--</option>";
-                        if (data.length > 0) {
-                            for (var i = 0; i < data.length; i++) {
-                                str += "<option value='" + data[i].id + "'>" + data[i].userName + "</option>";
-                            }
-                            str += "<option value='0'>--全部--</option>";
-
-                        }
-                        $("#User").empty().append(str);
-                    }
-                });
-            }
-            else {
-                $("#User").empty();
-                var str = "<option value='-1'>--请选择--</option>";
-                $("#User").append(str);
-            }
-
-        })
         $("#Send").click(function () {
-            if ($("#AllUser").is(":checked")) {
-                if ($("#affairState option:selected").val() == "-1") {
-                    alert("请选择事务状态");
-                }
-                if ($("#Title").val() == "" || $("#content").val() == "") {
-
-                    alert("请将信息填写完整！");
-                }
-                if ($("#Title").val() != "" && $("#content").val() != "" && $("#affairState option:selected").val() != "-1") {
-                    $.ajax({
-                        type: 'post',
-                        url: CTX + '/Message/SendMail',
-                        data: {data: $("#f1").serialize()},
-                        success: function (data) {
-                            alert();
-                            console.info(data);
-                            return;
-                        }
-                    });
-                    return;
-                }
-            }
-            else {
-
-                if ($("#department option:selected").val() != "-1" && $("#User option:selected").val() != "-1" && $("#affairState option:selected").val() != "-1" && $("#Title").val() != "" && $("#content").val() != "") {
-                    var User=$("[name='User']").val();
-                    var affairState=$("[name='affairState']").val();
+                if ($("#department option:selected").val() != "-1" && $("#Title").val() != "" && $("#content").val() != "") {
                     var Title=$("[name='Title']").val();
                     var content=$("[name='content']").val();
                     var department = $("#department option:selected").val();
                     $.ajax({
                         type: 'post',
-                        url: CTX + '/Message/SendMail',
-                        data: {User: User,affairState: affairState,Title: Title,content: content,department:department},
+                        url: CTX + '/Message/SendNotice',
+                        data: {Title: Title,content: content,department:department},
                         success: function (data) {
                             if(data.message=="1")
                             {
-                                $('.page-content').empty().load('/Message/SendBox');
+                                $('.page-content').empty().load('/Message/NoticeSearch');
                             }
                             else
                             {
@@ -251,7 +174,6 @@
                     alert("请将信息填写完整！");
                 }
 
-            }
 
 
         })

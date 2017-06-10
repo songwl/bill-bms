@@ -767,9 +767,9 @@ public class BillController extends BaseController {
     public String billFeedback(HttpServletRequest request, ModelMap modelMap) {
         String website = request.getParameter("website");
         LoginUser loginUser = this.getCurrentAccount();
-        if (loginUser != null) {
+      /*  if (loginUser != null) {
             billService.billFeedback(website);
-        }
+        }*/
         return "/bill/billFeedback";
     }
 

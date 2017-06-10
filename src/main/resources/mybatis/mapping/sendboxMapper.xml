@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yipeng.bill.bms.dao.sendboxMapper">
-  <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.sendbox">
+<mapper namespace="com.yipeng.bill.bms.dao.sendBoxMapper">
+  <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.sendBox">
     <id column="Id" jdbcType="BIGINT" property="id" />
-    <result column="sendUserId" jdbcType="INTEGER" property="senduserid" />
-    <result column="InUserId" jdbcType="INTEGER" property="inuserid" />
+    <result column="sendUserId" jdbcType="VARCHAR" property="senduserid" />
+    <result column="InUserId" jdbcType="VARCHAR" property="inuserid" />
+    <result column="mailType" jdbcType="INTEGER" property="mailtype" />
     <result column="Title" jdbcType="VARCHAR" property="title" />
     <result column="Content" jdbcType="VARCHAR" property="content" />
     <result column="dealtState" jdbcType="INTEGER" property="dealtstate" />
@@ -12,7 +13,7 @@
     <result column="SendTime" jdbcType="TIMESTAMP" property="sendtime" />
   </resultMap>
   <sql id="Base_Column_List">
-    Id, sendUserId, InUserId, Title, Content, dealtState, affairState, SendTime
+    Id, sendUserId, InUserId, mailType, Title, Content, dealtState, affairState, SendTime
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -24,15 +25,17 @@
     delete from sendbox
     where Id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.sendbox">
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.sendBox">
     insert into sendbox (Id, sendUserId, InUserId, 
-      Title, Content, dealtState, 
-      affairState, SendTime)
-    values (#{id,jdbcType=BIGINT}, #{senduserid,jdbcType=INTEGER}, #{inuserid,jdbcType=INTEGER}, 
-      #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{dealtstate,jdbcType=INTEGER}, 
-      #{affairstate,jdbcType=INTEGER}, #{sendtime,jdbcType=TIMESTAMP})
+      mailType, Title, Content, 
+      dealtState, affairState, SendTime
+      )
+    values (#{id,jdbcType=BIGINT}, #{senduserid,jdbcType=VARCHAR}, #{inuserid,jdbcType=VARCHAR}, 
+      #{mailtype,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{dealtstate,jdbcType=INTEGER}, #{affairstate,jdbcType=INTEGER}, #{sendtime,jdbcType=TIMESTAMP}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.sendbox">
+  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.sendBox">
     insert into sendbox
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -43,6 +46,9 @@
       </if>
       <if test="inuserid != null">
         InUserId,
+      </if>
+      <if test="mailtype != null">
+        mailType,
       </if>
       <if test="title != null">
         Title,
@@ -65,10 +71,13 @@
         #{id,jdbcType=BIGINT},
       </if>
       <if test="senduserid != null">
-        #{senduserid,jdbcType=INTEGER},
+        #{senduserid,jdbcType=VARCHAR},
       </if>
       <if test="inuserid != null">
-        #{inuserid,jdbcType=INTEGER},
+        #{inuserid,jdbcType=VARCHAR},
+      </if>
+      <if test="mailtype != null">
+        #{mailtype,jdbcType=INTEGER},
       </if>
       <if test="title != null">
         #{title,jdbcType=VARCHAR},
@@ -87,14 +96,17 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.sendbox">
+  <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.sendBox">
     update sendbox
     <set>
       <if test="senduserid != null">
-        sendUserId = #{senduserid,jdbcType=INTEGER},
+        sendUserId = #{senduserid,jdbcType=VARCHAR},
       </if>
       <if test="inuserid != null">
-        InUserId = #{inuserid,jdbcType=INTEGER},
+        InUserId = #{inuserid,jdbcType=VARCHAR},
+      </if>
+      <if test="mailtype != null">
+        mailType = #{mailtype,jdbcType=INTEGER},
       </if>
       <if test="title != null">
         Title = #{title,jdbcType=VARCHAR},
@@ -114,10 +126,11 @@
     </set>
     where Id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.sendbox">
+  <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.sendBox">
     update sendbox
-    set sendUserId = #{senduserid,jdbcType=INTEGER},
-      InUserId = #{inuserid,jdbcType=INTEGER},
+    set sendUserId = #{senduserid,jdbcType=VARCHAR},
+      InUserId = #{inuserid,jdbcType=VARCHAR},
+      mailType = #{mailtype,jdbcType=INTEGER},
       Title = #{title,jdbcType=VARCHAR},
       Content = #{content,jdbcType=VARCHAR},
       dealtState = #{dealtstate,jdbcType=INTEGER},
@@ -125,4 +138,57 @@
       SendTime = #{sendtime,jdbcType=TIMESTAMP}
     where Id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="selectCount" resultType="java.lang.Long">
+    select COUNT(*)
+    from sendbox as s
+    join t_user as u
+    on s.inuserid=u.id
+    where mailtype=#{MailType,jdbcType=INTEGER}
+    <if test="type == 1">
+      and  s.inUserId=#{currentid,jdbcType=VARCHAR}
+    </if>
+    <if test="type == 0">
+      and  s.sendUserId=#{currentid,jdbcType=VARCHAR}
+    </if>
+  </select>
+  <select id="selectCountRead" resultType="java.lang.Long">
+    select COUNT(*)
+    from sendbox as s
+    join t_user as u
+    on s.inuserid=u.id
+    where s.dealtState=0 and s.mailtype=#{MailType,jdbcType=INTEGER}
+    <if test="type == 1">
+      and  s.inUserId=#{currentid,jdbcType=VARCHAR}
+    </if>
+    <if test="type == 0">
+      and  s.sendUserId=#{currentid,jdbcType=VARCHAR}
+    </if>
+    <if test="SearchContent != null">
+      and (Title like CONCAT('%',#{SearchContent,jdbcType=VARCHAR},'%') or Content like CONCAT('%',#{SearchContent,jdbcType=VARCHAR},'%'))
+    </if>
+  </select>
+  <select id="selectSendBox" resultMap="BaseResultMap">
+    select s.id,u.user_name as inuserid,s.title,s.sendtime,s.dealtState,s.affairstate
+    from sendbox as s
+    join t_user as u
+    on s.inuserid=u.id
+    where mailtype=#{MailType,jdbcType=INTEGER}
+    <if test="type == 1">
+      and  s.inUserId=#{currentid,jdbcType=VARCHAR}
+    </if>
+    <if test="type == 0">
+      and  s.sendUserId=#{currentid,jdbcType=VARCHAR}
+    </if>
+    <if test="SearchContent != null">
+      and (Title like CONCAT('%',#{SearchContent,jdbcType=VARCHAR},'%') or Content like CONCAT('%',#{SearchContent,jdbcType=VARCHAR},'%'))
+    </if>
+    ORDER BY Sendtime desc
+    LIMIT #{offset},#{limit}
+  </select>
+  <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select s.id,s.Title,s.Content,u.user_name  as inuserid,s.dealtState,s.affairState,s.SendTime from sendbox as s
+    join t_user as u
+    on s.InUserId=u.id
+    where s.Id = #{id,jdbcType=BIGINT}
+  </select>
 </mapper>

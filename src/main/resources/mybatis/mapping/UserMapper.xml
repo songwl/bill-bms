@@ -365,5 +365,8 @@
     and a.role_id=4
     and b.status=0
   </select>
-
+  <select id="selectAllUsers"  resultMap="BaseResultMap">
+    select u.* from t_user as u ,t_user_role as ur
+    where u.id = ur.user_id and ur.role_id=#{role,jdbcType=VARCHAR}
+  </select>
 </mapper>

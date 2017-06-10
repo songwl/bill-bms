@@ -2,6 +2,8 @@ package com.yipeng.bill.bms.dao;
 
 import com.yipeng.bill.bms.domain.Role;
 
+import java.util.List;
+
 public interface RoleMapper {
     int deleteByPrimaryKey(Long id);
 
@@ -16,4 +18,5 @@ public interface RoleMapper {
     int updateByPrimaryKeySelective(Role record);
 
     int updateByPrimaryKey(Role record);
+    List<Role> selectAllRole();
 }

@@ -17,12 +17,78 @@
     .details * {
         font-size: 18px !important;
     }
+
+    .news {
+        margin-bottom: 1px;
+        padding: 0px 10px;
+        background: #fff;
+        border-bottom: 1px solid #e7e7e7;
+    }
+
+    .news ul li {
+        overflow: hidden;
+        zoom: 1;
+        background: #fff;
+        height: 30px;
+        line-height: 30px;
+        padding-left: 5px;
+        width: 100%
+    }
+
+    .news ul li .newsLt {
+        width: 40%;
+        float: left;
+        color: #666;
+        font-size: 12px;
+        text-align: left;
+    }
+
+    .news ul li .newsLt i {
+        font-style: normal;
+        color: #ff0000;
+    }
+
+    .news ul li .newsLt b {
+        color: #333;
+    }
+
+    .news ul li .newsRt {
+        width: 60%;
+        float: right;
+        font-size: 12px;
+        color: #8c8c8c;
+        text-align: left;
+
+    }
+
+    .news ul li .newsRt b {
+        vertical-align: 1px;
+    }
 </style>
 <div class="Navs">
     <div class="nav_L left">
         <i class="fa fa-home">&nbsp;</i><span>管理后台</span> > <span>系统概况</span>
     </div>
 
+</div>
+<div class="news" style="height:30px;overflow:hidden;position:relative;">
+
+    <ul style="position:absolute;left:0;top:0;width:100%">
+        <#if bmsModel.inbox?size==0>
+            <li>
+                <div class="newsLt"><i>●</i><b>最新公告</b>：无</div>
+                <div class="newsRt">发布时间：无</div>
+            </li>
+        <#else>
+            <#list bmsModel.inbox as item>
+                <li onclick="$('.page-content').empty().load('/Message/NoticeSearch').fadeIn(1000);" style="cursor: pointer;">
+                    <div class="newsLt" title="${item.title}"><i>●</i><b>最新公告</b>：${item.title}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期：${item.sendtime?string("yyyy-MM-dd HH:mm:ss")}
+                    </div>
+                    <div class="newsRt" title="${item.content}">内容：${item.content}</div>
+                </li>
+            </#list>
+        </#if>
+    </ul>
 </div>
 <div class="row row-bg">
     <#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("ADMIN")||bmsModel.user.hasRole("COMMISSIONER")>
@@ -298,6 +364,27 @@
 </div>
 
 <script type="text/javascript">
+
+    $(function () {
+        timer = null
+        num = 0
+        clearInterval(timer);
+        var lilength = $('.news ul li').length;
+        timer = setInterval(function () {
+            num -= 30;
+            $('.news ul').animate({'top': '' + num + 'px'}, 1000, function () {
+
+                if (num <= (lilength ) * -30) {
+                    num = 0;
+                    $('.news ul').css('top', 0)
+                }
+                ;
+            });
+
+
+        }, 4000);
+
+    })
 
 
     //异步加载首页数据，解决加载慢的问题

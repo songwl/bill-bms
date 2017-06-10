@@ -34,6 +34,10 @@ public class HomeServiceImpl implements HomeService {
     private  BillPriceMapper billPriceMapper;
     @Autowired
     private   SearchenginecompletionrateMapper searchenginecompletionrateMapper;
+    @Autowired
+    private  inBoxMapper inBoxMapper;
+    @Autowired
+    private  noticepublishMapper noticepublishMapper;
 
     /**
      * 首页详情
@@ -935,6 +939,18 @@ public class HomeServiceImpl implements HomeService {
         }
         return map;
     }
+
+    @Override
+    public List<noticepublish> getInBox(LoginUser loginUser) {
+        Map<String,Object> params=new HashMap<>();
+        params.put("currentid", loginUser.getId().toString());
+        params.put("type", 1);
+        params.put("offset", 0);
+        params.put("limit", 3);
+        List<noticepublish> inBoxList=noticepublishMapper.selectByInUser(params);
+        return inBoxList;
+    }
+
     //客户数
     public Long UserCount(Map<String, Object> params)
     {

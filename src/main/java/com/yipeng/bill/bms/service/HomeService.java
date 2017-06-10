@@ -1,7 +1,10 @@
 package com.yipeng.bill.bms.service;
 
+import com.yipeng.bill.bms.domain.inBox;
+import com.yipeng.bill.bms.domain.noticepublish;
 import com.yipeng.bill.bms.vo.LoginUser;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,4 +38,5 @@ public interface HomeService {
     //神马
     Map<String, Object> shenmaCompleteness(LoginUser loginUser);
 
+    List<noticepublish> getInBox(LoginUser loginUser);
 }

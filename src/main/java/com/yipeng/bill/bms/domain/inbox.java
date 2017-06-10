@@ -3,14 +3,14 @@ package com.yipeng.bill.bms.domain;
 import java.io.Serializable;
 import java.util.Date;
 
-public class inbox implements Serializable {
+public class inBox implements Serializable {
     private Long id;
 
-    private Integer sendmailid;
+    private String senduserid;
 
-    private Integer senduserid;
+    private String inuserid;
 
-    private Integer inuserid;
+    private Integer mailtype;
 
     private String title;
 
@@ -32,28 +32,28 @@ public class inbox implements Serializable {
         this.id = id;
     }
 
-    public Integer getSendmailid() {
-        return sendmailid;
-    }
-
-    public void setSendmailid(Integer sendmailid) {
-        this.sendmailid = sendmailid;
-    }
-
-    public Integer getSenduserid() {
+    public String getSenduserid() {
         return senduserid;
     }
 
-    public void setSenduserid(Integer senduserid) {
-        this.senduserid = senduserid;
+    public void setSenduserid(String senduserid) {
+        this.senduserid = senduserid == null ? null : senduserid.trim();
     }
 
-    public Integer getInuserid() {
+    public String getInuserid() {
         return inuserid;
     }
 
-    public void setInuserid(Integer inuserid) {
-        this.inuserid = inuserid;
+    public void setInuserid(String inuserid) {
+        this.inuserid = inuserid == null ? null : inuserid.trim();
+    }
+
+    public Integer getMailtype() {
+        return mailtype;
+    }
+
+    public void setMailtype(Integer mailtype) {
+        this.mailtype = mailtype;
     }
 
     public String getTitle() {

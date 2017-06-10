@@ -3,9 +3,12 @@ package com.yipeng.bill.bms.web;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.yipeng.bill.bms.domain.inBox;
+import com.yipeng.bill.bms.domain.noticepublish;
 import com.yipeng.bill.bms.service.HomeService;
 import com.yipeng.bill.bms.service.RemoteService;
 import com.yipeng.bill.bms.vo.LoginUser;
@@ -47,7 +50,9 @@ public class HomeController extends BaseController {
         LoginUser loginUser=this.getCurrentAccount();
 		Map<String, Object> bms=new HashMap<>();
 		/*Map<String, Object> bms=new HashMap<>();*/
+		List<noticepublish> inbox=homeService.getInBox(loginUser);
 		bms.put("user", loginUser);
+		bms.put("inbox",inbox );
 		model.addAttribute("bmsModel", bms);
 
 		return "/home/home";

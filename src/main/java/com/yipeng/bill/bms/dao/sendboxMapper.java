@@ -1,17 +1,27 @@
 package com.yipeng.bill.bms.dao;
 
-import com.yipeng.bill.bms.domain.sendbox;
+import com.yipeng.bill.bms.domain.sendBox;
 
-public interface sendboxMapper {
+import java.util.List;
+import java.util.Map;
+
+public interface sendBoxMapper {
     int deleteByPrimaryKey(Long id);
 
-    int insert(sendbox record);
+    int insert(sendBox record);
 
-    int insertSelective(sendbox record);
+    int insertSelective(sendBox record);
 
-    sendbox selectByPrimaryKey(Long id);
+    sendBox selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(sendbox record);
+    int updateByPrimaryKeySelective(sendBox record);
 
-    int updateByPrimaryKey(sendbox record);
+    int updateByPrimaryKey(sendBox record);
+
+    Long selectCount(Map<String ,Object> params);
+    Long selectCountRead(Map<String ,Object> params);
+
+    List<sendBox> selectSendBox(Map<String,Object> params);
+
+    sendBox selectById(Long id);
 }

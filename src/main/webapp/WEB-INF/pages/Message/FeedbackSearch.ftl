@@ -29,13 +29,13 @@
                     <div class="btn-group pull-right">
 
                         <#if !loginUser.hasRole("SUPER_ADMIN")>
-                            <button class="btn btn-white btn-sm fsgg" data-toggle="0" onclick="loadSendOrReceive(0)"
+                            <button class="btn btn-white btn-sm fsgg" data-toggle="0" check="" onclick="loadSendOrReceive(0)"
                                     style="background: #eee;">
                                 <i class="fa fa-arrow-up">发送反馈</i>
                             </button>
                         </#if>
                         <#if loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("ADMIN")||loginUser.hasRole("COMMISSIONER")||loginUser.hasRole("AGENT")>
-                            <button class="btn btn-white btn-sm jsgg" data-toggle="1" onclick="loadSendOrReceive(1)">
+                            <button class="btn btn-white btn-sm jsgg" data-toggle="1" check="" onclick="loadSendOrReceive(1)">
                                 <i class="fa fa-arrow-down">接收反馈</i>
                             </button>
                         </#if>
@@ -232,7 +232,7 @@
         }
         window.ReadMailEvents = {
             'click .title': function (e, value, row, index) {
-                $(".page-content").empty().load("/Message/ReadFeedback?FeedbackId=" + row.id).fadeIn(1000);
+                $(".page-content").empty().load(CTX+"/Message/ReadFeedback?FeedbackId=" + row.id).fadeIn(1000);
                 //window.location.href = "/Message/ReadMail?MailId=" + row.id + "&StateId=" + StateId;
 
             }

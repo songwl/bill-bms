@@ -37,7 +37,7 @@
 
                 <div class="mail-body text-right tooltip-demo">
 
-                    <a class="btn btn-sm btn-white"<#-- href="javascript:history.go(-1)"--> onclick="$('.page-content').empty().load('/Message/NoticeSearch');" id=""><i class="fa fa-reply"></i><span>返回</span></a>
+                    <a class="btn btn-sm btn-white"<#-- href="javascript:history.go(-1)"--> onclick="$('.page-content').empty().load(CTX+'/Message/NoticeSearch');" id=""><i class="fa fa-reply"></i><span>返回</span></a>
 
                 </div>
                 <div class="clearfix"></div>
@@ -52,7 +52,7 @@
 <script type="text/javascript">
     function MailNum() {
         $.ajax({
-            url: "/Procedure/MailNum",
+            url: CTX+"/Procedure/MailNum",
             success: function (data) {
                 $("#MailNum").text(data);
             }
@@ -61,7 +61,7 @@
     //setInterval('MailNum()', 500);
     function ReMailNum() {
         $.ajax({
-            url: "/Message/SendMailAllNum",
+            url: CTX+"/Message/SendMailAllNum",
             success: function (data) {
                 $("#ReMailNum").text(data.message);
             }
@@ -75,12 +75,12 @@
         $("#confirm").click(function () {
             //if (confirm('是否已经处理完毕?')) {
             $.ajax({
-                url: '/Message/GoOperationSingle',
+                url: CTX+'/Message/GoOperationSingle',
                 data: {id: ${sendBox.id}, type: 1},
                 success: function (data) {
                     if (data.message == 1) {
                         //window.location.reload();
-                        $('.page-content').empty().load('/Message/SendBox');
+                        $('.page-content').empty().load(CTX+'/Message/SendBox');
                     }else
                     {
                         alert("处理失败!");
@@ -93,12 +93,12 @@
         })
         $("#DeleteMail").click(function () {
             $.ajax({
-                url: '/Message/GoOperationSingle',
+                url: CTX+'/Message/GoOperationSingle',
                 data: {id: ${sendBox.id}, type: 3},
                 success: function (data) {
                     if (data.message == 1) {
                         //alert("删除成功！");
-                        $('.page-content').empty().load('/Message/SendBox');
+                        $('.page-content').empty().load(CTX+'/Message/SendBox');
                     }else
                     {
                         alert("删除失败");

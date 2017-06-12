@@ -73,7 +73,7 @@
                 </#list>
                 <div class="mail-body" id="Reply" style="height: 200px;display: none">
                             <textarea id="replyText" class="col-sm-10"
-                                      style="height:150px; margin-left:120px;resize:none;"
+                                      style="height:150px; margin-left:120px;resize:none;line-height: 144px;text-align: center;"
                             ></textarea>
                 </div>
 
@@ -85,7 +85,7 @@
                     <a class="btn btn-sm btn-white" onclick="" id="replySubmit" style="display: none"><i
                             class="fa	fa-comments"></i><span>回复</span></a>
                     <a class="btn btn-sm btn-white"<#-- href="javascript:history.go(-1)"-->
-                       onclick="$('.page-content').empty().load('/Message/FeedbackSearch');" id=""><i
+                       onclick="$('.page-content').empty().load(CTX+'/Message/FeedbackSearch');" id=""><i
                             class="fa fa-reply"></i><span>返回</span></a>
 
                 </div>
@@ -103,8 +103,8 @@
        style="display: none;width: 40px;height: 40px;line-height:40px;text-align: center;color: #64854c;"> <i
             class="fa fa-angle-up"></i></a>
     <a href="javascript:void(0)" title="刷新"
-       onclick="$('.page-content').empty().load('/Message/ReadFeedback?FeedbackId=' + ${sendBox.id});"
-       style="display: inline-block;font-size: 14px;border-top:1px solid #eee;width: 40px;height: 40px;line-height: 40px;text-align: center;color: #ddd;">
+       onclick="$('.page-content').empty().load(CTX+'/Message/ReadFeedback?FeedbackId=' + ${sendBox.id});"
+       style="display: inline-block;font-size: 14px;border-top:1px solid #eee;width: 40px;height: 40px;line-height: 40px;text-align: center;color: #aaaaaa;">
         <i class="glyphicon glyphicon-repeat"></i></a>
 </div>
 
@@ -112,7 +112,7 @@
 <script type="text/javascript">
     function MailNum() {
         $.ajax({
-            url: "/Procedure/MailNum",
+            url: CTX+"/Procedure/MailNum",
             success: function (data) {
                 $("#MailNum").text(data);
             }
@@ -121,7 +121,7 @@
     //setInterval('MailNum()', 500);
     function ReMailNum() {
         $.ajax({
-            url: "/Message/SendMailAllNum",
+            url: CTX+"/Message/SendMailAllNum",
             success: function (data) {
                 $("#ReMailNum").text(data.message);
             }
@@ -135,12 +135,12 @@
         $("#confirm").click(function () {
             //if (confirm('是否已经处理完毕?')) {
             $.ajax({
-                url: '/Message/GoOperationSingle',
+                url: CTX+'/Message/GoOperationSingle',
                 data: {id: ${sendBox.id}, type: 1},
                 success: function (data) {
                     if (data.message == 1) {
                         //window.location.reload();
-                        $('.page-content').empty().load('/Message/SendBox');
+                        $('.page-content').empty().load(CTX+'/Message/SendBox');
                     } else {
                         alert("处理失败!");
                     }
@@ -152,12 +152,12 @@
         })
         $("#DeleteMail").click(function () {
             $.ajax({
-                url: '/Message/GoOperationSingle',
+                url:CTX+ '/Message/GoOperationSingle',
                 data: {id: ${sendBox.id}, type: 3},
                 success: function (data) {
                     if (data.message == 1) {
                         //alert("删除成功！");
-                        $('.page-content').empty().load('/Message/SendBox');
+                        $('.page-content').empty().load(CTX+'/Message/SendBox');
                     } else {
                         alert("删除失败");
                     }
@@ -169,12 +169,12 @@
             $('#replySubmit').hide();
             $('#replybtn').show();
             $.ajax({
-                url: '/Message/replySubmit',
+                url: CTX+'/Message/replySubmit',
                 type: "post",
                 data: {id: ${sendBox.id}, ReplyContent: $("#replyText").val()},
                 success: function (data) {
                     if (data.message == 1) {
-                        $('.page-content').empty().load('/Message/ReadFeedback?FeedbackId=' + ${sendBox.id});
+                        $('.page-content').empty().load(CTX+'/Message/ReadFeedback?FeedbackId=' + ${sendBox.id});
                     } else {
                         alert("回复失败");
                     }

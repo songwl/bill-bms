@@ -112,7 +112,7 @@
                         <a class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Send"
                            id="Send"><i class="fa fa-reply"></i> 发送</a>
                         <a class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"
-                           title="Discard email" href="#" onclick="$('.page-content').empty().load('/Message/SendFeedback');"><i class="fa fa-times"></i> 放弃</a>
+                           title="Discard email" href="#" onclick="$('.page-content').empty().load(CTX+'/Message/SendFeedback');"><i class="fa fa-times"></i> 放弃</a>
                         <#--<a class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"
                            title="Move to draft folder"><i class="fa fa-pencil"></i> 存为草稿</a>-->
                     </div>
@@ -129,7 +129,7 @@
 
     function MailNum() {
         $.ajax({
-            url: "/Procedure/MailNum",
+            url: CTX+"/Procedure/MailNum",
             success: function (data) {
                 $("#MailNum").text(data);
             }
@@ -138,7 +138,7 @@
     //setInterval('MailNum()', 500);
     function ReMailNum() {
         $.ajax({
-            url: "/Message/SendMailAllNum",
+            url: CTX+"/Message/SendMailAllNum",
             success: function (data) {
                 $("#ReMailNum").text(data.message);
             }
@@ -160,7 +160,7 @@
                         success: function (data) {
                             if(data.message=="1")
                             {
-                                $('.page-content').empty().load('/Message/NoticeSearch');
+                                $('.page-content').empty().load(CTX+'/Message/NoticeSearch');
                             }
                             else if(data.message=="2")
                             {

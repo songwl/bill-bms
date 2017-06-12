@@ -57,7 +57,7 @@
 <script type="text/javascript">
     function MailNum() {
         $.ajax({
-            url: "/Message/MailNum",
+            url: CTX+"/Message/MailNum",
             success: function (data) {
                 $("#MailNum").text(data);
             }
@@ -66,7 +66,7 @@
     //setInterval('MailNum()', 500);
     function ReMailNum() {
         $.ajax({
-            url: "/Message/ReMailNum",
+            url: CTX+"/Message/ReMailNum",
             success: function (data) {
                 $("#MailAllNum").text(data.message);
             }
@@ -75,7 +75,7 @@
     //setInterval('ReMailNum()', 500);
     function MailAllNum() {
         $.ajax({
-            url: "/Message/SendMailAllNum",
+            url: CTX+"/Message/SendMailAllNum",
             success: function (data) {
                 $("#ReMailNum").text(data.message);
             }
@@ -210,7 +210,7 @@
         }
         window.ReadMailEvents = {
             'click .title': function (e, value, row, index) {
-                $(".page-content").empty().load("/Message/ReadNoticeContent?NoticeId=" + row.id).fadeIn(1000);
+                $(".page-content").empty().load(CTX+"/Message/ReadNoticeContent?NoticeId=" + row.id).fadeIn(1000);
                 //window.location.href = "/Message/ReadMail?MailId=" + row.id + "&StateId=" + StateId;
 
             }

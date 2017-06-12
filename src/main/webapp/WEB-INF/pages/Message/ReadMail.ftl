@@ -13,7 +13,7 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-content mailbox-content">
                     <div class="file-manager">
-                        <a class="btn btn-block btn-primary compose-mail" href="#" onclick="$('.page-content').empty().load('/Message/WriteMail');">写信</a>
+                        <a class="btn btn-block btn-primary compose-mail" href="#" onclick="$('.page-content').empty().load(CTX+'/Message/WriteMail');">写信</a>
                         <div class="space-25"></div>
                         <h5>文件夹</h5>
                         <ul class="folder-list m-b-md" style="padding: 0">
@@ -24,7 +24,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" onclick="$('.page-content').empty().load('/Message/SendBox');">
+                                <a href="#" onclick="$('.page-content').empty().load(CTX+'/Message/SendBox');">
                                     <i class="fa fa-envelope-o"></i> 发件箱<span class="label label-warning pull-right"
                                                                               id="ReMailNum">0</span>
                                 </a>
@@ -109,7 +109,7 @@
                 <div class="mail-body text-right tooltip-demo">
 
                         <#if sendBox.dealtstate==0><a class="btn btn-sm btn-white" id="confirm"><i class="glyphicon glyphicon-check"></i><span>确认处理</span></a></#if>
-                        <#if sendBox.dealtstate==1><a class="btn btn-sm btn-white" onclick="$('.page-content').empty().load('/Message/SendBox');" id=""><i class="fa fa-reply"></i><span>已经处理</span></a></#if>
+                        <#if sendBox.dealtstate==1><a class="btn btn-sm btn-white" onclick="$('.page-content').empty().load(CTX+'/Message/SendBox');" id=""><i class="fa fa-reply"></i><span>已经处理</span></a></#if>
                     <#--<a class="btn btn-sm btn-white"><i class="fa fa-arrow-right"></i> 下一封</a>-->
                     <button title="" data-placement="top" data-toggle="tooltip" data-original-title="删除邮件"
                             class="btn btn-sm btn-white" id="DeleteMail"><i class="fa fa-trash-o"></i> 删除
@@ -127,7 +127,7 @@
 <script type="text/javascript">
     function MailNum() {
         $.ajax({
-            url: "/Procedure/MailNum",
+            url:CTX+ "/Procedure/MailNum",
             success: function (data) {
                 $("#MailNum").text(data);
             }
@@ -136,7 +136,7 @@
     //setInterval('MailNum()', 500);
     function ReMailNum() {
         $.ajax({
-            url: "/Message/SendMailAllNum",
+            url: CTX+"/Message/SendMailAllNum",
             success: function (data) {
                 $("#ReMailNum").text(data.message);
             }
@@ -150,12 +150,12 @@
         $("#confirm").click(function () {
             //if (confirm('是否已经处理完毕?')) {
                 $.ajax({
-                    url: '/Message/GoOperationSingle',
+                    url: CTX+'/Message/GoOperationSingle',
                     data: {id: ${sendBox.id}, type: 1},
                     success: function (data) {
                         if (data.message == 1) {
                             //window.location.reload();
-                            $('.page-content').empty().load('/Message/SendBox');
+                            $('.page-content').empty().load(CTX+'/Message/SendBox');
                         }else
                         {
                             alert("处理失败!");
@@ -168,12 +168,12 @@
         })
         $("#DeleteMail").click(function () {
             $.ajax({
-                url: '/Message/GoOperationSingle',
+                url: CTX+'/Message/GoOperationSingle',
                 data: {id: ${sendBox.id}, type: 3},
                 success: function (data) {
                     if (data.message == 1) {
                         //alert("删除成功！");
-                        $('.page-content').empty().load('/Message/SendBox');
+                        $('.page-content').empty().load(CTX+'/Message/SendBox');
                     }else
                     {
                         alert("删除失败");

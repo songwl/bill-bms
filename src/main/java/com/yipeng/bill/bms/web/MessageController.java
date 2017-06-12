@@ -45,6 +45,7 @@ public class MessageController extends BaseController {
     public String SendBox(ModelMap modelMap) {
         return "/Message/SendBox";
     }
+
     @RequestMapping(value = "/MessageInfo")
     public String MessageInfo(ModelMap modelMap) {
         return "/Message/MessageInfo";
@@ -59,15 +60,18 @@ public class MessageController extends BaseController {
 
     @RequestMapping(value = "/NoticeSearch")
     public String NoticeSearch(ModelMap modelMap) {
-        LoginUser loginUser=this.getCurrentAccount();
-        modelMap.put("loginUser",loginUser);
+        LoginUser loginUser = this.getCurrentAccount();
+        modelMap.put("loginUser", loginUser);
         return "/Message/NoticeSearch";
     }
 
     @RequestMapping(value = "/ReadNoticeContent")
     public String ReadNotice(ModelMap modelMap, Long NoticeId) {
         noticepublish noticepublish = messageService.getNoticeContent(NoticeId);
-        modelMap.put("noticepublish", noticepublish);
+        LoginUser CurrentId = this.getCurrentAccount();
+        if (noticepublish.getSendid().equals(CurrentId.getId().toString()) || noticepublish.getInrole().equals(CurrentId.getCreateUserId().toString())) {
+            modelMap.put("noticepublish", noticepublish);
+        }
         return "/Message/ReadNoticeContent";
     }
 
@@ -77,6 +81,7 @@ public class MessageController extends BaseController {
         modelMap.put("bumenlist", bumenlist);
         return "/Message/SendNotice";
     }
+
     @RequestMapping(value = "/SendFeedback")
     public String SendFeedback(ModelMap modelMap) {
         return "/Message/SendFeedback";
@@ -84,23 +89,28 @@ public class MessageController extends BaseController {
 
     @RequestMapping(value = "/FeedbackSearch")
     public String FeedbackSearch(ModelMap modelMap) {
-        LoginUser loginUser=this.getCurrentAccount();
+        LoginUser loginUser = this.getCurrentAccount();
         modelMap.put("loginUser", loginUser);
         return "/Message/FeedbackSearch";
     }
 
     @RequestMapping(value = "/ReadFeedback")
     public String ReadFeedback(ModelMap modelMap, Long FeedbackId) {
-        LoginUser loginUser=this.getCurrentAccount();
+        LoginUser loginUser = this.getCurrentAccount();
         sendBox sendBox = sendBoxMapper.selectByPrimaryKey(FeedbackId);
-        sendBox.setDealtstate(1);
-        sendBoxMapper.updateByPrimaryKeySelective(sendBox);
-        List<messageReply> messageReplyList = messageReplyMapper.selectByMessageId(FeedbackId);
-        String sendUserName= userMapper.selectByPrimaryKey(Long.parseLong(sendBox.getSenduserid())).getUserName();
-        modelMap.put("sendBox", sendBox);
-        modelMap.put("messageReplyList", messageReplyList);
-        modelMap.put("loginUser", loginUser.getId().toString());
-        modelMap.put("sendUserName", sendUserName);
+        if (sendBox.getSenduserid().equals(loginUser.getId().toString()) || sendBox.getInuserid().equals(loginUser.getId().toString())) {
+            if((sendBox.getSenduserid().equals(loginUser.getId().toString())&&sendBox.getDealtstate()!=3)||(sendBox.getInuserid().equals(loginUser.getId().toString())&&sendBox.getDealtstate()!=2)) {
+                sendBox.setDealtstate(1);
+                sendBoxMapper.updateByPrimaryKeySelective(sendBox);
+            }
+            //messageReplyMapper.updateByMessageId(FeedbackId);//将MessageId为FeedbackId的信息返回表的DealtState（处理状态）改为2（已查看）
+            List<messageReply> messageReplyList = messageReplyMapper.selectByMessageId(FeedbackId);
+            String sendUserName = userMapper.selectByPrimaryKey(Long.parseLong(sendBox.getSenduserid())).getUserName();
+            modelMap.put("sendBox", sendBox);
+            modelMap.put("messageReplyList", messageReplyList);
+            modelMap.put("loginUser", loginUser.getId().toString());
+            modelMap.put("sendUserName", sendUserName);
+        }
         return "/Message/ReadFeedback";
     }
 
@@ -128,9 +138,9 @@ public class MessageController extends BaseController {
     public ResultMessage SendNotice(HttpServletRequest httpRequest) {
         Map<String, String[]> param = httpRequest.getParameterMap();
         LoginUser loginUser = this.getCurrentAccount();
-        boolean flag = messageService.SendNotice(param, loginUser);
+        int flag = messageService.SendNotice(param, loginUser);
 
-        return this.ajaxDoneSuccess(flag ? "1" : "0");
+        return this.ajaxDoneSuccess(flag + "");
     }
 
     @RequestMapping(value = "/GetSendBox")
@@ -147,14 +157,14 @@ public class MessageController extends BaseController {
 
     @RequestMapping(value = "/GetNoticeSearch")
     @ResponseBody
-    public Map<String, Object> GetNoticeSearch(int limit, int offset,String SearchContent, int type) {
+    public Map<String, Object> GetNoticeSearch(int limit, int offset, String SearchContent, int type) {
         LoginUser loginUser = this.getCurrentAccount();
         Map<String, Object> params = this.getSearchRequest(); //查询参数
         params.put("limit", limit);
         params.put("offset", offset);
-            //0发送 1接收
-            Map<String, Object> modelMap = messageService.GetSendOrReciveNotice(params, loginUser,SearchContent,type);
-            return modelMap;
+        //0发送 1接收
+        Map<String, Object> modelMap = messageService.GetSendOrReciveNotice(params, loginUser, SearchContent, type);
+        return modelMap;
     }
 
     @RequestMapping(value = "/GoOperation")
@@ -192,6 +202,7 @@ public class MessageController extends BaseController {
         Long sum = messageService.getReMailNum(loginUser, 1);
         return this.ajaxDoneSuccess(sum.toString());
     }
+
     @RequestMapping(value = "/SubmitFeedback")
     @ResponseBody
     public ResultMessage SubmitFeedback(HttpServletRequest httpRequest) {
@@ -201,17 +212,19 @@ public class MessageController extends BaseController {
 
         return this.ajaxDoneSuccess(flag ? "1" : "0");
     }
+
     @RequestMapping(value = "/GetFeedbackSearch")
     @ResponseBody
-    public Map<String, Object> GetFeedbackSearch(int limit, int offset,String SearchContent, int type) {
+    public Map<String, Object> GetFeedbackSearch(int limit, int offset, String SearchContent, int type) {
         LoginUser loginUser = this.getCurrentAccount();
         Map<String, Object> params = this.getSearchRequest(); //查询参数
         params.put("limit", limit);
         params.put("offset", offset);
         //0发送 1接收
-        Map<String, Object> modelMap = messageService.GetSendOrReciveFeedback(params, loginUser,SearchContent,type);
+        Map<String, Object> modelMap = messageService.GetSendOrReciveFeedback(params, loginUser, SearchContent, type);
         return modelMap;
     }
+
     //消息回复
     @RequestMapping(value = "/replySubmit", method = RequestMethod.POST)
     @ResponseBody

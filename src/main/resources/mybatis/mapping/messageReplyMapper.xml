@@ -132,4 +132,9 @@
     where MessageId = #{MessageId,jdbcType=BIGINT}
     order by id asc
   </select>
+  <update id="updateByMessageId"  parameterType="java.lang.Long">
+    update messagereply
+    set DealtState = 2
+    where MessageId = #{MessageId,jdbcType=BIGINT}
+  </update>
 </mapper>

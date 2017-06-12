@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.yipeng.bill.bms.dao.sendBoxMapper;
 import com.yipeng.bill.bms.domain.inBox;
 import com.yipeng.bill.bms.domain.noticepublish;
 import com.yipeng.bill.bms.service.HomeService;
@@ -27,6 +28,8 @@ public class HomeController extends BaseController {
 	private HomeService homeService;
 	@Autowired
 	private RemoteService remoteService;
+	@Autowired
+	private sendBoxMapper sendBoxMapper;
 	//@Autowired
 	//private AuthorityService authorityService;
 
@@ -34,6 +37,8 @@ public class HomeController extends BaseController {
 	public String index(ModelMap model) throws Exception {
 		Map<String, Object> bms = new HashMap<>();
 		LoginUser user = this.getCurrentAccount();
+		Long UnReadNum=sendBoxMapper.selectUnreadCount(user.getId().toString());
+		bms.put("UnReadNum", UnReadNum);
 		bms.put("user", user);
 		//bms.put("bmsNavigationList", authorityService.queryBmsNavByUserType(NumberUtils.toInt(account.getLoginUserType())));
 		model.addAttribute("bmsModel", bms);

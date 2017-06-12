@@ -103,7 +103,10 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Boolean SendNotice(Map<String, String[]> data, LoginUser loginUser) {
+    public int SendNotice(Map<String, String[]> data, LoginUser loginUser) {
+        if (!loginUser.hasRole("SUPER_ADMIN") && !loginUser.hasRole("DISTRIBUTOR") && !loginUser.hasRole("AGENT")) {
+            return 2;
+        }
         Long SendUserId = loginUser.getId();
         String Title = data.get("Title")[0];
         String Content = data.get("content")[0];
@@ -117,7 +120,7 @@ public class MessageServiceImpl implements MessageService {
         noticepublish.setDealtstate(0);
         noticepublish.setSendtime(new Date());
         int num1 = noticepublishMapper.insert(noticepublish);
-        return (num1 > 0) ? true : false;
+        return (num1 > 0) ? 1 : 0;
     }
 
     /**
@@ -142,7 +145,7 @@ public class MessageServiceImpl implements MessageService {
         sendBox.setTitle(Title);
         sendBox.setContent(Content);
         sendBox.setAffairstate(Integer.parseInt(affairState));
-        sendBox.setDealtstate(0);
+        sendBox.setDealtstate(3);
         sendBox.setSendtime(new Date());
         int num1 = sendBoxMapper.insert(sendBox);
         /*inBox inBox = new inBox();
@@ -167,20 +170,20 @@ public class MessageServiceImpl implements MessageService {
         messageReply messageReply = new messageReply();
         messageReply.setMessageid(id);
         messageReply.setSendid(SendUserId.toString());
-        if(sendBox.getSenduserid() .equals(SendUserId.toString()) )
-        {
-            messageReply.setInid(  sendBox.getInuserid());
-        }
-        else
-        {
-            messageReply.setInid( sendBox.getSenduserid());
+        if (sendBox.getSenduserid().equals(SendUserId.toString())) {
+            messageReply.setInid(sendBox.getInuserid());
+            sendBox.setDealtstate(3);//接收者有消息提醒
+        } else {
+            messageReply.setInid(sendBox.getSenduserid());
+            sendBox.setDealtstate(2);//接收者有消息提醒
         }
         messageReply.setReplycontent(Content);
         messageReply.setDealtstate(1);
         messageReply.setMessagetype(1);
         messageReply.setReplytime(new Date());
         int num = messageReplyMapper.insert(messageReply);
-        return num > 0;
+        int num2 = sendBoxMapper.updateByPrimaryKeySelective(sendBox);
+        return (num == num2 && num > 0);
     }
 
     /**
@@ -273,6 +276,9 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Map<String, Object> GetSendOrReciveNotice(Map<String, Object> params, LoginUser loginUser, String SearchContent, int type) {
+        if (type != 1 && type != 0) {
+            return null;
+        }
         params.put("currentid", loginUser.getId().toString());
         params.put("type", type);
         params.put("SearchContent", SearchContent);

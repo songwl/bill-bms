@@ -18,4 +18,6 @@ public interface messageReplyMapper {
     int updateByPrimaryKeySelective(messageReply record);
 
     int updateByPrimaryKey(messageReply record);
+
+    int updateByMessageId(Long MessageId);
 }

@@ -175,8 +175,13 @@
                         valign: 'middle',
                         title: '标题',
                         formatter: function (value, row, index) {
-                            var a = "";
-                            a = '<span class="title" style="cursor:pointer;">' + value + '</span>';
+                            if ((row.senduserid != ${loginUser.id} && row.dealtstate == 3)||(row.senduserid == ${loginUser.id} && row.dealtstate == 2)) {
+                                a = '<span class="title" style="color:red;cursor:pointer;">' + value + '</span>';
+                            }
+                            else
+                            {
+                                a = '<span class="title" style="cursor:pointer;">' + value + '</span>';
+                            }
                             return a;
                         },
                         events: ReadMailEvents

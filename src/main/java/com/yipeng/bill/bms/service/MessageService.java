@@ -16,7 +16,7 @@ public interface MessageService {
 
     Boolean SendMail(Map<String, String[]> data, LoginUser loginUser);
 
-    Boolean SendNotice(Map<String, String[]> data, LoginUser loginUser);
+    int SendNotice(Map<String, String[]> data, LoginUser loginUser);
 
     Boolean SubmitFeedback(Map<String, String[]> data, LoginUser loginUser);
 

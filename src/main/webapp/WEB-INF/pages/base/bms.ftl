@@ -493,7 +493,7 @@
                         </ul>
                     </li>
 
-                    <#--<li class="" style="border-bottom: 1px solid #3d3d3d;">
+                    <li class="" style="border-bottom: 1px solid #3d3d3d;">
                         <a href="javascript:;">
                             <i class="glyphicon glyphicon-envelope"></i><span class="title"> 信息系统 </span><span
                                 class="arrow "></span>
@@ -526,7 +526,7 @@
                             </li>
 
                         </ul>
-                    </li>-->
+                    </li>
                     <li class="" style="border-bottom: 1px solid #3d3d3d;">
                         <a href="javascript:;">
                             <i class="	glyphicon glyphicon-bullhorn"></i><span class="title"> 公告系统 </span><span
@@ -550,8 +550,11 @@
                     </li>
                     <li class="" style="border-bottom: 1px solid #3d3d3d;">
                         <a href="javascript:;">
-                            <i class="fa fa-comments-o"></i><span class="title"> 反馈与帮助 </span><span
-                                class="arrow "></span>
+                            <i class="fa fa-comments-o"></i><span class="title"> 反馈与帮助 </span>
+                            <#if bmsModel.UnReadNum gt 0>
+                            <span class="label label-warning" id="ReMailNum">${bmsModel.UnReadNum}</span>
+                            </#if>
+                            <span class="arrow "></span>
                         </a>
                         <ul class="sub-menu" style="background: #293038;">
                             <#if !bmsModel.user.hasRole("SUPER_ADMIN")>
@@ -564,6 +567,9 @@
                             <li class="">
                                 <a href="/Message/FeedbackSearch">
                                     反馈查询
+                                    <#if bmsModel.UnReadNum gt 0>
+                                        <span class="label label-warning" id="ReMailNum">${bmsModel.UnReadNum}</span>
+                                    </#if>
                                 </a>
                             </li>
 

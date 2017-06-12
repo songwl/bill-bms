@@ -162,6 +162,10 @@
                             {
                                 $('.page-content').empty().load('/Message/NoticeSearch');
                             }
+                            else if(data.message=="2")
+                            {
+                                alert("你没有权限");
+                            }
                             else
                             {
                                 alert("发送失败");

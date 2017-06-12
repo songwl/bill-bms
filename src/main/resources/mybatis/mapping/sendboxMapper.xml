@@ -168,7 +168,7 @@
     </if>
   </select>
   <select id="selectSendBox" resultMap="BaseResultMap">
-    select s.id,u.user_name as inuserid,s.title,s.sendtime,s.dealtState,s.affairstate
+    select s.id,s.sendUserId,u.user_name as inuserid,s.title,s.sendtime,s.dealtState,s.affairstate
     from sendbox as s
     join t_user as u
     on s.inuserid=u.id
@@ -190,5 +190,11 @@
     join t_user as u
     on s.InUserId=u.id
     where s.Id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectUnreadCount" resultType="java.lang.Long">
+    select COUNT(*) from sendbox
+    where mailType=2 and
+    ((sendUserId=#{currentid,jdbcType=VARCHAR} and dealtState=2)  or
+    (InUserId=#{currentid,jdbcType=VARCHAR} and dealtState=3 ))
   </select>
 </mapper>

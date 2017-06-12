@@ -40,16 +40,16 @@
                 <#if sendBox.senduserid == loginUser>
                     <div class="mail-body">
                         <div style="float: right;max-width: 80%">
-                            ${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</br>
-                        ${sendBox.content}
+                            <span style="float: right">${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</span> </br>
+                            <span style="float: right">${sendBox.content}</span> </br><div style="clear: both"></div>
                         </div>
                         <div style="clear:both;"></div>
                     </div>
                 <#else >
                     <div class="mail-body">
                         <div style="max-width: 80%">
-                            ${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</br>
-                        ${sendBox.content}
+                            <span style="">${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</span> </br>
+                            <span style="">${sendBox.content}</span>
                         </div>
                     </div>
                 </#if>
@@ -57,16 +57,16 @@
                     <#if item.sendid == loginUser>
                         <div class="mail-body">
                             <div style="float: right;max-width: 80%">
-                                ${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</br>
-                            ${item.replycontent}
+                                <span style="float: right">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span> </br>
+                                <span style="float: right">${item.replycontent}</span><div style="clear: both"></div>
                             </div>
                             <div style="clear:both;"></div>
                         </div>
                     <#else >
                         <div class="mail-body">
                             <div style="max-width: 80%">
-                                ${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</br>
-                            ${item.replycontent}
+                               <span style="">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span> </br>
+                                <span style="">${item.replycontent}</span>
                             </div>
                         </div>
                     </#if>

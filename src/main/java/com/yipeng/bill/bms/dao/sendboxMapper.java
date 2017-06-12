@@ -24,4 +24,6 @@ public interface sendBoxMapper {
     List<sendBox> selectSendBox(Map<String,Object> params);
 
     sendBox selectById(Long id);
+
+    Long selectUnreadCount(String currentid);
 }

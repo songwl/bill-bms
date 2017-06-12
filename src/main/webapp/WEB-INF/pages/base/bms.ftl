@@ -493,7 +493,7 @@
                         </ul>
                     </li>
 
-                    <li class="" style="border-bottom: 1px solid #3d3d3d;">
+                    <#--<li class="" style="border-bottom: 1px solid #3d3d3d;">
                         <a href="javascript:;">
                             <i class="glyphicon glyphicon-envelope"></i><span class="title"> 信息系统 </span><span
                                 class="arrow "></span>
@@ -526,7 +526,7 @@
                             </li>
 
                         </ul>
-                    </li>
+                    </li>-->
                     <li class="" style="border-bottom: 1px solid #3d3d3d;">
                         <a href="javascript:;">
                             <i class="	glyphicon glyphicon-bullhorn"></i><span class="title"> 公告系统 </span><span

@@ -16,7 +16,7 @@
                         <h5>文件夹</h5>
                         <ul class="folder-list m-b-md" style="padding: 0">
                             <li>
-                                <a href="#">
+                                <a href="#" onclick="$('.page-content').empty().load('/Message/InBox');">
                                     <i class="fa fa-inbox "></i> 收件箱 <span class="label label-warning pull-right"
                                                                            id="MailNum">0</span>
                                 </a>
@@ -146,22 +146,22 @@
 </div>
 
 
-<script>
+<script type="text/javascript">
 
     function MailNum() {
         $.ajax({
-            url: CTX+"/Procedure/MailNum",
+            url: CTX+"/Message/MailNum",
             success: function (data) {
-                $("#MailNum").text(data);
+                $("#ReMailNum").text("").text(data.message);//未读发件箱
             }
         })
     }
     //setInterval('MailNum()', 500);
     function ReMailNum() {
         $.ajax({
-            url: CTX+"/Message/SendMailAllNum",
+            url: CTX+"/Message/ReMailNum",
             success: function (data) {
-                $("#ReMailNum").text(data.message);
+                $("#MailNum").text(data.message);//未读收件箱
             }
         })
     }

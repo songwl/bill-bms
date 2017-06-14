@@ -13,12 +13,8 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-content mailbox-content">
                     <div class="file-manager">
-<<<<<<< 564a611cdea878de5e64dd82b575e239e33d58e9
-                        <a class="btn btn-block btn-primary compose-mail" href="#" onclick="$('.page-content').empty().load(CTX+'/Message/WriteMail');">写信</a>
-=======
                         <a class="btn btn-block btn-primary compose-mail" href="#"
                            onclick="$('.page-content').empty().load('/Message/WriteMail');">写信</a>
->>>>>>> 1098cc93e46fce1a95b6366e7ff906158f765918
                         <div class="space-25"></div>
                         <h5>文件夹</h5>
                         <ul class="folder-list m-b-md" style="padding: 0">
@@ -29,7 +25,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" onclick="$('.page-content').empty().load(CTX+'/Message/SendBox');">
+                                <a href="#" onclick="$('.page-content').empty().load('/Message/SendBox');">
                                     <i class="fa fa-envelope-o"></i> 发件箱<span class="label label-warning pull-right"
                                                                               id="ReMailNum">0</span>
                                 </a>
@@ -90,36 +86,35 @@
                 </h2>
                 <div class="mail-tools tooltip-demo m-t-md">
                     <h3>
-                        <span class="font-noraml">主题： </span>${sendBox.title}
+                        <span class="font-noraml">主题： </span>${inBox.title}
                     </h3>
                     <h4>
                         <span class="font-noraml">类型： </span>
-                        <#if sendBox.affairstate==1>一般</#if>
-                        <#if sendBox.affairstate==2>紧急</#if>
-                        <#if sendBox.affairstate==3>重要</#if>
+                        <#if inBox.affairstate==1>一般</#if>
+                        <#if inBox.affairstate==2>紧急</#if>
+                        <#if inBox.affairstate==3>重要</#if>
                     </h4>
                     <h5>
-                        <span class="pull-right font-noraml">${sendBox.sendtime}</span>
-                        <span class="font-noraml">收件人:</span>${sendUserName}
+                        <span class="font-noraml">发件人:</span>${sendUserName}
                     </h5>
                 </div>
             </div>
             <div class="mail-box">
 
-                <#if sendBox.senduserid == loginUser>
+
+                <#if inBox.senduserid == loginUser>
                     <div class="mail-body">
                         <div style="float: right;max-width: 80%">
-                            <span style="float: right">${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</span> </br>
-                            <span style="float: right">${sendBox.content}</span> </br>
-                            <div style="clear: both"></div>
+                            <span style="float: right">${inBox.intime?string("yyyy-MM-dd HH:mm:ss")}</span> </br>
+                            <span style="float: right">${inBox.content}</span> </br><div style="clear: both"></div>
                         </div>
                         <div style="clear:both;"></div>
                     </div>
                 <#else >
                     <div class="mail-body">
                         <div style="max-width: 80%">
-                            <span style="">${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</span> </br>
-                            <span style="">${sendBox.content}</span>
+                            <span style="">${inBox.intime?string("yyyy-MM-dd HH:mm:ss")}</span> </br>
+                            <span style="">${inBox.content}</span>
                         </div>
                     </div>
                 </#if>
@@ -128,8 +123,7 @@
                         <div class="mail-body">
                             <div style="float: right;max-width: 80%">
                                 <span style="float: right">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span> </br>
-                                <span style="float: right">${item.replycontent}</span>
-                                <div style="clear: both"></div>
+                                <span style="float: right">${item.replycontent}</span><div style="clear: both"></div>
                             </div>
                             <div style="clear:both;"></div>
                         </div>
@@ -142,31 +136,26 @@
                         </div>
                     </#if>
                 </#list>
+
                 <div class="mail-body" id="Reply" style="height: 200px;display: none">
                             <textarea id="replyText" class="col-sm-10"
                                       style="height:150px; margin-left:120px;resize:none;"
                             ></textarea>
                 </div>
-
                 <div class="mail-body text-right tooltip-demo">
-
-                        <#if sendBox.dealtstate==0><a class="btn btn-sm btn-white" id="confirm"><i class="glyphicon glyphicon-check"></i><span>确认处理</span></a></#if>
-                        <#if sendBox.dealtstate==1><a class="btn btn-sm btn-white" onclick="$('.page-content').empty().load(CTX+'/Message/SendBox');" id=""><i class="fa fa-reply"></i><span>已经处理</span></a></#if>
-                    <#--<a class="btn btn-sm btn-white"><i class="fa fa-arrow-right"></i> 下一封</a>-->
-
                     <#if flag>
-                        <a class="btn btn-sm btn-white"
-                           onclick="$('#Reply').show();$('#replybtn').hide();$('#replySubmit').show();" id="replybtn"><i
-                                class="fa	fa-comments"></i><span>回复</span></a>
-                        <a class="btn btn-sm btn-white" onclick="" id="replySubmit" style="display: none"><i
-                                class="fa	fa-comments"></i><span>回复</span></a>
+                    <a class="btn btn-sm btn-white"
+                       onclick="$('#Reply').show();$('#replybtn').hide();$('#replySubmit').show();" id="replybtn"><i
+                            class="fa	fa-comments"></i><span>回复</span></a>
+                    <a class="btn btn-sm btn-white" onclick="" id="replySubmit" style="display: none"><i
+                            class="fa	fa-comments"></i><span>回复</span></a>
                     <#else >
                         <button title="" data-placement="top" data-toggle="tooltip" data-original-title="回复"
                                 class="btn btn-sm btn-white" disabled="disabled"><i class="fa fa-trash-o"></i> 回复
                         </button>
                     </#if>
-                    <a class="btn btn-sm btn-white"<#-- href="javascript:history.go(-1)"-->
-                       onclick="$('.page-content').empty().load('/Message/SendBox');" id=""><i
+                        <a class="btn btn-sm btn-white"
+                                                onclick="$('.page-content').empty().load('/Message/InBox');" id=""><i
                             class="fa fa-reply"></i><span>返回</span></a>
                 <#--<a class="btn btn-sm btn-white"><i class="fa fa-arrow-right"></i> 下一封</a>-->
                     <button title="" data-placement="top" data-toggle="tooltip" data-original-title="删除邮件"
@@ -186,87 +175,66 @@
        style="display: none;width: 40px;height: 40px;line-height:40px;text-align: center;color: #64854c;"> <i
             class="fa fa-angle-up"></i></a>
     <a href="javascript:void(0)" title="刷新"
-       onclick="$('.page-content').empty().load('/Message/ReadMail?MailId=' + ${sendBox.id});"
+       onclick="$('.page-content').empty().load('/Message/ReadInMail?MailId=' + ${inBox.id});"
        style="display: inline-block;font-size: 14px;border-top:1px solid #eee;width: 40px;height: 40px;line-height: 40px;text-align: center;color: #ddd;">
         <i class="glyphicon glyphicon-repeat"></i></a>
 </div>
 
 
 <script type="text/javascript">
+    //setInterval('MailNum()', 500);
     function MailNum() {
         $.ajax({
-            url: CTX+"/Message/MailNum",
+            url: CTX + "/Message/ReMailNum",
             success: function (data) {
-                $("#ReMailNum").text("").text(data.message);//未读发件箱
+                $("#ReMailNum").text(data.message);//未读发件箱
             }
         })
     }
     //setInterval('MailNum()', 500);
     function ReMailNum() {
         $.ajax({
-            url: CTX+"/Message/ReMailNum",
+            url: CTX + "/Message/InReMailNum",
             success: function (data) {
                 $("#MailNum").text(data.message);//未读收件箱
             }
         })
     }
-    //setInterval('ReMailNum()', 500);
-
     $(function () {
-        MailNum();
         ReMailNum();
+        MailNum();
         $("#confirm").click(function () {
             //if (confirm('是否已经处理完毕?')) {
-<<<<<<< 564a611cdea878de5e64dd82b575e239e33d58e9
-                $.ajax({
-                    url: CTX+'/Message/GoOperationSingle',
-                    data: {id: ${sendBox.id}, type: 1},
-                    success: function (data) {
-                        if (data.message == 1) {
-                            //window.location.reload();
-                            $('.page-content').empty().load(CTX+'/Message/SendBox');
-                        }else
-                        {
-                            alert("处理失败!");
-                        }
-=======
             $.ajax({
-                url: '/Message/GoOperationSingle',
-                data: {id: ${sendBox.id}, type: 1},
+                url: '/Message/GoInOperationSingle',
+                data: {id: ${inBox.id}, type: 1},
                 success: function (data) {
                     if (data.message == 1) {
+                        $('.page-content').empty().load('/Message/ReadInMail');
                         //window.location.reload();
-                        $('.page-content').empty().load('/Message/SendBox');
                     } else {
                         alert("处理失败!");
->>>>>>> 1098cc93e46fce1a95b6366e7ff906158f765918
                     }
                 }
             });
             //}
 
 
-        })
+        });
         $("#DeleteMail").click(function () {
             $.ajax({
-                url: CTX+'/Message/GoOperationSingle',
-                data: {id: ${sendBox.id}, type: 3},
+                url: '/Message/GoInOperationSingle',
+                data: {id: ${inBox.id}, type: 3},
                 success: function (data) {
                     if (data.message == 1) {
                         //alert("删除成功！");
-<<<<<<< 564a611cdea878de5e64dd82b575e239e33d58e9
-                        $('.page-content').empty().load(CTX+'/Message/SendBox');
-                    }else
-                    {
-=======
-                        $('.page-content').empty().load('/Message/SendBox');
+                        $('.page-content').empty().load('/Message/InBox');
                     } else {
->>>>>>> 1098cc93e46fce1a95b6366e7ff906158f765918
                         alert("删除失败");
                     }
                 }
             });
-        })
+        });
 
         $("#replySubmit").click(function () {
             $('#Reply').hide();
@@ -275,20 +243,16 @@
             $.ajax({
                 url: '/Message/MailreplySubmit',
                 type: "post",
-                data: {
-                    id: ${sendBox.id}, ReplyContent: $("#replyText").val(), mailType: 1
-                },
+                data: {id: ${inBox.id}, ReplyContent: $("#replyText").val(), mailType: 0},
                 success: function (data) {
                     if (data.message == 1) {
-                        $('.page-content').empty().load('/Message/ReadMail?MailId=' + ${sendBox.id});
-                    }
-                    else {
+                        $('.page-content').empty().load('/Message/ReadInMail?MailId=' + ${inBox.id});
+                    } else {
                         alert("回复失败");
                     }
                 }
             });
         });
-
         //绑定滚动条事件
         $(window).bind("scroll", function () {
             var sTop = $(window).scrollTop();
@@ -312,7 +276,6 @@
                 }
             }
         });
-
-    })
+    });
 </script>
 </@base.html>

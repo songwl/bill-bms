@@ -1,3 +1,5 @@
+
+
 package com.yipeng.bill.bms.dao;
 
 import com.yipeng.bill.bms.domain.inBox;
@@ -21,8 +23,16 @@ public interface inBoxMapper {
 
     int updateByPrimaryKey(inBox record);
 
-    Long selectCount(Map<String ,Object> params);
+    Long selectCount(Map<String, Object> params);
 
-    List<Feedback> selectInBox(Map<String,Object> params);
+    Long selectAllCount(Map<String, Object> params);
+
+    Long selectCountRead(Map<String, Object> params);
+
+    List<inBox> selectInBox(Map<String, Object> params);
+
+    inBox selectById(Long id);
+
+    inBox selectBySendId(Long id);
 
 }

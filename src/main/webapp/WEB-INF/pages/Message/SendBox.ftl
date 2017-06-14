@@ -17,7 +17,7 @@
                         <h5>文件夹</h5>
                         <ul class="folder-list m-b-md" style="padding: 0">
                             <li>
-                                <a href="/Mail/Index">
+                                <a href="#" onclick="$('.page-content').empty().load('/Message/InBox');">
                                     <i class="fa fa-inbox "></i> 收件箱 <span class="label label-warning pull-right"
                                                                            id="MailNum">0</span>
                                 </a>
@@ -81,8 +81,8 @@
                 <h2>
                     发件箱 (<span id="MailAllNum">0</span>)
                 </h2>
-                <div class="mail-tools tooltip-demo m-t-md">
-                    <div class="btn-group pull-right">
+               <div class="mail-tools tooltip-demo m-t-md">
+                    <#-- <div class="btn-group pull-right">
                         <button class="btn btn-white btn-sm">
                             <i class="fa fa-arrow-left"></i>
                         </button>
@@ -90,7 +90,7 @@
                             <i class="fa fa-arrow-right"></i>
                         </button>
 
-                    </div>
+                    </div>-->
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" id="refresh"
                             title="刷新邮件列表"><i class="fa fa-refresh"></i> 刷新
                     </button>
@@ -127,7 +127,7 @@
         $.ajax({
             url: CTX+"/Message/MailNum",
             success: function (data) {
-                $("#MailNum").text(data);
+                $("#ReMailNum").text("").text(data.message);//未读发件箱
             }
         })
     }
@@ -136,7 +136,7 @@
         $.ajax({
             url: CTX+"/Message/ReMailNum",
             success: function (data) {
-                $("#MailAllNum").text(data.message);
+                $("#MailNum").text(data.message);//未读收件箱
             }
         })
     }
@@ -145,7 +145,7 @@
         $.ajax({
             url: CTX+"/Message/SendMailAllNum",
             success: function (data) {
-                $("#ReMailNum").text(data.message);
+                $("#MailAllNum").text(data.message);
             }
         })
     }
@@ -223,14 +223,35 @@
                         valign: 'middle',
                         title: '标题',
                         formatter: function (value, row, index) {
-
-                            var a = "";
-                            a = '<span class="title" style="cursor:pointer;">' + value + '</span>';
-
+                            var a="";
+                            if ((row.senduserid != ${loginUser.id} && row.dealtstate == 3)||(row.senduserid == ${loginUser.id} && row.dealtstate == 2)) {
+                                a = '<span class="title" style="color:red;cursor:pointer;">' + value + '</span>';
+                            }
+                            else
+                            {
+                                a = '<span class="title" style="cursor:pointer;">' + value + '</span>';
+                            }
                             return a;
                         },
                         events: ReadMailEvents
 
+                    },
+                    {
+                        field: 'affairstate',
+                        title: '事务类型',
+                        width: 200,
+                        align: 'center',
+                        valign: 'middle',
+                        formatter: function (value, row, index) {
+                            if (value == "1") {
+                                return "一般";
+                            }
+                            else if (value == "2") {
+                                return "紧急";
+                            } else {
+                                return "重要";
+                            }
+                        }
                     },
                     {
                         field: 'sendtime',
@@ -249,13 +270,13 @@
                         title: '状态',
                         align: 'center',
                         valign: 'middle',
-                        width: 70,
+                        width: 90,
                         formatter: function (value, row, index) {
                             var a = "";
-                            if (value == 0) {
-                                a = '<span class="label label-success StateId" data-state="0">未处理</span>';
+                            if ((row.senduserid != ${loginUser.id} && row.dealtstate == 3)||(row.senduserid == ${loginUser.id} && row.dealtstate == 2)) {
+                                a = '<div class="label label-success StateId" data-state="0">未读消息</div>';
                             }
-                            if (value == 1) {
+                            else {
                                 a = '<span class="label label-default StateId" data-state="1">已处理</span>';
                             }
 

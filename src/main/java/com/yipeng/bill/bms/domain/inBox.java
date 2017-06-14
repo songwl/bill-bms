@@ -6,6 +6,8 @@ import java.util.Date;
 public class inBox implements Serializable {
     private Long id;
 
+    private Long sendid;
+
     private String senduserid;
 
     private String inuserid;
@@ -30,6 +32,14 @@ public class inBox implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getSendid() {
+        return sendid;
+    }
+
+    public void setSendid(Long sendid) {
+        this.sendid = sendid;
     }
 
     public String getSenduserid() {

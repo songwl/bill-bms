@@ -25,7 +25,7 @@
     delete from sendbox
     where Id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.sendBox">
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.sendBox"  useGeneratedKeys="true" keyColumn="id" keyProperty="id">
     insert into sendbox (Id, sendUserId, InUserId, 
       mailType, Title, Content, 
       dealtState, affairState, SendTime
@@ -35,7 +35,7 @@
       #{dealtstate,jdbcType=INTEGER}, #{affairstate,jdbcType=INTEGER}, #{sendtime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.sendBox">
+  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.sendBox"  useGeneratedKeys="true" keyColumn="id" keyProperty="id">
     insert into sendbox
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -156,7 +156,7 @@
     from sendbox as s
     join t_user as u
     on s.inuserid=u.id
-    where s.dealtState=0 and s.mailtype=#{MailType,jdbcType=INTEGER}
+    where (s.dealtState=0 ||s.dealtState=2) and s.mailtype=#{MailType,jdbcType=INTEGER}
     <if test="type == 1">
       and  s.inUserId=#{currentid,jdbcType=VARCHAR}
     </if>

@@ -493,7 +493,7 @@
                         </ul>
                     </li>
 
-                    <#--<li class="" style="border-bottom: 1px solid #3d3d3d;">
+                    <li class="" style="border-bottom: 1px solid #3d3d3d;">
                         <a href="javascript:;">
                             <i class="glyphicon glyphicon-envelope"></i><span class="title"> 信息系统 </span><span
                                 class="arrow "></span>
@@ -505,7 +505,7 @@
                                 </a>
                             </li>
                             <li class="">
-                                <a href="javascript:;">
+                                <a href="/Message/InBox">
                                     收件箱
                                 </a>
                             </li>
@@ -526,7 +526,7 @@
                             </li>
 
                         </ul>
-                    </li>-->
+                    </li>
                     <li class="" style="border-bottom: 1px solid #3d3d3d;">
                         <a href="javascript:;">
                             <i class="	glyphicon glyphicon-bullhorn"></i><span class="title"> 公告系统 </span><span
@@ -552,7 +552,7 @@
                         <a href="javascript:;">
                             <i class="fa fa-comments-o"></i><span class="title"> 反馈与帮助 </span>
                             <#if bmsModel.UnReadNum gt 0>
-                            <span class="label label-warning" id="ReMailNum">${bmsModel.UnReadNum}</span>
+                            <span class="label label-warning" id="">${bmsModel.UnReadNum}</span>
                             </#if>
                             <span class="arrow "></span>
                         </a>
@@ -568,7 +568,7 @@
                                 <a href="/Message/FeedbackSearch">
                                     反馈查询
                                     <#if bmsModel.UnReadNum gt 0>
-                                        <span class="label label-warning" id="ReMailNum">${bmsModel.UnReadNum}</span>
+                                        <span class="label label-warning" id="">${bmsModel.UnReadNum}</span>
                                     </#if>
                                 </a>
                             </li>

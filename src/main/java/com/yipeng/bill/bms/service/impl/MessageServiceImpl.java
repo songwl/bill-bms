@@ -1,5 +1,6 @@
 package com.yipeng.bill.bms.service.impl;
 
+import com.mchange.v1.db.sql.ConnectionUtils;
 import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.service.MessageService;
@@ -9,6 +10,7 @@ import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -59,17 +61,18 @@ public class MessageServiceImpl implements MessageService {
             sendBox.setTitle(Title);
             sendBox.setContent(Content);
             sendBox.setAffairstate(Integer.parseInt(affairState));
-            sendBox.setDealtstate(0);
+            sendBox.setDealtstate(3);
             sendBox.setSendtime(new Date());
             num1 += sendBoxMapper.insert(sendBox);
             inBox inBox = new inBox();
+            inBox.setSendid(sendBox.getId());
             inBox.setSenduserid(SendUserId.toString());
             inBox.setInuserid(InUserId);
             inBox.setMailtype(1);
             inBox.setTitle(Title);
             inBox.setContent(Content);
             inBox.setAffairstate(Integer.parseInt(affairState));
-            inBox.setDealtstate(0);
+            inBox.setDealtstate(3);
             inBox.setIntime(new Date());
             num2 += inBoxMapper.insert(inBox);
         } else {
@@ -186,6 +189,34 @@ public class MessageServiceImpl implements MessageService {
         return (num == num2 && num > 0);
     }
 
+    @Override
+    public Boolean MailreplySubmit(Map<String, String[]> data, LoginUser loginUser) {
+        Long SendUserId = loginUser.getId();
+        Long id = Long.parseLong(data.get("id")[0]);
+        inBox inBox = inBoxMapper.selectByPrimaryKey(id);
+        id = inBox.getSendid();
+        String Content = data.get("ReplyContent")[0];
+        int mailType = Integer.parseInt(data.get("mailType")[0]);
+        sendBox sendBox = sendBoxMapper.selectByPrimaryKey(id);
+        messageReply messageReply = new messageReply();
+        messageReply.setMessageid(id);
+        messageReply.setSendid(SendUserId.toString());
+        if (sendBox.getSenduserid().equals(SendUserId.toString())) {
+            messageReply.setInid(sendBox.getInuserid());
+            sendBox.setDealtstate(3);//接收者有消息提醒
+        } else {
+            messageReply.setInid(sendBox.getSenduserid());
+            sendBox.setDealtstate(2);//接收者有消息提醒
+        }
+        messageReply.setReplycontent(Content);
+        messageReply.setDealtstate(1);
+        messageReply.setMessagetype(mailType);//0是信息消息 1是反馈消息
+        messageReply.setReplytime(new Date());
+        int num = messageReplyMapper.insert(messageReply);
+        int num2 = sendBoxMapper.updateByPrimaryKeySelective(sendBox);
+        return (num == num2 && num > 0);
+    }
+
     /**
      * 获取发件箱列表
      *
@@ -197,6 +228,7 @@ public class MessageServiceImpl implements MessageService {
     public Map<String, Object> GetSendBox(Map<String, Object> params, LoginUser loginUser) {
         params.put("currentid", loginUser.getId());
         params.put("MailType", 1);
+        params.put("type", 0);
         Long total = sendBoxMapper.selectCount(params);
         List<sendBox> sendBoxList = sendBoxMapper.selectSendBox(params);
         /*SimpleDateFormat sm=new SimpleDateFormat("yyyy-MM-dd hh:MM:ss");
@@ -207,6 +239,19 @@ public class MessageServiceImpl implements MessageService {
         Map<String, Object> map = new HashMap<>();
         map.put("total", total);
         map.put("rows", sendBoxList);
+
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> GetInBox(Map<String, Object> params, LoginUser loginUser) {
+        params.put("currentid", loginUser.getId());
+        params.put("MailType", 1);
+        Long total = inBoxMapper.selectCount(params);
+        List<inBox> inBoxList = inBoxMapper.selectInBox(params);
+        Map<String, Object> map = new HashMap<>();
+        map.put("total", total);
+        map.put("rows", inBoxList);
 
         return map;
     }
@@ -232,6 +277,28 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public Boolean updateInRead(String[] idarr, int type) {
+        for (String item : idarr
+                ) {
+            inBox inBox = inBoxMapper.selectByPrimaryKey(Long.parseLong(item));
+            sendBox sendBox = sendBoxMapper.selectByPrimaryKey(inBox.getSendid());
+            if (type == 1) {
+            }
+            if (type == 2) {
+                inBox.setAffairstate(3);
+            }
+            if (type == 3) {
+                inBox.setMailtype(0);
+            }
+            sendBox.setDealtstate(1);
+            Boolean flag = inBoxMapper.updateByPrimaryKey(inBox) > 0
+                    && sendBoxMapper.updateByPrimaryKeySelective(sendBox) > 0;
+            if (!flag) return false;
+        }
+        return true;
+    }
+
+    @Override
     public Boolean updateReadSingle(Long id, int type) {
         sendBox sendBox = sendBoxMapper.selectByPrimaryKey(id);
         if (type == 1) {
@@ -249,10 +316,28 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public Boolean updateInReadSingle(Long id, int type) {
+        inBox inBox = inBoxMapper.selectByPrimaryKey(id);
+        if (type == 1) {
+        }
+        if (type == 2) {
+            inBox.setAffairstate(3);
+        }
+        if (type == 3) {
+            inBox.setMailtype(0);
+        }
+        inBox.setDealtstate(1);
+        Boolean flag = inBoxMapper.updateByPrimaryKey(inBox) > 0;
+        if (!flag) return false;
+        return true;
+    }
+
+    @Override
     public Long getReMailNum(LoginUser loginUser, int type) {
         Map<String, Object> params = new HashMap<>();
         params.put("currentid", loginUser.getId());
         params.put("MailType", 1);
+        params.put("type", 0);
         Long sum;
         if (type == 0) {
             sum = sendBoxMapper.selectCount(params);
@@ -263,9 +348,44 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public Long getInReMailNum(LoginUser loginUser, int type) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("currentid", loginUser.getId());
+        params.put("MailType", 1);
+        params.put("type", 1);
+        Long sum;
+        if (type == 0) {
+            sum = inBoxMapper.selectCount(params);
+        } else {
+            sum = inBoxMapper.selectCountRead(params);
+        }
+        return sum;
+    }
+
+    @Override
+    public Long getInMailNum(LoginUser loginUser, int type) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("currentid", loginUser.getId());
+        params.put("MailType", 1);
+        Long sum;
+        if (type == 0) {
+            sum = inBoxMapper.selectCount(params);
+        } else {
+            sum = inBoxMapper.selectCountRead(params);
+        }
+        return sum;
+    }
+
+    @Override
     public sendBox getContent(Long id) {
         sendBox sendBox = sendBoxMapper.selectById(id);
         return sendBox;
+    }
+
+    @Override
+    public inBox getInContent(Long id) {
+        inBox inBox = inBoxMapper.selectByPrimaryKey(id);
+        return inBox;
     }
 
     @Override

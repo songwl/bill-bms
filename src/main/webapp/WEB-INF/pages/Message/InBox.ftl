@@ -1,48 +1,115 @@
 <#import "/base/base.ftl" as base>
 <#import "/base/dict.ftl" as dict>
 
-<@base.html "写信息">
+<@base.html "收件箱">
 <link href="${ctx}/static/css/Message/font-awesome.min.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/animate.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/custom.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/Index.css" rel="stylesheet">
 <div class="wrapper wrapper-content">
     <div class="row">
+        <div class="col-sm-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content mailbox-content">
+                    <div class="file-manager">
+                        <a class="btn btn-block btn-primary compose-mail" href="#"
+                           onclick="$('.page-content').empty().load('/Message/WriteMail');">写信</a>
+                        <div class="space-25"></div>
+                        <h5>文件夹</h5>
+                        <ul class="folder-list m-b-md" style="padding: 0">
+                            <li>
+                                <a href="#" onclick="$('.page-content').empty().load('/Message/InBox');">
+                                    <i class="fa fa-inbox "></i> 收件箱 <span class="label label-warning pull-right"
+                                                                           id="MailNum">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" onclick="$('.page-content').empty().load('/Message/SendBox');"> <i
+                                        class="fa fa-envelope-o"></i>
+                                    发件箱<span class="label label-warning pull-right" id="ReMailNum">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#"> <i class="fa fa-certificate"></i> 重要</a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-file-text-o"></i> 草稿 <span
+                                        class="label label-danger pull-right">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailbox.html"> <i class="fa fa-trash-o"></i> 垃圾箱</a>
+                            </li>
+                        </ul>
+                        <h5>分类</h5>
+                        <ul class="category-list" style="padding: 0">
+                            <li>
+                                <a href="#"> <i class="fa fa-circle text-navy"></i> 工作</a>
+                            </li>
+                            <li>
+                                <a href="#"> <i class="fa fa-circle text-danger"></i> 文档</a>
+                            </li>
+                            <li>
+                                <a href="#"> <i class="fa fa-circle text-primary"></i> 社交</a>
+                            </li>
+                            <li>
+                                <a href="#"> <i class="fa fa-circle text-info"></i> 广告</a>
+                            </li>
+                            <li>
+                                <a href="#"> <i class="fa fa-circle text-warning"></i> 客户端</a>
+                            </li>
+                        </ul>
+
+
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-sm-9 animated fadeInRight">
             <div class="mail-box-header">
 
-                <div class="pull-right mail-search">
+                <form method="get" action="index.html" class="pull-right mail-search">
                     <div class="input-group">
-                        <input type="text" class="form-control input-sm" name="search" placeholder="搜索公告标题，正文等">
+                        <input type="text" class="form-control input-sm" name="search" placeholder="搜索邮件标题，正文等">
                         <div class="input-group-btn">
-                            <button class="btn btn-sm btn-primary" id="Search">
-                                <i class="glyphicon glyphicon-search"></i>
+                            <button type="submit" class="btn btn-sm btn-primary">
                                 搜索
                             </button>
                         </div>
                     </div>
-                </div>
+                </form>
                 <h2>
-                    反馈查询 <span id="MailAllNum"></span>
+                    收件箱 (<span id="MailAllNum">0</span>)
                 </h2>
                 <div class="mail-tools tooltip-demo m-t-md">
-                    <div class="btn-group pull-right">
+                    <#--div class="btn-group pull-right">
+                        <button class="btn btn-white btn-sm">
+                            <i class="fa fa-arrow-left"></i>
+                        </button>
+                        <button class="btn btn-white btn-sm">
+                            <i class="fa fa-arrow-right"></i>
+                        </button>
 
-                        <#if !loginUser.hasRole("SUPER_ADMIN")>
-                            <button class="btn btn-white btn-sm fsgg" data-toggle="0" check="" onclick="loadSendOrReceive(0)"
-                                    style="background: #eee;">
-                                <i class="fa fa-arrow-up">发送反馈</i>
-                            </button>
-                        </#if>
-                        <#if loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("ADMIN")||loginUser.hasRole("COMMISSIONER")||loginUser.hasRole("AGENT")>
-                            <button class="btn btn-white btn-sm jsgg" data-toggle="1" check="" onclick="loadSendOrReceive(1)">
-                                <i class="fa fa-arrow-down">接收反馈</i>
-                            </button>
-                        </#if>
-                    </div>
+                    </div>-->
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" id="refresh"
-                            title="刷新公告列表"><i class="fa fa-refresh"></i> 刷新
+                            title="刷新邮件列表"><i class="fa fa-refresh"></i> 刷新
                     </button>
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"
+                            onclick="operation(1);" id="updateread"
+                            title="标为已读">
+                        <i class="fa fa-eye"></i>
+                    </button>
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"
+                            onclick="operation(2);" title="标为重要">
+                        <i class="fa fa-exclamation"></i>
+                    </button>
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"
+                            onclick="operation(3);" title="标为垃圾邮件">
+                        <i class="fa fa-trash-o"></i>
+                    </button>
+
                 </div>
             </div>
             <div class="mail-box">
@@ -60,51 +127,37 @@
 <script type="text/javascript">
     function MailNum() {
         $.ajax({
-            url: "/Message/MailNum",
+            url: CTX + "/Message/ReMailNum",
             success: function (data) {
-                $("#MailNum").text(data);
+                $("#ReMailNum").text(data.message);//未读发件箱
             }
         })
     }
     //setInterval('MailNum()', 500);
     function ReMailNum() {
         $.ajax({
-            url: "/Message/ReMailNum",
+            url: CTX + "/Message/InReMailNum",
             success: function (data) {
-                $("#MailAllNum").text(data.message);
+                $("#MailNum").text(data.message);//未读收件箱
             }
         })
     }
     //setInterval('ReMailNum()', 500);
     function MailAllNum() {
         $.ajax({
-            url: "/Message/SendMailAllNum",
+            url: CTX + "/Message/InMailAllNum",
             success: function (data) {
-                $("#ReMailNum").text(data.message);
+                $("#MailAllNum").text(data.message);//总收件箱
             }
         })
     }
     //setInterval('MailAllNum()', 500);
 
-    var num = 1;
-        <#if !loginUser.hasRole("SUPER_ADMIN")>
-        num = 0;
-        </#if>
-    var SearchContent = "";
+
     $(function () {
-        /*MailNum();
+        MailNum();
         ReMailNum();
-        MailAllNum();*/
-        $("#Search").click(function () {
-            SearchContent = $("[name='search']").val();
-            num = $("[check]").attr("data-toggle");
-            $("#myTable").bootstrapTable('refresh');
-        });
-        $("#refresh").click(function () {
-            SearchContent = $("[name='search']").val();
-            num = $("[check]").attr("data-toggle");
-            $("#myTable").bootstrapTable('refresh');
-        });
+        MailAllNum();
         //1.初始化Table
         var oTable = new TableInit();
         oTable.Init();
@@ -114,27 +167,14 @@
         oButtonInit.Init();
 
     });
-    //0是发送 1是接收
-    function loadSendOrReceive(nn) {
-        if (nn == 0) {
-            $(".fsgg").css("background", "#eee").attr("check", "");
-            $(".jsgg").css("background", "#fff").removeAttr("check");
-        }
-        else {
-            $(".jsgg").css("background", "#eee").attr("check", "");
-            $(".fsgg").css("background", "#fff").removeAttr("check");
-        }
-        SearchContent = "";
-        num = nn;
-        $("#myTable").bootstrapTable('refresh');
-    }
+
 
     var TableInit = function () {
         var oTableInit = new Object();
         //初始化Table
         oTableInit.Init = function () {
             $('#myTable').bootstrapTable({
-                url: CTX + '/Message/GetFeedbackSearch',         //请求后台的URL（*）
+                url: CTX + '/Message/GetInBox',         //请求后台的URL（*）
                 method: 'get',                      //请求方式（*）
                 toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
@@ -169,18 +209,27 @@
                         visible: false
 
                     },
+
+                    {
+                        field: 'senduserid',
+                        title: '发件人',
+                        align: 'center',
+                        valign: 'middle',
+                        width: 70
+
+                    },
+
                     {
                         field: 'title',
                         align: 'center',
                         valign: 'middle',
                         title: '标题',
                         formatter: function (value, row, index) {
-                            var a="";
-                            if ((row.senduserid != ${loginUser.id} && row.dealtstate == 3)||(row.senduserid == ${loginUser.id} && row.dealtstate == 2)) {
+                            var a = "";
+                            if ((row.senduserid != ${loginUser.id} && row.dealtstate == 3) || (row.senduserid == ${loginUser.id} && row.dealtstate == 2)) {
                                 a = '<span class="title" style="color:red;cursor:pointer;">' + value + '</span>';
                             }
-                            else
-                            {
+                            else {
                                 a = '<span class="title" style="cursor:pointer;">' + value + '</span>';
                             }
                             return a;
@@ -190,24 +239,23 @@
                     },
                     {
                         field: 'affairstate',
+                        title: '事务类型',
+                        width: 200,
                         align: 'center',
                         valign: 'middle',
-                        title: '问题类型',
                         formatter: function (value, row, index) {
                             if (value == "1") {
-                                return "优化问题";
+                                return "一般";
                             }
                             else if (value == "2") {
-                                return "报价问题";
+                                return "紧急";
+                            } else {
+                                return "重要";
                             }
-                            else {
-                                return "其他问题";
-                            }
-                        },
-
+                        }
                     },
                     {
-                        field: 'sendtime',
+                        field: 'intime',
                         title: '日期',
                         width: 200,
                         align: 'center',
@@ -217,23 +265,29 @@
                             return date.toLocaleString();
                         }
                     },
+
                     {
-                        field: 'zt',
+                        field: 'dealtstate',
                         title: '状态',
                         align: 'center',
                         valign: 'middle',
+                        width: 90,
                         formatter: function (value, row, index) {
                             var a = "";
-                            if ((row.senduserid != ${loginUser.id} && row.dealtstate == 3)||(row.senduserid == ${loginUser.id} && row.dealtstate == 2)) {
-                                a = '<span class="label label-success StateId" data-state="0">未查看</span>';
+                            if ((row.senduserid != ${loginUser.id} && row.dealtstate == 3) || (row.senduserid == ${loginUser.id} && row.dealtstate == 2)) {
+                                a = '<span class="label label-success StateId" data-state="0">未读消息</span>';
                             }
                             else {
-                                a = '<span class="label label-default StateId" data-state="1">已查看</span>';
+                                a = '<span class="label label-default StateId" data-state="1">已处理</span>';
                             }
 
                             return a;
-                        }
+
+                        },
+
                     },
+
+
                 ]
             });
         };
@@ -242,15 +296,14 @@
         oTableInit.queryParams = function (params) {
             var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
                 limit: params.limit,   //页面大小
-                offset: params.offset,  //页码
-                type: num,
-                SearchContent: SearchContent
+                offset: params.offset  //页码
             };
             return temp;
         }
         window.ReadMailEvents = {
             'click .title': function (e, value, row, index) {
-                $(".page-content").empty().load(CTX+"/Message/ReadFeedback?FeedbackId=" + row.id).fadeIn(1000);
+                var StateId = $(".StateId").attr("data-state");
+                $(".page-content").empty().load("/Message/ReadInMail?MailId=" + row.id + "&StateId=" + StateId).fadeIn(1000);
                 //window.location.href = "/Message/ReadMail?MailId=" + row.id + "&StateId=" + StateId;
 
             }
@@ -271,12 +324,18 @@
 
         return oInit;
     };
+    $(function () {
+        $("#refresh").click(function () {
+            $("#myTable").bootstrapTable('refresh');
+        });
+        /* $("#updateread").click(operation(1));*/
+    });
     function operation(types) {
         var allTableData = $('#myTable').bootstrapTable('getSelections');//获取表格的所有内容行
         console.info(allTableData);
         $.ajax({
             type: 'get',
-            url: CTX + '/Message/GoOperation',
+            url: CTX + '/Message/GoInOperation',
             data: {data: allTableData, type: types},
             success: function (data) {
                 if (data.message != "1") {

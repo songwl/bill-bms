@@ -56,4 +56,6 @@ public interface UserMapper {
     List<User> getSearchUserBillAscription(Map<String,Object> params);
 
     List<User> selectAllUsers(String role);
+
+    List<User> selectAddressee(String currentid);
 }

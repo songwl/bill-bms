@@ -81,10 +81,10 @@
                 <form class="form-horizontal" method="post" id="f1" name="f1" action="/Message/SendMail">
                     <div class="mail-body">
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">部门：</label>
+                            <label class="col-sm-2 control-label">收件人：</label>
 
                             <div class="col-sm-10">
-                                <select style="width:100px;" id="department" name="department">
+                                <#--<select style="width:100px;" id="department" name="department">
                                     <option value="-1">--请选择--</option>
                                     <#list bumenlist as bumen>
                                         <option value="${bumen.id}">${bumen.roleName}</option>
@@ -92,9 +92,12 @@
 
                                 </select>
                                 &nbsp; &nbsp; &nbsp;
-                                <label class=" control-label">收件人：</label>
+                                <label class=" control-label">收件人：</label>-->
                                 <select style="width:100px;" id="User" name="User">
                                     <option value="-1">--请选择--</option>
+                                    <#list AddresseeList as item>
+                                        <option value="${item.id}">${item.userName}</option>
+                                    </#list>
                                 </select>
                                 &nbsp; &nbsp; &nbsp;
                                 <label class=" control-label">事务状态：</label>
@@ -124,7 +127,7 @@
                     <div class="mail-text h-200">
 
                         <div class="summernote">
-                            <textarea class="col-sm-10" style="height:150px; margin-left:120px;resize:none;"
+                            <textarea class="col-sm-10" style="height:150px;line-height: 80px;text-align: center; margin-left:120px;resize:none;"
                                       id="content" name="content"></textarea>
                         </div>
                         <div class="clearfix"></div>
@@ -150,16 +153,16 @@
 
     function MailNum() {
         $.ajax({
-            url: CTX+"/Message/MailNum",
+            url: CTX + "/Message/ReMailNum",
             success: function (data) {
-                $("#ReMailNum").text("").text(data.message);//未读发件箱
+                $("#ReMailNum").text(data.message);//未读发件箱
             }
         })
     }
     //setInterval('MailNum()', 500);
     function ReMailNum() {
         $.ajax({
-            url: CTX+"/Message/ReMailNum",
+            url: CTX + "/Message/InReMailNum",
             success: function (data) {
                 $("#MailNum").text(data.message);//未读收件箱
             }
@@ -171,7 +174,7 @@
 
         MailNum();
         ReMailNum();
-        $("#department").change(function () {
+        /*$("#department").change(function () {
             if ($("#department option:selected").val() != "-1") {
                 $("#User").empty();
                 var department = $("#department option:selected").val();
@@ -198,7 +201,7 @@
                 $("#User").append(str);
             }
 
-        })
+        })*/
         $("#Send").click(function () {
             if ($("#AllUser").is(":checked")) {
                 if ($("#affairState option:selected").val() == "-1") {
@@ -224,16 +227,16 @@
             }
             else {
 
-                if ($("#department option:selected").val() != "-1" && $("#User option:selected").val() != "-1" && $("#affairState option:selected").val() != "-1" && $("#Title").val() != "" && $("#content").val() != "") {
+                if (/*$("#department option:selected").val() != "-1" &&*/ $("#User option:selected").val() != "-1" && $("#affairState option:selected").val() != "-1" && $("#Title").val() != "" && $("#content").val() != "") {
                     var User=$("[name='User']").val();
                     var affairState=$("[name='affairState']").val();
                     var Title=$("[name='Title']").val();
                     var content=$("[name='content']").val();
-                    var department = $("#department option:selected").val();
+                    /*var department = $("#department option:selected").val();*/
                     $.ajax({
                         type: 'post',
                         url: CTX + '/Message/SendMail',
-                        data: {User: User,affairState: affairState,Title: Title,content: content,department:department},
+                        data: {User: User,affairState: affairState,Title: Title,content: content,department:""},
                         success: function (data) {
                             if(data.message=="1")
                             {

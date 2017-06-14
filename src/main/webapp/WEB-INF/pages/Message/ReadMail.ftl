@@ -15,9 +15,6 @@
                     <div class="file-manager">
                         <a class="btn btn-block btn-primary compose-mail" href="#"
                            onclick="$('.page-content').empty().load(CTX+'/Message/WriteMail');">写信</a>
-
-                        <a class="btn btn-block btn-primary compose-mail" href="#"
-                           onclick="$('.page-content').empty().load('/Message/WriteMail');">写信</a>
                         <div class="space-25"></div>
                         <h5>文件夹</h5>
                         <ul class="folder-list m-b-md" style="padding: 0">

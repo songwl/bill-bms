@@ -40,8 +40,11 @@ public class MessageController extends BaseController {
 
     @RequestMapping(value = "/WriteMail")
     public String WriteMail(ModelMap modelMap) {
-        List<Role> bumenlist = messageService.getBumen();
-        modelMap.put("bumenlist", bumenlist);
+        LoginUser loginUser=this.getCurrentAccount();
+        /*List<Role> bumenlist = messageService.getBumen()
+        modelMap.put("bumenlist", bumenlist);;*/
+        List<User> AddresseeList = messageService.GetAddressee(loginUser);
+        modelMap.put("AddresseeList", AddresseeList);
         return "/Message/WriteMail";
     }
 
@@ -458,6 +461,16 @@ public class MessageController extends BaseController {
     @RequestMapping(value = "/MailreplySubmit", method = RequestMethod.POST)
     @ResponseBody
     public ResultMessage MailreplySubmit(HttpServletRequest httpRequest) {
+        Map<String, String[]> param = httpRequest.getParameterMap();
+        LoginUser loginUser = this.getCurrentAccount();
+        boolean flag = messageService.replySubmit(param, loginUser);
+
+        return this.ajaxDoneSuccess(flag ? "1" : "0");
+    }
+    //信息回复
+    @RequestMapping(value = "/InMailreplySubmit", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage InMailreplySubmit(HttpServletRequest httpRequest) {
         Map<String, String[]> param = httpRequest.getParameterMap();
         LoginUser loginUser = this.getCurrentAccount();
         boolean flag = messageService.MailreplySubmit(param, loginUser);

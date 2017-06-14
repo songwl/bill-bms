@@ -9,6 +9,8 @@ import java.util.Map;
 public interface MessageService {
     List<Role> getBumen();
 
+    List<User> GetAddressee(LoginUser loginUser);
+
     List<User> getUsers(String role);
 
     Boolean SendMail(Map<String, String[]> data, LoginUser loginUser);

@@ -146,10 +146,7 @@
                     }
                 }
             });
-            //}
-
-
-        })
+        });
         $("#DeleteMail").click(function () {
             $.ajax({
                 url:CTX+ '/Message/GoOperationSingle',
@@ -163,7 +160,7 @@
                     }
                 }
             });
-        })
+        });
         $("#replySubmit").click(function () {
             $('#Reply').hide();
             $('#replySubmit').hide();
@@ -171,14 +168,10 @@
             $.ajax({
                 url: CTX+'/Message/replySubmit',
                 type: "post",
-                data: {id: ${sendBox.id}, ReplyContent: $("#replyText").val(),mailType;1},
+                data: {id: ${sendBox.id}, ReplyContent: $("#replyText").val(),mailType:1},
                 success: function (data) {
                     if (data.message == 1) {
-                        $('.page-content').empty().load(CTX+'/Message/ReadFeedback?FeedbackId=' + ${sendBox.id});
-
-                    if (data.message == 1) ·{
                         $('.page-content').empty().load('/Message/ReadFeedback?FeedbackId=' + ${sendBox.id});
-
                     } else {
                         alert("回复失败");
                     }

@@ -495,8 +495,12 @@
 
                     <li class="" style="border-bottom: 1px solid #3d3d3d;">
                         <a href="javascript:;">
-                            <i class="glyphicon glyphicon-envelope"></i><span class="title"> 信息系统 </span><span
-                                class="arrow "></span>
+                            <i class="glyphicon glyphicon-envelope"></i><span class="title"> 信息系统 </span>
+                            <#if bmsModel.SendUnReadNum gt 0||bmsModel.InUnReadNum gt 0>
+                                <span class="label label-warning"
+                                      id="">${bmsModel.SendUnReadNum+bmsModel.InUnReadNum}</span>
+                            </#if>
+                            <span class="arrow "></span>
                         </a>
                         <ul class="sub-menu" style="background: #293038;">
                             <li class="">
@@ -507,11 +511,17 @@
                             <li class="">
                                 <a href="/Message/InBox">
                                     收件箱
+                                    <#if bmsModel.InUnReadNum gt 0>
+                                        <span class="label label-warning" id="">${bmsModel.InUnReadNum}</span>
+                                    </#if>
                                 </a>
                             </li>
                             <li class="">
                                 <a href="/Message/SendBox">
                                     发件箱
+                                    <#if bmsModel.SendUnReadNum gt 0>
+                                        <span class="label label-warning" id="">${bmsModel.SendUnReadNum}</span>
+                                    </#if>
                                 </a>
                             </li>
                             <li class="">
@@ -552,7 +562,7 @@
                         <a href="javascript:;">
                             <i class="fa fa-comments-o"></i><span class="title"> 反馈与帮助 </span>
                             <#if bmsModel.UnReadNum gt 0>
-                            <span class="label label-warning" id="">${bmsModel.UnReadNum}</span>
+                                <span class="label label-warning" id="">${bmsModel.UnReadNum}</span>
                             </#if>
                             <span class="arrow "></span>
                         </a>

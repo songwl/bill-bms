@@ -11,6 +11,7 @@ import com.yipeng.bill.bms.dao.sendBoxMapper;
 import com.yipeng.bill.bms.domain.inBox;
 import com.yipeng.bill.bms.domain.noticepublish;
 import com.yipeng.bill.bms.service.HomeService;
+import com.yipeng.bill.bms.service.MessageService;
 import com.yipeng.bill.bms.service.RemoteService;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class HomeController extends BaseController {
 	private RemoteService remoteService;
 	@Autowired
 	private sendBoxMapper sendBoxMapper;
+	@Autowired
+	private MessageService messageService;
 	//@Autowired
 	//private AuthorityService authorityService;
 
@@ -37,8 +40,12 @@ public class HomeController extends BaseController {
 	public String index(ModelMap model) throws Exception {
 		Map<String, Object> bms = new HashMap<>();
 		LoginUser user = this.getCurrentAccount();
-		Long UnReadNum=sendBoxMapper.selectUnreadCount(user.getId().toString());
+		Long UnReadNum=sendBoxMapper.selectUnreadCount(user.getId().toString());//反馈未读数量
+		Long SendUnReadNum = messageService.getReMailNum(user, 1);//发件箱未读数量
+		Long InUnReadNum = messageService.getInReMailNum(user, 1);
 		bms.put("UnReadNum", UnReadNum);
+		bms.put("SendUnReadNum", SendUnReadNum);
+		bms.put("InUnReadNum", InUnReadNum);
 		bms.put("user", user);
 		//bms.put("bmsNavigationList", authorityService.queryBmsNavByUserType(NumberUtils.toInt(account.getLoginUserType())));
 		model.addAttribute("bmsModel", bms);

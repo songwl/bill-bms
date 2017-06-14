@@ -40,6 +40,12 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public List<User> GetAddressee(LoginUser loginUser) {
+        List<User> list = userMapper.selectAddressee(loginUser.getId().toString());
+        return list;
+    }
+
+    @Override
     public List<User> getUsers(String role) {
         List<User> list = userMapper.selectAllUsers(role);
         return list;

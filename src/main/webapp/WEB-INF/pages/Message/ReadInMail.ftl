@@ -243,7 +243,7 @@
             $('#replySubmit').hide();
             $('#replybtn').show();
             $.ajax({
-                url: CTX + '/Message/MailreplySubmit',
+                url: CTX + '/Message/InMailreplySubmit',
                 type: "post",
                 data: {id: ${inBox.id}, ReplyContent: $("#replyText").val(), mailType: 0},
                 success: function (data) {

@@ -97,7 +97,7 @@ public class MessageController extends BaseController {
                 sendBoxMapper.updateByPrimaryKeySelective(sendBox);
             }
             //messageReplyMapper.updateByMessageId(FeedbackId);//将MessageId为FeedbackId的信息返回表的DealtState（处理状态）改为2（已查看）
-            List<messageReply> messageReplyList = messageReplyMapper.selectByMessageId(MailId);
+            List<messageReply> messageReplyList = messageReplyMapper.selectByMessageId(inBox.getSendid());
             String sendUserName = userMapper.selectByPrimaryKey(Long.parseLong(inBox.getSenduserid())).getUserName();
             boolean flag=false;
             if (sendBox.getMailtype() == 1) {

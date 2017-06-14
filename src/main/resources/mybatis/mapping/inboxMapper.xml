@@ -202,7 +202,7 @@
 
 
   <select id="selectInBox" resultMap="BaseResultMap">
-    select s.id,u.user_name as senduserid,s.title,sb.dealtState,s.Content,s.affairstate,s.intime
+    select s.id,s.sendid,u.user_name as senduserid,s.title,sb.dealtState,s.Content,s.affairstate,s.intime
     from inbox as s
     join t_user as u
     on s.senduserid=u.id

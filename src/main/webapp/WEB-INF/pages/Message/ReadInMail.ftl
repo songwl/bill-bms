@@ -106,7 +106,8 @@
                     <div class="mail-body">
                         <div style="float: right;max-width: 80%">
                             <span style="float: right">${inBox.intime?string("yyyy-MM-dd HH:mm:ss")}</span> </br>
-                            <span style="float: right">${inBox.content}</span> </br><div style="clear: both"></div>
+                            <span style="float: right">${inBox.content}</span> </br>
+                            <div style="clear: both"></div>
                         </div>
                         <div style="clear:both;"></div>
                     </div>
@@ -123,7 +124,8 @@
                         <div class="mail-body">
                             <div style="float: right;max-width: 80%">
                                 <span style="float: right">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span> </br>
-                                <span style="float: right">${item.replycontent}</span><div style="clear: both"></div>
+                                <span style="float: right">${item.replycontent}</span>
+                                <div style="clear: both"></div>
                             </div>
                             <div style="clear:both;"></div>
                         </div>
@@ -144,18 +146,18 @@
                 </div>
                 <div class="mail-body text-right tooltip-demo">
                     <#if flag>
-                    <a class="btn btn-sm btn-white"
-                       onclick="$('#Reply').show();$('#replybtn').hide();$('#replySubmit').show();" id="replybtn"><i
-                            class="fa	fa-comments"></i><span>回复</span></a>
-                    <a class="btn btn-sm btn-white" onclick="" id="replySubmit" style="display: none"><i
-                            class="fa	fa-comments"></i><span>回复</span></a>
+                        <a class="btn btn-sm btn-white"
+                           onclick="$('#Reply').show();$('#replybtn').hide();$('#replySubmit').show();" id="replybtn"><i
+                                class="fa	fa-comments"></i><span>回复</span></a>
+                        <a class="btn btn-sm btn-white" onclick="" id="replySubmit" style="display: none"><i
+                                class="fa	fa-comments"></i><span>回复</span></a>
                     <#else >
                         <button title="" data-placement="top" data-toggle="tooltip" data-original-title="回复"
                                 class="btn btn-sm btn-white" disabled="disabled"><i class="fa fa-trash-o"></i> 回复
                         </button>
                     </#if>
-                        <a class="btn btn-sm btn-white"
-                                                onclick="$('.page-content').empty().load('/Message/InBox');" id=""><i
+                    <a class="btn btn-sm btn-white"
+                       onclick="$('.page-content').empty().load('/Message/InBox');" id=""><i
                             class="fa fa-reply"></i><span>返回</span></a>
                 <#--<a class="btn btn-sm btn-white"><i class="fa fa-arrow-right"></i> 下一封</a>-->
                     <button title="" data-placement="top" data-toggle="tooltip" data-original-title="删除邮件"
@@ -223,7 +225,7 @@
         });
         $("#DeleteMail").click(function () {
             $.ajax({
-                url: '/Message/GoInOperationSingle',
+                url: CTX + '/Message/GoInOperationSingle',
                 data: {id: ${inBox.id}, type: 3},
                 success: function (data) {
                     if (data.message == 1) {
@@ -241,7 +243,7 @@
             $('#replySubmit').hide();
             $('#replybtn').show();
             $.ajax({
-                url: '/Message/MailreplySubmit',
+                url: CTX + '/Message/MailreplySubmit',
                 type: "post",
                 data: {id: ${inBox.id}, ReplyContent: $("#replyText").val(), mailType: 0},
                 success: function (data) {

@@ -13,7 +13,8 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-content mailbox-content">
                     <div class="file-manager">
-                        <a class="btn btn-block btn-primary compose-mail" href="#" onclick="$('.page-content').empty().load(CTX+'/Message/WriteMail');">写信</a>
+                        <a class="btn btn-block btn-primary compose-mail" href="#"
+                           onclick="$('.page-content').empty().load(CTX+'/Message/WriteMail');">写信</a>
 
                         <a class="btn btn-block btn-primary compose-mail" href="#"
                            onclick="$('.page-content').empty().load('/Message/WriteMail');">写信</a>
@@ -148,9 +149,9 @@
 
                 <div class="mail-body text-right tooltip-demo">
 
-                        <#if sendBox.dealtstate==0><a class="btn btn-sm btn-white" id="confirm"><i class="glyphicon glyphicon-check"></i><span>确认处理</span></a></#if>
-                        <#if sendBox.dealtstate==1><a class="btn btn-sm btn-white" onclick="$('.page-content').empty().load(CTX+'/Message/SendBox');" id=""><i class="fa fa-reply"></i><span>已经处理</span></a></#if>
-                    <#--<a class="btn btn-sm btn-white"><i class="fa fa-arrow-right"></i> 下一封</a>-->
+                <#--<#if sendBox.dealtstate==0><a class="btn btn-sm btn-white" id="confirm"><i class="glyphicon glyphicon-check"></i><span>确认处理</span></a></#if>
+                <#if sendBox.dealtstate==1><a class="btn btn-sm btn-white" onclick="$('.page-content').empty().load(CTX+'/Message/SendBox');" id=""><i class="fa fa-reply"></i><span>已经处理</span></a></#if>
+            &lt;#&ndash;<a class="btn btn-sm btn-white"><i class="fa fa-arrow-right"></i> 下一封</a>&ndash;&gt;-->
 
                     <#if flag>
                         <a class="btn btn-sm btn-white"
@@ -193,16 +194,16 @@
 <script type="text/javascript">
     function MailNum() {
         $.ajax({
-            url: CTX+"/Message/MailNum",
+            url: CTX + "/Message/ReMailNum",
             success: function (data) {
-                $("#ReMailNum").text("").text(data.message);//未读发件箱
+                $("#ReMailNum").text(data.message);//未读发件箱
             }
         })
     }
     //setInterval('MailNum()', 500);
     function ReMailNum() {
         $.ajax({
-            url: CTX+"/Message/ReMailNum",
+            url: CTX + "/Message/InReMailNum",
             success: function (data) {
                 $("#MailNum").text(data.message);//未读收件箱
             }
@@ -215,50 +216,34 @@
         ReMailNum();
         $("#confirm").click(function () {
             //if (confirm('是否已经处理完毕?')) {
-                $.ajax({
-                    url: CTX+'/Message/GoOperationSingle',
-                    data: {id: ${sendBox.id}, type: 1},
-                    success: function (data) {
-                        if (data.message == 1) {
-                            //window.location.reload();
-                            $('.page-content').empty().load(CTX+'/Message/SendBox');
-                        }else
-                        {
-                            alert("处理失败!");
-                        }
             $.ajax({
-                url: '/Message/GoOperationSingle',
+                url: CTX + '/Message/GoOperationSingle',
                 data: {id: ${sendBox.id}, type: 1},
                 success: function (data) {
                     if (data.message == 1) {
                         //window.location.reload();
-                        $('.page-content').empty().load('/Message/SendBox');
+                        $('.page-content').empty().load(CTX + '/Message/SendBox');
                     } else {
                         alert("处理失败!");
                     }
                 }
             });
-            //}
-
-
-        })
+        });
         $("#DeleteMail").click(function () {
             $.ajax({
-                url: CTX+'/Message/GoOperationSingle',
+                url: CTX + '/Message/GoOperationSingle',
                 data: {id: ${sendBox.id}, type: 3},
                 success: function (data) {
                     if (data.message == 1) {
                         //alert("删除成功！");
-                        $('.page-content').empty().load(CTX+'/Message/SendBox');
-                    }else
-                    {
-                        $('.page-content').empty().load('/Message/SendBox');
-                    } else {
+                        $('.page-content').empty().load(CTX + '/Message/SendBox');
+                    }
+                    else {
                         alert("删除失败");
                     }
                 }
             });
-        })
+        });
 
         $("#replySubmit").click(function () {
             $('#Reply').hide();
@@ -305,6 +290,6 @@
             }
         });
 
-    })
+    });
 </script>
 </@base.html>

@@ -209,6 +209,14 @@
                         visible: false
 
                     },
+                    {
+                        field: 'sendid',
+                        title: '编号',
+                        align: 'center',
+                        valign: 'middle',
+                        visible: false
+
+                    },
 
                     {
                         field: 'senduserid',

@@ -125,16 +125,16 @@
 <script type="text/javascript">
     function MailNum() {
         $.ajax({
-            url: CTX+"/Message/MailNum",
+            url: CTX + "/Message/ReMailNum",
             success: function (data) {
-                $("#ReMailNum").text("").text(data.message);//未读发件箱
+                $("#ReMailNum").text(data.message);//未读发件箱
             }
         })
     }
     //setInterval('MailNum()', 500);
     function ReMailNum() {
         $.ajax({
-            url: CTX+"/Message/ReMailNum",
+            url: CTX + "/Message/InReMailNum",
             success: function (data) {
                 $("#MailNum").text(data.message);//未读收件箱
             }

@@ -13,12 +13,10 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-content mailbox-content">
                     <div class="file-manager">
-<<<<<<< 564a611cdea878de5e64dd82b575e239e33d58e9
                         <a class="btn btn-block btn-primary compose-mail" href="#" onclick="$('.page-content').empty().load(CTX+'/Message/WriteMail');">写信</a>
-=======
+
                         <a class="btn btn-block btn-primary compose-mail" href="#"
                            onclick="$('.page-content').empty().load('/Message/WriteMail');">写信</a>
->>>>>>> 1098cc93e46fce1a95b6366e7ff906158f765918
                         <div class="space-25"></div>
                         <h5>文件夹</h5>
                         <ul class="folder-list m-b-md" style="padding: 0">
@@ -217,7 +215,6 @@
         ReMailNum();
         $("#confirm").click(function () {
             //if (confirm('是否已经处理完毕?')) {
-<<<<<<< 564a611cdea878de5e64dd82b575e239e33d58e9
                 $.ajax({
                     url: CTX+'/Message/GoOperationSingle',
                     data: {id: ${sendBox.id}, type: 1},
@@ -229,7 +226,6 @@
                         {
                             alert("处理失败!");
                         }
-=======
             $.ajax({
                 url: '/Message/GoOperationSingle',
                 data: {id: ${sendBox.id}, type: 1},
@@ -239,7 +235,6 @@
                         $('.page-content').empty().load('/Message/SendBox');
                     } else {
                         alert("处理失败!");
->>>>>>> 1098cc93e46fce1a95b6366e7ff906158f765918
                     }
                 }
             });
@@ -254,14 +249,11 @@
                 success: function (data) {
                     if (data.message == 1) {
                         //alert("删除成功！");
-<<<<<<< 564a611cdea878de5e64dd82b575e239e33d58e9
                         $('.page-content').empty().load(CTX+'/Message/SendBox');
                     }else
                     {
-=======
                         $('.page-content').empty().load('/Message/SendBox');
                     } else {
->>>>>>> 1098cc93e46fce1a95b6366e7ff906158f765918
                         alert("删除失败");
                     }
                 }

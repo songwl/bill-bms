@@ -18,10 +18,14 @@ public interface sendBoxMapper {
 
     int updateByPrimaryKey(sendBox record);
 
-    Long selectCount(Map<String ,Object> params);
-    Long selectCountRead(Map<String ,Object> params);
+    Long selectCount(Map<String, Object> params);
 
-    List<sendBox> selectSendBox(Map<String,Object> params);
+    Long selectCountRead(Map<String, Object> params);
+
+    List<sendBox> selectSendBox(Map<String, Object> params);
+
+    List<sendBox> selectDraftBox(Map<String, Object> params);
+    Long selectDraftBoxNum(Map<String, Object> params);
 
     sendBox selectById(Long id);
 

@@ -1,7 +1,7 @@
 <#import "/base/base.ftl" as base>
 <#import "/base/dict.ftl" as dict>
 
-<@base.html "收件箱">
+<@base.html "草稿箱">
 <link href="${ctx}/static/css/Message/font-awesome.min.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/animate.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/custom.css" rel="stylesheet">
@@ -82,32 +82,35 @@
                     </div>
                 </div>
                 <h2>
-                    收件箱 (<span id="MailAllNum">0</span>)
+                    垃圾箱
                 </h2>
                 <div class="mail-tools tooltip-demo m-t-md">
-                    <#--div class="btn-group pull-right">
-                        <button class="btn btn-white btn-sm">
-                            <i class="fa fa-arrow-left"></i>
-                        </button>
-                        <button class="btn btn-white btn-sm">
-                            <i class="fa fa-arrow-right"></i>
-                        </button>
+                    <div class="btn-group pull-right">
 
-                    </div>-->
+                        <button class="btn btn-white btn-sm fsgg" data-toggle="0" check=""
+                                onclick="loadSendOrReceive(0)"
+                                style="background: #eee;">
+                            <i class="fa fa-arrow-up">发件箱</i>
+                        </button>
+                        <button class="btn btn-white btn-sm jsgg" data-toggle="1" check=""
+                                onclick="loadSendOrReceive(1)">
+                            <i class="fa fa-arrow-down">收件箱</i>
+                        </button>
+                    </div>
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" id="refresh"
                             title="刷新邮件列表"><i class="fa fa-refresh"></i> 刷新
                     </button>
+                <#--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"
+                        onclick="operation(1);" id="updateread"
+                        title="标为已读">
+                    <i class="fa fa-eye"></i>
+                </button>
+                <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"
+                        onclick="operation(2);" title="标为重要">
+                    <i class="fa fa-exclamation"></i>
+                </button>-->
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"
-                            onclick="operation(1);" id="updateread"
-                            title="标为已读">
-                        <i class="fa fa-eye"></i>
-                    </button>
-                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"
-                            onclick="operation(2);" title="标为重要">
-                        <i class="fa fa-exclamation"></i>
-                    </button>
-                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"
-                            onclick="operation(3);" title="标为垃圾邮件">
+                            onclick="DeleteGarbage();" title="删除">
                         <i class="fa fa-trash-o"></i>
                     </button>
 
@@ -143,26 +146,51 @@
             }
         })
     }
-    //setInterval('ReMailNum()', 500);
-    function MailAllNum() {
-        $.ajax({
-            url: CTX + "/Message/InMailAllNum",
-            success: function (data) {
-                $("#MailAllNum").text(data.message);//总收件箱
-            }
-        })
+
+    //0是发送 1是接收
+    function loadSendOrReceive(nn) {
+        if (nn == 0) {
+            $(".fsgg").css("background", "#eee").attr("check", "");
+            $(".jsgg").css("background", "#fff").removeAttr("check");
+        }
+        else {
+            $(".jsgg").css("background", "#eee").attr("check", "");
+            $(".fsgg").css("background", "#fff").removeAttr("check");
+        }
+        SearchContent = "";
+        Mailtype = nn;
+        if (Mailtype == 0) {
+            $("#myTable").bootstrapTable('hideColumn', 'senduserid');
+            $("#myTable").bootstrapTable('hideColumn', 'intime');
+            $("#myTable").bootstrapTable('showColumn', 'inuserid');
+            $("#myTable").bootstrapTable('showColumn', 'sendtime');
+        } else {
+            $("#myTable").bootstrapTable('hideColumn', 'inuserid');
+            $("#myTable").bootstrapTable('hideColumn', 'sendtime');
+            $("#myTable").bootstrapTable('showColumn', 'senduserid');
+            $("#myTable").bootstrapTable('showColumn', 'intime');
+        }
+        $("#myTable").bootstrapTable('refresh');
     }
-    //setInterval('MailAllNum()', 500);
 
-
+    var Mailtype = 0;
+    var SearchContent = "";
     $(function () {
         MailNum();
         ReMailNum();
-        MailAllNum();
+        $("#Search").click(function () {
+            SearchContent = $("[name='search']").val();
+            num = $("[check]").attr("data-toggle");
+            $("#myTable").bootstrapTable('refresh');
+        });
+        $("#refresh").click(function () {
+            SearchContent = $("[name='search']").val();
+            num = $("[check]").attr("data-toggle");
+            $("#myTable").bootstrapTable('refresh');
+        });
         //1.初始化Table
         var oTable = new TableInit();
         oTable.Init();
-
         //2.初始化Button的点击事件
         var oButtonInit = new ButtonInit();
         oButtonInit.Init();
@@ -175,7 +203,7 @@
         //初始化Table
         oTableInit.Init = function () {
             $('#myTable').bootstrapTable({
-                url: CTX + '/Message/GetInBox',         //请求后台的URL（*）
+                url: CTX + '/Message/GetDustbin',         //请求后台的URL（*）
                 method: 'get',                      //请求方式（*）
                 toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
@@ -211,23 +239,20 @@
 
                     },
                     {
-                        field: 'sendid',
-                        title: '编号',
+                        field: 'inuserid',
+                        title: '收件人',
                         align: 'center',
                         valign: 'middle',
-                        visible: false
 
                     },
-
                     {
                         field: 'senduserid',
                         title: '发件人',
                         align: 'center',
                         valign: 'middle',
-                        width: 70
+                        visible: false
 
                     },
-
                     {
                         field: 'title',
                         align: 'center',
@@ -235,36 +260,14 @@
                         title: '标题',
                         formatter: function (value, row, index) {
                             var a = "";
-                            if ((row.senduserid != ${loginUser.id} && row.dealtstate == 3) || (row.senduserid == ${loginUser.id} && row.dealtstate == 2)) {
-                                a = '<span class="title" style="color:red;cursor:pointer;">' + value + '</span>';
-                            }
-                            else {
-                                a = '<span class="title" style="cursor:pointer;">' + value + '</span>';
-                            }
+                            a = '<span class="title" style="cursor:pointer;">' + value + '</span>';
                             return a;
                         },
                         events: ReadMailEvents
 
                     },
                     {
-                        field: 'affairstate',
-                        title: '事务类型',
-                        width: 200,
-                        align: 'center',
-                        valign: 'middle',
-                        formatter: function (value, row, index) {
-                            if (value == "1") {
-                                return "一般";
-                            }
-                            else if (value == "2") {
-                                return "紧急";
-                            } else {
-                                return "重要";
-                            }
-                        }
-                    },
-                    {
-                        field: 'intime',
+                        field: 'sendtime',
                         title: '日期',
                         width: 200,
                         align: 'center',
@@ -274,29 +277,18 @@
                             return date.toLocaleString();
                         }
                     },
-
                     {
-                        field: 'dealtstate',
-                        title: '状态',
+                        field: 'intime',
+                        title: '日期',
+                        width: 200,
                         align: 'center',
                         valign: 'middle',
-                        width: 90,
+                        visible: false,
                         formatter: function (value, row, index) {
-                            var a = "";
-                            if ((row.senduserid != ${loginUser.id} && row.dealtstate == 3) || (row.senduserid == ${loginUser.id} && row.dealtstate == 2)) {
-                                a = '<span class="label label-success StateId" data-state="0">未读消息</span>';
-                            }
-                            else {
-                                a = '<span class="label label-default StateId" data-state="1">已处理</span>';
-                            }
-
-                            return a;
-
-                        },
-
+                            var date = new Date(value);
+                            return date.toLocaleString();
+                        }
                     },
-
-
                 ]
             });
         };
@@ -305,14 +297,19 @@
         oTableInit.queryParams = function (params) {
             var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
                 limit: params.limit,   //页面大小
-                offset: params.offset  //页码
+                offset: params.offset,  //页码
+                type: Mailtype
             };
             return temp;
         }
         window.ReadMailEvents = {
             'click .title': function (e, value, row, index) {
                 var StateId = $(".StateId").attr("data-state");
-                $(".page-content").empty().load("/Message/ReadInMail?MailId=" + row.id + "&StateId=" + StateId).fadeIn(1000);
+                if (Mailtype == 0) {
+                    $(".page-content").empty().load("/Message/ReadDustbin?MailId=" + row.id).fadeIn(1000);
+                } else {
+                    $(".page-content").empty().load("/Message/ReadInDustbin?MailId=" + row.id).fadeIn(1000);
+                }
                 //window.location.href = "/Message/ReadMail?MailId=" + row.id + "&StateId=" + StateId;
 
             }
@@ -355,6 +352,26 @@
             }
         });
     }
+    function DeleteGarbage(types) {
+        var allTableData = $('#myTable').bootstrapTable('getSelections');//获取表格的所有内容行
+        if (allTableData.length <= 0) {
+            alert("请选择行");
+            return;
+        }
+        $.ajax({
+            type: 'post',
+            url: CTX + '/Message/DeleteGarbage',
+            data: {data: allTableData, type: Mailtype},
+            success: function (data) {
+                if (data.message != "1") {
+                    alert("失败！");
+                }
+                $("#myTable").bootstrapTable('refresh');
+                return;
+            }
+        });
+    }
+
 </script>
 
 </@base.html>

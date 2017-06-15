@@ -493,7 +493,7 @@
                         </ul>
                     </li>
 
-                    <li class="" style="border-bottom: 1px solid #3d3d3d;">
+                    <#--<li class="" style="border-bottom: 1px solid #3d3d3d;">
                         <a href="javascript:;">
                             <i class="glyphicon glyphicon-envelope"></i><span class="title"> 信息系统 </span>
                             <#if bmsModel.SendUnReadNum gt 0||bmsModel.InUnReadNum gt 0>
@@ -525,18 +525,18 @@
                                 </a>
                             </li>
                             <li class="">
-                                <a href="javascript:;">
+                                <a href="/Message/DraftBox">
                                     草稿箱
                                 </a>
                             </li>
                             <li class="">
-                                <a href="javascript:;">
+                                <a href="/Message/DustbinBox">
                                     垃圾箱
                                 </a>
                             </li>
 
                         </ul>
-                    </li>
+                    </li>-->
                     <li class="" style="border-bottom: 1px solid #3d3d3d;">
                         <a href="javascript:;">
                             <i class="	glyphicon glyphicon-bullhorn"></i><span class="title"> 公告系统 </span><span

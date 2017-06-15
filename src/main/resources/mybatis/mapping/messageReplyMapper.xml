@@ -24,6 +24,10 @@
     delete from messagereply
     where id = #{id,jdbcType=BIGINT}
   </delete>
+  <delete id="deleteByMessageId" parameterType="java.lang.Long">
+    delete from messagereply
+    where MessageId = #{id,jdbcType=BIGINT}
+  </delete>
   <insert id="insert" parameterType="com.yipeng.bill.bms.domain.messageReply">
     insert into messagereply (id, MessageId, SendId, 
       InId, ReplyContent, ReplyTime, 

@@ -7,6 +7,8 @@ import java.util.List;
 public interface messageReplyMapper {
     int deleteByPrimaryKey(Long id);
 
+    int deleteByMessageId(Long MessageId);
+
     int insert(messageReply record);
 
     int insertSelective(messageReply record);

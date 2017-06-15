@@ -27,17 +27,17 @@
                                     发件箱<span class="label label-warning pull-right" id="ReMailNum">0</span>
                                 </a>
                             </li>
-                            <li>
+                            <#--<li>
                                 <a href="#"> <i class="fa fa-certificate"></i> 重要</a>
-                            </li>
+                            </li>-->
                             <li>
-                                <a href="#">
+                                <a href="#" onclick="$('.page-content').empty().load(CTX+'/Message/DraftBox');">
                                     <i class="fa fa-file-text-o"></i> 草稿 <span
-                                        class="label label-danger pull-right">0</span>
+                                        class="label label-danger pull-right"></span>
                                 </a>
                             </li>
                             <li>
-                                <a href="mailbox.html"> <i class="fa fa-trash-o"></i> 垃圾箱</a>
+                                <a href="#" onclick="$('.page-content').empty().load(CTX+'/Message/DustbinBox');"> <i class="fa fa-trash-o"></i> 垃圾箱</a>
                             </li>
                         </ul>
                         <h5>分类</h5>
@@ -68,16 +68,17 @@
         <div class="col-sm-9 animated fadeInRight">
             <div class="mail-box-header">
 
-                <form method="get" action="index.html" class="pull-right mail-search">
+                <div class="pull-right mail-search">
                     <div class="input-group">
                         <input type="text" class="form-control input-sm" name="search" placeholder="搜索邮件标题，正文等">
                         <div class="input-group-btn">
-                            <button type="submit" class="btn btn-sm btn-primary">
+                            <button class="btn btn-sm btn-primary" id="Search">
+                                <i class="glyphicon glyphicon-search"></i>
                                 搜索
                             </button>
                         </div>
                     </div>
-                </form>
+                </div>
                 <h2>
                     发件箱 (<span id="MailAllNum">0</span>)
                 </h2>

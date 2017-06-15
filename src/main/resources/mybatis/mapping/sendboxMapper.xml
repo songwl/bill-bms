@@ -197,4 +197,24 @@
     ((sendUserId=#{currentid,jdbcType=VARCHAR} and dealtState=2)  or
     (InUserId=#{currentid,jdbcType=VARCHAR} and dealtState=3 ))
   </select>
+  <select id="selectDraftBox" resultMap="BaseResultMap">
+  select *
+  from sendbox
+  where mailtype=#{MailType,jdbcType=INTEGER}
+    and  sendUserId=#{currentid,jdbcType=VARCHAR}
+  <if test="SearchContent != null">
+    and (Title like CONCAT('%',#{SearchContent,jdbcType=VARCHAR},'%') or Content like CONCAT('%',#{SearchContent,jdbcType=VARCHAR},'%'))
+  </if>
+  ORDER BY Sendtime desc
+  LIMIT #{offset},#{limit}
+</select>
+  <select id="selectDraftBoxNum" resultType="java.lang.Long">
+    select COUNT(*)
+    from sendbox
+    where mailtype=#{MailType,jdbcType=INTEGER}
+    and  sendUserId=#{currentid,jdbcType=VARCHAR}
+    <if test="SearchContent != null">
+      and (Title like CONCAT('%',#{SearchContent,jdbcType=VARCHAR},'%') or Content like CONCAT('%',#{SearchContent,jdbcType=VARCHAR},'%'))
+    </if>
+  </select>
 </mapper>

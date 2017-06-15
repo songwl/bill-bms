@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +41,7 @@ public class MessageController extends BaseController {
 
     @RequestMapping(value = "/WriteMail")
     public String WriteMail(ModelMap modelMap) {
-        LoginUser loginUser=this.getCurrentAccount();
+        LoginUser loginUser = this.getCurrentAccount();
         /*List<Role> bumenlist = messageService.getBumen()
         modelMap.put("bumenlist", bumenlist);;*/
         List<User> AddresseeList = messageService.GetAddressee(loginUser);
@@ -102,9 +103,9 @@ public class MessageController extends BaseController {
             //messageReplyMapper.updateByMessageId(FeedbackId);//将MessageId为FeedbackId的信息返回表的DealtState（处理状态）改为2（已查看）
             List<messageReply> messageReplyList = messageReplyMapper.selectByMessageId(inBox.getSendid());
             String sendUserName = userMapper.selectByPrimaryKey(Long.parseLong(inBox.getSenduserid())).getUserName();
-            boolean flag=false;
+            boolean flag = false;
             if (sendBox.getMailtype() == 1) {
-                flag=true;
+                flag = true;
             }
             modelMap.put("flag", flag);
             modelMap.put("inBox", inBox);
@@ -147,6 +148,9 @@ public class MessageController extends BaseController {
     @RequestMapping(value = "/FeedbackSearch")
     public String FeedbackSearch(ModelMap modelMap) {
         LoginUser loginUser = this.getCurrentAccount();
+        if (loginUser.hasRole("SECRETARY")) {
+            loginUser.setId(1l);
+        }
         modelMap.put("loginUser", loginUser);
         return "/Message/FeedbackSearch";
     }
@@ -161,6 +165,9 @@ public class MessageController extends BaseController {
     @RequestMapping(value = "/ReadFeedback")
     public String ReadFeedback(ModelMap modelMap, Long FeedbackId) {
         LoginUser loginUser = this.getCurrentAccount();
+        if (loginUser.hasRole("SECRETARY")) {
+            loginUser.setId(1l);
+        }
         sendBox sendBox = sendBoxMapper.selectByPrimaryKey(FeedbackId);
         if (sendBox.getSenduserid().equals(loginUser.getId().toString()) || sendBox.getInuserid().equals(loginUser.getId().toString())) {
             if ((sendBox.getSenduserid().equals(loginUser.getId().toString()) && sendBox.getDealtstate() != 3) || (sendBox.getInuserid().equals(loginUser.getId().toString()) && sendBox.getDealtstate() != 2)) {
@@ -183,6 +190,69 @@ public class MessageController extends BaseController {
         LoginUser loginUser = this.getCurrentAccount();
         modelMap.put("loginUser", loginUser);
         return "/Message/InBox";
+    }
+
+    @RequestMapping(value = "/DraftBox")
+    public String DraftBox(ModelMap modelMap) {
+        LoginUser loginUser = this.getCurrentAccount();
+        modelMap.put("loginUser", loginUser);
+        Map<String, Object> params = new HashMap<>();
+        params.put("currentid", loginUser.getId());
+        params.put("MailType", 4);
+        Long DraftNum = sendBoxMapper.selectDraftBoxNum(params);
+        modelMap.put("DraftNum", DraftNum);
+        return "/Message/DraftBox";
+    }
+
+    @RequestMapping(value = "/ReadDraft")
+    public String ReadDraft(ModelMap modelMap, Long sendId) {
+        LoginUser loginUser = this.getCurrentAccount();
+        List<User> AddresseeList = messageService.GetAddressee(loginUser);
+        modelMap.put("AddresseeList", AddresseeList);
+        modelMap.put("sendId", sendId);
+        return "/Message/ReadDraft";
+    }
+
+    @RequestMapping(value = "/DustbinBox")
+    public String DustbinBox(ModelMap modelMap) {
+        return "/Message/DustbinBox";
+    }
+
+    @RequestMapping(value = "/ReadDustbin")
+    public String ReadDustbin(ModelMap modelMap, Long MailId) {
+        LoginUser loginUser = this.getCurrentAccount();
+        sendBox sendBox = sendBoxMapper.selectByPrimaryKey(MailId);
+        if (sendBox.getSenduserid().equals(loginUser.getId().toString()) || sendBox.getInuserid().equals(loginUser.getId().toString())) {
+
+            //messageReplyMapper.updateByMessageId(FeedbackId);//将MessageId为FeedbackId的信息返回表的DealtState（处理状态）改为2（已查看）
+            List<messageReply> messageReplyList = messageReplyMapper.selectByMessageId(MailId);
+            String sendUserName = userMapper.selectByPrimaryKey(Long.parseLong(sendBox.getInuserid())).getUserName();
+
+            modelMap.put("sendBox", sendBox);
+            modelMap.put("messageReplyList", messageReplyList);
+            modelMap.put("loginUser", loginUser.getId().toString());
+            modelMap.put("sendUserName", sendUserName);
+        }
+        return "/Message/ReadDustbin";
+    }
+
+    @RequestMapping(value = "/ReadInDustbin")
+    public String ReadInDustbin(ModelMap modelMap, Long MailId, Long StateId) {
+        LoginUser loginUser = this.getCurrentAccount();
+        inBox inBox = messageService.getInContent(MailId);
+        sendBox sendBox = sendBoxMapper.selectByPrimaryKey(inBox.getSendid());
+        if (sendBox.getInuserid().equals(loginUser.getId().toString())) {
+
+            //messageReplyMapper.updateByMessageId(FeedbackId);//将MessageId为FeedbackId的信息返回表的DealtState（处理状态）改为2（已查看）
+            List<messageReply> messageReplyList = messageReplyMapper.selectByMessageId(inBox.getSendid());
+            String sendUserName = userMapper.selectByPrimaryKey(Long.parseLong(inBox.getSenduserid())).getUserName();
+
+            modelMap.put("inBox", inBox);
+            modelMap.put("messageReplyList", messageReplyList);
+            modelMap.put("loginUser", loginUser.getId().toString());
+            modelMap.put("sendUserName", sendUserName);
+        }
+        return "/Message/ReadInDustbin";
     }
 
     /**
@@ -266,6 +336,44 @@ public class MessageController extends BaseController {
         Map<String, Object> modelMap = messageService.GetInBox(params, loginUser);
 
         return modelMap;
+    }
+
+    /**
+     * 草稿箱列表
+     *
+     * @param limit
+     * @param offset
+     * @return
+     */
+    @RequestMapping(value = "/GetDraftBox")
+    @ResponseBody
+    public Map<String, Object> GetDraftBox(int limit, int offset) {
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        params.put("limit", limit);
+        params.put("offset", offset);
+        Map<String, Object> modelMap = messageService.GetDraftBox(params, loginUser);
+
+        return modelMap;
+    }
+
+    @RequestMapping(value = "/GetDustbin")
+    @ResponseBody
+    public Map<String, Object> GetDustbin(int limit, int offset, int type) {
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        params.put("limit", limit);
+        params.put("offset", offset);
+        if (type != 0 && type != 1) {
+            return null;
+        }
+        if (type == 0) {
+            Map<String, Object> modelMap = messageService.GetSendDustbin(params, loginUser);
+            return modelMap;
+        } else {
+            Map<String, Object> modelMap = messageService.GetInDustbin(params, loginUser);
+            return modelMap;
+        }
     }
 
     /**
@@ -438,6 +546,9 @@ public class MessageController extends BaseController {
     @ResponseBody
     public Map<String, Object> GetFeedbackSearch(int limit, int offset, String SearchContent, int type) {
         LoginUser loginUser = this.getCurrentAccount();
+        if (loginUser.hasRole("SECRETARY")) {
+            loginUser.setId(1l);
+        }
         Map<String, Object> params = this.getSearchRequest(); //查询参数
         params.put("limit", limit);
         params.put("offset", offset);
@@ -452,6 +563,9 @@ public class MessageController extends BaseController {
     public ResultMessage replySubmit(HttpServletRequest httpRequest) {
         Map<String, String[]> param = httpRequest.getParameterMap();
         LoginUser loginUser = this.getCurrentAccount();
+        if (loginUser.hasRole("SECRETARY")) {
+            loginUser.setId(1l);
+        }
         boolean flag = messageService.replySubmit(param, loginUser);
 
         return this.ajaxDoneSuccess(flag ? "1" : "0");
@@ -467,6 +581,7 @@ public class MessageController extends BaseController {
 
         return this.ajaxDoneSuccess(flag ? "1" : "0");
     }
+
     //信息回复
     @RequestMapping(value = "/InMailreplySubmit", method = RequestMethod.POST)
     @ResponseBody
@@ -475,6 +590,115 @@ public class MessageController extends BaseController {
         LoginUser loginUser = this.getCurrentAccount();
         boolean flag = messageService.MailreplySubmit(param, loginUser);
 
+        return this.ajaxDoneSuccess(flag ? "1" : "0");
+    }
+
+    /**
+     * 存至草稿箱
+     *
+     * @param httpRequest
+     * @return
+     */
+    @RequestMapping(value = "/SaveDraftMail", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage SaveDraftMail(HttpServletRequest httpRequest) {
+        Map<String, String[]> param = httpRequest.getParameterMap();
+        LoginUser loginUser = this.getCurrentAccount();
+        boolean flag = messageService.SaveDraftMail(param, loginUser);
+
+        return this.ajaxDoneSuccess(flag ? "1" : "0");
+    }
+
+    /**
+     * 预加载草稿箱
+     *
+     * @param sendId
+     * @return
+     */
+    @RequestMapping(value = "/LoadInit", method = RequestMethod.POST)
+    @ResponseBody
+    public sendBox LoadInit(Long sendId) {
+        sendBox sendBox = sendBoxMapper.selectByPrimaryKey(sendId);
+        return sendBox;
+    }
+
+    /**
+     * 保存已查看的草稿箱
+     *
+     * @param httpRequest
+     * @return
+     */
+    @RequestMapping(value = "/SaveOldDraft", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage SaveOldDraft(HttpServletRequest httpRequest) {
+        Map<String, String[]> param = httpRequest.getParameterMap();
+        LoginUser loginUser = this.getCurrentAccount();
+        boolean flag = messageService.SaveOldDraft(param, loginUser);
+
+        return this.ajaxDoneSuccess(flag ? "1" : "0");
+    }
+
+    /**
+     * 发送已查看的草稿箱
+     *
+     * @param httpRequest
+     * @return
+     */
+    @RequestMapping(value = "/SendDraft", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage SendDraft(HttpServletRequest httpRequest) {
+        Map<String, String[]> param = httpRequest.getParameterMap();
+        LoginUser loginUser = this.getCurrentAccount();
+        boolean flag = messageService.SendDraft(param, loginUser);
+
+        return this.ajaxDoneSuccess(flag ? "1" : "0");
+    }
+
+    /**
+     * 删除草稿箱
+     *
+     * @param httpRequest
+     * @return
+     */
+    @RequestMapping(value = "/DeleteDraft", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage DeleteDraft(HttpServletRequest httpRequest) {
+        Map<String, String[]> param = httpRequest.getParameterMap();
+        int len = param.size() / 10;
+        String[] idarr = new String[len];
+        for (int i = 0; i < len; i++) {
+            idarr[i] = param.get("data[" + i + "][id]")[0].toString();
+        }
+        Boolean flag = messageService.DeleteDraft(idarr);
+        return this.ajaxDoneSuccess(flag ? "1" : "0");
+    }
+
+    @RequestMapping(value = "/DeleteGarbage", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage DeleteGarbage(HttpServletRequest httpRequest, int type) {
+        Map<String, String[]> param = httpRequest.getParameterMap();
+        int len = (param.size() + 1) / 10;
+        String[] idarr = new String[len];
+        for (int i = 0; i < len; i++) {
+            idarr[i] = param.get("data[" + i + "][id]")[0].toString();
+        }
+        Boolean flag = messageService.DeleteGarbage(idarr, type);
+        return this.ajaxDoneSuccess(flag ? "1" : "0");
+    }
+
+    /**
+     * 删除单个垃圾箱
+     *
+     * @param id
+     * @param type
+     * @return
+     */
+    @RequestMapping(value = "/DeleteGarbageSingle", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage DeleteGarbageSingle(String id, int type) {
+        String[] idarr = new String[1];
+        idarr[0] = id;
+        Boolean flag = messageService.DeleteGarbage(idarr, type);
         return this.ajaxDoneSuccess(flag ? "1" : "0");
     }
 }

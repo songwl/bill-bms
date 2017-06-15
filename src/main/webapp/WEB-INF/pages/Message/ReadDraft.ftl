@@ -32,13 +32,13 @@
                                 <a href="#"> <i class="fa fa-certificate"></i> 重要</a>
                             </li>-->
                             <li>
-                                <a href="#" onclick="$('.page-content').empty().load(CTX+'/Message/DraftBox');">
+                                <a href="#" onclick="$('.page-content').empty().load('/Message/DraftBox');">
                                     <i class="fa fa-file-text-o"></i> 草稿 <span
                                         class="label label-danger pull-right"></span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" onclick="$('.page-content').empty().load(CTX+'/Message/DustbinBox');"><i class="fa fa-trash-o"></i> 垃圾箱</a>
+                                <a href="#" onclick="$('.page-content').empty().load('/Message/DustbinBox');"><i class="fa fa-trash-o"></i> 垃圾箱</a>
                             </li>
                         </ul>
                         <h5>分类</h5>
@@ -70,9 +70,9 @@
                 <div class="pull-right tooltip-demo">
                     <a href="#" class="btn btn-white btn-sm savedraft" data-toggle="tooltip" data-placement="top"
                        title="存为草稿"><i
-                            class="fa fa-floppy-o"></i> 存为草稿</a>
+                            class="fa fa-floppy-o"></i>保存</a>
                     <a href="#" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="放弃"
-                       onclick="$('.page-content').empty().load(CTX + '/Message/WriteMail');"><i
+                       onclick="$('.page-content').empty().load(CTX + '/Message/DraftBox');"><i
                             class="fa fa-times"></i> 放弃</a>
                 </div>
                 <h2>
@@ -140,10 +140,10 @@
                         <a class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Send"
                            id="Send"><i class="fa fa-reply"></i> 发送</a>
                         <a class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"
-                           title="Discard email" onclick="$('.page-content').empty().load(CTX + '/Message/WriteMail');"><i
+                           title="Discard email" onclick="$('.page-content').empty().load(CTX + '/Message/DraftBox');"><i
                                 class="fa fa-times"></i> 放弃</a>
                         <a class="btn btn-white btn-sm savedraft" data-toggle="tooltip" data-placement="top"
-                           title="Move to draft folder"><i class="fa fa-floppy-o"></i> 存为草稿</a>
+                           title="Move to draft folder"><i class="fa fa-floppy-o"></i> 保存</a>
                     </div>
                     <div class="clearfix"></div>
                 </form>
@@ -175,10 +175,25 @@
     }
     //setInterval('ReMailNum()', 500);
 
+    function loadinit() {
+        $.ajax({
+            type: "post",
+            url: CTX + "/Message/LoadInit",
+            data: {sendId:${sendId}},
+            success: function (data) {
+                console.info(data);
+                $("#User").val(data.inuserid);
+                $("#affairState").val(data.affairstate);
+                $("#Title").val(data.title);
+                $("#content").val(data.content);
+            }
+        });
+    }
     $(document).ready(function () {
 
         MailNum();
         ReMailNum();
+        loadinit();
         /*$("#department").change(function () {
             if ($("#department option:selected").val() != "-1") {
                 $("#User").empty();
@@ -240,8 +255,8 @@
                     /*var department = $("#department option:selected").val();*/
                     $.ajax({
                         type: 'post',
-                        url: CTX + '/Message/SendMail',
-                        data: {User: User, affairState: affairState, Title: Title, content: content, department: ""},
+                        url: CTX + '/Message/SendDraft',
+                        data: {id:${sendId},User: User, affairState: affairState, Title: Title, content: content, department: ""},
                         success: function (data) {
                             if (data.message == "1") {
                                 $('.page-content').empty().load(CTX + '/Message/SendBox');
@@ -269,8 +284,8 @@
             var content = $("[name='content']").val();
             $.ajax({
                 type: 'post',
-                url: CTX + '/Message/SaveDraftMail',
-                data: {User: User, affairState: affairState, Title: Title, content: content, department: ""},
+                url: CTX + '/Message/SaveOldDraft',
+                data: {id:${sendId},User: User, affairState: affairState, Title: Title, content: content, department: ""},
                 success: function (data) {
                     if (data.message == "1") {
                         $('.page-content').empty().load(CTX + '/Message/DraftBox');

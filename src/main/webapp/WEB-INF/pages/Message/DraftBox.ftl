@@ -1,7 +1,7 @@
 <#import "/base/base.ftl" as base>
 <#import "/base/dict.ftl" as dict>
 
-<@base.html "收件箱">
+<@base.html "草稿箱">
 <link href="${ctx}/static/css/Message/font-awesome.min.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/animate.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/custom.css" rel="stylesheet">
@@ -82,22 +82,22 @@
                     </div>
                 </div>
                 <h2>
-                    收件箱 (<span id="MailAllNum">0</span>)
+                    草稿箱 (<span id="MailAllNum">${DraftNum}</span>)
                 </h2>
                 <div class="mail-tools tooltip-demo m-t-md">
-                    <#--div class="btn-group pull-right">
-                        <button class="btn btn-white btn-sm">
-                            <i class="fa fa-arrow-left"></i>
-                        </button>
-                        <button class="btn btn-white btn-sm">
-                            <i class="fa fa-arrow-right"></i>
-                        </button>
+                <#--div class="btn-group pull-right">
+                    <button class="btn btn-white btn-sm">
+                        <i class="fa fa-arrow-left"></i>
+                    </button>
+                    <button class="btn btn-white btn-sm">
+                        <i class="fa fa-arrow-right"></i>
+                    </button>
 
-                    </div>-->
+                </div>-->
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" id="refresh"
                             title="刷新邮件列表"><i class="fa fa-refresh"></i> 刷新
                     </button>
-                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"
+                    <#--<button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"
                             onclick="operation(1);" id="updateread"
                             title="标为已读">
                         <i class="fa fa-eye"></i>
@@ -105,9 +105,9 @@
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"
                             onclick="operation(2);" title="标为重要">
                         <i class="fa fa-exclamation"></i>
-                    </button>
+                    </button>-->
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"
-                            onclick="operation(3);" title="标为垃圾邮件">
+                            onclick="DeleteDraft();" title="删除">
                         <i class="fa fa-trash-o"></i>
                     </button>
 
@@ -143,22 +143,12 @@
             }
         })
     }
-    //setInterval('ReMailNum()', 500);
-    function MailAllNum() {
-        $.ajax({
-            url: CTX + "/Message/InMailAllNum",
-            success: function (data) {
-                $("#MailAllNum").text(data.message);//总收件箱
-            }
-        })
-    }
-    //setInterval('MailAllNum()', 500);
+
 
 
     $(function () {
         MailNum();
         ReMailNum();
-        MailAllNum();
         //1.初始化Table
         var oTable = new TableInit();
         oTable.Init();
@@ -175,7 +165,7 @@
         //初始化Table
         oTableInit.Init = function () {
             $('#myTable').bootstrapTable({
-                url: CTX + '/Message/GetInBox',         //请求后台的URL（*）
+                url: CTX + '/Message/GetDraftBox',         //请求后台的URL（*）
                 method: 'get',                      //请求方式（*）
                 toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
@@ -211,24 +201,6 @@
 
                     },
                     {
-                        field: 'sendid',
-                        title: '编号',
-                        align: 'center',
-                        valign: 'middle',
-                        visible: false
-
-                    },
-
-                    {
-                        field: 'senduserid',
-                        title: '发件人',
-                        align: 'center',
-                        valign: 'middle',
-                        width: 70
-
-                    },
-
-                    {
                         field: 'title',
                         align: 'center',
                         valign: 'middle',
@@ -247,24 +219,7 @@
 
                     },
                     {
-                        field: 'affairstate',
-                        title: '事务类型',
-                        width: 200,
-                        align: 'center',
-                        valign: 'middle',
-                        formatter: function (value, row, index) {
-                            if (value == "1") {
-                                return "一般";
-                            }
-                            else if (value == "2") {
-                                return "紧急";
-                            } else {
-                                return "重要";
-                            }
-                        }
-                    },
-                    {
-                        field: 'intime',
+                        field: 'sendtime',
                         title: '日期',
                         width: 200,
                         align: 'center',
@@ -274,29 +229,6 @@
                             return date.toLocaleString();
                         }
                     },
-
-                    {
-                        field: 'dealtstate',
-                        title: '状态',
-                        align: 'center',
-                        valign: 'middle',
-                        width: 90,
-                        formatter: function (value, row, index) {
-                            var a = "";
-                            if ((row.senduserid != ${loginUser.id} && row.dealtstate == 3) || (row.senduserid == ${loginUser.id} && row.dealtstate == 2)) {
-                                a = '<span class="label label-success StateId" data-state="0">未读消息</span>';
-                            }
-                            else {
-                                a = '<span class="label label-default StateId" data-state="1">已处理</span>';
-                            }
-
-                            return a;
-
-                        },
-
-                    },
-
-
                 ]
             });
         };
@@ -312,7 +244,7 @@
         window.ReadMailEvents = {
             'click .title': function (e, value, row, index) {
                 var StateId = $(".StateId").attr("data-state");
-                $(".page-content").empty().load("/Message/ReadInMail?MailId=" + row.id + "&StateId=" + StateId).fadeIn(1000);
+                $(".page-content").empty().load("/Message/ReadDraft?sendId=" + row.id).fadeIn(1000);
                 //window.location.href = "/Message/ReadMail?MailId=" + row.id + "&StateId=" + StateId;
 
             }
@@ -355,6 +287,27 @@
             }
         });
     }
+    function DeleteDraft(types) {
+        var allTableData = $('#myTable').bootstrapTable('getSelections');//获取表格的所有内容行
+        if(allTableData.length<=0)
+        {
+            alert("请选择行");
+            return;
+        }
+        $.ajax({
+            type: 'post',
+            url: CTX + '/Message/DeleteDraft',
+            data: {data: allTableData},
+            success: function (data) {
+                if (data.message != "1") {
+                    alert("失败！");
+                }
+                $("#myTable").bootstrapTable('refresh');
+                return;
+            }
+        });
+    }
+
 </script>
 
 </@base.html>

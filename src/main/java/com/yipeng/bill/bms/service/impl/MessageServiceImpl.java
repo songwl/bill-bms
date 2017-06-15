@@ -93,7 +93,7 @@ public class MessageServiceImpl implements MessageService {
                 sendBox.setTitle(Title);
                 sendBox.setContent(Content);
                 sendBox.setAffairstate(Integer.parseInt(affairState));
-                sendBox.setDealtstate(0);
+                sendBox.setDealtstate(3);
                 sendBox.setSendtime(new Date());
                 num1 += sendBoxMapper.insert(sendBox);
                 inBox inBox = new inBox();
@@ -103,12 +103,134 @@ public class MessageServiceImpl implements MessageService {
                 inBox.setTitle(Title);
                 inBox.setContent(Content);
                 inBox.setAffairstate(Integer.parseInt(affairState));
+                inBox.setDealtstate(3);
+                inBox.setIntime(new Date());
+                num2 += inBoxMapper.insert(inBox);
+            }
+        }
+        return (num1 == num2 && num1 > 0) ? true : false;
+    }
+
+    @Override
+    public Boolean SaveDraftMail(Map<String, String[]> data, LoginUser loginUser) {
+        Long SendUserId = loginUser.getId();
+        String InUserId = data.get("User")[0];
+        String Title = data.get("Title")[0];
+        String Content = data.get("content")[0];
+        String affairState = data.get("affairState")[0];
+        int num1 = 0, num2 = 0;
+        if (!"0".equals(InUserId)) {
+            sendBox sendBox = new sendBox();
+            sendBox.setSenduserid(SendUserId.toString());
+            sendBox.setInuserid(InUserId);
+            sendBox.setMailtype(4);
+            sendBox.setTitle(Title);
+            sendBox.setContent(Content);
+            sendBox.setAffairstate(Integer.parseInt(affairState));
+            sendBox.setDealtstate(3);
+            sendBox.setSendtime(new Date());
+            num1 += sendBoxMapper.insert(sendBox);
+            inBox inBox = new inBox();
+            inBox.setSendid(sendBox.getId());
+            inBox.setSenduserid(SendUserId.toString());
+            inBox.setInuserid(InUserId);
+            inBox.setMailtype(4);//草稿箱
+            inBox.setTitle(Title);
+            inBox.setContent(Content);
+            inBox.setAffairstate(Integer.parseInt(affairState));
+            inBox.setDealtstate(3);
+            inBox.setIntime(new Date());
+            num2 += inBoxMapper.insert(inBox);
+        } else {
+            String department = data.get("department")[0];
+            List<User> users = userMapper.selectAllUsers(department);
+            for (User item : users
+                    ) {
+                sendBox sendBox = new sendBox();
+                sendBox.setSenduserid(SendUserId.toString());
+                sendBox.setInuserid(item.getId().toString());
+                sendBox.setMailtype(4);//草稿箱
+                sendBox.setTitle(Title);
+                sendBox.setContent(Content);
+                sendBox.setAffairstate(Integer.parseInt(affairState));
+                sendBox.setDealtstate(0);
+                sendBox.setSendtime(new Date());
+                num1 += sendBoxMapper.insert(sendBox);
+                inBox inBox = new inBox();
+                inBox.setSenduserid(SendUserId.toString());
+                inBox.setInuserid(item.getId().toString());
+                inBox.setMailtype(4);
+                inBox.setTitle(Title);
+                inBox.setContent(Content);
+                inBox.setAffairstate(Integer.parseInt(affairState));
                 inBox.setDealtstate(0);
                 inBox.setIntime(new Date());
                 num2 += inBoxMapper.insert(inBox);
             }
         }
         return (num1 == num2 && num1 > 0) ? true : false;
+    }
+
+    @Override
+    public Boolean SaveOldDraft(Map<String, String[]> data, LoginUser loginUser) {
+        Long SendUserId = loginUser.getId();
+        String id = data.get("id")[0];
+        String InUserId = data.get("User")[0];
+        String Title = data.get("Title")[0];
+        String Content = data.get("content")[0];
+        String affairState = data.get("affairState")[0];
+        sendBox sendBox = sendBoxMapper.selectByPrimaryKey(Long.parseLong(id));
+        sendBox.setInuserid(InUserId);
+        sendBox.setTitle(Title);
+        sendBox.setContent(Content);
+        sendBox.setAffairstate(Integer.parseInt(affairState));
+        sendBox.setSendtime(new Date());
+        sendBox.setDealtstate(3);
+        inBox inBox = inBoxMapper.selectBySendId(Long.parseLong(id));
+        inBox.setInuserid(InUserId);
+        inBox.setTitle(Title);
+        inBox.setContent(Content);
+        inBox.setAffairstate(Integer.parseInt(affairState));
+        inBox.setIntime(new Date());
+        inBox.setDealtstate(3);
+        int num1 = sendBoxMapper.updateByPrimaryKeySelective(sendBox);
+        int num2 = inBoxMapper.updateByPrimaryKeySelective(inBox);
+        if (num1 == num2 && num1 > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean SendDraft(Map<String, String[]> data, LoginUser loginUser) {
+        Long SendUserId = loginUser.getId();
+        String id = data.get("id")[0];
+        String InUserId = data.get("User")[0];
+        String Title = data.get("Title")[0];
+        String Content = data.get("content")[0];
+        String affairState = data.get("affairState")[0];
+        sendBox sendBox = sendBoxMapper.selectByPrimaryKey(Long.parseLong(id));
+        sendBox.setInuserid(InUserId);
+        sendBox.setTitle(Title);
+        sendBox.setContent(Content);
+        sendBox.setAffairstate(Integer.parseInt(affairState));
+        sendBox.setMailtype(1);
+        sendBox.setSendtime(new Date());
+        sendBox.setDealtstate(3);
+        inBox inBox = inBoxMapper.selectBySendId(Long.parseLong(id));
+        inBox.setInuserid(InUserId);
+        inBox.setTitle(Title);
+        inBox.setContent(Content);
+        inBox.setMailtype(1);
+        inBox.setAffairstate(Integer.parseInt(affairState));
+        inBox.setIntime(new Date());
+        inBox.setDealtstate(3);
+        int num1 = sendBoxMapper.updateByPrimaryKeySelective(sendBox);
+        int num2 = inBoxMapper.updateByPrimaryKeySelective(inBox);
+        if (num1 == num2 && num1 > 0) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -263,6 +385,42 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public Map<String, Object> GetDraftBox(Map<String, Object> params, LoginUser loginUser) {
+        params.put("currentid", loginUser.getId());
+        params.put("MailType", 4);
+        Long total = inBoxMapper.selectCount(params);
+        List<sendBox> sendBoxList = sendBoxMapper.selectDraftBox(params);
+        Map<String, Object> map = new HashMap<>();
+        map.put("total", total);
+        map.put("rows", sendBoxList);
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> GetSendDustbin(Map<String, Object> params, LoginUser loginUser) {
+        params.put("currentid", loginUser.getId());
+        params.put("MailType", 0);
+        params.put("type", 0);
+        Long total = inBoxMapper.selectCount(params);
+        List<sendBox> sendBoxList = sendBoxMapper.selectSendBox(params);
+        Map<String, Object> map = new HashMap<>();
+        map.put("total", total);
+        map.put("rows", sendBoxList);
+        return map;
+    }
+    @Override
+    public Map<String, Object> GetInDustbin(Map<String, Object> params, LoginUser loginUser) {
+        params.put("currentid", loginUser.getId());
+        params.put("MailType", 0);
+        Long total = inBoxMapper.selectCount(params);
+        List<inBox> inBoxList = inBoxMapper.selectInBox(params);
+        Map<String, Object> map = new HashMap<>();
+        map.put("total", total);
+        map.put("rows", inBoxList);
+        return map;
+    }
+
+    @Override
     public Boolean updateRead(String[] idarr, int type) {
         for (String item : idarr
                 ) {
@@ -280,6 +438,68 @@ public class MessageServiceImpl implements MessageService {
             if (!flag) return false;
         }
         return true;
+    }
+
+    @Override
+    public Boolean DeleteDraft(String[] idarr) {
+        int num1 = 0, num2 = 0;
+        for (String item : idarr
+                ) {
+            num1 += sendBoxMapper.deleteByPrimaryKey(Long.parseLong(item));
+            num2 += inBoxMapper.deleteBySendId(Long.parseLong(item));
+        }
+        if (num1 == num2 && num1 > 0) return true;
+        return false;
+    }
+
+    @Override
+    public Boolean DeleteGarbage(String[] idarr, int type) {
+        if(type!=0&&type!=1)
+        {
+            return false;
+        }
+        if(type==0) {//发件箱删除
+            int num1 = 0, num2 = 0;
+            for (String item : idarr
+                    ) {
+                inBox inBox=inBoxMapper.selectBySendId(Long.parseLong(item));
+                if(inBox==null) {
+                    num1 += sendBoxMapper.deleteByPrimaryKey(Long.parseLong(item));
+                    num2++;
+                    messageReplyMapper.deleteByMessageId(Long.parseLong(item));//删除回复信息
+                }
+                else
+                {
+                    sendBox sendBox=sendBoxMapper.selectByPrimaryKey(Long.parseLong(item));
+                    sendBox.setMailtype(-1);
+                    num1+=sendBoxMapper.updateByPrimaryKeySelective(sendBox);
+                    num2++;
+                }
+            }
+            if (num1 == num2 && num1 > 0) return true;
+            return false;
+        }
+        else//收件箱删除
+        {
+            int num1 = 0, num2 = 0;
+            for (String item : idarr
+                    ) {
+                inBox inBox=inBoxMapper.selectByPrimaryKey(Long.parseLong(item));
+                sendBox sendBox=sendBoxMapper.selectByPrimaryKey(inBox.getSendid());
+                if(sendBox.getMailtype()!=-1) {
+                    num1 += inBoxMapper.deleteByPrimaryKey(Long.parseLong(item));
+                    num2++;
+                }
+                else
+                {
+                    num1 += inBoxMapper.deleteByPrimaryKey(Long.parseLong(item));
+                    num2 += sendBoxMapper.deleteByPrimaryKey(inBox.getSendid());
+                    messageReplyMapper.deleteByMessageId(inBox.getSendid());//删除回复信息
+                }
+            }
+            if (num1 == num2 && num1 > 0) return true;
+            return false;
+        }
     }
 
     @Override

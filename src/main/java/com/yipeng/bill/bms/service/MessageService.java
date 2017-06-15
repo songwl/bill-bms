@@ -15,6 +15,12 @@ public interface MessageService {
 
     Boolean SendMail(Map<String, String[]> data, LoginUser loginUser);
 
+    Boolean SaveDraftMail(Map<String, String[]> data, LoginUser loginUser);
+
+    Boolean SaveOldDraft(Map<String, String[]> data, LoginUser loginUser);
+
+    Boolean SendDraft(Map<String, String[]> data, LoginUser loginUser);
+
     int SendNotice(Map<String, String[]> data, LoginUser loginUser);
 
     Boolean SubmitFeedback(Map<String, String[]> data, LoginUser loginUser);
@@ -27,14 +33,22 @@ public interface MessageService {
 
     Map<String, Object> GetInBox(Map<String, Object> params, LoginUser loginUser);
 
+    Map<String, Object> GetDraftBox(Map<String, Object> params, LoginUser loginUser);
+
+    Map<String, Object> GetSendDustbin(Map<String, Object> params, LoginUser loginUser);
+
+    Map<String, Object> GetInDustbin(Map<String, Object> params, LoginUser loginUser);
+
     Boolean updateRead(String[] idarr, int type);
+
+    Boolean DeleteDraft(String[] idarr);
+    Boolean DeleteGarbage(String[] idarr, int type);
 
     Boolean updateInRead(String[] idarr, int type);
 
     Boolean updateReadSingle(Long id, int type);
 
     Boolean updateInReadSingle(Long id, int type);
-
 
     Long getReMailNum(LoginUser loginUser, int type);//获取发件箱未读数量
 

@@ -30,17 +30,17 @@
                                                                               id="ReMailNum">0</span>
                                 </a>
                             </li>
-                            <li>
+                            <#--<li>
                                 <a href="#"> <i class="fa fa-certificate"></i> 重要</a>
-                            </li>
+                            </li>-->
                             <li>
-                                <a href="#">
+                                <a href="#" onclick="$('.page-content').empty().load('/Message/DraftBox');">
                                     <i class="fa fa-file-text-o"></i> 草稿 <span
-                                        class="label label-danger pull-right">0</span>
+                                        class="label label-danger pull-right"></span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#"> <i class="fa fa-trash-o"></i> 垃圾箱</a>
+                                <a href="#" onclick="$('.page-content').empty().load('/Message/DustbinBox');"> <i class="fa fa-trash-o"></i> 垃圾箱</a>
                             </li>
                         </ul>
                         <h5>分类</h5>

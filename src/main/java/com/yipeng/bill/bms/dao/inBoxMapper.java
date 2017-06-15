@@ -13,6 +13,8 @@ import java.util.Map;
 public interface inBoxMapper {
     int deleteByPrimaryKey(Long id);
 
+    int deleteBySendId(Long Sendid);
+
     int insert(inBox record);
 
     int insertSelective(inBox record);

@@ -150,19 +150,12 @@
                 <#if sendBox.dealtstate==1><a class="btn btn-sm btn-white" onclick="$('.page-content').empty().load(CTX+'/Message/SendBox');" id=""><i class="fa fa-reply"></i><span>已经处理</span></a></#if>
             &lt;#&ndash;<a class="btn btn-sm btn-white"><i class="fa fa-arrow-right"></i> 下一封</a>&ndash;&gt;-->
 
-                    <#if flag>
-                        <a class="btn btn-sm btn-white"
-                           onclick="$('#Reply').show();$('#replybtn').hide();$('#replySubmit').show();" id="replybtn"><i
-                                class="fa	fa-comments"></i><span>回复</span></a>
-                        <a class="btn btn-sm btn-white" onclick="" id="replySubmit" style="display: none"><i
-                                class="fa	fa-comments"></i><span>回复</span></a>
-                    <#else >
+
                         <button title="" data-placement="top" data-toggle="tooltip" data-original-title="回复"
                                 class="btn btn-sm btn-white" disabled="disabled"><i class="fa fa-trash-o"></i> 回复
                         </button>
-                    </#if>
                     <a class="btn btn-sm btn-white"<#-- href="javascript:history.go(-1)"-->
-                       onclick="$('.page-content').empty().load('/Message/SendBox');" id=""><i
+                       onclick="$('.page-content').empty().load('/Message/DustbinBox');" id=""><i
                             class="fa fa-reply"></i><span>返回</span></a>
                 <#--<a class="btn btn-sm btn-white"><i class="fa fa-arrow-right"></i> 下一封</a>-->
                     <button title="" data-placement="top" data-toggle="tooltip" data-original-title="删除邮件"
@@ -228,12 +221,13 @@
         });
         $("#DeleteMail").click(function () {
             $.ajax({
-                url: CTX + '/Message/GoOperationSingle',
-                data: {id: ${sendBox.id}, type: 3},
+                type: 'post',
+                url: CTX + '/Message/DeleteGarbageSingle',
+                data: {id: ${sendBox.id}, type: 0},
                 success: function (data) {
                     if (data.message == 1) {
                         //alert("删除成功！");
-                        $('.page-content').empty().load(CTX + '/Message/SendBox');
+                        $('.page-content').empty().load(CTX + '/Message/DustbinBox');
                     }
                     else {
                         alert("删除失败");

@@ -408,6 +408,7 @@ public class MessageServiceImpl implements MessageService {
         map.put("rows", sendBoxList);
         return map;
     }
+
     @Override
     public Map<String, Object> GetInDustbin(Map<String, Object> params, LoginUser loginUser) {
         params.put("currentid", loginUser.getId());
@@ -454,44 +455,38 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Boolean DeleteGarbage(String[] idarr, int type) {
-        if(type!=0&&type!=1)
-        {
+        if (type != 0 && type != 1) {
             return false;
         }
-        if(type==0) {//发件箱删除
+        if (type == 0) {//发件箱删除
             int num1 = 0, num2 = 0;
             for (String item : idarr
                     ) {
-                inBox inBox=inBoxMapper.selectBySendId(Long.parseLong(item));
-                if(inBox==null) {
+                inBox inBox = inBoxMapper.selectBySendId(Long.parseLong(item));
+                if (inBox == null) {
                     num1 += sendBoxMapper.deleteByPrimaryKey(Long.parseLong(item));
                     num2++;
                     messageReplyMapper.deleteByMessageId(Long.parseLong(item));//删除回复信息
-                }
-                else
-                {
-                    sendBox sendBox=sendBoxMapper.selectByPrimaryKey(Long.parseLong(item));
+                } else {
+                    sendBox sendBox = sendBoxMapper.selectByPrimaryKey(Long.parseLong(item));
                     sendBox.setMailtype(-1);
-                    num1+=sendBoxMapper.updateByPrimaryKeySelective(sendBox);
+                    num1 += sendBoxMapper.updateByPrimaryKeySelective(sendBox);
                     num2++;
                 }
             }
             if (num1 == num2 && num1 > 0) return true;
             return false;
-        }
-        else//收件箱删除
+        } else//收件箱删除
         {
             int num1 = 0, num2 = 0;
             for (String item : idarr
                     ) {
-                inBox inBox=inBoxMapper.selectByPrimaryKey(Long.parseLong(item));
-                sendBox sendBox=sendBoxMapper.selectByPrimaryKey(inBox.getSendid());
-                if(sendBox.getMailtype()!=-1) {
+                inBox inBox = inBoxMapper.selectByPrimaryKey(Long.parseLong(item));
+                sendBox sendBox = sendBoxMapper.selectByPrimaryKey(inBox.getSendid());
+                if (sendBox.getMailtype() != -1) {
                     num1 += inBoxMapper.deleteByPrimaryKey(Long.parseLong(item));
                     num2++;
-                }
-                else
-                {
+                } else {
                     num1 += inBoxMapper.deleteByPrimaryKey(Long.parseLong(item));
                     num2 += sendBoxMapper.deleteByPrimaryKey(inBox.getSendid());
                     messageReplyMapper.deleteByMessageId(inBox.getSendid());//删除回复信息
@@ -648,5 +643,13 @@ public class MessageServiceImpl implements MessageService {
         map.put("total", total);
         map.put("rows", sendBoxList);
         return map;
+    }
+
+    @Override
+    public Boolean FinishFeedback(Long id) {
+        sendBox sendBox = sendBoxMapper.selectByPrimaryKey(id);
+        sendBox.setDealtstate(4);
+        int num = sendBoxMapper.updateByPrimaryKeySelective(sendBox);
+        return num > 0;
     }
 }

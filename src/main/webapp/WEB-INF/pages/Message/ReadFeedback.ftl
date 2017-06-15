@@ -41,7 +41,8 @@
                     <div class="mail-body">
                         <div style="float: right;max-width: 80%">
                             <span style="float: right">${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</span> </br>
-                            <span style="float: right">${sendBox.content}</span> </br><div style="clear: both"></div>
+                            <span style="float: right">${sendBox.content}</span> </br>
+                            <div style="clear: both"></div>
                         </div>
                         <div style="clear:both;"></div>
                     </div>
@@ -58,14 +59,15 @@
                         <div class="mail-body">
                             <div style="float: right;max-width: 80%">
                                 <span style="float: right">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span> </br>
-                                <span style="float: right">${item.replycontent}</span><div style="clear: both"></div>
+                                <span style="float: right">${item.replycontent}</span>
+                                <div style="clear: both"></div>
                             </div>
                             <div style="clear:both;"></div>
                         </div>
                     <#else >
                         <div class="mail-body">
                             <div style="max-width: 80%">
-                               <span style="">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span> </br>
+                                <span style="">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span> </br>
                                 <span style="">${item.replycontent}</span>
                             </div>
                         </div>
@@ -78,16 +80,26 @@
                 </div>
 
                 <div class="mail-body text-right tooltip-demo">
-
-                    <a class="btn btn-sm btn-white"
-                       onclick="$('#Reply').show();$('#replybtn').hide();$('#replySubmit').show();" id="replybtn"><i
-                            class="fa	fa-comments"></i><span>回复</span></a>
-                    <a class="btn btn-sm btn-white" onclick="" id="replySubmit" style="display: none"><i
-                            class="fa	fa-comments"></i><span>回复</span></a>
+                    <#if sendBox.dealtstate==2||sendBox.dealtstate==3||sendBox.dealtstate==1>
+                        <a class="btn btn-sm btn-white"
+                           onclick="$('#Reply').show();$('#replybtn').hide();$('#replySubmit').show();" id="replybtn"><i
+                                class="fa	fa-comments"></i><span>回复</span></a>
+                        <a class="btn btn-sm btn-white" onclick="" id="replySubmit" style="display: none"><i
+                                class="fa	fa-comments"></i><span>回复</span></a>
+                        <a class="btn btn-sm btn-white" id="finish"><i
+                                class="fa fa-stop-circle-o"></i><span>结束对话</span></a>
+                    <#else>
+                        <button title="" data-placement="top" data-toggle="tooltip" data-original-title="回复"
+                                class="btn btn-sm btn-white" disabled="disabled"><i class="fa fa-trash-o"></i> 回复
+                        </button>
+                        <button title="" data-placement="top" data-toggle="tooltip" data-original-title="回复"
+                                class="btn btn-sm btn-white" disabled="disabled"><i class="fa fa-stop-circle-o"></i>
+                            结束对话
+                        </button>
+                    </#if>
                     <a class="btn btn-sm btn-white"<#-- href="javascript:history.go(-1)"-->
                        onclick="$('.page-content').empty().load(CTX+'/Message/FeedbackSearch');" id=""><i
                             class="fa fa-reply"></i><span>返回</span></a>
-
                 </div>
                 <div class="clearfix"></div>
 
@@ -112,7 +124,7 @@
 <script type="text/javascript">
     function MailNum() {
         $.ajax({
-            url: CTX+"/Procedure/MailNum",
+            url: CTX + "/Procedure/MailNum",
             success: function (data) {
                 $("#MailNum").text(data);
             }
@@ -121,7 +133,7 @@
     //setInterval('MailNum()', 500);
     function ReMailNum() {
         $.ajax({
-            url: CTX+"/Message/SendMailAllNum",
+            url: CTX + "/Message/SendMailAllNum",
             success: function (data) {
                 $("#ReMailNum").text(data.message);
             }
@@ -132,15 +144,32 @@
     $(function () {
         /*MailNum();
         ReMailNum();*/
+        $("#finish").click(function () {
+            if (!confirm('是否结束对话?')) {
+                return;
+            }
+            $.ajax({
+                url: CTX + '/Message/FinishFeedback',
+                data: {id: ${sendBox.id}},
+                success: function (data) {
+                    if (data.message == 1) {
+                        //window.location.reload();
+                        $('.page-content').empty().load(CTX + '/Message/ReadFeedback?FeedbackId=${sendBox.id}');
+                    } else {
+                        alert("处理失败!");
+                    }
+                }
+            });
+        });
         $("#confirm").click(function () {
             //if (confirm('是否已经处理完毕?')) {
             $.ajax({
-                url: CTX+'/Message/GoOperationSingle',
+                url: CTX + '/Message/GoOperationSingle',
                 data: {id: ${sendBox.id}, type: 1},
                 success: function (data) {
                     if (data.message == 1) {
                         //window.location.reload();
-                        $('.page-content').empty().load(CTX+'/Message/SendBox');
+                        $('.page-content').empty().load(CTX + '/Message/SendBox');
                     } else {
                         alert("处理失败!");
                     }
@@ -149,12 +178,12 @@
         });
         $("#DeleteMail").click(function () {
             $.ajax({
-                url:CTX+ '/Message/GoOperationSingle',
+                url: CTX + '/Message/GoOperationSingle',
                 data: {id: ${sendBox.id}, type: 3},
                 success: function (data) {
                     if (data.message == 1) {
                         //alert("删除成功！");
-                        $('.page-content').empty().load(CTX+'/Message/SendBox');
+                        $('.page-content').empty().load(CTX + '/Message/SendBox');
                     } else {
                         alert("删除失败");
                     }
@@ -166,9 +195,9 @@
             $('#replySubmit').hide();
             $('#replybtn').show();
             $.ajax({
-                url: CTX+'/Message/replySubmit',
+                url: CTX + '/Message/replySubmit',
                 type: "post",
-                data: {id: ${sendBox.id}, ReplyContent: $("#replyText").val(),mailType:1},
+                data: {id: ${sendBox.id}, ReplyContent: $("#replyText").val(), mailType: 1},
                 success: function (data) {
                     if (data.message == 1) {
                         $('.page-content').empty().load('/Message/ReadFeedback?FeedbackId=' + ${sendBox.id});

@@ -227,6 +227,9 @@
                             if ((row.senduserid != ${loginUser.id} && row.dealtstate == 3)||(row.senduserid == ${loginUser.id} && row.dealtstate == 2)) {
                                 a = '<span class="label label-success StateId" data-state="0">未查看</span>';
                             }
+                            if ( row.dealtstate == 4) {
+                                a = '<span class="label label-default StateId" data-state="0">已结束</span>';
+                            }
                             else {
                                 a = '<span class="label label-default StateId" data-state="1">已查看</span>';
                             }

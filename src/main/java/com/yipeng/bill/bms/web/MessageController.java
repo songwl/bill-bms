@@ -170,7 +170,7 @@ public class MessageController extends BaseController {
         }
         sendBox sendBox = sendBoxMapper.selectByPrimaryKey(FeedbackId);
         if (sendBox.getSenduserid().equals(loginUser.getId().toString()) || sendBox.getInuserid().equals(loginUser.getId().toString())) {
-            if ((sendBox.getSenduserid().equals(loginUser.getId().toString()) && sendBox.getDealtstate() != 3) || (sendBox.getInuserid().equals(loginUser.getId().toString()) && sendBox.getDealtstate() != 2)) {
+            if (sendBox.getDealtstate() != 4 && ((sendBox.getSenduserid().equals(loginUser.getId().toString()) && (sendBox.getDealtstate() != 3 && sendBox.getDealtstate() != 4)) || (sendBox.getInuserid().equals(loginUser.getId().toString()) && (sendBox.getDealtstate() != 2 && sendBox.getDealtstate() != 5)))) {
                 sendBox.setDealtstate(1);
                 sendBoxMapper.updateByPrimaryKeySelective(sendBox);
             }
@@ -699,6 +699,19 @@ public class MessageController extends BaseController {
         String[] idarr = new String[1];
         idarr[0] = id;
         Boolean flag = messageService.DeleteGarbage(idarr, type);
+        return this.ajaxDoneSuccess(flag ? "1" : "0");
+    }
+
+    /**
+     * 结束反馈对话
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/FinishFeedback")
+    @ResponseBody
+    public ResultMessage FinishFeedback(Long id) {
+        Boolean flag = messageService.FinishFeedback(id);
         return this.ajaxDoneSuccess(flag ? "1" : "0");
     }
 }

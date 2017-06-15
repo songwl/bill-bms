@@ -65,4 +65,5 @@ public interface MessageService {
     Map<String, Object> GetSendOrReciveNotice(Map<String, Object> params, LoginUser loginUser, String SearchContent, int type);
 
     Map<String, Object> GetSendOrReciveFeedback(Map<String, Object> params, LoginUser loginUser, String SearchContent, int type);
+    Boolean FinishFeedback(Long id);
 }

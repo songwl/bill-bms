@@ -235,7 +235,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public int SendNotice(Map<String, String[]> data, LoginUser loginUser) {
-        if (!loginUser.hasRole("SUPER_ADMIN") && !loginUser.hasRole("DISTRIBUTOR") && !loginUser.hasRole("AGENT")) {
+        if (!loginUser.hasRole("SUPER_ADMIN") && !loginUser.hasRole("DISTRIBUTOR") && !loginUser.hasRole("AGENT")&& !loginUser.hasRole("SECRETARY")) {
             return 2;
         }
         Long SendUserId = loginUser.getId();
@@ -298,6 +298,9 @@ public class MessageServiceImpl implements MessageService {
         Long id = Long.parseLong(data.get("id")[0]);
         String Content = data.get("ReplyContent")[0];
         sendBox sendBox = sendBoxMapper.selectByPrimaryKey(id);
+        if (sendBox.getDealtstate() == 4) {//会话已结束
+            return false;
+        }
         messageReply messageReply = new messageReply();
         messageReply.setMessageid(id);
         messageReply.setSendid(SendUserId.toString());
@@ -426,15 +429,17 @@ public class MessageServiceImpl implements MessageService {
         for (String item : idarr
                 ) {
             sendBox sendBox = sendBoxMapper.selectByPrimaryKey(Long.parseLong(item));
-            if (type == 1) {
+            switch (type) {
+                case 1://将处理类型改为已查看
+                    break;
+                case 2://type=2,将事务状态改为重要
+                    sendBox.setAffairstate(3);
+                    break;
+                case 3://type=3，将邮件类型改为0，既垃圾箱
+                    sendBox.setMailtype(0);
+                    break;
             }
-            if (type == 2) {
-                sendBox.setAffairstate(3);
-            }
-            if (type == 3) {
-                sendBox.setMailtype(0);
-            }
-            sendBox.setDealtstate(1);
+            sendBox.setDealtstate(1);//将处理类型改为已查看
             Boolean flag = sendBoxMapper.updateByPrimaryKey(sendBox) > 0;
             if (!flag) return false;
         }

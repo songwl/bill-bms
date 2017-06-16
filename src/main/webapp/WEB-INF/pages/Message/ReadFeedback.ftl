@@ -75,8 +75,8 @@
                 </#list>
                 <div class="mail-body" id="Reply" style="height: 200px;display: none">
                             <textarea id="replyText" class="col-sm-10"
-                                      style="height:150px; margin-left:120px;resize:none;line-height: 144px;text-align: center;"
-                            ></textarea>
+                                      style="height:150px; margin-left:120px;resize:none;">
+                            </textarea>
                 </div>
 
                 <div class="mail-body text-right tooltip-demo">
@@ -90,7 +90,7 @@
                                 class="fa fa-stop-circle-o"></i><span>结束对话</span></a>
                     <#else>
                         <button title="" data-placement="top" data-toggle="tooltip" data-original-title="回复"
-                                class="btn btn-sm btn-white" disabled="disabled"><i class="fa fa-trash-o"></i> 回复
+                                class="btn btn-sm btn-white" disabled="disabled"><i class="fa	fa-comments"></i> 回复
                         </button>
                         <button title="" data-placement="top" data-toggle="tooltip" data-original-title="回复"
                                 class="btn btn-sm btn-white" disabled="disabled"><i class="fa fa-stop-circle-o"></i>

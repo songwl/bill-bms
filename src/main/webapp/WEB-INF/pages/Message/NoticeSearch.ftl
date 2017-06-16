@@ -26,7 +26,7 @@
                 </h2>
                 <div class="mail-tools tooltip-demo m-t-md">
                     <div class="btn-group pull-right">
-                        <#if loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")>
+                        <#if loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("SECRETARY")>
                             <button class="btn btn-white btn-sm fsgg" data-toggle="0" onclick="loadSendOrReceive(0)"
                                     style="background: #eee;">
                                 <i class="fa fa-arrow-up">发送公告</i>
@@ -84,7 +84,7 @@
     //setInterval('MailAllNum()', 500);
 
     var num = 1;
-        <#if loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")>
+        <#if loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("SECRETARY")>
         num = 0;
         </#if>
     var SearchContent = "";

@@ -28,13 +28,13 @@
                 <div class="mail-tools tooltip-demo m-t-md">
                     <div class="btn-group pull-right">
 
-                        <#if !loginUser.hasRole("SUPER_ADMIN")>
+                        <#if !loginUser.hasRole("SUPER_ADMIN")&&!loginUser.hasRole("SECRETARY")>
                             <button class="btn btn-white btn-sm fsgg" data-toggle="0" check="" onclick="loadSendOrReceive(0)"
                                     style="background: #eee;">
                                 <i class="fa fa-arrow-up">发送反馈</i>
                             </button>
                         </#if>
-                        <#if loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("ADMIN")||loginUser.hasRole("COMMISSIONER")||loginUser.hasRole("AGENT")>
+                        <#if loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("ADMIN")||loginUser.hasRole("COMMISSIONER")||loginUser.hasRole("AGENT")||loginUser.hasRole("SECRETARY")>
                             <button class="btn btn-white btn-sm jsgg" data-toggle="1" check="" onclick="loadSendOrReceive(1)">
                                 <i class="fa fa-arrow-down">接收反馈</i>
                             </button>
@@ -87,7 +87,7 @@
     //setInterval('MailAllNum()', 500);
 
     var num = 1;
-        <#if !loginUser.hasRole("SUPER_ADMIN")>
+        <#if !loginUser.hasRole("SUPER_ADMIN")&&!loginUser.hasRole("SECRETARY")>
         num = 0;
         </#if>
     var SearchContent = "";

@@ -543,7 +543,7 @@
                                 class="arrow "></span>
                         </a>
                         <ul class="sub-menu" style="background: #293038;">
-                            <#if bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")>
+                            <#if bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")||bmsModel.user.hasRole("SECRETARY")>
                                 <li class="">
                                     <a href="/Message/SendNotice">
                                         发布公告
@@ -567,7 +567,7 @@
                             <span class="arrow "></span>
                         </a>
                         <ul class="sub-menu" style="background: #293038;">
-                            <#if !bmsModel.user.hasRole("SUPER_ADMIN")>
+                            <#if !bmsModel.user.hasRole("SUPER_ADMIN")&&!bmsModel.user.hasRole("SECRETARY")>
                                 <li class="">
                                     <a href="/Message/SendFeedback">
                                         提交反馈

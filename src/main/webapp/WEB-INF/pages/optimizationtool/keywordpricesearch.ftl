@@ -59,8 +59,8 @@
                                         <span class="price_anniu font20">批量查询</span>
                                         </br>
                                         </br>
-                                        </br>
-                                        <button onclick="loopall();">循环所有关键词</button>
+                                       <#-- </br>
+                                        <button onclick="loopall();">循环所有关键词</button>-->
                                     </div>
                                     <div class="hg10"></div>
                                     <div class="clear"></div>

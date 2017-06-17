@@ -8,7 +8,7 @@
 <link href="${ctx}/static/css/Message/Index.css" rel="stylesheet">
 <div class="wrapper wrapper-content">
     <div class="row">
-        <div class="col-sm-9 animated fadeInRight">
+        <div class="col-sm-12 animated fadeInRight">
             <div class="mail-box-header">
 
                 <div class="pull-right mail-search">
@@ -29,13 +29,15 @@
                     <div class="btn-group pull-right">
 
                         <#if !loginUser.hasRole("SUPER_ADMIN")&&!loginUser.hasRole("SECRETARY")>
-                            <button class="btn btn-white btn-sm fsgg" data-toggle="0" check="" onclick="loadSendOrReceive(0)"
+                            <button class="btn btn-white btn-sm fsgg" data-toggle="0" check=""
+                                    onclick="loadSendOrReceive(0)"
                                     style="background: #eee;">
                                 <i class="fa fa-arrow-up">发送反馈</i>
                             </button>
                         </#if>
                         <#if loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("ADMIN")||loginUser.hasRole("COMMISSIONER")||loginUser.hasRole("AGENT")||loginUser.hasRole("SECRETARY")>
-                            <button class="btn btn-white btn-sm jsgg" data-toggle="1" check="" onclick="loadSendOrReceive(1)">
+                            <button class="btn btn-white btn-sm jsgg" data-toggle="1" check=""
+                                    onclick="loadSendOrReceive(1)">
                                 <i class="fa fa-arrow-down">接收反馈</i>
                             </button>
                         </#if>
@@ -170,25 +172,6 @@
 
                     },
                     {
-                        field: 'title',
-                        align: 'center',
-                        valign: 'middle',
-                        title: '标题',
-                        formatter: function (value, row, index) {
-                            var a="";
-                            if ((row.senduserid != ${loginUser.id} && row.dealtstate == 3)||(row.senduserid == ${loginUser.id} && row.dealtstate == 2)) {
-                                a = '<span class="title" style="color:red;cursor:pointer;">' + value + '</span>';
-                            }
-                            else
-                            {
-                                a = '<span class="title" style="cursor:pointer;">' + value + '</span>';
-                            }
-                            return a;
-                        },
-                        events: ReadMailEvents
-
-                    },
-                    {
                         field: 'affairstate',
                         align: 'center',
                         valign: 'middle',
@@ -204,6 +187,23 @@
                                 return "其他问题";
                             }
                         },
+                    },
+                    {
+                        field: 'title',
+                        align: 'left',
+                        valign: 'middle',
+                        title: '标题',
+                        formatter: function (value, row, index) {
+                            var a = "";
+                            if ((row.senduserid != ${loginUser.id} && row.dealtstate == 3) || (row.senduserid == ${loginUser.id} && row.dealtstate == 2)) {
+                                a = '<span class="title" style="color:red;cursor:pointer;font-weight: bold;">' + value + '</span>';
+                            }
+                            else {
+                                a = '<span class="title" style="cursor:pointer;color: #1e7bb4;font-weight: bold;">' + value + '</span>';
+                            }
+                            return a;
+                        },
+                        events: ReadMailEvents
 
                     },
                     {
@@ -224,16 +224,15 @@
                         valign: 'middle',
                         formatter: function (value, row, index) {
                             var a = "";
-                            if ((row.senduserid != ${loginUser.id} && row.dealtstate == 3)||(row.senduserid == ${loginUser.id} && row.dealtstate == 2)) {
-                                a = '<span class="label label-success StateId" data-state="0">未查看</span>';
+                            if ((row.senduserid != ${loginUser.id} && row.dealtstate == 3) || (row.senduserid == ${loginUser.id} && row.dealtstate == 2)) {
+                                a = '<span style="display: inline-block;padding: 1px 8px;color: #fff;border-radius: 5px;background: #51a351;" data-state="0">未查看</span>';
                             }
-                            if ( row.dealtstate == 4) {
-                                a = '<span class="label label-default StateId" data-state="0">已结束</span>';
+                            else if (row.dealtstate == 4) {
+                                a = '<span style="display: inline-block;padding: 1px 8px;color: #dddddd;border-radius: 5px;background: #fff;" data-state="0">已结束</span>';
                             }
                             else {
-                                a = '<span class="label label-default StateId" data-state="1">已查看</span>';
+                                a = '<span style="display: inline-block;padding: 1px 8px;color: #008040;border-radius: 5px;background: #fff;" data-state="1">已查看</span>';
                             }
-
                             return a;
                         }
                     },
@@ -253,7 +252,7 @@
         }
         window.ReadMailEvents = {
             'click .title': function (e, value, row, index) {
-                $(".page-content").empty().load(CTX+"/Message/ReadFeedback?FeedbackId=" + row.id).fadeIn(1000);
+                $(".page-content").empty().load(CTX + "/Message/ReadFeedback?FeedbackId=" + row.id).fadeIn(1000);
                 //window.location.href = "/Message/ReadMail?MailId=" + row.id + "&StateId=" + StateId;
 
             }

@@ -9,7 +9,7 @@
 <link href="${ctx}/static/css/Message/Index.css" rel="stylesheet">
 <div class="wrapper wrapper-content">
     <div class="row">
-        <div class="col-sm-9 animated fadeInRight">
+        <div class="col-sm-12 animated fadeInRight">
             <div class="mail-box-header">
             <#-- <div class="pull-right tooltip-demo">
                  <a href="mail_compose.html" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"
@@ -39,17 +39,18 @@
 
                 <#if sendBox.senduserid == loginUser>
                     <div class="mail-body">
-                        <div style="float: right;max-width: 80%">
-                            <span style="float: right">${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</span> </br>
-                            <span style="float: right">${sendBox.content}</span> </br>
+                        <div class="manage_right"><img src="/static/img/laugh.png" class="usertx"><br>我<br><span class="tw_time">${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
+                        <div style="float: right;max-width: 80%" class="replyright">
+                            <span style="float: right">${sendBox.content}</span>
                             <div style="clear: both"></div>
                         </div>
                         <div style="clear:both;"></div>
                     </div>
                 <#else >
                     <div class="mail-body">
-                        <div style="max-width: 80%">
-                            <span style="">${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</span> </br>
+                        <div class="user_left">
+                            <img src="/static/img/laugh.png" alt=""><br>客服<br><span class="tw_time">${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
+                        <div style="max-width: 80%" class="replyleft">
                             <span style="">${sendBox.content}</span>
                         </div>
                     </div>
@@ -57,8 +58,8 @@
                 <#list messageReplyList as item>
                     <#if item.sendid == loginUser>
                         <div class="mail-body">
-                            <div style="float: right;max-width: 80%">
-                                <span style="float: right">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span> </br>
+                            <div class="manage_right"><img src="/static/img/laugh.png" class="usertx"><br>我<br><span class="tw_time">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
+                            <div style="float: right;max-width: 80%" class="replyright">
                                 <span style="float: right">${item.replycontent}</span>
                                 <div style="clear: both"></div>
                             </div>
@@ -66,17 +67,16 @@
                         </div>
                     <#else >
                         <div class="mail-body">
-                            <div style="max-width: 80%">
-                                <span style="">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span> </br>
+                            <div class="user_left">
+                                <img src="/static/img/laugh.png" alt=""><br>客服<br><span class="tw_time">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
+                            <div style="max-width: 80%" class="replyleft">
                                 <span style="">${item.replycontent}</span>
                             </div>
                         </div>
                     </#if>
                 </#list>
                 <div class="mail-body" id="Reply" style="height: 200px;display: none">
-                            <textarea id="replyText" class="col-sm-10"
-                                      style="height:150px; margin-left:120px;resize:none;">
-                            </textarea>
+                            <textarea id="replyText" class="col-sm-10" style="height:150px; margin-left:120px;resize:none;"></textarea>
                 </div>
 
                 <div class="mail-body text-right tooltip-demo">
@@ -119,7 +119,56 @@
        style="display: inline-block;font-size: 14px;border-top:1px solid #eee;width: 40px;height: 40px;line-height: 40px;text-align: center;color: #aaaaaa;">
         <i class="glyphicon glyphicon-repeat"></i></a>
 </div>
-
+<style type="text/css">
+    .replyleft
+    {
+        max-width: 80%;
+        display: inline-block;
+        background: #f8f9fd;
+        border: 1px solid #e2e3e4;
+        border-radius: 5px;
+        padding: 10px;
+        line-height: 22px;
+        font-size: 14px;
+        word-wrap: break-word;
+        word-break: break-all;
+        color: #444444;
+        margin-top: 10px;
+    }
+    .replyright
+    {    max-width: 80%;
+        background: #fffef5;
+        border: 1px solid #ede6ae;
+        border-radius: 5px;
+        padding: 10px;
+        word-wrap: break-word;
+        word-break: break-all;
+        margin-top: 10px;
+    }
+    .user_left {
+        background: url(/static/img/iconimg.gif) no-repeat right -1518px;
+        float: left;
+        margin-right: -1px;
+        z-index: 2;
+        position: relative;
+        display: inline-block;
+        text-align: right;
+        font-size: 14px;
+        padding-right: 13px;
+    }
+    .manage_right {
+         background: url(/static/img/iconimg.gif) no-repeat left -1678px;
+         float: right;
+         margin-left: -1px;
+         z-index: 2;
+         position: relative;
+         margin-top: 10px;
+         display: inline-block;
+         text-align: left;
+         font-size: 14px;
+         padding-left: 13px;
+     }
+</style>
 
 <script type="text/javascript">
     function MailNum() {
@@ -191,6 +240,10 @@
             });
         });
         $("#replySubmit").click(function () {
+            if ($("#replyText").val() == "") {
+                alert("回复内容不允许为空");
+                return;
+            }
             $('#Reply').hide();
             $('#replySubmit').hide();
             $('#replybtn').show();

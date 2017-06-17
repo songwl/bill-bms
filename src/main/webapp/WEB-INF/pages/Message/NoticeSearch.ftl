@@ -8,7 +8,7 @@
 <link href="${ctx}/static/css/Message/Index.css" rel="stylesheet">
 <div class="wrapper wrapper-content">
     <div class="row">
-        <div class="col-sm-9 animated fadeInRight">
+        <div class="col-sm-12 animated fadeInRight">
             <div class="mail-box-header">
 
                 <div class="pull-right mail-search">
@@ -170,13 +170,13 @@
 
                     {
                         field: 'title',
-                        align: 'center',
+                        align: 'left',
                         valign: 'middle',
                         title: '标题',
                         formatter: function (value, row, index) {
 
                             var a = "";
-                            a = '<span class="title" style="cursor:pointer;">' + value + '</span>';
+                            a = '<span class="title" style="color: #1e7bb4;font-weight: bold;cursor:pointer;">' + value + '</span>';
 
                             return a;
                         },

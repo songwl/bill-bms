@@ -9,7 +9,7 @@
 <link href="${ctx}/static/css/Message/Index.css" rel="stylesheet">
 <div class="wrapper wrapper-content">
     <div class="row">
-        <div class="col-sm-9 animated fadeInRight">
+        <div class="col-sm-12 animated fadeInRight">
             <div class="mail-box-header">
             <#-- <div class="pull-right tooltip-demo">
                  <a href="mail_compose.html" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"

@@ -2,6 +2,7 @@ package com.yipeng.bill.bms.service;
 
 import com.yipeng.bill.bms.domain.ForbiddenWords;
 import com.yipeng.bill.bms.domain.KeywordsPrice;
+import com.yipeng.bill.bms.vo.LoginUser;
 
 import java.util.List;
 
@@ -10,6 +11,9 @@ import java.util.List;
  */
 public interface OptimizationToolService {
 
-    List<KeywordsPrice> forbiddenWordsList(String keywords);
+    List<KeywordsPrice> forbiddenWordsList(String keywords,double rote);
     Boolean LoopAllKeywords();
+    Boolean UpdateRote(LoginUser loginUser,double rote);
+    List<KeywordsPrice> GetPriceList(String[] keywords, double rote);
+    String UpdateToken(LoginUser loginUser);
 }

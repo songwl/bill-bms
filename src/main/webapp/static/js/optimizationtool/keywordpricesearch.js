@@ -3,8 +3,17 @@
  */
 var keywords = "";
 var clock;
-$(".price_explanation").click(function () {
+var rote;
+$(".price_anniu").click(function () {
+   /* var patt = /^(\d+(\.\d{1,2})?)$/g;
+    if (!patt.test($("#rote").val())) {
+        alert("请输入正确的两位小数倍率")
+        return;
+    }*/
     keywords = $.trim($("#tKeywordMulti").val());
+    rote = $("#rote").val();
+    $("#tKeywordMulti").attr("readonly", "readonly");
+    $(".price_anniu").text("查询中..").attr("disabled", "disabled");
     clickff();
     window.clearInterval(clock);
     clock = setInterval(clickff, 3000);
@@ -13,15 +22,26 @@ $(".price_explanation").click(function () {
 function clickff() {
     if (keywords == "") {
         window.clearInterval(clock);
+        $("#tKeywordMulti").removeAttr("readonly");
+        $(".price_anniu").text("批量查询").removeAttr("disabled");
         return;
     }
     $.ajax({
         type: 'post',
         url: CTX + '/optimizationTool/keywordpricesearchClick',
-        data: {keywords: keywords},
-        success: function (result) {
+        data: {keywords: keywords, rote: $("#rote").val()},
+        success: function (result) {console.info(result);
+            if (result.code == "-1") {
+                window.clearInterval(clock);
+                $("#tKeywordMulti").removeAttr("readonly");
+                $(".price_anniu").removeAttr("disabled").text("批量查询");
+                alert(result.message);
+                return;
+            }
             if (result.data == null) {
                 window.clearInterval(clock);
+                $("#tKeywordMulti").removeAttr("readonly");
+                $(".price_anniu").removeAttr("disabled").text("批量查询");
                 return;
             }
             var str = "";
@@ -46,7 +66,14 @@ function clickff() {
             $("#tKeywordMulti").val(strr);
             if (flag) {
                 window.clearInterval(clock);
+                $("#tKeywordMulti").removeAttr("readonly");
+                $(".price_anniu").removeAttr("disabled").text("批量查询");
             }
+        },
+        error: function () {
+            window.clearInterval(clock);
+            $("#tKeywordMulti").removeAttr("readonly");
+            $(".price_anniu").removeAttr("disabled").text("批量查询");
         }
 
     })

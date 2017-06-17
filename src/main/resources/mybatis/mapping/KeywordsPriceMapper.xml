@@ -235,12 +235,12 @@
 
   <select id="selectByword"  resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List" />
+    keywords,#{rote,jdbcType=DOUBLE}*PriceBaiduPc as PriceBaiduPc,#{rote,jdbcType=DOUBLE}*PriceSogouPc as PriceSogouPc,#{rote,jdbcType=DOUBLE}*PriceSoPC as PriceSoPC,#{rote,jdbcType=DOUBLE}*PriceBaiduWap as PriceBaiduWap,#{rote,jdbcType=DOUBLE}*PriceSm as PriceSm
     from keywords_price
     where 1=2 or keywords in
     <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
       (#{item})
-    </foreach>
+    </foreach>+
   </select>
 
   <select id="selectByTaskId" parameterType="java.lang.Integer" resultMap="BaseResultMap">

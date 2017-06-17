@@ -29,17 +29,16 @@ public class RankingUpdateServiceImpl implements RankingUpdateService {
 
     @Override
     public int updateRanking(int TaskId, int RankLast, int RankFirst) {
-       //通过订单taskId更新数据库
-        Map<String,Object> params=new HashMap<>();
-        params.put("webAppId",TaskId);
-        List<Bill> billList=billMapper.selectAllSelective(params);
+        //通过订单taskId更新数据库
+        Map<String, Object> params = new HashMap<>();
+        params.put("webAppId", TaskId);
+        List<Bill> billList = billMapper.selectAllSelective(params);
         //判断是否为空
-        if (!CollectionUtils.isEmpty(billList))
-        {
-            for (Bill item:billList
-                 ) {
+        if (!CollectionUtils.isEmpty(billList)) {
+            for (Bill item : billList
+                    ) {
                 //更新排名
-                Bill bill=new Bill();
+                Bill bill = new Bill();
                 bill.setId(item.getId());
                 bill.setNewRanking(RankLast);
                 bill.setFirstRanking(RankFirst);
@@ -48,9 +47,7 @@ public class RankingUpdateServiceImpl implements RankingUpdateService {
             }
 
             return 1;
-        }
-        else
-        {
+        } else {
 
             return 0;
         }
@@ -59,26 +56,96 @@ public class RankingUpdateServiceImpl implements RankingUpdateService {
 
     @Autowired
     private KeywordsPriceMapper keywordsPriceMapper;
+
     @Override
     public int updateKeywords(JsonObject json1) {
         KeywordsPrice keywordsPrice = keywordsPriceMapper.selectByTaskId(Integer.parseInt(json1.get("TaskId").toString()));
-        if(keywordsPrice==null)
-        {
+        if (keywordsPrice == null) {
             return 1;
         }
+        Long IndexBaiduAll = Long.parseLong(json1.get("IndexBaiduAll").toString());
+        Long IndexSoAll = Long.parseLong(json1.get("IndexSoAll").toString());
+        Long BaiduCollectionCount = Long.parseLong(json1.get("BaiduCollectionCount").toString());
+        Long BaiduHomepageCount = Long.parseLong(json1.get("BaiduHomepageCount").toString());
+        double index = 0;//指数
+        double BasicOffer = 0;//基础
+        if (IndexBaiduAll != 0) {
+            index = IndexBaiduAll;
+        } else {
+            index = IndexSoAll;
+        }
+        BasicOffer = ((index / 110) + (BaiduCollectionCount / 1100000)) + (BaiduHomepageCount / 500 + 1);
+        double price = 0;//价格
+        int len = keywordsPrice.getKeywords().length();
+        switch (len) {
+            case 1:
+                if (BasicOffer * 3 < 30) {
+                    price = 30;
+                } else {
+                    price = BasicOffer * 3;
+                }
+                break;
+            case 2:
+                if (BasicOffer * 2 < 6) {
+                    price = 6;
+                } else {
+                    price = BasicOffer * 2;
+                }
+                break;
+            case 3:
+                if (BasicOffer * 1.4 < 5) {
+                    price = 5;
+                } else {
+                    price = BasicOffer * 1.4;
+                }
+                break;
+            case 4:
+                if (BasicOffer * 1.3 < 4) {
+                    price = 4;
+                } else {
+                    price = BasicOffer * 1.3;
+                }
+                break;
+            case 5:
+                if (BasicOffer * 1.2 < 3) {
+                    price = 3;
+                } else {
+                    price = BasicOffer * 1.2;
+                }
+                break;
+            case 6:
+                if (BasicOffer * 1.1 < 2.5) {
+                    price = 2.5;
+                } else {
+                    price = BasicOffer * 1.1;
+                }
+                break;
+            default:
+                if (BasicOffer < 2) {
+                    price = 2;
+                } else {
+                    price = BasicOffer;
+                }
+                break;
+        }
+        double PriceBaiduPc = price;
+        double PriceBaiduWap = price * 1.2;
+        double PriceSoPc = price * 0.3;
+        double PriceSogouPc = price * 0.2;
+        double PriceSm = price * 0.3;
         keywordsPrice.setIndexbaiduall(Integer.parseInt(json1.get("IndexBaiduAll").toString()));
         keywordsPrice.setIndexbaiduwap(Integer.parseInt(json1.get("IndexBaiduWap").toString()));
         keywordsPrice.setIndexsoall(Integer.parseInt(json1.get("IndexSoAll").toString()));
         keywordsPrice.setBaiducollectioncount(Integer.parseInt(json1.get("BaiduCollectionCount").toString()));
         keywordsPrice.setBaiduhomepagecount(Integer.parseInt(json1.get("BaiduHomepageCount").toString()));
         keywordsPrice.setDegree(Integer.parseInt(json1.get("Degree").toString()));
-        keywordsPrice.setPricebaidupc(Double.parseDouble(json1.get("PriceBaiduPc").toString()));
-        keywordsPrice.setPricebaiduwap(Double.parseDouble(json1.get("PriceBaiduWap").toString()));
-        keywordsPrice.setPricesopc(Double.parseDouble(json1.get("PriceSoPc").toString()));
-        keywordsPrice.setPricesowap(Double.parseDouble(json1.get("PriceSoWap").toString()));
-        keywordsPrice.setPricesogoupc(Double.parseDouble(json1.get("PriceSogouPc").toString()));
-        keywordsPrice.setPricesogouwap(Double.parseDouble(json1.get("PriceSogouWap").toString()));
-        keywordsPrice.setPricesm(Double.parseDouble(json1.get("PriceSm").toString()));
+        keywordsPrice.setPricebaidupc(PriceBaiduPc);
+        keywordsPrice.setPricebaiduwap(PriceBaiduWap);
+        keywordsPrice.setPricesopc(PriceSoPc);
+        keywordsPrice.setPricesowap(PriceSoPc);
+        keywordsPrice.setPricesogoupc(PriceSogouPc);
+        keywordsPrice.setPricesogouwap(PriceSogouPc);
+        keywordsPrice.setPricesm(PriceSm);
         keywordsPrice.setUpdatetime(new Date());
         int a = keywordsPriceMapper.updateByPrimaryKeySelective(keywordsPrice);
         return a > 0 ? 1 : 2;

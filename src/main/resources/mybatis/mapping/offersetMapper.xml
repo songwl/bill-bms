@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yipeng.bill.bms.dao.offersetMapper">
+  <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.offerset">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="userId" jdbcType="BIGINT" property="userid" />
+    <result column="tokenId" jdbcType="VARCHAR" property="tokenid" />
+    <result column="rate" jdbcType="DOUBLE" property="rate" />
+    <result column="updateTime" jdbcType="TIMESTAMP" property="updatetime" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="requestSecond" jdbcType="INTEGER" property="requestsecond" />
+    <result column="surplusSecond" jdbcType="INTEGER" property="surplussecond" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, userId, tokenId, rate, updateTime, createTime, requestSecond, surplusSecond
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from offerset
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from offerset
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.offerset">
+    insert into offerset (id, userId, tokenId, 
+      rate, updateTime, createTime, 
+      requestSecond, surplusSecond)
+    values (#{id,jdbcType=BIGINT}, #{userid,jdbcType=BIGINT}, #{tokenid,jdbcType=VARCHAR}, 
+      #{rate,jdbcType=DOUBLE}, #{updatetime,jdbcType=TIMESTAMP}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{requestsecond,jdbcType=INTEGER}, #{surplussecond,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.offerset">
+    insert into offerset
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userid != null">
+        userId,
+      </if>
+      <if test="tokenid != null">
+        tokenId,
+      </if>
+      <if test="rate != null">
+        rate,
+      </if>
+      <if test="updatetime != null">
+        updateTime,
+      </if>
+      <if test="createtime != null">
+        createTime,
+      </if>
+      <if test="requestsecond != null">
+        requestSecond,
+      </if>
+      <if test="surplussecond != null">
+        surplusSecond,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="tokenid != null">
+        #{tokenid,jdbcType=VARCHAR},
+      </if>
+      <if test="rate != null">
+        #{rate,jdbcType=DOUBLE},
+      </if>
+      <if test="updatetime != null">
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="requestsecond != null">
+        #{requestsecond,jdbcType=INTEGER},
+      </if>
+      <if test="surplussecond != null">
+        #{surplussecond,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.offerset">
+    update offerset
+    <set>
+      <if test="userid != null">
+        userId = #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="tokenid != null">
+        tokenId = #{tokenid,jdbcType=VARCHAR},
+      </if>
+      <if test="rate != null">
+        rate = #{rate,jdbcType=DOUBLE},
+      </if>
+      <if test="updatetime != null">
+        updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createtime != null">
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="requestsecond != null">
+        requestSecond = #{requestsecond,jdbcType=INTEGER},
+      </if>
+      <if test="surplussecond != null">
+        surplusSecond = #{surplussecond,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.offerset">
+    update offerset
+    set userId = #{userid,jdbcType=BIGINT},
+      tokenId = #{tokenid,jdbcType=VARCHAR},
+      rate = #{rate,jdbcType=DOUBLE},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      requestSecond = #{requestsecond,jdbcType=INTEGER},
+      surplusSecond = #{surplussecond,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  select
+  <include refid="Base_Column_List" />
+  from offerset
+  where userId = #{UserId,jdbcType=BIGINT}
+</select>
+  <select id="selectByUserIds" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from offerset
+    where userId = #{UserId,jdbcType=BIGINT}
+  </select>
+
+</mapper>

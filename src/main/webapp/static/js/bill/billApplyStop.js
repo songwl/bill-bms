@@ -5,7 +5,36 @@
 
 
 $(document).ready(function () {
+    //申请停单不通过
+    $("#applyNotPass").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var len =selectContent.length;
+        if(selectContent == "") {
+            alert('请选择一列数据!');
 
+        }else{
+            if(confirm("是否不通过审核?"))
+            {
+                $.ajax({
+                    type:"post",
+                    url:CTX+"/order/applyStopBillNotPass",
+                    data:{ selectContent:selectContent,length:len},
+                    success:function (result) {
+                        if(result.code==200)
+                        {
+                            alert(result.message);
+                            $('#myTable').bootstrapTable('refresh');
+                        }
+                        else
+                        {
+                            alert(result.message);
+                        }
+                    }
+
+                })
+            }
+        }
+    })
 
 
     $(".close").click(function () {
@@ -300,7 +329,7 @@ var TableInit = function () {
                     formatter:function (value,row,index) {
                         var a="";
 
-                            a="<span style='color:#94b86e;'>停单审核中</span>";
+                        a="<span style='color:#94b86e;'>停单审核中</span>";
 
                         return a;
                     }

@@ -13,7 +13,7 @@ $(".dfpricecmt").click(function () {
     var keywordarr = keyword.split('\n');
     var urlarr = url.split('\n');
     var pricearr = price.split('\n');
-
+var  index;
     var bool = false;
     if (keywordarr.length >= 1 && urlarr.length >= 1 && pricearr.length >= 1
         && keywordarr.length == urlarr.length && keywordarr.length == pricearr.length
@@ -43,14 +43,14 @@ $(".dfpricecmt").click(function () {
                 dfprice: price
             },
             beforeSend: function () {
-                $(".pload").show();
-                $('.dfpricecmt').attr('disabled',"true");
+                index  = layer.load(1, {
+                    shade: [0.1,'#fff'] //0.1透明度的白色背景
+                });
             },
             success: function (result) {
                 $(".pload").hide();
                 if (result.code == 200) {
                     if (result.message == "") {
-                        alert("导入成功!");
                         $(".differentpriceDiv").slideUp();
                         $(".modal-backdrop").hide();
                         $('#myTable').bootstrapTable('refresh');
@@ -60,28 +60,41 @@ $(".dfpricecmt").click(function () {
                        $("#dfkeyword").val("");
                        $("#dfurl").val("");
                       $("#dfprice").val("");
-                        $('.dfpricecmt').removeAttr("disabled");
+                        layer.alert("导入成功!", {
+                            skin: 'layui-layer-molv' //样式类名
+                            ,closeBtn: 0
+                        });
 
                     }
                     else {
-
-                        alert(result.message + " 已经存在!");
-                        $('.dfpricecmt').removeAttr("disabled");
+                        layer.alert(result.message, {
+                            skin: 'layui-layer-molv' //样式类名
+                            ,closeBtn: 0
+                        });
                     }
                 }
                 else {
 
-                    alert("系统繁忙，请稍后再试！");
-                    $('.dfpricecmt').removeAttr("disabled");
+                    layer.alert("系统繁忙，请稍后再试！", {
+                        skin: 'layui-layer-molv' //样式类名
+                        ,closeBtn: 0
+                    });
+
                 }
+                layer.close(index);
             }
 
         })
 
     }
     else {
-        alert("填写信息不完整或信息有误，请检查订单信息")
+        layer.alert("填写信息不完整或信息有误，请检查订单信息！", {
+            skin: 'layui-layer-molv' //样式类名
+            ,closeBtn: 0
+        });
+
     }
+
 });
 
 

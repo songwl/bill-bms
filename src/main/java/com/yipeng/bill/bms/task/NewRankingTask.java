@@ -93,7 +93,7 @@ public class NewRankingTask {
                             //用来做中间转换的Date
                             Date   date= null;
 
-                                //将字符串转换成日期格式
+                            //将字符串转换成日期格式
                             try {
                                 date = from_type.parse(UpdateTime);
                             } catch (ParseException e) {

@@ -26,7 +26,14 @@ public interface BillService {
      * @param user
      * @return
      */
-     String savaDiffrentBill(Map<String, String[]>  params,LoginUser user);
+    String savaDiffrentBill(Map<String, String[]>  params,LoginUser user);
+    /**
+     * 客户提交订单
+     * @param params
+     * @param user
+     * @return
+     */
+    String saveKeHuBill(Map<String, String[]>  params,LoginUser user);
     /**
      * 通过ID查询订单
      * @param id
@@ -41,6 +48,16 @@ public interface BillService {
      */
     Map<String, Object> pendingAuditList(Map<String,Object> params, LoginUser user);
 
+    Map<String,Object>  pendingAuditView1List(Map<String,Object> params, LoginUser loginUser);
+
+    /**
+     * 客户自己提交的待审核订单
+     * @param params
+     * @param loginUser
+     * @return
+     */
+    Map<String,Object> pendingAuditViewKeHuList(Map<String,Object> params, LoginUser loginUser);
+
     int updateBillPrice(Map<String, String[]>  params,LoginUser user);
 
     /**
@@ -49,7 +66,7 @@ public interface BillService {
      * @param user
      * @return
      */
-    int distributorPrice(Map<String, String[]>  params,User user);
+    int distributorPrice(Map<String, String[]>  params,LoginUser user);
 
     /**
      * g管理员录入价格
@@ -58,7 +75,20 @@ public interface BillService {
      * @return
      */
     int adminPrice(Map<String, String[]>  params,User user);
-
+    /**
+     * 订单审核不通过
+     * @param params
+     * @param user
+     * @return
+     */
+    int billNotExamine(Map<String, String[]>  params,LoginUser user);
+    /**
+     * 待审核订单预览页面（提交订单页面）删除
+     * @param params
+     * @param user
+     * @return
+     */
+    int deleteBillPendingAuditView(Map<String, String[]>  params,LoginUser user);
     /**
      *  订单列表
      * @param params
@@ -127,6 +157,13 @@ public interface BillService {
      */
     int applyStopBillPass(Map<String, String[]>  params,LoginUser user);
 
+    /**
+     * 申请停单审核 不通过
+     * @param params
+     * @param user
+     * @return
+     */
+    int applyStopBillNotPass(Map<String, String[]>  params,LoginUser user);
 
 
     /**
@@ -150,4 +187,10 @@ public interface BillService {
     Map<String,Object> lastMonthConsumption(LoginUser user);//优化结算(上月消费)
 
     Map<String,Object> billClientSideSettlementTable(LoginUser loginUser);//客户方结算页面table
+
+    Map<String,Object> billDayCost(LoginUser loginUser,String searchTime);
+
+    Map<String,Object> billClientDayCost(LoginUser loginUser);//今日消费
+
+    int pendingAuditView1ListCmt(Map<String, String[]>  params,LoginUser user);//客户提交的订单
 }

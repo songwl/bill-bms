@@ -1,9 +1,11 @@
 package com.yipeng.bill.bms.service.impl;
 
 import com.yipeng.bill.bms.dao.UserCompanyMapper;
+import com.yipeng.bill.bms.dao.UserFootMessageMapper;
 import com.yipeng.bill.bms.dao.UserHyperlinkMapper;
 import com.yipeng.bill.bms.dao.UserImgurlMapper;
 import com.yipeng.bill.bms.domain.UserCompany;
+import com.yipeng.bill.bms.domain.UserFootMessage;
 import com.yipeng.bill.bms.domain.UserHyperlink;
 import com.yipeng.bill.bms.domain.UserImgurl;
 import com.yipeng.bill.bms.service.userCompanyService;
@@ -36,6 +38,8 @@ public class userCompanyServiceImpl implements userCompanyService {
     private UserHyperlinkMapper userHyperlinkMapper;
     @Autowired
     private UserImgurlMapper userImgurlMapper;
+    @Autowired
+    private UserFootMessageMapper userFootMessageMapper;
     @Override
     public int uploadFile(MultipartFile logoImgurl, MultipartFile img_url1, MultipartFile img_url2,
                           MultipartFile img_url3, Map<String, String[]> map,
@@ -64,6 +68,10 @@ public class userCompanyServiceImpl implements userCompanyService {
         String[] hyperlink2=params.get("hyperlink2");
         String[] hyperlink3=params.get("hyperlink3");
         String[] hyperlink4=params.get("hyperlink4");
+        String[] footFont1=params.get("footFont1");
+        String[] footFont2=params.get("footFont2");
+        String[] copyrightInfo1=params.get("copyrightInfo1");
+        String[] copyrightInfo2=params.get("copyrightInfo2");
         //原始名称
         String oldlogoImgurl = logoImgurl.getOriginalFilename(); //获取上传文件的原名
         String oldimgurl1 = img_url1.getOriginalFilename();
@@ -87,9 +95,9 @@ public class userCompanyServiceImpl implements userCompanyService {
         UserCompany userCompany=userCompanyMapper.selectByUserId(loginUser.getId());
 
         //判断数据库是否已经拥有对象
-       List<UserImgurl>  userImgurlList=userImgurlMapper.selectByUserId(loginUser.getId());
+        List<UserImgurl>  userImgurlList=userImgurlMapper.selectByUserId(loginUser.getId());
 
-       //判断绑定的域名是否存在
+        //判断绑定的域名是否存在
         if(website.length>0&&!"".equals(website[0]))
         {
 
@@ -502,57 +510,57 @@ public class userCompanyServiceImpl implements userCompanyService {
             //判断超链接
             if(!"".equals(title1[0])&&!"".equals(hyperlink1[0]))//第一个超链接
             {
-                   List<UserHyperlink> userHyperlinkList=userHyperlinkMapper.selectByUserId(loginUser.getId());
-                   //判断是否已经存在超链接
-                  if(!CollectionUtils.isEmpty(userHyperlinkList))
-                  {
-                      UserHyperlink userHyperlink1=new UserHyperlink();
-                      userHyperlink1.setId(userHyperlinkList.get(0).getId());
-                      userHyperlink1.setTitle(title1[0]);
-                      userHyperlink1.setWebSite(website[0]);
-                      userHyperlink1.setHyperlink(hyperlink1[0]);
-                      userHyperlink1.setUpdateUserId(loginUser.getId());
-                      userHyperlink1.setUpdateTime(new Date());
-                      userHyperlinkMapper.updateByPrimaryKeySelective(userHyperlink1);
-                  }
-                  else
-                  {
+                List<UserHyperlink> userHyperlinkList=userHyperlinkMapper.selectByUserId(loginUser.getId());
+                //判断是否已经存在超链接
+                if(!CollectionUtils.isEmpty(userHyperlinkList))
+                {
+                    UserHyperlink userHyperlink1=new UserHyperlink();
+                    userHyperlink1.setId(userHyperlinkList.get(0).getId());
+                    userHyperlink1.setTitle(title1[0]);
+                    userHyperlink1.setWebSite(website[0]);
+                    userHyperlink1.setHyperlink(hyperlink1[0]);
+                    userHyperlink1.setUpdateUserId(loginUser.getId());
+                    userHyperlink1.setUpdateTime(new Date());
+                    userHyperlinkMapper.updateByPrimaryKeySelective(userHyperlink1);
+                }
+                else
+                {
 
-                      UserHyperlink userHyperlink1=new UserHyperlink();
-                      userHyperlink1.setTitle(title1[0]);
-                      userHyperlink1.setWebSite(website[0]);
-                      userHyperlink1.setHyperlink(hyperlink1[0]);
-                      userHyperlink1.setCreateUserId(loginUser.getId());
-                      userHyperlink1.setCreateTime(new Date());
-                      userHyperlinkMapper.insert(userHyperlink1);
-                  }
-                  //第二个超链接
-                  if (!"".equals(title2[0])&&!"".equals(hyperlink2[0]))
-                  {
-                      //存在 ->更新
-                      if (userHyperlinkList.size()>=2)
-                      {
-                          UserHyperlink userHyperlink2=new UserHyperlink();
-                          userHyperlink2.setId(userHyperlinkList.get(1).getId());
-                          userHyperlink2.setTitle(title2[0]);
-                          userHyperlink2.setWebSite(website[0]);
-                          userHyperlink2.setHyperlink(hyperlink2[0]);
-                          userHyperlink2.setUpdateUserId(loginUser.getId());
-                          userHyperlink2.setUpdateTime(new Date());
-                          userHyperlinkMapper.updateByPrimaryKeySelective(userHyperlink2);
-                      }
-                      //不存在 -》添加
-                      else
-                      {
-                          UserHyperlink userHyperlink2=new UserHyperlink();
-                          userHyperlink2.setTitle(title2[0]);
-                          userHyperlink2.setWebSite(website[0]);
-                          userHyperlink2.setHyperlink(hyperlink2[0]);
-                          userHyperlink2.setCreateUserId(loginUser.getId());
-                          userHyperlink2.setCreateTime(new Date());
-                          userHyperlinkMapper.insert(userHyperlink2);
-                      }
-                  }
+                    UserHyperlink userHyperlink1=new UserHyperlink();
+                    userHyperlink1.setTitle(title1[0]);
+                    userHyperlink1.setWebSite(website[0]);
+                    userHyperlink1.setHyperlink(hyperlink1[0]);
+                    userHyperlink1.setCreateUserId(loginUser.getId());
+                    userHyperlink1.setCreateTime(new Date());
+                    userHyperlinkMapper.insert(userHyperlink1);
+                }
+                //第二个超链接
+                if (!"".equals(title2[0])&&!"".equals(hyperlink2[0]))
+                {
+                    //存在 ->更新
+                    if (userHyperlinkList.size()>=2)
+                    {
+                        UserHyperlink userHyperlink2=new UserHyperlink();
+                        userHyperlink2.setId(userHyperlinkList.get(1).getId());
+                        userHyperlink2.setTitle(title2[0]);
+                        userHyperlink2.setWebSite(website[0]);
+                        userHyperlink2.setHyperlink(hyperlink2[0]);
+                        userHyperlink2.setUpdateUserId(loginUser.getId());
+                        userHyperlink2.setUpdateTime(new Date());
+                        userHyperlinkMapper.updateByPrimaryKeySelective(userHyperlink2);
+                    }
+                    //不存在 -》添加
+                    else
+                    {
+                        UserHyperlink userHyperlink2=new UserHyperlink();
+                        userHyperlink2.setTitle(title2[0]);
+                        userHyperlink2.setWebSite(website[0]);
+                        userHyperlink2.setHyperlink(hyperlink2[0]);
+                        userHyperlink2.setCreateUserId(loginUser.getId());
+                        userHyperlink2.setCreateTime(new Date());
+                        userHyperlinkMapper.insert(userHyperlink2);
+                    }
+                }
                 //第三个超链接
                 if (!"".equals(title3[0])&&!"".equals(hyperlink3[0]))
                 {
@@ -608,9 +616,56 @@ public class userCompanyServiceImpl implements userCompanyService {
                     }
                 }
             }
-            else
+            //判断底部信息
+            if(!"".equals(footFont1[0])||!"".equals(footFont2[0])||!"".equals(copyrightInfo1[0])||!"".equals(copyrightInfo2[0]))//第一个
             {
-
+                UserFootMessage userFootMessage=userFootMessageMapper.selectByUserId(loginUser.getId());
+                if(userFootMessage!=null)
+                {
+                    if (!"".equals(footFont1[0]))
+                    {
+                        userFootMessage.setFootfont1(footFont1[0]);
+                    }
+                    if (!"".equals(footFont2[0]))
+                    {
+                        userFootMessage.setFootfont2(footFont2[0]);
+                    }
+                    if (!"".equals(copyrightInfo1))
+                    {
+                        userFootMessage.setCopyrightinfo1(copyrightInfo1[0]);
+                    }
+                    if (!"".equals(copyrightInfo2))
+                    {
+                        userFootMessage.setCopyrightinfo2(copyrightInfo2[0]);
+                    }
+                    userFootMessage.setUpdateTime(new Date());
+                    userFootMessage.setUpdateUserId(loginUser.getId());
+                    userFootMessageMapper.updateByPrimaryKeySelective(userFootMessage);
+                }
+                else
+                {
+                    UserFootMessage userFootMessage1=new UserFootMessage();
+                    userFootMessage1.setWebsite(website[0]);
+                    if (!"".equals(footFont1[0]))
+                    {
+                        userFootMessage1.setFootfont1(footFont1[0]);
+                    }
+                    if (!"".equals(footFont2[0]))
+                    {
+                        userFootMessage1.setFootfont2(footFont2[0]);
+                    }
+                    if (!"".equals(copyrightInfo1))
+                    {
+                        userFootMessage1.setCopyrightinfo1(copyrightInfo1[0]);
+                    }
+                    if (!"".equals(copyrightInfo2))
+                    {
+                        userFootMessage1.setCopyrightinfo2(copyrightInfo2[0]);
+                    }
+                    userFootMessage1.setCreateTime(new Date());
+                    userFootMessage1.setCreateUserId(loginUser.getId());
+                    userFootMessageMapper.insert(userFootMessage1);
+                }
             }
 
         }

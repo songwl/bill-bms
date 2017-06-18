@@ -38,7 +38,6 @@ public class HomeServiceImpl implements HomeService {
     private  inBoxMapper inBoxMapper;
     @Autowired
     private  noticepublishMapper noticepublishMapper;
-
     /**
      * 首页详情
      * @param loginUser
@@ -104,7 +103,15 @@ public class HomeServiceImpl implements HomeService {
         searchMap.put("year",now.get(Calendar.YEAR));
         searchMap.put("month",now.get(Calendar.MONTH)+1);
         searchMap.put("day",now.get(Calendar.DATE));
-        searchMap.put("userId",loginUser.getId());
+        if(loginUser.hasRole("ASSISTANT"))
+        {
+            searchMap.put("userId",loginUser.getCreateUserId());
+        }
+        else
+        {
+            searchMap.put("userId",loginUser.getId());
+        }
+
         Searchenginecompletionrate searchenginecompletionrate=searchenginecompletionrateMapper.selectByUsedIdAndDay(searchMap);
         if(searchenginecompletionrate!=null)
         {
@@ -237,7 +244,7 @@ public class HomeServiceImpl implements HomeService {
             return map;
         }
         //渠道商和代理商
-        else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+        else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ASSISTANT"))
         {
 
             //某个月的第一天和最后一天
@@ -256,7 +263,15 @@ public class HomeServiceImpl implements HomeService {
             String seriesLastMonthSum="";
             //循环获取上个月每天的达标数
             Map<String,Object> dateMap=new  HashMap<>();
-            dateMap.put("userId",loginUser.getId());
+            if(loginUser.hasRole("ASSISTANT"))
+            {
+                dateMap.put("userId",loginUser.getCreateUserId());
+            }
+            else
+            {
+                dateMap.put("userId",loginUser.getId());
+            }
+
             //判断Y轴的显示
             int MaxYbylast=0;
             //判断Y轴消费的显示
@@ -387,7 +402,7 @@ public class HomeServiceImpl implements HomeService {
                 Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
                 if(MaxYbyNewCost<=keywordsSum)
                 {
-                     MaxYbyNewCost=keywordsSum;
+                    MaxYbyNewCost=keywordsSum;
                 }
                 seriesNowMonthSum+=keywordsSum+",";
             }
@@ -520,7 +535,7 @@ public class HomeServiceImpl implements HomeService {
         return null;
     }
 
-
+    //客户数
     @Override
     public Map<String, Object> userCount(LoginUser loginUser) {
         Map<String, Object> map=new HashMap<>();//视图返回对象
@@ -541,6 +556,14 @@ public class HomeServiceImpl implements HomeService {
             Long UserCount=userMapper.getUserBillAscriptionCount(params);
             map.put("UserCount",UserCount);
 
+        }
+        else {
+            if (loginUser.hasRole("ASSISTANT"))
+            {
+                params.put("userId",loginUser.getCreateUserId());
+            }
+            Long count=UserCount(params);
+            map.put("UserCount",count);
         }
         return map;
     }
@@ -563,6 +586,11 @@ public class HomeServiceImpl implements HomeService {
         return map;
     }
 
+    /**
+     * 本月消费
+     * @param loginUser
+     * @return
+     */
     @Override
     public Map<String, Object> MonthConsumption(LoginUser loginUser) {
         Map<String, Object> map=new HashMap<>();//视图返回对象
@@ -574,7 +602,12 @@ public class HomeServiceImpl implements HomeService {
             map.put("MonthConsumption",MonthConsumption);
         }
         //渠道商和代理商
-        else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")) {
+        else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ASSISTANT")) {
+
+            if(loginUser.hasRole("ASSISTANT"))
+            {
+                params.put("userId",loginUser.getCreateUserId());
+            }
             //月总消费
             Double MonthConsumption=MonthConsumption(params);
             map.put("MonthConsumption",MonthConsumption);
@@ -599,7 +632,7 @@ public class HomeServiceImpl implements HomeService {
             Double sum=billCostMapper.MonthConsumptionCustomer(params);
             map.put("MonthConsumption",sum);
         }
-            return map;
+        return map;
     }
     //本日消费
     @Override
@@ -618,8 +651,13 @@ public class HomeServiceImpl implements HomeService {
             map.put("DayConsumption",DayConsumption);
         }
         //渠道商和代理商
-        else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+        else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ASSISTANT"))
         {
+
+            if(loginUser.hasRole("ASSISTANT"))
+            {
+                params.put("userId",loginUser.getCreateUserId());
+            }
             Double DayConsumption=DayConsumption(params);
             map.put("DayConsumption",DayConsumption);
         }
@@ -640,7 +678,7 @@ public class HomeServiceImpl implements HomeService {
         }
 
 
-            return map;
+        return map;
     }
     //任务数
     @Override
@@ -655,8 +693,12 @@ public class HomeServiceImpl implements HomeService {
             map.put("billCount",billCount);
         }
         //渠道商和代理商
-        else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+        else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ASSISTANT"))
         {
+            if(loginUser.hasRole("ASSISTANT"))
+            {
+                params.put("userId",loginUser.getCreateUserId());
+            }
 
             Long billCount=billMapper.getBillListCount(params);
             map.put("billCount",billCount);
@@ -689,9 +731,13 @@ public class HomeServiceImpl implements HomeService {
             map.put("AllbillCount",billCount);
         }
         //渠道商和代理商
-        else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+        else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ASSISTANT"))
         {
 
+            if(loginUser.hasRole("ASSISTANT"))
+            {
+                params.put("userId",loginUser.getCreateUserId());
+            }
             Long billCount=billMapper.getBillListCount(params);
             map.put("AllbillCount",billCount);
         }
@@ -716,16 +762,30 @@ public class HomeServiceImpl implements HomeService {
         Calendar calendar = Calendar.getInstance();
         DecimalFormat df = new DecimalFormat("0.00");//格式化小数
         Map<String, Object> map=new HashMap<>();
-        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ASSISTANT"))
         {
             //1,先获取对应所有的订单
             Map<String,Object> billListparams=new HashMap<>();
-            billListparams.put("userId",loginUser.getId());
+            if(loginUser.hasRole("ASSISTANT"))
+            {
+                billListparams.put("userId",loginUser.getCreateUserId());
+            }
+            else
+            {
+                billListparams.put("userId",loginUser.getId());
+            }
             billListparams.put("state",2);
             //订单数（优化中）
             List<Bill> billList=billMapper.selectByInMemberId(billListparams);
             Map<String,Object> billparam=new HashMap<>();
-            billparam.put("userId",loginUser.getId());
+            if(loginUser.hasRole("ASSISTANT"))
+            {
+                billparam.put("userId",loginUser.getCreateUserId());
+            }
+            else
+            {
+                billparam.put("userId",loginUser.getId());
+            }
             Date tomorrow = calendar.getTime();
             String str1=formatter.format(tomorrow);
             billparam.put("date",str1);
@@ -806,7 +866,7 @@ public class HomeServiceImpl implements HomeService {
         Map<String, Object> map=new HashMap<>();
         DecimalFormat df = new DecimalFormat("0.00");//格式化小数
         String baidu="百度";
-        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ASSISTANT"))
         {
 
             Double baiduCompleteness=searchCompleteness(baidu,loginUser);
@@ -833,7 +893,7 @@ public class HomeServiceImpl implements HomeService {
         Map<String, Object> map=new HashMap<>();
         DecimalFormat df = new DecimalFormat("0.00");//格式化小数
         String baiduWap="手机百度";
-        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ASSISTANT"))
         {
 
             Double baiduWapCompleteness=searchCompleteness(baiduWap,loginUser);
@@ -862,7 +922,7 @@ public class HomeServiceImpl implements HomeService {
         Map<String, Object> map=new HashMap<>();
         DecimalFormat df = new DecimalFormat("0.00");//格式化小数
         String sanliuling="360";
-        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ASSISTANT"))
         {
 
             Double sanliulingCompleteness=searchCompleteness(sanliuling,loginUser);
@@ -885,13 +945,13 @@ public class HomeServiceImpl implements HomeService {
         }
         return map;
     }
-   //搜狗
+    //搜狗
     @Override
     public Map<String, Object> sougouCompleteness(LoginUser loginUser) {
         Map<String, Object> map=new HashMap<>();
         DecimalFormat df = new DecimalFormat("0.00");//格式化小数
         String sougou="搜狗";
-        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ASSISTANT"))
         {
 
             Double sougouCompleteness=searchCompleteness(sougou,loginUser);
@@ -912,13 +972,13 @@ public class HomeServiceImpl implements HomeService {
         }
         return map;
     }
-//神马
+    //神马
     @Override
     public Map<String, Object> shenmaCompleteness(LoginUser loginUser) {
         Map<String, Object> map=new HashMap<>();
         DecimalFormat df = new DecimalFormat("0.00");//格式化小数
         String shenma="神马";
-        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ASSISTANT"))
         {
 
             Double shenmaCompleteness=searchCompleteness(shenma,loginUser);
@@ -939,20 +999,9 @@ public class HomeServiceImpl implements HomeService {
         }
         return map;
     }
-
-    @Override
-    public List<noticepublish> getInBox(LoginUser loginUser) {
-        Map<String,Object> params=new HashMap<>();
-        params.put("currentid", loginUser.getId().toString());
-        params.put("type", 1);
-        params.put("offset", 0);
-        params.put("limit", 3);
-        List<noticepublish> inBoxList=noticepublishMapper.selectByInUser(params);
-        return inBoxList;
-    }
-
     //客户数
     public Long UserCount(Map<String, Object> params)
+
     {
         Long Count=userMapper.getUserRoleByCreateIdCount(params);
         return  Count;
@@ -982,7 +1031,15 @@ public class HomeServiceImpl implements HomeService {
         //今日达标数
         //1,先获取对应所有的订单
         Map<String,Object> billparam=new HashMap<>();
-        billparam.put("userId",loginUser.getId());
+        if(loginUser.hasRole("ASSISTANT"))
+        {
+            billparam.put("userId",loginUser.getCreateUserId());
+
+        }
+        else
+        {
+            billparam.put("userId",loginUser.getId());
+        }
         billparam.put("state",2);
         billparam.put("searchName",search);
         List<Bill> billList=billMapper.selectByInMemberId(billparam);
@@ -1234,8 +1291,6 @@ public class HomeServiceImpl implements HomeService {
         {
             yAxis="9100,9200,9300,9400,9500,9600,9700,9800,9900,10000";
         }
-
-
         else if(max<=11000&&max>10000)
         {
             yAxis="10100,10200,10300,10400,10500,10600,10700,10800,10900,11000";
@@ -1445,5 +1500,14 @@ public class HomeServiceImpl implements HomeService {
 
         return yAxis;
     }
-
+    @Override
+    public List<noticepublish> getInBox(LoginUser loginUser) {
+        Map<String,Object> params=new HashMap<>();
+        params.put("currentid", loginUser.getId().toString());
+        params.put("type", 1);
+        params.put("offset", 0);
+        params.put("limit", 3);
+        List<noticepublish> inBoxList=noticepublishMapper.selectByInUser(params);
+        return inBoxList;
+    }
 }

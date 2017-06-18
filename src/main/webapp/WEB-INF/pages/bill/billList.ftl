@@ -9,6 +9,7 @@
 <script src="${ctx}/static/js/My97DatePicker/WdatePicker.js"></script>
 <script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
 
+
 <div class="Navs">
     <div class="nav_L left">
         <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>关键词排名</span>
@@ -39,6 +40,12 @@
                 <span>&nbsp;<i class="fa fa-trash"></i>&nbsp;申请停单</span>
             </div>
         </#if>
+      <#if bmsModel.user.hasRole("CUSTOMER")>
+            <div id="addBillByKehu">
+                <span>&nbsp;<i class="fa fa-arrow-down"></i>&nbsp;导入</span>
+            </div>
+        </#if>
+
         <div class="search">
             <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
         </div>
@@ -228,8 +235,7 @@
 
 
 <!--详情-->
-
-    <div class="bootbox modal in" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false" id="billCostDetail">
+<div class="bootbox modal in" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false" id="billCostDetail">
         <div class="modal-dialog listdetails">
             <div class="modal-content">
                 <div class="modal-body" style="max-height: 374px;">
@@ -328,12 +334,80 @@
         </div>
     </div>
 </div>
+
+<!--相同价导入-->
+<div class="bootbox modal in samepriceDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
+    <div class="dv1">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="bootbox-close-button close">×</button>
+                <h4 class="modal-title">订单导入</h4>
+            </div>
+            <div class="modal-body" style="max-height: 574px; border-bottom: 1px solid #eee;">
+                <div class="bootbox-body">
+                    <style type="text/css">
+                        .dv1{
+                            width: 960px;
+                        }
+                    </style>
+                    <form class="form-horizontal row-border" id="edt-form" action="#" novalidate="novalidate">
+                        <div class="form-group hidden">
+                            <div class="progress progress-striped active">
+                                <span id="success_span" data-count="0" class="progress-bar progress-bar-success" style="width: 0%; text-align: center; color: black;" title=""></span>
+                                <span id="failed_span" data-count="0" class="progress-bar progress-bar-warning" style="width: 0%; text-align: center; color: black;" title=""></span>
+                            </div>
+                        </div>
+                        <div class="form-group" style="border-bottom: 1px solid #eee;padding-bottom: 3px">
+                            <label class="col-md-2 control-label padding-right-0px">
+                                搜索引擎
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-md-2 padding-right-0px padding-left-5px input-width-small">
+                                <select id="searchengineid" name="searchengineid" class="form-control input-width-small">
+                                    <@dict.showOptions dictKey="search" dictType="DICT" haveBlank="Y" />
+                                </select>
+                            </div>
+
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-1 control-label padding-right-0px">
+                                关键词*
+                            </label>
+                            <div class="col-md-4 padding-left-5px">
+                                <textarea name="keyword" id="keyword" rows="15" class="form-control"  style="width: 296px; height: 297px;resize: none;"></textarea>
+                            </div>
+
+                            <label class="col-md-1 control-label padding-right-0px">
+                                网址
+                                <span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 padding-left-5px">
+                                <textarea name="url" id="url" rows="15" class="form-control"   style="height: 297px;resize: none;"></textarea>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+
+            <div class="modal-footer">
+                <button data-bb-handler="success" type="button" class="btn wzgj-blue addBillByKehuCmt" style="background: #09C;color: #fff;">确定</button>
+                <button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--相同价导入end-->
 <#--<a href="#" onclick="$('body').animate( {scrollTop: 0}, 500);" style="position: fixed;right: 18px;bottom: 20px;border: 1px solid;color: #ddd;"><i class="glyphicon glyphicon-arrow-up"></i></a>-->
-<div class="fixed-btn go-top" onclick=" $('body,html').animate({scrollTop:0},1000);" style="display:none;position: fixed;right: 0.8%;bottom: 5%;width: 40px;border: 1px solid #eee;background-color: white;font-size: 24px;z-index: 1040;">
-    <a href="javascript:void(0)" title="返回顶部" style="display: inline-block;width: 40px;height: 40px;text-align: center;color: #64854c;"> <i class="fa fa-angle-up"></i></a>
+<div class="fixed-btn go-top" onclick=" $('body,html').animate({scrollTop:0},500);" style="display:none;position: fixed;right: 0.8%;bottom: 5%;width: 40px;border: 1px solid #eee;background-color: white;font-size: 24px;z-index: 1040;background:#7a7a7a;">
+    <a href="javascript:void(0)" title="返回顶部" style="display: inline-block;width: 40px;height: 40px;text-align: center;color: #64854c;">
+        <i class="fa fa-angle-up" style="color: #fff;"></i></a>
 </div>
 <div class="pload" style="position:absolute;top:45%;left: 50%; z-index:2200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none;"></div>
-  <#--  <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("COMMISSIONER")>
+ <#-- <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("COMMISSIONER")>
 <form id= "uploadForm" enctype="multipart/form-data">
     <p >上传文件： <input type="file" name="file"/></p>
     <input type="button" value="上传" onclick="doUpload()" />

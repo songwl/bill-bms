@@ -10,7 +10,7 @@
         <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>停单审核中</span>
     </div>
     <div class="nav_R right" id="divQx">
-        <div id="xxx">
+        <div id="applyNotPass">
             <span>&nbsp;<i class="fa fa-exchange"></i>&nbsp;取消停单</span>
         </div>
     </div>

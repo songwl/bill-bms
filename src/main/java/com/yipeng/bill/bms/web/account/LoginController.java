@@ -2,10 +2,7 @@ package com.yipeng.bill.bms.web.account;
 
 import com.yipeng.bill.bms.core.crypto.CryptoUtils;
 import com.yipeng.bill.bms.core.utils.ServletUtil;
-import com.yipeng.bill.bms.dao.UserCompanyMapper;
-import com.yipeng.bill.bms.dao.UserHyperlinkMapper;
-import com.yipeng.bill.bms.dao.UserImgurlMapper;
-import com.yipeng.bill.bms.dao.UserMapper;
+import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.service.RoleService;
 import com.yipeng.bill.bms.service.UserRoleService;
@@ -55,6 +52,8 @@ public class LoginController extends BaseController {
 	UserImgurlMapper userImgurlMapper;
 	@Autowired
 	UserHyperlinkMapper userHyperlinkMapper;
+	@Autowired
+	UserFootMessageMapper userFootMessageMapper;
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(HttpServletRequest request,ModelMap map) {
 		//获取当前访问的网址
@@ -65,6 +64,8 @@ public class LoginController extends BaseController {
 		List<UserImgurl> userImgurlList=userImgurlMapper.selectByWebsite(website);
 		//获取当前网址对应的超链接
 		List<UserHyperlink> userHyperlinkList=userHyperlinkMapper.selectByWebsite(website);
+		//底部信息
+		UserFootMessage userFootMessage=userFootMessageMapper.selectByWebsite(website);
 		Map<String, Object> bms=new HashMap<>();
 		if(!CollectionUtils.isEmpty(userImgurlList))
 		{
@@ -73,6 +74,10 @@ public class LoginController extends BaseController {
 		if(!CollectionUtils.isEmpty(userHyperlinkList))
 		{
 			map.put("userHyperlinkList",userHyperlinkList);
+		}
+		if(userFootMessage!=null)
+		{
+			map.addAttribute("userFootMessage",userFootMessage);
 		}
 		map.addAttribute("bmsModel", userCompany);
 		return  "/user/login";
@@ -91,41 +96,41 @@ public class LoginController extends BaseController {
 		User user = userService.getUserByName(userName);
 		String codeSession = (String) session.getAttribute("code");
 
-			if(user!=null)
+		if(user!=null)
+		{
+			if(user.getUserName().equals(userName)&&user.getPassword().equals(CryptoUtils.md5(password)))
 			{
-				if(user.getUserName().equals(userName)&&user.getPassword().equals(CryptoUtils.md5(password)))
+				if(codeSession.toLowerCase().equals(code.toLowerCase()))
 				{
-					if(codeSession.toLowerCase().equals(code.toLowerCase()))
+					if(user.getStatus())
 					{
-						if(user.getStatus())
-						{
-							int loginCount=user.getLoginCount();
-							user.setLastLoginTime(new Date());
-							user.setLoginCount(loginCount+1);
-							userMapper.updateByPrimaryKeySelective(user);
-							boolean flag = executeLogin(request, response, user);
-							return "redirect:/index";
-						}
-						else
-						{
-							modelMap.addAttribute("loginFailureMessage", "您无权限登录系统,请联系管理!");
-							return "/user/login";
-
-						}
-
-			    	}
+						int loginCount=user.getLoginCount();
+						user.setLastLoginTime(new Date());
+						user.setLoginCount(loginCount+1);
+						userMapper.updateByPrimaryKeySelective(user);
+						boolean flag = executeLogin(request, response, user);
+						return "redirect:/index";
+					}
 					else
 					{
-						modelMap.addAttribute("loginFailureMessage", "验证码错误");
+						modelMap.addAttribute("loginFailureMessage", "您无权限登录系统,请联系管理!");
 						return "/user/login";
+
 					}
+
+				}
+				else
+				{
+					modelMap.addAttribute("loginFailureMessage", "验证码错误");
+					return "/user/login";
+				}
 			}
 		}
 
 
 
-			modelMap.addAttribute("loginFailureMessage", "用户名密码错误");
-			return "/user/login";
+		modelMap.addAttribute("loginFailureMessage", "用户名密码错误");
+		return "/user/login";
 
 
 

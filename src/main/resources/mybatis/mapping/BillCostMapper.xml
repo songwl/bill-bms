@@ -13,7 +13,7 @@
     id, t_bill_id, t_bill_price_id, cost_amount, cost_date, ranking
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from t_bill_cost
     where id = #{id,jdbcType=BIGINT}
@@ -153,7 +153,7 @@
     WHERE a.t_bill_price_id = b.id
     AND b.in_member_id=#{userId,jdbcType=BIGINT} AND a.t_bill_id=#{billId,jdbcType=BIGINT}
   </select>
- <!--总消费-->
+  <!--总消费-->
   <select id="MonthConsumption"  resultType="java.lang.Double">
     SELECT SUM(b.cost_amount) from t_bill_price as a,t_bill_cost as b
     where a.bill_id=b.t_bill_id
@@ -169,7 +169,7 @@
       and month(b.cost_date)=#{month,jdbcType=INTEGER}
     </if>
     <if test="day != null">
-    and DAY(b.cost_date) = #{day,jdbcType=INTEGER}
+      and DAY(b.cost_date) = #{day,jdbcType=INTEGER}
     </if>
   </select>
 
@@ -244,7 +244,7 @@
     IFNULL(COUNT(a.id),0)
     from t_bill_cost as a ,t_bill_price as b, t_bill as c
     where   a.t_bill_price_id=b.id
-    AND  b.bill_id=c.id
+    AND  b.bill_id=c.id  AND c.delete_state=0
     <if test="userId != null">
       AND b.in_member_id=#{userId,jdbcType=BIGINT}
     </if>
@@ -285,7 +285,7 @@
     AND a.out_member_id=#{userIdDayCost,jdbcType=BIGINT}
     and year(b.cost_date)=#{year,jdbcType=INTEGER}
     and month(b.cost_date)=#{month,jdbcType=INTEGER}
-   and DAY(b.cost_date) = #{day,jdbcType=INTEGER}
+    and DAY(b.cost_date) = #{day,jdbcType=INTEGER}
   </select>
 
   <select id="selectByDayCostPriceId"  resultMap="BaseResultMap">
@@ -320,18 +320,18 @@
   </select>
 
   <select id="selectByUseDayCost"  resultType="java.lang.Double">
-  SELECT IFNULL(SUM(a.cost_amount) ,0)
-  from t_bill_cost as a,t_bill_price as b
-  WHERE a.t_bill_price_id=b.id
-  AND b.out_member_id=#{userId,jdbcType=BIGINT}
-  and year(a.cost_date)=#{year,jdbcType=INTEGER}
-  and month(a.cost_date)=#{month,jdbcType=INTEGER}
-  and DAY(a.cost_date) = #{day,jdbcType=INTEGER}
+    SELECT IFNULL(SUM(a.cost_amount) ,0)
+    from t_bill_cost as a,t_bill_price as b
+    WHERE a.t_bill_price_id=b.id
+    AND b.out_member_id=#{userId,jdbcType=BIGINT}
+    and year(a.cost_date)=#{year,jdbcType=INTEGER}
+    and month(a.cost_date)=#{month,jdbcType=INTEGER}
+    and DAY(a.cost_date) = #{day,jdbcType=INTEGER}
   </select>
 
   <select id="selectByKehuSum"  resultType="java.lang.Double">
-   select sum(cost_amount) from t_bill_cost
-   where t_bill_price_id =(
+    select sum(cost_amount) from t_bill_cost
+    where t_bill_price_id =(
     select id from t_bill_price
     where bill_id in(
     select bill_id from t_bill_price
@@ -339,5 +339,87 @@
     and out_member_id=#{outmemberId,jdbcType=BIGINT})
     and out_member_id='2')
     and cost_date=CURDATE()
+  </select>
+  <!--优化方结算-->
+  <select id="selectByBillDayCost"  resultType="java.lang.Double">
+    select IFNULL(SUM(cost_amount) ,0)
+    from t_bill_cost
+    where t_bill_price_id in(
+    select id from t_bill_price where bill_id IN (
+    select bill_id from t_bill_price where
+    in_member_id=#{InUserId,jdbcType=BIGINT} and out_member_id=#{OutUserId,jdbcType=BIGINT})
+    and out_member_id=#{InUserId,jdbcType=BIGINT}) and cost_date=#{searchTime,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByBillMonthCost"  resultType="java.lang.Double">
+    select IFNULL(SUM(cost_amount) ,0)
+    from t_bill_cost
+    where t_bill_price_id in(
+    select id from t_bill_price where bill_id IN (
+    select bill_id from t_bill_price where
+    in_member_id=#{InUserId,jdbcType=BIGINT} and out_member_id=#{OutUserId,jdbcType=BIGINT})
+    and out_member_id=#{InUserId,jdbcType=BIGINT}) and   date_format(cost_date,'%Y-%m')=#{monthTime,jdbcType=VARCHAR}
+  </select>
+
+
+  <!--客户方结算-->
+  <select id="selectByBillClientDayCost"  resultType="java.lang.Double">
+    select IFNULL(SUM(cost_amount) ,0)
+    from t_bill_cost
+    where t_bill_price_id in(
+    select id from t_bill_price where bill_id IN (
+    select bill_id from t_bill_price where
+    in_member_id=#{InUserId,jdbcType=BIGINT} and out_member_id=#{OutUserId,jdbcType=BIGINT})
+    and in_member_id=#{InUserId,jdbcType=BIGINT}) and cost_date=CURDATE()
+  </select>
+
+  <select id="selectByBillClientMonthCost"  resultType="java.lang.Double">
+    select IFNULL(SUM(cost_amount) ,0)
+    from t_bill_cost
+    where t_bill_price_id in(
+    select id from t_bill_price where bill_id IN (
+    select bill_id from t_bill_price where
+    in_member_id=#{InUserId,jdbcType=BIGINT} and out_member_id=#{OutUserId,jdbcType=BIGINT})
+    and in_member_id=#{InUserId,jdbcType=BIGINT}) and  date_format(cost_date,'%Y-%m')=date_format(now(),'%Y-%m')
+  </select>
+
+  <select id="selectByBillCaoZuoYuanDayCost"  resultType="java.lang.Double">
+    select SUM(cost_amount) from t_bill_cost
+    where t_bill_price_id in (
+    select id from t_bill_price
+    where bill_id in (
+    select id from t_bill where bill_ascription=#{userId,jdbcType=BIGINT}
+    )and in_member_id=1 and out_member_id=#{OutUserId,jdbcType=BIGINT}) and cost_date=#{searchTime,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByBillCaoZuoYuanMonthCost"  resultType="java.lang.Double">
+    select SUM(cost_amount) from t_bill_cost
+    where t_bill_price_id in (
+    select id from t_bill_price
+    where bill_id in (
+    select id from t_bill where bill_ascription=#{userId,jdbcType=BIGINT}
+    )and in_member_id=1 and out_member_id=#{OutUserId,jdbcType=BIGINT}) and  date_format(cost_date,'%Y-%m')=#{monthTime,jdbcType=VARCHAR}
+  </select>
+
+  <!--最新排名（管理员）-->
+  <select id="selectByGetBillToOne"  resultMap="BaseResultMap">
+    SELECT b.*  from t_bill as a,t_bill_cost as b
+    where a.id=b.t_bill_id  AND a.delete_state=0
+    GROUP BY b.t_bill_id HAVING COUNT(b.t_bill_id)=2 or COUNT(b.t_bill_id)=3
+  </select>
+
+  <!--最新排名（操作员）-->
+  <select id="selectByCaoZuoyuanGetBillToOne"  resultMap="BaseResultMap">
+    SELECT b.*  from t_bill as a,t_bill_cost as b
+    where a.id=b.t_bill_id  AND a.delete_state=0 AND  a.bill_ascription=#{billAscription,jdbcType=BIGINT}
+    GROUP BY b.t_bill_id HAVING COUNT(b.t_bill_id)=2 or COUNT(b.t_bill_id)=3
+  </select>
+
+  <!--最新排名（渠道商）-->
+  <select id="selectByQuDaoGetBillToOne"  resultMap="BaseResultMap">
+  SELECT b.*  from t_bill as a,t_bill_cost as b,t_bill_price as c
+    where a.id=b.t_bill_id  AND a.delete_state=0 AND  a.id=c.bill_id and c.out_member_id=#{outmemberId,jdbcType=BIGINT}
+    GROUP BY b.t_bill_id HAVING COUNT(b.t_bill_id)=2 or COUNT(b.t_bill_id)=3
+
   </select>
 </mapper>

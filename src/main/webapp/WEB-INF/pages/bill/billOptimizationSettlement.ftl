@@ -4,6 +4,7 @@
 <@base.html "系统概况">
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <script src="${ctx}/static/js/public/highcharts.js"></script>
+<script src="${ctx}/static/js/My97DatePicker/WdatePicker.js"></script>
 <style>
     .dashboard-stat {
         border-radius: 5px !important;
@@ -100,7 +101,6 @@
 
 </div>
 
-
 <div class="row">
     <div class="col-md-12">
         <div class="widget box">
@@ -117,6 +117,33 @@
                 </div>
             </div>
             <div id="container" style="width: 100%; height: 400px; float:left;;"></div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary" id="list-panel">
+            <div class="panel-body">
+                <div style="margin-bottom: 5px;">
+                    <span>日期：</span>
+                    <input onFocus="WdatePicker({lang:'zh-tw',readOnly:true})" id="createTime"  style="border:1px solid #09c;height:30px;"/>
+
+                    <span class="search" style="cursor: pointer;">&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
+
+                </div>
+                <div class="panel-nav">
+
+                    <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;客户消费</div>
+                    <div class="Nav_Right">
+
+                    </div>
+                    <div class="cls"></div>
+                </div>
+
+                <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%;font-size: 13px;font-family: "微软雅黑">
+                </table>
+            </div>
+
         </div>
     </div>
 </div>
@@ -219,6 +246,143 @@
             },  ]
         })
     });
+
+</script>
+<script>
+    var searchTime;
+    $(".search").click(function () {
+        searchTime=$("#createTime").val();
+        $('#myTable').bootstrapTable('refresh');
+    })
+    $(function () {
+
+        //1.初始化Table
+        var oTable = new TableInit();
+        oTable.Init();
+        //2.初始化Button的点击事件
+        var oButtonInit = new ButtonInit();
+        oButtonInit.Init();
+    });
+    var TableInit = function () {
+        var oTableInit = new Object();
+        //初始化Table
+        oTableInit.Init = function () {
+            $('#myTable').bootstrapTable({
+                url:CTX+ '/order/billDayCost',         //请求后台的URL（*）
+                method: 'get',                      //请求方式（*）
+                toolbar: '#toolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，
+                //pagination: true,                   //是否显示分页（*）
+               // pageNumber: 1,                       //初始化加载第一页，默认第一页
+               // pageSize:20,                       //每页的记录行数（*）
+               // pageList: [50, 500,1000],        //可供选择的每页的行数（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                queryParams: oTableInit.queryParams,//传递参数（*）
+                queryParamsType: "",
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                //height: 700,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+                rowStyle: function (row, index) {
+                    //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
+                    var strclass = "";
+                    if ((row.id)%2==0){
+                        strclass = '';
+                    }
+                    else {
+                        strclass = 'active';
+                    }
+                    return { classes: strclass }
+                },
+                columns: [
+                    {
+                        checkbox: true
+                    },{
+                        field: 'id',
+
+                        align: 'center',
+                        valign: 'middle',
+                        title: '序号',
+
+                    },
+                    {
+                        field: 'fundItemId',
+
+                        align: 'center',
+                        valign: 'middle',
+                        title: 'sql序号',
+                        visible:false
+
+                    },
+                    {
+                        field: 'userName',
+
+                        align: 'center',
+                        valign: 'middle',
+                        title: '客户名',
+
+                    },
+                    {
+                        field: 'changeAmount',
+                        align: 'center',
+                        valign: 'middle',
+                        title: '本月扣费',
+
+                    },
+                    {
+                        field: 'dayAccountSum',
+                        align: 'center',
+                        valign: 'middle',
+                        title: '本日扣费',
+
+                    },
+                    {
+                        field: 'balance',
+                        align: 'center',
+                        valign: 'middle',
+                        title: '客户余额',
+
+                    },
+                    {
+                        field: 'changeTime',
+                        align: 'center',
+                        valign: 'middle',
+                        title: '消费时间',
+
+                    }
+
+                ],
+
+            });
+        };
+
+        //得到查询的参数
+        oTableInit.queryParams = function (params) {
+            var temp = {
+                limit: params.pageSize,   //页面大小
+                offset: params.pageNumber,  //页码
+                sortOrder: params.sortOrder,
+                sortName: params.sortName,
+                searchTime:searchTime
+
+            };
+            return temp;
+        }
+
+
+
+        return oTableInit;
+    };
+
+    $(function () {
+        $("#queren").click(function () {
+
+            $('#myTable').bootstrapTable('refresh');
+        });
+
+    });
+
 
 </script>
 

@@ -11,24 +11,29 @@
         <i class="fa fa-home">&nbsp;</i><span>客户管理</span> > <span>客户列表</span>
     </div>
     <div class="nav_R right" id="divQx">
-    <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")>
+    <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")||bmsModel.user.hasRole("ASSISTANT")>
         <div class="Import addMember">
             <span id="Import">&nbsp;<i class="fa fa-plus"></i>&nbsp;添加客户</span>
         </div>
     </#if>
+        <#if bmsModel.user.hasRole("DISTRIBUTOR")>
+            <div class="Import addASSISTANT">
+                <span id="Import">&nbsp;<i class="fa fa-plus"></i>&nbsp;添加助理</span>
+            </div>
+        </#if>
         <#if bmsModel.user.dailiRole=1>
             <div class="Import addAGENT">
                 <span id="Import">&nbsp;<i class="fa fa-plus"></i>&nbsp;添加代理商</span>
             </div>
         </#if>
-        <div class="search">
-            <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
-        </div>
         <#if  bmsModel.user.hasRole("SUPER_ADMIN")>
             <div class="updateDailiRole" style="width:130px;">
                 <span id="dailiRole">&nbsp;<i class="fa fa-gavel"></i>&nbsp;开通代理权限</span>
             </div>
         </#if>
+        <div class="search">
+            <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
+        </div>
     </div>
 </div>
 <div class="cls">

@@ -29,4 +29,6 @@ public interface UserRoleMapper {
 
     //所有用户
     List<UserRole>   selectByAllUserRole(Map<String,Object> params);
+
+    int deleteByUserId(Long userId);
 }

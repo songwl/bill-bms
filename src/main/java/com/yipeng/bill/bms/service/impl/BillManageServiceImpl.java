@@ -3,13 +3,16 @@ package com.yipeng.bill.bms.service.impl;
 import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.model.BillManageList;
+import com.yipeng.bill.bms.model.FundItemSum;
 import com.yipeng.bill.bms.service.BillManageService;
+import com.yipeng.bill.bms.service.UserService;
 import com.yipeng.bill.bms.vo.BillDetails;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -32,7 +35,10 @@ public class BillManageServiceImpl implements BillManageService {
     private BillCostMapper billCostMapper;
     @Autowired
     private BillSearchSupportMapper billSearchSupportMapper;
-
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private  FundAccountMapper fundAccountMapper;
 
     /**
      * 管理员订单管理
@@ -190,7 +196,15 @@ public class BillManageServiceImpl implements BillManageService {
         }
         else
         {
-            params.put("userId",loginUser.getId());
+            if(loginUser.hasRole("ASSISTANT"))
+            {
+                params.put("userId",loginUser.getCreateUserId());
+            }
+            else
+            {
+                params.put("userId",loginUser.getId());
+            }
+
             params.put("state",2);//订单状态
             params.put("billType",1);//订单属性
         }
@@ -208,7 +222,15 @@ public class BillManageServiceImpl implements BillManageService {
                 //客户
                 BillPrice billPrice=new BillPrice();
                 billPrice.setBillId(item.getId());
-                billPrice.setInMemberId(loginUser.getId());
+                if(loginUser.hasRole("ASSISTANT")||loginUser.hasRole("COMMISSIONER"))
+                {
+                    billPrice.setInMemberId(loginUser.getCreateUserId());
+                }
+                else
+                {
+                    billPrice.setInMemberId(loginUser.getId());
+                }
+
                 List<BillPrice> billPriceList=billPriceMapper.selectByBillPrice(billPrice);//通过单价表的outmemberId获取用户
                 if(!CollectionUtils.isEmpty(billPriceList))
                 {
@@ -232,7 +254,7 @@ public class BillManageServiceImpl implements BillManageService {
                             ) {
                         BillPrice billPrices=new BillPrice();
                         billPrices.setBillId(billitem.getId());
-                        if (loginUser.hasRole("COMMISSIONER"))
+                        if (loginUser.hasRole("COMMISSIONER")||loginUser.hasRole("ASSISTANT"))
                         {
                             billPrices.setInMemberId(loginUser.getCreateUserId());
                         }
@@ -298,64 +320,215 @@ public class BillManageServiceImpl implements BillManageService {
 
     @Override
     public Map<String, Object> getNewRankingTable(Map<String, Object> params, LoginUser loginUser) {
-        int offset=Integer.parseInt(params.get("offset").toString()) ;
-         int i=offset;
+
+        int i=0;
         List<BillDetails> billDetailsList=new ArrayList<>();
+        Map<String,Object> map=new HashMap<>();
+
+        SimpleDateFormat sm=new SimpleDateFormat("yyyy-MM-dd");
+        String  dateNow=sm.format(new Date());
         //根据权限来判断
         //管理员
         if(loginUser.hasRole("SUPER_ADMIN"))
         {
+            List<BillCost> billList=billCostMapper.selectByGetBillToOne();
+            for (BillCost item: billList
+                    ) {
+                String costDate=sm.format(item.getCostDate());
+                if(costDate.equals(dateNow))
+                {
+                    i++;
+                    Bill bill=billMapper.selectByPrimaryKey(item.gettBillId());
+                    if(bill!=null)
+                    {
+                        BillDetails billDetails=new BillDetails();
+                        billDetails.setdisplayId(i);
+                        billDetails.setWebsite(bill.getWebsite());
+                        billDetails.setKeywords(bill.getKeywords());
+                        //获取搜索引擎
+                        BillSearchSupport billSearchSupport= billSearchSupportMapper.selectByBillId(bill.getId());
+                        billDetails.setSearchName(billSearchSupport.getSearchSupport());
+                        //获取客户
+                        BillPrice billPrice=new BillPrice();
+                        billPrice.setInMemberId(loginUser.getId());
+                        billPrice.setBillId(bill.getId());
+                        List<BillPrice> billPriceList= billPriceMapper.selectByBillPrice(billPrice);
+                        if(!CollectionUtils.isEmpty(billPriceList))
+                        {
+                            User user1=userMapper.selectByPrimaryKey(billPriceList.get(0).getOutMemberId());
+                            billDetails.setUserName(user1.getUserName());
+                        }
+                        billDetails.setNewRanking(bill.getNewRanking());
+                        billDetails.setChangeRanking(bill.getChangeRanking());
+                        billDetailsList.add(billDetails);
+                    }
+                }
+            }
+            map.put("rows",billDetailsList);
+            return map;
 
         }
         //渠道商
-        else if(loginUser.hasRole("DISTRIBUTOR"))
+        else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("ASSISTANT"))
         {
-                Calendar now =Calendar.getInstance();
-            params.put("year",now.get(Calendar.YEAR));
-            params.put("month",now.get(Calendar.MONTH)+1);
-            params.put("day",now.get(Calendar.DATE));
-
-            //查询最新排名的订单
-            params.put("userId",loginUser.getId());
-            params.put("state",2);
-
-
-            List<Bill> billList=billMapper.selectByNewRanking(params);
-            Long total=billMapper.selectByNewRankingCount(params);
-            if (!CollectionUtils.isEmpty(billList))
+            Map<String,Object> mapParams=new HashMap<>();
+            if(loginUser.hasRole("ASSISTANT"))
             {
-                for (Bill item: billList
-                     ) {
-                    i++;
-                     BillDetails billDetails=new BillDetails();
-                     billDetails.setdisplayId(i);
-                     billDetails.setWebsite(item.getWebsite());
-                     billDetails.setKeywords(item.getKeywords());
-                     //获取搜索引擎
-                     BillSearchSupport billSearchSupport= billSearchSupportMapper.selectByBillId(item.getId());
-                     billDetails.setSearchName(billSearchSupport.getSearchSupport());
-                     //获取客户
-                     BillPrice billPrice=new BillPrice();
-                     billPrice.setInMemberId(loginUser.getId());
-                     billPrice.setBillId(item.getId());
-                     List<BillPrice> billPriceList= billPriceMapper.selectByBillPrice(billPrice);
-                     if(!CollectionUtils.isEmpty(billPriceList))
-                     {
-                         User user1=userMapper.selectByPrimaryKey(billPriceList.get(0).getOutMemberId());
-                         billDetails.setUserName(user1.getUserName());
-                     }
-                     billDetails.setNewRanking(item.getNewRanking());
-                     billDetails.setChangeRanking(item.getChangeRanking());
-                     billDetailsList.add(billDetails);
-                }
-
-                Map<String,Object> map=new HashMap<>();
-                map.put("total",total);
-                map.put("rows",billDetailsList);
-                return  map;
+                mapParams.put("outmemberId",loginUser.getCreateUserId());
+            }
+            else
+            {
+                mapParams.put("outmemberId",loginUser.getId());
             }
 
+            List<BillCost> billList2=billCostMapper.selectByQuDaoGetBillToOne(mapParams);
+            for (BillCost item: billList2
+                    ) {
+                String costDate=sm.format(item.getCostDate());
+                if(costDate.equals(dateNow))
+                {
+                    i++;
+                    Bill bill=billMapper.selectByPrimaryKey(item.gettBillId());
+                    if(bill!=null)
+                    {
+                        BillDetails billDetails=new BillDetails();
+                        billDetails.setdisplayId(i);
+                        billDetails.setWebsite(bill.getWebsite());
+                        billDetails.setKeywords(bill.getKeywords());
+                        //获取搜索引擎
+                        BillSearchSupport billSearchSupport= billSearchSupportMapper.selectByBillId(bill.getId());
+                        billDetails.setSearchName(billSearchSupport.getSearchSupport());
+                        //获取客户
+                        BillPrice billPrice=new BillPrice();
+                        if(loginUser.hasRole("ASSISTANT"))
+                        {
+                            billPrice.setInMemberId(loginUser.getCreateUserId());
+                        }
+                        else
+                        {
+                            billPrice.setInMemberId(loginUser.getId());
+                        }
+
+                        billPrice.setBillId(bill.getId());
+                        List<BillPrice> billPriceList= billPriceMapper.selectByBillPrice(billPrice);
+                        if(!CollectionUtils.isEmpty(billPriceList))
+                        {
+                            User user1=userMapper.selectByPrimaryKey(billPriceList.get(0).getOutMemberId());
+                            billDetails.setUserName(user1.getUserName());
+                        }
+                        billDetails.setNewRanking(bill.getNewRanking());
+                        billDetails.setChangeRanking(bill.getChangeRanking());
+                        billDetailsList.add(billDetails);
+                    }
+                }
+            }
+            map.put("rows",billDetailsList);
+            return map;
+
+        }
+        else if(loginUser.hasRole("COMMISSIONER"))
+        {
+            Map<String,Object> mapParams=new HashMap<>();
+            mapParams.put("billAscription",loginUser.getId());
+            List<BillCost> billList2=billCostMapper.selectByCaoZuoyuanGetBillToOne(mapParams);
+            for (BillCost item: billList2
+                    ) {
+                String costDate=sm.format(item.getCostDate());
+                if(costDate.equals(dateNow))
+                {
+                    i++;
+                    Bill bill=billMapper.selectByPrimaryKey(item.gettBillId());
+                    if(bill!=null)
+                    {
+                        BillDetails billDetails=new BillDetails();
+                        billDetails.setdisplayId(i);
+                        billDetails.setWebsite(bill.getWebsite());
+                        billDetails.setKeywords(bill.getKeywords());
+                        //获取搜索引擎
+                        BillSearchSupport billSearchSupport= billSearchSupportMapper.selectByBillId(bill.getId());
+                        billDetails.setSearchName(billSearchSupport.getSearchSupport());
+                        //获取客户
+                        BillPrice billPrice=new BillPrice();
+                        billPrice.setInMemberId(loginUser.getCreateUserId());
+                        billPrice.setBillId(bill.getId());
+                        List<BillPrice> billPriceList= billPriceMapper.selectByBillPrice(billPrice);
+                        if(!CollectionUtils.isEmpty(billPriceList))
+                        {
+                            User user1=userMapper.selectByPrimaryKey(billPriceList.get(0).getOutMemberId());
+                            billDetails.setUserName(user1.getUserName());
+                        }
+                        billDetails.setNewRanking(bill.getNewRanking());
+                        billDetails.setChangeRanking(bill.getChangeRanking());
+                        billDetailsList.add(billDetails);
+                    }
+                }
+            }
+            map.put("rows",billDetailsList);
+            return map;
         }
         return null;
     }
+
+    @Override
+    public Map<String, Object> performanceStatisticsTable(LoginUser loginUser,String searchTime) {
+        //获取渠道商的客户和代理商
+        List<User> userList = userService.getSearchUser(loginUser, "2");
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", loginUser.getId());
+        List<FundItemSum> fundItemSumList = new ArrayList<>();
+        SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat smm = new SimpleDateFormat("yyyy-MM");
+        if("".equals(searchTime))
+        {
+            searchTime=sm.format(new Date());
+        }
+        String monthTime= null;
+        try {
+            monthTime = smm.format(smm.parse(searchTime));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //本日
+        params.put("searchTime",searchTime);
+        //本月
+        params.put("monthTime",monthTime);
+        Long i = new Long(0);
+        for (User item : userList
+                ) {
+            params.put("OutUserId", item.getId());
+
+            i++;
+            Double sumDay = billCostMapper.selectByBillCaoZuoYuanDayCost(params);
+            Double sumMonth = billCostMapper.selectByBillCaoZuoYuanMonthCost(params);
+            FundItemSum fundItemSum = new FundItemSum();
+            fundItemSum.setId(i);
+            fundItemSum.setUserName(item.getUserName());
+
+            fundItemSum.setChangeTime(searchTime);
+            if(sumMonth==null)
+            {
+                fundItemSum.setChangeAmount(new BigDecimal(0));
+            }
+            else
+            {
+                fundItemSum.setChangeAmount(new BigDecimal(sumMonth));
+            }
+            if(sumDay==null)
+            {
+                fundItemSum.setdayAccountSum(new BigDecimal(0));
+            }
+            else
+            {
+                fundItemSum.setdayAccountSum(new BigDecimal(sumDay));
+            }
+
+            fundItemSumList.add(fundItemSum);
+
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("rows", fundItemSumList);
+        return map;
+    }
+
 }

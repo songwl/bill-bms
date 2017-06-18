@@ -109,7 +109,7 @@ public class BillManageController extends  BaseController {
     }
 
     /**
-     * 订单管理TABLE  (渠道商和操作员)
+     * 新增排名TABLE  (渠道商和操作员)
      * @param request
      * @return
      */
@@ -118,13 +118,9 @@ public class BillManageController extends  BaseController {
     public Map<String,Object> getNewRankingTable(HttpServletRequest request,String sortOrder, String sortName, String website,String keywords)
     {
         LoginUser user=this.getCurrentAccount();
-        int limit =Integer.parseInt(request.getParameter("limit"));
-        int offset=Integer.parseInt(request.getParameter("offset"));
 
-        offset=(offset-1)*limit;
         Map<String, Object> params=new HashMap<>();
-        params.put("limit",limit);
-        params.put("offset",offset);
+
         if(sortName!=null)
         {
             params.put("sortName",sortName);
@@ -152,6 +148,31 @@ public class BillManageController extends  BaseController {
         Map<String,Object> map= billManageService.getNewRankingTable(params,user);
         return  map;
     }
+    /**
+     * 订单管理(管理员)
+     * @param request
+     * @return
+     */
+    @RequestMapping(value="/performanceStatistics",method = RequestMethod.GET)
+    public  String performanceStatistics(HttpServletRequest request)
+    {
+        return "/billManage/performanceStatistics";
+    }
+    /**
+     * 今日消费
+     *
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/performanceStatisticsTable")
+    @ResponseBody
+    public Map<String, Object> performanceStatisticsTable( String sortOrder, String sortName,String searchTime) {
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> modelMap = billManageService.performanceStatisticsTable(loginUser,searchTime);
+        return modelMap;
 
+    }
 
 }

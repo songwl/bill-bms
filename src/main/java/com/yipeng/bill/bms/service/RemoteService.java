@@ -25,4 +25,6 @@ public interface RemoteService {
 
 
     String getPriceApiId(Map<String,String> params);
+
+    String delSearchTask(Map<String,String> params);
 }

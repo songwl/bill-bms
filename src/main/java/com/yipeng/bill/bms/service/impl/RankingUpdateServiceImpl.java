@@ -30,15 +30,16 @@ public class RankingUpdateServiceImpl implements RankingUpdateService {
     @Override
     public int updateRanking(int TaskId, int RankLast, int RankFirst) {
         //通过订单taskId更新数据库
-        Map<String, Object> params = new HashMap<>();
-        params.put("webAppId", TaskId);
-        List<Bill> billList = billMapper.selectAllSelective(params);
+        Map<String,Object> params=new HashMap<>();
+        params.put("webAppId",TaskId);
+        List<Bill> billList=billMapper.selectAllSelective(params);
         //判断是否为空
-        if (!CollectionUtils.isEmpty(billList)) {
-            for (Bill item : billList
+        if (!CollectionUtils.isEmpty(billList))
+        {
+            for (Bill item:billList
                     ) {
                 //更新排名
-                Bill bill = new Bill();
+                Bill bill=new Bill();
                 bill.setId(item.getId());
                 bill.setNewRanking(RankLast);
                 bill.setFirstRanking(RankFirst);
@@ -47,7 +48,9 @@ public class RankingUpdateServiceImpl implements RankingUpdateService {
             }
 
             return 1;
-        } else {
+        }
+        else
+        {
 
             return 0;
         }
@@ -74,7 +77,7 @@ public class RankingUpdateServiceImpl implements RankingUpdateService {
         } else {
             index = IndexSoAll;
         }
-        BasicOffer = ((index / 110) + (BaiduCollectionCount / 1100000)) + (BaiduHomepageCount / 500 + 1);
+        BasicOffer = ((index / 120) + (BaiduCollectionCount / 1300000)) + (BaiduHomepageCount / 500 + 1);
         double price = 0;//价格
         int len = keywordsPrice.getKeywords().length();
         switch (len) {
@@ -150,4 +153,5 @@ public class RankingUpdateServiceImpl implements RankingUpdateService {
         int a = keywordsPriceMapper.updateByPrimaryKeySelective(keywordsPrice);
         return a > 0 ? 1 : 2;
     }
+
 }

@@ -10,12 +10,14 @@ import java.util.Map;
 
 public interface FundAccountMapper {
     int deleteByPrimaryKey(Long id);
+    int deleteByUserId(Long userId);
 
     int insert(FundAccount record);
 
     int insertSelective(FundAccount record);
 
     FundAccount selectByPrimaryKey(Long id);
+
 
     int updateByPrimaryKeySelective(FundAccount record);
 

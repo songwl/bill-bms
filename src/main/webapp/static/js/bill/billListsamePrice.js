@@ -3,9 +3,10 @@ $(".samepricecmt").click(function () {
 
 
     var search= $("#searchengineid option:selected").text();
+
     var keyword= $.trim($("#keyword").val());
     var url=$.trim($("#url").val());
-
+    var index;
 
     var rankend = parseInt($.trim(jQuery("input[name='samePricerankend']").val()));
     var price = parseFloat($.trim(jQuery("input[name='samePriceprice']").val()));
@@ -38,17 +39,25 @@ $(".samepricecmt").click(function () {
         && 1000 > price && price > 0
     )
     {
-        if(search==""||keyword==""||url==""||customerIds=="0")
+        if(search==""||keyword==""||url==""||customerIds=="0"||search == "--请选择--")
         {
-            alert("请将信息填写完整！");
+
+            layer.alert('请将信息填写完整!', {
+                skin: 'layui-layer-molv' //样式类名
+                ,closeBtn: 0
+            });
         }
         else
         {
             var keyword_arr=$.trim(keyword).split('\n');
             var url_arr=$.trim(url).split('\n');
-            if(keyword_arr.length>1&&keyword_arr.length!=url_arr.length)
+            if(keyword_arr.length>=1&&keyword_arr.length!=url_arr.length)
             {
-                alert("网址行数为1或者与关键词一一对应");
+
+                layer.alert('网址行数为1或者与关键词一一对应!', {
+                    skin: 'layui-layer-molv' //样式类名
+                    ,closeBtn: 0
+                });
             }
             else
             {
@@ -82,19 +91,20 @@ $(".samepricecmt").click(function () {
 
                     },
                     beforeSend: function () {
-                        $(".pload").show();
-                        $('.samepricecmt').attr('disabled',"true");
+                        index  = layer.load(1, {
+                            shade: [0.1,'#fff'] //0.1透明度的白色背景
+                        });
                     },
 
                     success:function (result) {
-                        $(".pload").hide();
                         if(result.code==200)
                         {
-
                             if(result.message=="")
                             {
-                                alert("导入成功!");
-                                $(".modal-backdrop").hide();
+                                layer.alert(" 导入成功!", {
+                                    skin: 'layui-layer-molv' //样式类名
+                                    ,closeBtn: 0
+                                });
                                 $(".samepriceDiv").slideUp();
                                 $('#myTable').bootstrapTable('refresh');
                                 $("#keyword").val("");
@@ -109,22 +119,30 @@ $(".samepricecmt").click(function () {
                                jQuery("input[name='samePriceprice3']").val("");
                                 $("#searchengineid").val("0");
                                 $("#sameSelect").val("0");
-                                $('.samepricecmt').removeAttr("disabled");
+
 
                             }
                             else
                             {
+                                layer.alert(result.message +" !", {
+                                    skin: 'layui-layer-molv' //样式类名
+                                    ,closeBtn: 0
+                                });
 
-                                alert(result.message+" !");
-                                $('.samepricecmt').removeAttr("disabled");
+
                             }
+
                         }
                         else
                         {
 
-                            alert("系统繁忙，请稍后再试！");
-                            $('.samepricecmt').removeAttr("disabled");
+                            layer.alert("系统繁忙，请稍后再试！", {
+                                skin: 'layui-layer-molv' //样式类名
+                                ,closeBtn: 0
+                            });
+
                         }
+                        layer.close(index);
                     }
 
                 })
@@ -136,7 +154,11 @@ $(".samepricecmt").click(function () {
     }
     else
     {
-        alert("前N名依次增大，并且值介于1-50之间，收费依次减小，并且值大于0小于1000；前N名和收费必须同时提供");
+        layer.alert("系统繁忙，请稍后再试！", {
+            skin: 'layui-layer-molv' //样式类名
+            ,closeBtn: 0
+        });
+
 
     }
 })

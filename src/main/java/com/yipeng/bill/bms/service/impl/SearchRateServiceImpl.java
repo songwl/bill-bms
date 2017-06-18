@@ -49,15 +49,15 @@ public class SearchRateServiceImpl implements SearchRateService {
             Searchenginecompletionrate searchenginecompletionrate=new Searchenginecompletionrate();
             try{
 
-            searchenginecompletionrate.setUserid(userRole.getUserId());
-            searchenginecompletionrate.setAllcompleteness(Double.parseDouble(df.format(all)));
-            searchenginecompletionrate.setBaiducompleteness(Double.parseDouble(df.format(baidu)));
-            searchenginecompletionrate.setBaiduwapcompleteness(Double.parseDouble(df.format(baiduwap)));
-            searchenginecompletionrate.setSanliulingcompleteness(Double.parseDouble(df.format(sanliuling)));
-            searchenginecompletionrate.setSougoucompleteness(Double.parseDouble(df.format(sougou)));
-            searchenginecompletionrate.setShenmacompleteness(Double.parseDouble(df.format(shenma)));
-            searchenginecompletionrate.setCreatetime(new Date());
-            searchenginecompletionrateMapper.insert(searchenginecompletionrate);
+                searchenginecompletionrate.setUserid(userRole.getUserId());
+                searchenginecompletionrate.setAllcompleteness(Double.parseDouble(df.format(all)));
+                searchenginecompletionrate.setBaiducompleteness(Double.parseDouble(df.format(baidu)));
+                searchenginecompletionrate.setBaiduwapcompleteness(Double.parseDouble(df.format(baiduwap)));
+                searchenginecompletionrate.setSanliulingcompleteness(Double.parseDouble(df.format(sanliuling)));
+                searchenginecompletionrate.setSougoucompleteness(Double.parseDouble(df.format(sougou)));
+                searchenginecompletionrate.setShenmacompleteness(Double.parseDouble(df.format(shenma)));
+                searchenginecompletionrate.setCreatetime(new Date());
+                searchenginecompletionrateMapper.insert(searchenginecompletionrate);
             }catch (Exception e)
             {
                 searchenginecompletionrateMapper.updateByPrimaryKeySelective(searchenginecompletionrate);

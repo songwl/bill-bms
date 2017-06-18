@@ -52,7 +52,7 @@ public class CustomerController extends  BaseController{
      */
     @RequestMapping(value="getCustomerList")
     @ResponseBody
-    public Map<String,Object> getCustomerList(int limit,int offset,String searchUserName,String searchState)
+    public Map<String,Object> getCustomerList(int limit,int offset,String searchUserName,String searchState,String sortOrder, String sortName)
     {
         LoginUser user=this.getCurrentAccount();
 
@@ -62,6 +62,8 @@ public class CustomerController extends  BaseController{
             Map<String,Object> params=new HashMap<>();
             params.put("limit",limit);
             params.put("offset",offset);
+            params.put("sortOrder",sortOrder);
+            params.put("sortName",sortName);
             if(!searchUserName.isEmpty())
             {
                 try{
@@ -97,8 +99,8 @@ public class CustomerController extends  BaseController{
     public ResultMessage createUser(HttpServletRequest request, User user, int addMemberId,
                                     String realName,String contact,String phone,String qq, BigDecimal balance)
     {
-        User user1=this.getCurrentAccount();
-        int a=customerService.savaUser(user,addMemberId,user1.getId(),realName,contact,phone,qq,balance);
+        LoginUser loginUser=this.getCurrentAccount();
+        int a=customerService.savaUser(user,addMemberId,loginUser,realName,contact,phone,qq,balance);
         if (a==0)
         {
             return this.ajaxDoneError("系统错误,请稍后再试！");
@@ -165,15 +167,15 @@ public class CustomerController extends  BaseController{
         {
             if(user.hasRole("SUPER_ADMIN"))
             {
-                 int a=customerService.customerAudit(customerId);
-                 if(a==1)
-                 {
-                     return  this.ajaxDoneSuccess("审核成功！");
-                 }
-                 else
-                 {
-                     return  this.ajaxDoneError("审核失败，请稍后再试！");
-                 }
+                int a=customerService.customerAudit(customerId);
+                if(a==1)
+                {
+                    return  this.ajaxDoneSuccess("审核成功！");
+                }
+                else
+                {
+                    return  this.ajaxDoneError("审核失败，请稍后再试！");
+                }
             }
 
         }
@@ -189,6 +191,16 @@ public class CustomerController extends  BaseController{
     {
         return "/customer/fundAccount";
     }
+    /**
+     * 资金明细
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/fundAccountByKeHu")
+    public  String fundAccountByKeHu(HttpServletRequest request)
+    {
+        return "/customer/fundAccountByKehu";
+    }
 
     /**
      * 资金明细table
@@ -198,19 +210,23 @@ public class CustomerController extends  BaseController{
      */
     @RequestMapping(value="/fundAccountList")
     @ResponseBody
-    public Map<String,Object> fundAccountList(int limit,int offset) {
-         LoginUser user=this.getCurrentAccount();
+    public Map<String,Object> fundAccountList(int limit,int offset,String sortOrder, String sortName) {
+        LoginUser user=this.getCurrentAccount();
         offset = (offset - 1) * limit;
-         if(user!=null)
-         {
+        if(user!=null)
+        {
 
-             Map<String,Object> params=new HashMap<>();
-             params.put("limit",limit);
-             params.put("offset",offset);
-             Map<String, Object> modelMap=  customerService.fundAccountList(params,user);
-             return  modelMap;
-         }
-         return  null;
+            Map<String,Object> params=new HashMap<>();
+            params.put("limit",limit);
+            params.put("offset",offset);
+            if (sortName != null) {
+                params.put("sortName", sortName);
+                params.put("sortOrder", sortOrder);
+            }
+            Map<String, Object> modelMap=  customerService.fundAccountList(params,user);
+            return  modelMap;
+        }
+        return  null;
 
     }
     /**
@@ -218,8 +234,8 @@ public class CustomerController extends  BaseController{
      * @param request
      * @return
      */
-     @RequestMapping(value = "/Recharge",method = RequestMethod.POST)
-     @ResponseBody
+    @RequestMapping(value = "/Recharge",method = RequestMethod.POST)
+    @ResponseBody
     public  ResultMessage Recharge(HttpServletRequest request)
     {
         LoginUser user=this.getCurrentAccount();
@@ -227,8 +243,8 @@ public class CustomerController extends  BaseController{
         {
             String customerId=request.getParameter("customerId");
             String RechargeSum=request.getParameter("RechargeSum");
-           int a= customerService.Recharge(customerId,RechargeSum,user);
-           return  this.ajaxDoneSuccess("充值成功！");
+            int a= customerService.Recharge(customerId,RechargeSum,user);
+            return  this.ajaxDoneSuccess("充值成功！");
         }
 
         return  this.ajaxDoneError("充值失败，请稍后再试!");

@@ -17,7 +17,7 @@
     update_user_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from t_bill_click_statistics
     where id = #{id,jdbcType=BIGINT}
@@ -142,11 +142,11 @@
   <select id="selectByDateNow"  resultMap="BaseResultMap">
     SELECT a.* from t_bill_click_statistics as a
     where
-     year(a.create_time)=#{year,jdbcType=INTEGER}
+    year(a.create_time)=#{year,jdbcType=INTEGER}
     and month(a.create_time)=#{month,jdbcType=INTEGER}
     and DAY(a.create_time) = #{day,jdbcType=INTEGER}
     <if test="userId != null">
-    and  a.userId = #{userId,jdbcType=BIGINT}
+      and  a.userId = #{userId,jdbcType=BIGINT}
     </if>
   </select>
 </mapper>

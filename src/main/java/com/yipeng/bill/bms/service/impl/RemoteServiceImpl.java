@@ -43,7 +43,7 @@ public class RemoteServiceImpl implements RemoteService {
     Md5_UrlEncode md5_urlEncode=new Md5_UrlEncode();
     @Override
     public CustomerRankingResult getCustomerRanking(CustomerRankingParam customerRankingParam)throws IOException, NoSuchAlgorithmException  {
-         //返回对象
+        //返回对象
         CustomerRankingResult result = new CustomerRankingResult();
         //请求返回
         String json=getTaskId(customerRankingParam);
@@ -69,7 +69,21 @@ public class RemoteServiceImpl implements RemoteService {
 
         return result;
     }
-   //导入优帮云订单
+
+    @Override
+    public String delSearchTask(Map<String, String> params) {
+        String result="";
+        try {
+            result=send(url,params,"UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        return result;
+    }
+
+    //导入优帮云订单
     @Override
     public CustomerOptimizationResult getOptimizationApi(Map<String, String> params) {
         //返回对象
@@ -106,7 +120,7 @@ public class RemoteServiceImpl implements RemoteService {
     }
 
     /**
-     * 模拟请求
+     * 请求接口
      * @param url       资源地址
      * @param map   参数列表
      * @param encoding  编码
@@ -118,7 +132,7 @@ public class RemoteServiceImpl implements RemoteService {
         String body = "";
 
         //创建httpclient对象
-         CloseableHttpClient client = HttpClients.createDefault();
+        CloseableHttpClient client = HttpClients.createDefault();
         //创建post方式请求对象
         HttpPost httpPost = new HttpPost(url);
 

@@ -13,7 +13,7 @@ import java.util.Objects;
  * Created by 鱼在我这里。 on 2017/3/19.
  */
 public interface CustomerService {
-    int savaUser(User user, int addMemberId, Long userId,String realName,String contact,String phone,String qq, BigDecimal balance);
+    int savaUser(User user, int addMemberId, LoginUser loginUser,String realName,String contact,String phone,String qq, BigDecimal balance);
 
     /**
      * 获取客户列表

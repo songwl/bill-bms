@@ -44,6 +44,59 @@ $("#searchButton").click(function () {
 
     $('#myTable').bootstrapTable('refresh');
 })
+//删除订单
+$("#deleteBill").click(function () {
+    var selectContent = $('#myTable').bootstrapTable('getSelections');
+    var len = selectContent.length;
+    var index;
+    if(selectContent == "") {
+        layer.alert('请选择一列数据!', {
+            skin: 'layui-layer-molv' //样式类名
+            ,closeBtn: 0
+        });
+    }else{
+
+        layer.confirm('是否删除订单？',{
+                btn:['确定','取消']
+            },function () {
+            $.ajax({
+                type:'post',
+                url:CTX+'/order/deleteBillPendingAuditView',
+                data:{selectContent: selectContent, length: len},
+                beforeSend: function () {
+                    index  = layer.load(1, {
+                        shade: [0.1,'#fff'] //0.1透明度的白色背景
+                    });
+                },
+                success:function (result) {
+                    if (result.code == 200) {
+
+                        layer.alert(result.message, {
+                            skin: 'layui-layer-molv' //样式类名
+                            ,closeBtn: 0
+                        });
+                        $('#myTable').bootstrapTable('refresh');
+
+                    }
+                    else {
+                        layer.alert(result.message, {
+                            skin: 'layui-layer-molv' //样式类名
+                            ,closeBtn: 0
+                        });
+
+                    }
+                    layer.close(index);
+                }
+
+            })
+            }
+        )
+
+
+
+    }
+})
+
 
 $(function () {
 

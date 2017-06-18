@@ -168,6 +168,36 @@ $(document).ready(function () {
             }
         }
     })
+    //申请停单不通过
+    $("#applyNotPass").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var len =selectContent.length;
+        if(selectContent == "") {
+            alert('请选择一列数据!');
+
+        }else{
+            if(confirm("是否不通过审核?"))
+            {
+                $.ajax({
+                    type:"post",
+                    url:CTX+"/order/applyStopBillNotPass",
+                    data:{ selectContent:selectContent,length:len},
+                    success:function (result) {
+                        if(result.code==200)
+                        {
+                            alert(result.message);
+                            $('#myTable').bootstrapTable('refresh');
+                        }
+                        else
+                        {
+                            alert(result.message);
+                        }
+                    }
+
+                })
+            }
+        }
+    })
 })
 $(function () {
 
@@ -246,6 +276,7 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '网址',
+                    sortable: true,
 
                 }, {
                     field: 'searchName',

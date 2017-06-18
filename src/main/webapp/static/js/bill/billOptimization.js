@@ -349,6 +349,14 @@ var TableInit = function () {
 
                 },
                 {
+                    field: 'billAscriptionName',
+                    sortable: true,
+                    align: 'center',
+                    valign: 'middle',
+                    title: '操作员',
+
+                },
+                {
                     field: 'keywords',
                     align: 'center',
                     valign: 'middle',

@@ -60,11 +60,11 @@ public class OptimizationTask {
                     billOptimization.setOptimizationDate(new Date());
                     billOptimizationMapper.insert(billOptimization);
                     //日优化
-                     int single=bill.getDayOptimization();
-                     //总优化
-                     int All=bill.getAllOptimization();
-                     bill.setAllOptimization(single+All);
-                     billMapper.updateByPrimaryKeySelective(bill);
+                    int single=bill.getDayOptimization();
+                    //总优化
+                    int All=bill.getAllOptimization();
+                    bill.setAllOptimization(single+All);
+                    billMapper.updateByPrimaryKeySelective(bill);
                 }
             }
             if (CollectionUtils.isEmpty(billList) || billList.size()<limit) { //查询为空或者不足limit条,说明已查询结束

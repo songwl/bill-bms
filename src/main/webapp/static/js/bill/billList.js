@@ -26,6 +26,7 @@ $(document).ready(function () {
         $(".changepriceDiv").slideUp();
         $(".billExamineDiv").slideUp();
         $(".billChangeDiv").slideUp();
+        $(".samepriceDiv").slideUp();
     })
     $(".cancel").click(function () {
 
@@ -34,6 +35,7 @@ $(document).ready(function () {
         $(".changepriceDiv").slideUp();
         $(".billExamineDiv").slideUp();
         $(".billChangeDiv").slideUp();
+        $(".samepriceDiv").slideUp();
 
     })
     //显示搜索内容
@@ -49,6 +51,89 @@ $(document).ready(function () {
 
 
     })
+    //客户导入订单显示
+    $("#addBillByKehu").click(function () {
+        $(".modal-backdrop").show();
+        $(".samepriceDiv").slideDown();
+    })
+    //客户导入订单确认
+    $(".addBillByKehuCmt").click(function () {
+        var search= $("#searchengineid option:selected").text();
+        var keyword= $.trim($("#keyword").val());
+        var url=$.trim($("#url").val());
+        if(search==""||keyword==""||url==""||search == "--请选择--")
+        {
+            alert("请将信息填写完整！");
+        }
+        else
+        {
+
+            var keyword_arr=$.trim(keyword).split('\n');
+            var url_arr=$.trim(url).split('\n');
+
+            console.info(keyword_arr.length);
+            console.info(url_arr.length);
+            console.info(keyword_arr.length>1&&keyword_arr.length!=url_arr.length);
+            if(keyword_arr.length>=1&&keyword_arr.length!=url_arr.length)
+            {
+                alert("网址行数为1或者与关键词一一对应");
+                return;
+            }
+            else
+            {
+                $.ajax({
+                    type:"post",
+                    url:CTX+"/order/list/addBillByKehuCmt",
+                    dataType:'json',
+                    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                    data:{
+                        search:search,
+                        keyword:keyword,
+                        url:url,
+                    },
+                    beforeSend: function () {
+                        $(".pload").show();
+                        $('.addBillByKehuCmt').attr('disabled',"true");
+                    },
+                    success:function (result) {
+                        $(".pload").hide();
+                        if(result.code==200)
+                        {
+
+                            if(result.message=="")
+                            {
+                                alert("导入成功!");
+                                $(".modal-backdrop").hide();
+                                $(".samepriceDiv").slideUp();
+                                $('#myTable').bootstrapTable('refresh');
+                                $("#keyword").val("");
+                                $("#url").val("");
+                                $("#searchengineid").val("0");
+                                $('.addBillByKehuCmt').removeAttr("disabled");
+
+                            }
+                            else
+                            {
+
+                                alert(result.message+" !");
+                                $('.addBillByKehuCmt').removeAttr("disabled");
+                            }
+                        }
+                        else
+                        {
+
+                            alert("系统繁忙，请稍后再试！");
+                            $('.addBillByKehuCmt').removeAttr("disabled");
+                        }
+                    }
+
+                })
+            }
+        }
+    })
+
+
+    //今日达标
     $("#searchState").change(function () {
         var state = $("#searchState option:selected").val();
         if (state == 1) {
@@ -305,27 +390,49 @@ $(document).ready(function () {
     $("#billDelete").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
         var len = selectContent.length;
+        var index;
         if (selectContent == "") {
-            alert('请选择一列数据!');
+            layer.alert('请选择一列数据!', {
+                skin: 'layui-layer-molv' //样式类名
+                ,closeBtn: 0
+            });
 
         } else {
-            if (confirm("是否删除订单?")) {
+            layer.confirm('是否删除当前订单？', {
+                btn: ['确定','取消'] //按钮
+            }, function(){
                 $.ajax({
                     type: "post",
                     url: CTX + "/order/billList/deleteBill",
                     data: {selectContent: selectContent, length: len},
+                    beforeSend: function () {
+                        index  = layer.load(1, {
+                            shade: [0.1,'#fff'] //0.1透明度的白色背景
+                        });
+                    },
                     success: function (result) {
                         if (result.code == 200) {
-                            alert(result.message);
+
+                            layer.alert(result.message, {
+                                skin: 'layui-layer-molv' //样式类名
+                                ,closeBtn: 0
+                            });
                             $('#myTable').bootstrapTable('refresh');
+
                         }
                         else {
-                            alert(result.message);
+                            layer.alert(result.message, {
+                                skin: 'layui-layer-molv' //样式类名
+                                ,closeBtn: 0
+                            });
+
                         }
+                        layer.close(index);
                     }
 
                 })
-            }
+
+            });
         }
     })
     //优化启动
@@ -520,7 +627,6 @@ var TableInit = function () {
                 }, {
                     field: 'website',
                     align: 'center',
-                    valign: 'middle',
                     sortable: true,
                     title: '网址',
 

@@ -30,9 +30,10 @@ public interface FundItemMapper {
     Long selectByZhuanYuanCount(Map<String,Object> params);
     //渠道商和代理商
     List<FundItemSum> selectByDAgent(Map<String,Object> params);
-   Long selectByDAgentCount(Map<String,Object> params);
+    Long selectByDAgentCount(Map<String,Object> params);
     //客户
     List<FundItemSum> selectByCustomer(Map<String,Object> params);
+    Long selectByCustomerCount(Map<String,Object> params);
 
     //查询今日单价对象对应的记录
     FundItem selectByItemPriceId(Map<String,Object> params);

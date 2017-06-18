@@ -38,6 +38,7 @@ public interface BillMapper {
      * @return
      */
     List<Bill>  selectByInMemberId(Map<String,Object> params);
+    Long selectByInMemberIdCount(Map<String,Object> params);
     /**
      * 通过付款方来查询对应的订单
      * @param params
@@ -45,6 +46,7 @@ public interface BillMapper {
      */
     List<Bill>  selectByOutMemberId(Map<String,Object> params);
 
+    Long selectByOutMemberIdCount(Map<String,Object> params);
     /**
      * 根据角色来获取订单(渠道商直属客户)
      * @param params
@@ -78,8 +80,8 @@ public interface BillMapper {
      * @return
      */
     List<Bill> getBillGroupByWebsite(Map<String,Object> params);
-    List<Bill> getBillGroupByWebsiteTwo(Map<String,Object> params);
 
+    List<Bill> getBillGroupByWebsiteTwo(Map<String,Object> params);
     /**
      * 本月新增订单数
      * @param params
@@ -104,7 +106,19 @@ public interface BillMapper {
 
     List<Bill>  selectByBillByUpdateStandardDays(Map<String,Object> params);
     //达标数量
-     int selectBillDabiaoCount(Map<String,Object> params);
+    int selectBillDabiaoCount(Map<String,Object> params);
 
-     List<String> selectAllKeywords();
+    //通过TASKID查询
+    List<Bill> selectByBillIdToGetTaskId(int taskId);
+    //审核客户提交订单页面
+    List<Bill> selectByPendingAuditView1List(Map<String,Object> params);
+
+    Long selectByPendingAuditView1ListCount(Map<String,Object> params);
+
+    //审核客户提交订单页面
+    List<Bill> selectByAuditViewKeHuList(Map<String,Object> params);
+
+    Long selectByAuditViewKeHuListCount(Map<String,Object> params);
+
+    List<String> selectAllKeywords();
 }

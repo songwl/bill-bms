@@ -59,10 +59,10 @@ var TableInit = function () {
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，
-            pagination: true,                   //是否显示分页（*）
-            pageNumber: 1,                       //初始化加载第一页，默认第一页
-            pageSize: 20,                       //每页的记录行数（*）
-            pageList: [20, 50, 100],        //可供选择的每页的行数（*）
+            //pagination: true,                   //是否显示分页（*）
+            //pageNumber: 1,                       //初始化加载第一页，默认第一页
+            //pageSize: 20,                       //每页的记录行数（*）
+            //pageList: [20, 50, 100],        //可供选择的每页的行数（*）
             sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
             queryParams: oTableInit.queryParams,//传递参数（*）
             queryParamsType: "",
@@ -154,8 +154,8 @@ var TableInit = function () {
     //得到查询的参数
     oTableInit.queryParams = function (params) {
         var temp = {
-            limit: params.pageSize,   //页面大小
-            offset: params.pageNumber,  //页码
+          /*  limit: params.pageSize,   //页面大小
+            offset: params.pageNumber,  //页码*/
             sortOrder: params.sortOrder,
             sortName: params.sortName,
             website:website,

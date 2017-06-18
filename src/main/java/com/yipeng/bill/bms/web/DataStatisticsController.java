@@ -88,9 +88,9 @@ public class DataStatisticsController extends  BaseController{
             List<BillCommissionerStatistics> billCommissionerStatisticsList=billCommissionerStatisticsMapper.selectByGetAll(mapCaozuo);
            /* List<DistributorData> distributorDataList=dataStatisticsService.commissionerData(params,loginUser);
 */
-           List<DistributorData> distributorDataList=new ArrayList<>();
+            List<DistributorData> distributorDataList=new ArrayList<>();
             for (BillCommissionerStatistics item:billCommissionerStatisticsList
-                 ) {
+                    ) {
                 DistributorData distributorData=new DistributorData();
                 User user1=userMapper.selectByPrimaryKey(item.getUserid());
                 distributorData.setUserName(user1.getUserName());

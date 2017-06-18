@@ -24,7 +24,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">绑定域名</label>
                     <div class="col-sm-9">
-                        <input type="text" name="website" class="col-sm-10 form-control"   placeholder="绑定域名">
+                        <input type="text" name="website" id="website" class="col-sm-10 form-control"   placeholder="绑定域名（例：www.baidu.com    前缀不带http）">
                     </div>
                 </div>
                 <div class="form-group">
@@ -94,6 +94,30 @@
                         <input type="file" name="img_url3" data-ref="url2" class="col-sm-10 myfile" value=""/>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">底部文字1</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="footFont1" class="col-sm-10 form-control"   placeholder="底部文字1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">底部文字2</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="footFont2" class="col-sm-10 form-control"   placeholder="底部文字2">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">版权信息1</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="copyrightInfo1" class="col-sm-10 form-control"   placeholder="版权信息1">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">版权信息2</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="copyrightInfo2" class="col-sm-10 form-control"   placeholder="版权信息2">
+                    </div>
+                </div>
                 <button type="button" onclick="doUpload()" class="btn btn-default col-sm-2 col-sm-offset-4" style="background: #09C;color: #fff;">提交</button>
 
         </div>
@@ -101,26 +125,37 @@
 </div>
 <script>
     function doUpload() {
-        var formData = new FormData($( "#uploadForm" )[0]);
-        $.ajax({
-            url:CTX+ '/userCompany/uploadFile' ,
-            type: 'POST',
-            data: formData,
-            async: false,
-            cache: false,
-            contentType: false,
-            processData: false,
-            beforeSend: function () {
-                $(".pload").show();
-                $(".modal-backdrop").show();
-            },
-            success: function (result) {
-                $(".pload").hide();
-                $(".modal-backdrop").hide();
-                alert(result.message);
+        var website=$("#website").val();
+        if(website!="")
+        {
+            var formData = new FormData($( "#uploadForm" )[0]);
 
-            }
-        });
+            $.ajax({
+                url:CTX+ '/userCompany/uploadFile' ,
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $(".pload").show();
+                    $(".modal-backdrop").show();
+                },
+                success: function (result) {
+                    $(".pload").hide();
+                    $(".modal-backdrop").hide();
+
+                    alert(result.message);
+
+                }
+            });
+        }
+        else
+        {
+            alert("请先绑定域名！");
+        }
+
     }
 </script>
 </@base.html>

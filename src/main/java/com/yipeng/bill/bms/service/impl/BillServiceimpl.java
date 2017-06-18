@@ -10,15 +10,13 @@ import com.yipeng.bill.bms.core.model.Page;
 import com.yipeng.bill.bms.core.utils.DateUtils;
 import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
-import com.yipeng.bill.bms.model.Define;
-import com.yipeng.bill.bms.model.Md5_UrlEncode;
-import com.yipeng.bill.bms.model.OpDefine;
-import com.yipeng.bill.bms.model.Yby;
+import com.yipeng.bill.bms.model.*;
 import com.yipeng.bill.bms.service.BillService;
 import com.yipeng.bill.bms.service.RemoteService;
 import com.yipeng.bill.bms.vo.*;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpEntity;
+import org.codehaus.jackson.ObjectCodec;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.hamcrest.text.IsEmptyString;
 import org.json.JSONArray;
@@ -40,6 +38,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Created by Administrator on 2017/3/10.
@@ -69,7 +68,7 @@ public class BillServiceimpl implements BillService {
     @Autowired
     private  FundAccountMapper fundAccountMapper;
     @Autowired
-     private  BillOptimizationMapper billOptimizationMapper;
+    private  BillOptimizationMapper billOptimizationMapper;
     Md5_UrlEncode md5_urlEncode=new Md5_UrlEncode();
     /**
      * 相同价导入
@@ -80,7 +79,7 @@ public class BillServiceimpl implements BillService {
     public String saveSameBill(Map<String, String[]>  params,LoginUser user ) {
 
         int state=0;
-        if(user.hasRole("DISTRIBUTOR"))
+        if(user.hasRole("DISTRIBUTOR")||user.hasRole("ASSISTANT"))
         {
             state=1;
         }
@@ -99,60 +98,74 @@ public class BillServiceimpl implements BillService {
         String[] search=params.get("search");
         String[] customerId=params.get("customerId");
         String errorDetails="";
+        //判断是否为网址
+        Pattern pattern = Pattern
+                .compile("^([hH][tT]{2}[pP]://|[hH][tT]{2}[pP][sS]://|[wW]{3}[.])(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/]*$)");
+        Pattern pattern1=Pattern.compile("^?([a-zA-Z0-9]([a-zA-Z0-9\\\\-]{0,61}[a-zA-Z0-9])?\\\\.)+[a-zA-Z]{2,6}");
+        Pattern pattern2=Pattern.compile("^([a-zA-Z\\d][a-zA-Z\\d-]+\\.)+[a-zA-Z\\d-][^ ]*$");
+        Pattern pattern3 = Pattern
+                .compile("^([mM]{1}[.])(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/]*$)");
         if(urls.length==keywords.length) {
             //违禁词库
-             List<ForbiddenWords> forbiddenWordsList =forbiddenWordsMapper.selectBySelective();
+            List<ForbiddenWords> forbiddenWordsList =forbiddenWordsMapper.selectBySelective();
             for (int i = 0; i < urls.length; i++) {
-
-
                 //判断当前关键词是否为违禁词
                 Boolean ForbiddenWordsBool=true;//变量
                 for (ForbiddenWords items: forbiddenWordsList
-                     ) {
-                    if(keywords[i].equals(items.getWords()))//是违禁词
+                        ) {
+                    if(keywords[i].replace(" ","").equals(items.getWords()))//是违禁词
                     {
                         ForbiddenWordsBool=false;
                     }
                 }
+
                 //不是违禁词  就添加
-                if(ForbiddenWordsBool)
+                if(ForbiddenWordsBool&&(pattern.matcher(urls[i]).matches() || pattern1.matcher(urls[i]).matches()||pattern2.matcher(urls[i]).matches()||pattern3.matcher(urls[i]).matches()  ))
                 {
                     Map<String,Object> map=new HashMap<>();
                     String urlss=urls[i];
+
                     if(search[0].equals("360")||search[0].equals("搜狗"))
                     {
                         String urlStr=urls[i].substring(0,7);
-                        String urlLast=urls[i].substring(urls[i].length()-1,urls[i].length());
-                        if ("http://".equals(urlStr)&&"/".equals(urlLast))
+                        //String urlLast=urls[i].substring(urls[i].length()-1,urls[i].length());
+                        if ("http://".equals(urlStr))
                         {
-                            map.put("url",urls[i]);
+                            map.put("url",urls[i].replace(" ","").replace(",","."));
                         }
                         else
                         {
 
                             if(!"http://".equals(urlStr))
                             {
-                                urlss="http://"+urlss;
+                                urlss="http://"+urlss.replace(" ","").replace(",",".");
                             }
-                            if(!"/".equals(urlLast))
+                           /* if(!"/".equals(urlLast))
                             {
                                 urlss=urlss+"/";
-                            }
-                            map.put("url",urlss);
+                            }*/
+                            map.put("url",urlss.replace(" ","").replace(",","."));
                         }
 
                     }
                     else
                     {
-                        map.put("url",urls[i]);
+                        map.put("url",urls[i].replace(" ","").replace(",","."));
                     }
                     //先查询是否订单已经存在
                     Map<String, Object> params1 = new HashMap();
                     params1.put("website",urlss);
                     params1.put("keywords", keywords[i]);
                     List<Bill> billList = billMapper.selectAllSelective(params1);
-                    map.put("keywords",keywords[i]);
-                    map.put("CreateUserId",user.getId());
+                    map.put("keywords",keywords[i].trim());
+                    if(user.hasRole("ASSISTANT"))
+                    {
+                        map.put("CreateUserId",user.getCreateUserId());
+                    }
+                    else
+                    {
+                        map.put("CreateUserId",user.getId());
+                    }
                     map.put("search",search[0]);
                     map.put("price",price[0]);
                     map.put("rankend",rankend[0]);
@@ -205,7 +218,7 @@ public class BillServiceimpl implements BillService {
                 //返回错误信息
                 else
                 {
-                    errorDetails += +(i + 1) + "网址：" + urls[i] + "  关键词：" + keywords[i] + "是违禁词   ";
+                    errorDetails += +(i + 1) + "网址：" + urls[i] + " 格式错误或关键词：" + keywords[i] + "是违禁词   ";
                 }
 
 
@@ -219,17 +232,17 @@ public class BillServiceimpl implements BillService {
     }
 
     /**
-     * 实现不同价导入
+     * 不同价导入
      * @return
      */
     @Override
     public String savaDiffrentBill(Map<String, String[]>  params,LoginUser user) {
 
         int state=0;
-       if(user.hasRole("DISTRIBUTOR"))
-       {
-           state=1;
-       }
+        if(user.hasRole("DISTRIBUTOR")||user.hasRole("ASSISTANT"))
+        {
+            state=1;
+        }
         String[] dfurlsArr=params.get("dfurl");
         String[] dfkeywordsArr=params.get("dfkeyword");
         String[] dfpricesArr=params.get("dfprice");
@@ -240,6 +253,13 @@ public class BillServiceimpl implements BillService {
         String[] dfrankend=params.get("dfrankend");
         String[] customerId=params.get("customerIds");
         String errorDetails="";
+        //判断是否为网址
+        Pattern pattern = Pattern
+                .compile("^([hH][tT]{2}[pP]://|[hH][tT]{2}[pP][sS]://|[wW]{3}[.])(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/])+$");
+        Pattern pattern1=Pattern.compile("^?([a-zA-Z0-9]([a-zA-Z0-9\\\\-]{0,61}[a-zA-Z0-9])?\\\\.)+[a-zA-Z]{2,6}");
+        Pattern pattern2=Pattern.compile("^([a-zA-Z\\d][a-zA-Z\\d-]+\\.)+[a-zA-Z\\d-][^ ]*$");
+        Pattern pattern3 = Pattern
+                .compile("^([mM]{1}[.])(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/]*$)");
         if(dfurls.length==dfkeywords.length&&dfkeywords.length==dfprices.length)
         {
             //违禁词库
@@ -251,7 +271,7 @@ public class BillServiceimpl implements BillService {
                 Boolean ForbiddenWordsBool=true;//变量
                 for (ForbiddenWords items: forbiddenWordsList
                         ) {
-                    if(dfkeywords[i].equals(items.getWords()))//是违禁词
+                    if(dfkeywords[i].replace(" ","").equals(items.getWords()))//是违禁词
                     {
                         ForbiddenWordsBool=false;
                     }
@@ -262,39 +282,36 @@ public class BillServiceimpl implements BillService {
 
                 //判断搜索引擎
                 String urlNew=dfurls[i];
-                if(dfsearch[0].equals("360")||dfsearch[0].equals("搜狗"))
-                {
-
-                    String urlStr=dfurls[i].substring(0,7);
-                    String urlLast=dfurls[i].substring(dfurls[i].length()-1,dfurls[i].length());
-                    if ("http://".equals(urlStr)&&"/".equals(urlLast))
-                    {
-                        urlNew=urlNew;
-                    }
-                    else
-                    {
-
-                        if(!"http://".equals(urlStr))
-                        {
-                            urlNew="http://"+urlNew;
-                        }
-                        if(!"/".equals(urlLast))
-                        {
-                            urlNew=urlNew+"/";
-                        }
-                    }
-                }
-                else
-                {
-                    urlNew=dfurls[i];
-                }
                 Map<String,Object> params1=new HashMap();
-                params1.put("website",urlNew);
-                params1.put("keywords",dfkeywords[i]);
+                params1.put("website",urlNew.replace(" ","").replace(",","."));
+                params1.put("keywords",dfkeywords[i].trim());
                 List<Bill> billList=billMapper.selectAllSelective(params1);
 
                 //不是违禁词  就添加
-                if(ForbiddenWordsBool) {
+                if(ForbiddenWordsBool&&(pattern.matcher(urlNew).matches() || pattern1.matcher(urlNew).matches()||pattern2.matcher(urlNew).matches()||pattern3.matcher(urlNew).matches()  )) {
+
+                    if(dfsearch[0].equals("360")||dfsearch[0].equals("搜狗"))
+                    {
+
+                        String urlStr=dfurls[i].substring(0,7);
+                        if ("http://".equals(urlStr))
+                        {
+                            urlNew=urlNew;
+                        }
+                        else
+                        {
+
+                            if(!"http://".equals(urlStr))
+                            {
+                                urlNew="http://"+urlNew;
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        urlNew=dfurls[i];
+                    }
                     if(billList!=null&&billList.size()>0)
                     {
                         Boolean bool=true;
@@ -312,7 +329,7 @@ public class BillServiceimpl implements BillService {
                                 //如果当前价格存在
                                 if(!CollectionUtils.isEmpty(billPriceList)) {
                                     bool = false;
-                                    errorDetails += +(i + 1) + "网址：" + dfurls[i] + "  关键词：" + dfkeywords[i] + "已存在！ ";
+                                    errorDetails += +(i + 1) + "网址：" + dfurls[i] + "关键词：" + dfkeywords[i] + "已存在！ ";
                                     break;
                                 }
                             }
@@ -321,7 +338,7 @@ public class BillServiceimpl implements BillService {
                         {
 
                             Bill bill=new Bill();
-                            bill.setWebsite(urlNew);
+                            bill.setWebsite(urlNew.replace(",","."));
                             bill.setKeywords(dfkeywords[i]);
                             bill.setCreateUserId(user.getId());
                             bill.setUpdateUserId(user.getId());
@@ -333,6 +350,8 @@ public class BillServiceimpl implements BillService {
                             bill.setDayOptimization(0);
                             bill.setAllOptimization(0);
                             bill.setState(state);
+                            //删除状态（0未删除，1已删除）
+                            bill.setDeleteState(0);
                             //正常单
                             bill.setBillType(1);
                             //优化状态（未优化）（调点击）
@@ -349,7 +368,15 @@ public class BillServiceimpl implements BillService {
                             BigDecimal bd=new BigDecimal(dfprices[i]);
                             billPrice.setPrice(bd);
                             billPrice.setBillRankingStandard(Long.parseLong(dfrankend[0]));
-                            billPrice.setInMemberId(user.getId());
+                            if(user.hasRole("ASSISTANT"))
+                            {
+                                billPrice.setInMemberId(user.getCreateUserId());
+                            }
+                            else
+                            {
+                                billPrice.setInMemberId(user.getId());
+                            }
+
                             billPrice.setOutMemberId(new Long(customerId[0]));
                             billPrice.setCreateTime(new Date());
                             billPriceMapper.insert(billPrice);
@@ -364,8 +391,17 @@ public class BillServiceimpl implements BillService {
                         //判断搜索引擎
                         bill.setWebsite(urlNew);
                         bill.setKeywords(dfkeywords[i]);
-                        bill.setCreateUserId(user.getId());
-                        bill.setUpdateUserId(user.getId());
+                        if(user.hasRole("ASSISTANT"))
+                        {
+                            bill.setCreateUserId(user.getCreateUserId());
+                            bill.setUpdateUserId(user.getCreateUserId());
+                        }
+                        else
+                        {
+                            bill.setCreateUserId(user.getId());
+                            bill.setUpdateUserId(user.getId());
+                        }
+
                         bill.setCreateTime(new Date());
                         //默认排名为200（无排名）
                         bill.setFirstRanking(200);
@@ -374,6 +410,8 @@ public class BillServiceimpl implements BillService {
                         bill.setDayOptimization(0);
                         bill.setAllOptimization(0);
                         bill.setState(state);
+                        //删除状态（0未删除，1已删除）
+                        bill.setDeleteState(0);
                         //正常单
                         bill.setBillType(1);
                         Long billId=billMapper.insert(bill);
@@ -388,7 +426,15 @@ public class BillServiceimpl implements BillService {
                         BigDecimal bd=new BigDecimal(dfprices[i]);
                         billPrice.setPrice(bd);
                         billPrice.setBillRankingStandard(Long.parseLong(dfrankend[0]));
-                        billPrice.setInMemberId(user.getId());
+                        if(user.hasRole("ASSISTANT"))
+                        {
+                            billPrice.setInMemberId(user.getCreateUserId());
+                        }
+                        else
+                        {
+                            billPrice.setInMemberId(user.getId());
+                        }
+
                         billPrice.setOutMemberId(new Long(customerId[0]));
                         billPrice.setCreateTime(new Date());
                         billPriceMapper.insert(billPrice);
@@ -398,12 +444,253 @@ public class BillServiceimpl implements BillService {
                 //返货错误信息
                 else
                 {
-                    errorDetails += +(i + 1) + "网址：" + dfurls[i] + "  关键词：" + dfkeywords[i] + "是违禁词！   ";
+                    errorDetails += +(i + 1) + "网址：" + dfurls[i] + " 格式错误或关键词：" + dfkeywords[i] + "是违禁词！   ";
                 }
             }
         }
 
         return errorDetails;
+    }
+
+    /**
+     * 客户方导入
+     * @return
+     */
+    @Override
+    public String saveKeHuBill(Map<String, String[]> params, LoginUser user) {
+        int state=-1;
+        String[] urlsArr=params.get("url");
+        String[] keywordsArr=params.get("keyword");
+        String[] search=params.get("search");
+        String errorDetails="";
+        //判断是否为网址
+        Pattern pattern = Pattern
+                .compile("^([hH][tT]{2}[pP]://|[hH][tT]{2}[pP][sS]://|[wW]{3}[.])(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/]*$)");
+        Pattern pattern1=Pattern.compile("^?([a-zA-Z0-9]([a-zA-Z0-9\\\\-]{0,61}[a-zA-Z0-9])?\\\\.)+[a-zA-Z]{2,6}");
+        Pattern pattern2=Pattern.compile("^([a-zA-Z\\d][a-zA-Z\\d-]+\\.)+[a-zA-Z\\d-][^ ]*$");
+        Pattern pattern3 = Pattern
+                .compile("^([mM]{1}[.])(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/]*$)");
+        String[] urls=urlsArr[0].split("\n");
+        String[] keywords=keywordsArr[0].split("\n");
+        if(urls.length==keywords.length) {
+            //违禁词库
+            List<ForbiddenWords> forbiddenWordsList = forbiddenWordsMapper.selectBySelective();
+            for (int i = 0; i < urls.length; i++) {
+                //判断当前关键词是否为违禁词
+                Boolean ForbiddenWordsBool = true;//变量
+                for (ForbiddenWords items : forbiddenWordsList
+                        ) {
+                    if (keywords[i].replace(" ", "").equals(items.getWords()))//是违禁词
+                    {
+                        ForbiddenWordsBool = false;
+                    }
+                }
+
+                //不是违禁词  就添加
+                if (ForbiddenWordsBool && (pattern.matcher(urls[i]).matches() || pattern1.matcher(urls[i]).matches() || pattern2.matcher(urls[i]).matches() || pattern3.matcher(urls[i]).matches())) {
+                    Map<String,Object> map=new HashMap<>();
+                    String urlss=urls[i];
+
+                    if(search[0].equals("360")||search[0].equals("搜狗"))
+                    {
+                        String urlStr=urls[i].substring(0,7);
+                        //String urlLast=urls[i].substring(urls[i].length()-1,urls[i].length());
+                        if ("http://".equals(urlStr))
+                        {
+                            map.put("url",urls[i].replace(" ","").replace(",","."));
+                        }
+                        else
+                        {
+
+                            if(!"http://".equals(urlStr))
+                            {
+                                urlss="http://"+urlss.replace(" ","").replace(",",".");
+                            }
+                           /* if(!"/".equals(urlLast))
+                            {
+                                urlss=urlss+"/";
+                            }*/
+                            map.put("url",urlss.replace(" ","").replace(",","."));
+                        }
+
+                    }
+                    else
+                    {
+                        map.put("url",urls[i].replace(" ","").replace(",","."));
+                    }
+                    //先查询是否订单已经存在
+                    Map<String, Object> params1 = new HashMap();
+                    params1.put("website",urlss);
+                    params1.put("keywords", keywords[i]);
+                    List<Bill> billList = billMapper.selectAllSelective(params1);
+                    //存在 判断搜索引擎是否一致
+                    if (billList.size() > 0) {
+                        Boolean bool = true;
+                        for (Bill bill : billList
+                                ) {
+
+                            //查询每个订单对应的搜索引擎名
+                            BillSearchSupport billSearchSupport = billSearchSupportMapper.selectByBillId(bill.getId());
+                            if (billSearchSupport.getSearchSupport().equals(search[0])) {
+
+
+                                bool = false;
+                                errorDetails += +(i + 1) + "网址：" + urls[i] + "  关键词：" + keywords[i] + "已存在！  ";
+                                break;
+                            }
+
+
+                        }
+
+                        if (bool) {
+                            //订单主表
+                            Bill bill=new Bill();
+                            bill.setWebsite(urlss);
+                            bill.setKeywords(keywords[i]);
+                            bill.setCreateTime(new Date());
+                            bill.setCreateUserId(user.getId());
+                            bill.setFirstRanking(200);
+                            bill.setNewRanking(200);
+                            bill.setStandardDays(0);
+                            bill.setDayOptimization(0);
+                            bill.setAllOptimization(0);
+                            bill.setState(state);
+                            bill.setBillType(1);
+                            //优化状态（未优化）（调点击）
+                            bill.setOpstate(0);
+                            //删除状态（0未删除，1已删除）
+                            bill.setDeleteState(0);
+                            Long billId = billMapper.insert(bill);
+                            //订单引擎表
+                            BillSearchSupport billSearchSupport = new BillSearchSupport();
+                            billSearchSupport.setBillId(bill.getId());
+                            billSearchSupport.setSearchSupport(search[0]);
+                            billSearchSupportMapper.insert(billSearchSupport);
+
+                        }
+                    }
+                    //不存在 直接录入
+                    else {
+                        //订单主表
+                        Bill bill=new Bill();
+                        bill.setWebsite(urlss);
+                        bill.setKeywords(keywords[i]);
+                        bill.setCreateTime(new Date());
+                        bill.setCreateUserId(user.getId());
+                        bill.setFirstRanking(200);
+                        bill.setNewRanking(200);
+                        bill.setStandardDays(0);
+                        bill.setDayOptimization(0);
+                        bill.setAllOptimization(0);
+                        bill.setState(state);
+                        bill.setBillType(1);
+                        //优化状态（未优化）（调点击）
+                        bill.setOpstate(0);
+                        //删除状态（0未删除，1已删除）
+                        bill.setDeleteState(0);
+                        Long billId = billMapper.insert(bill);
+                        //订单引擎表
+                        BillSearchSupport billSearchSupport = new BillSearchSupport();
+                        billSearchSupport.setBillId(bill.getId());
+                        billSearchSupport.setSearchSupport(search[0]);
+                        billSearchSupportMapper.insert(billSearchSupport);
+                    }
+                }
+                else
+                {
+                    errorDetails += +(i + 1) + "网址：" + urls[i] + " 格式错误或关键词：" + keywords[i] + "是违禁词   ";
+                }
+            }
+        }
+
+        return errorDetails;
+    }
+    /**
+     * 订单录入
+     * @param params
+     */
+    public  void  insertPirce(Map<String,Object> params)
+    {
+        Long customerId =Long.valueOf( params.get("customerId").toString());
+        Long CreateUserId =Long.valueOf( params.get("CreateUserId").toString());
+        Bill bill = new Bill();
+        bill.setWebsite(params.get("url").toString());
+        bill.setKeywords(params.get("keywords").toString());
+        bill.setCreateUserId((Long)params.get("CreateUserId"));
+        bill.setUpdateUserId((Long)params.get("CreateUserId"));
+        bill.setCreateTime(new Date());
+        //默认排名为200（无排名）
+        bill.setFirstRanking(200);
+        bill.setNewRanking(200);
+        bill.setStandardDays(0);
+        bill.setDayOptimization(0);
+        bill.setAllOptimization(0);
+        bill.setState(Integer.parseInt(params.get("state").toString()));
+        //正常单
+        bill.setBillType(1);
+        //优化状态（未优化）（调点击）
+        bill.setOpstate(0);
+        //删除状态（0未删除，1已删除）
+        bill.setDeleteState(0);
+        Long billId = billMapper.insert(bill);
+        //订单引擎表
+        BillSearchSupport billSearchSupport = new BillSearchSupport();
+        billSearchSupport.setBillId(bill.getId());
+        billSearchSupport.setSearchSupport(params.get("search").toString());
+        billSearchSupportMapper.insert(billSearchSupport);
+        //订单单价表
+        BillPrice billPrice = new BillPrice();
+        billPrice.setBillId(bill.getId());
+        BigDecimal ret = null;
+        ret= new BigDecimal((String)params.get("price") );
+        billPrice.setPrice(ret);
+        Long rankend =Long.valueOf( params.get("rankend").toString());
+        billPrice.setBillRankingStandard((rankend));
+        billPrice.setInMemberId(CreateUserId);
+        billPrice.setOutMemberId(customerId);
+        billPrice.setCreateTime(new Date());
+        billPriceMapper.insert(billPrice);
+        //判断价格
+        if (!"".equals(params.get("price1").toString()) && null != params.get("price1").toString()) {
+            BillPrice billPrice1 = new BillPrice();
+            billPrice1.setBillId(bill.getId());
+            BigDecimal ret1 = null;
+            ret1= new BigDecimal( (String)params.get("price1") );
+            billPrice1.setPrice(ret1);
+            Long rankend1 =Long.valueOf( params.get("rankend1").toString());
+            billPrice1.setBillRankingStandard(rankend1);
+            billPrice1.setInMemberId(CreateUserId);
+            billPrice1.setOutMemberId(customerId);
+            billPrice1.setCreateTime(new Date());
+            billPriceMapper.insert(billPrice1);
+            if (!"".equals(params.get("price2").toString()) && null != params.get("price2").toString()) {
+                BillPrice billPrice2 = new BillPrice();
+                billPrice2.setBillId(bill.getId());
+                BigDecimal ret2 = null;
+                ret2= new BigDecimal((String)params.get("price2") );
+                billPrice2.setPrice(ret2);
+                Long rankend2 =Long.valueOf( params.get("rankend").toString());
+                billPrice2.setBillRankingStandard(rankend2);
+                billPrice2.setInMemberId(CreateUserId);
+                billPrice2.setOutMemberId(customerId);
+                billPrice2.setCreateTime(new Date());
+                billPriceMapper.insert(billPrice2);
+                if (!"".equals(params.get("price3").toString()) && null != params.get("price3").toString()) {
+                    BillPrice billPrice3 = new BillPrice();
+                    billPrice3.setBillId(bill.getId());
+                    BigDecimal ret3 = null;
+                    ret3= new BigDecimal( (String)params.get("price3") );
+                    billPrice3.setPrice(ret3);
+                    Long rankend3 =Long.valueOf( params.get("rankend").toString());
+                    billPrice3.setBillRankingStandard(rankend3);
+                    billPrice3.setInMemberId(CreateUserId);
+                    billPrice3.setOutMemberId(customerId);
+                    billPrice3.setCreateTime(new Date());
+                    billPriceMapper.insert(billPrice3);
+
+                }
+            }
+        }
     }
 
     /**
@@ -431,21 +718,25 @@ public class BillServiceimpl implements BillService {
         int i=offset;
         if(user.hasRole("SUPER_ADMIN"))
         {
-
+            Role role=roleMapper.selectByRoleCode("DISTRIBUTOR");
+            if(role!=null)
+            {
+                params.put("roleId",role.getId());
+            }
             params.put("state",1);
-            params.put("roleId",4);
-           //查询所有订单状态为1的
-             List<Bill> billList=billMapper.selectByBillAudit(params);
+
+            //查询所有订单状态为1的
+            List<Bill> billList=billMapper.selectByBillAudit(params);
             Long total=billMapper.selectByBillAuditCount(params);
             for (Bill bill: billList
-                 ) {
+                    ) {
                 i++;
                 BillDetails billDetails=new BillDetails();
                 billDetails.setdisplayId(i);
                 billDetails.setId(bill.getId());
                 User user1= userMapper.selectByPrimaryKey(bill.getUpdateUserId());
                 billDetails.setUserName(user1.getUserName());
-                 //通过单价表里面的inmemberId获取outMembenId  从而获取客户名
+                //通过单价表里面的inmemberId获取outMembenId  从而获取客户名
                 BillPrice billPrice=new BillPrice();
                 billPrice.setBillId(bill.getId());
                 billPrice.setInMemberId(user1.getId());
@@ -496,7 +787,7 @@ public class BillServiceimpl implements BillService {
             List<Bill> billList=billMapper.selectAgentBill(params);
             Long total=billMapper.selectAgentBillCount(params);
             for (Bill bill: billList
-                 ) {
+                    ) {
                 i++;
                 BillDetails billDetails=new BillDetails();
                 billDetails.setdisplayId(i);
@@ -534,7 +825,7 @@ public class BillServiceimpl implements BillService {
                 billDetails.setLength(total);
                 billDetailsList.add(billDetails);
             }
-;
+            ;
             Map<String,Object> map=new HashMap<>();
             map.put("total",total);
             map.put("rows",billDetailsList);
@@ -545,6 +836,102 @@ public class BillServiceimpl implements BillService {
 
 
 
+    }
+
+    /**
+     * 客户提交订单审核页面（上级审核）
+     * @param params
+     * @param loginUser
+     * @return
+     */
+    @Override
+    public Map<String, Object> pendingAuditView1List(Map<String, Object> params, LoginUser loginUser) {
+        //视图模型
+        int limit=Integer.parseInt(params.get("limit").toString()) ;
+        int offset=Integer.parseInt(params.get("offset").toString()) ;
+        int i=offset;
+        List<BillDetails> billDetailsList = new ArrayList<BillDetails>();
+        Map<String,Object>  sqlMap=new HashMap<>();
+        if(loginUser.hasRole("ASSISTANT"))
+        {
+            sqlMap.put("userId",loginUser.getCreateUserId());
+        }
+        else
+        {
+            sqlMap.put("userId",loginUser.getId());
+        }
+
+        sqlMap.put("state",-1);
+        sqlMap.put("limit",limit );
+        sqlMap.put("offset",offset);
+
+        List<Bill> billList=billMapper.selectByPendingAuditView1List(sqlMap);
+        Long total=billMapper.selectByPendingAuditView1ListCount(sqlMap);
+        for (Bill bill: billList
+                ) {
+
+
+            BillDetails billDetails=new BillDetails();
+            User user1=userMapper.selectByPrimaryKey(bill.getCreateUserId());
+            if(user1!=null)
+            {
+                billDetails.setUserName(user1.getUserName());
+            }
+            BillSearchSupport billSearchSupport=  billSearchSupportMapper.selectByBillId(bill.getId());
+            if(billSearchSupport!=null)
+            {
+                billDetails.setSearchName(billSearchSupport.getSearchSupport());
+            }
+            i++;
+            //调用方法  加入集合
+            billDetails.setdisplayId(i);
+            billDetails.setId(bill.getId());
+            //插入数据
+            billDetails.setKeywords(bill.getKeywords());
+            billDetails.setWebsite(bill.getWebsite());
+            billDetails.setCreateTime(DateUtils.formatDate(bill.getCreateTime()));
+            billDetailsList.add(billDetails);
+        }
+
+        Map<String,Object>  tableMap=new HashMap<>();
+        tableMap.put("total",total);
+        tableMap.put("rows",billDetailsList);
+        return tableMap;
+    }
+    /**
+     * 客户提交订单（待审核，客户自己看的）
+     * @param params
+     * @param loginUser
+     * @return
+     */
+    @Override
+    public Map<String, Object> pendingAuditViewKeHuList(Map<String, Object> params, LoginUser loginUser) {
+        params.put("createUserId",loginUser.getId());
+        List<BillDetails> billDetailsList=new ArrayList<>();
+        List<Bill> billList=billMapper.selectByAuditViewKeHuList(params);
+        Long total=billMapper.selectByAuditViewKeHuListCount(params);
+        int limit=Integer.parseInt(params.get("limit").toString()) ;
+        int offset=Integer.parseInt(params.get("offset").toString()) ;
+        int i=offset;
+        for (Bill item:billList
+                ) {
+            i++;
+            BillDetails billDetails=new BillDetails();
+            BillSearchSupport billSearchSupport=  billSearchSupportMapper.selectByBillId(item.getId());
+            //插入数据
+            billDetails.setdisplayId(i);
+            billDetails.setId(item.getId());
+            billDetails.setKeywords(item.getKeywords());
+            billDetails.setWebsite(item.getWebsite());
+            billDetails.setSearchName(billSearchSupport.getSearchSupport());
+            billDetails.setCreateTime(DateUtils.formatDate(item.getCreateTime()));
+            billDetails.setState(item.getState());
+            billDetailsList.add(billDetails);
+        }
+        Map<String,Object> viewMap=new HashMap<>();
+        viewMap.put("rows",billDetailsList);
+        viewMap.put("total",total);
+        return viewMap;
     }
 
     /**
@@ -561,7 +948,7 @@ public class BillServiceimpl implements BillService {
         String[] price=params.get("price");
         String[] price1=params.get("price1");
         String[] price2=params.get("price2");
-       String[] price3=params.get("price3");
+        String[] price3=params.get("price3");
         String[] rankend=params.get("rankend");
         String[] rankend1=params.get("rankend1");
         String[] rankend2=params.get("rankend2");
@@ -575,28 +962,36 @@ public class BillServiceimpl implements BillService {
             BillPrice billPrice=new BillPrice();
             billPrice.setBillId(billId);
             //判断当前登录对象
-            if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+            if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ASSISTANT"))
             {
-                billPrice.setInMemberId(loginUser.getId());
+                if (loginUser.hasRole("ASSISTANT"))
+                {
+                    billPrice.setInMemberId(loginUser.getCreateUserId());
+                }
+                else
+                {
+                    billPrice.setInMemberId(loginUser.getId());
+                }
+
             }
             else if (loginUser.hasRole("COMMISSIONER"))
             {
                 billPrice.setInMemberId(loginUser.getCreateUserId());
             }
 
-           List<BillPrice> billPriceList=billPriceMapper.selectByBillPrice(billPrice);
-           //判断对象是否为空
+            List<BillPrice> billPriceList=billPriceMapper.selectByBillPrice(billPrice);
+            //判断对象是否为空
             if(!CollectionUtils.isEmpty(billPriceList))
             {
                 if (!"NaN".equals(price[0]))
                 {
                     //修改的对象
-                     BillPrice billPriceInsert =new BillPrice();
-                     billPriceInsert.setId(billPriceList.get(0).getId());
-                     billPriceInsert.setBillRankingStandard(Long.parseLong(rankend[0]));
-                     billPriceInsert.setPrice(new BigDecimal(price[0]));
-                     //修改数据库
-                     billPriceMapper.updateByPrimaryKeySelective(billPriceInsert);
+                    BillPrice billPriceInsert =new BillPrice();
+                    billPriceInsert.setId(billPriceList.get(0).getId());
+                    billPriceInsert.setBillRankingStandard(Long.parseLong(rankend[0]));
+                    billPriceInsert.setPrice(new BigDecimal(price[0]));
+                    //修改数据库
+                    billPriceMapper.updateByPrimaryKeySelective(billPriceInsert);
                 }
                 //判断价格2是否为空  如果不为空才修改数据库
                 if (!"NaN".equals(price1[0]))
@@ -620,9 +1015,17 @@ public class BillServiceimpl implements BillService {
                         billPriceInsert1.setPrice(new BigDecimal(price1[0]));
                         billPriceInsert1.setBillId(billId);
                         //判断当前登录对象
-                        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+                        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ASSISTANT"))
                         {
-                            billPriceInsert1.setInMemberId(loginUser.getId());
+                            if (loginUser.hasRole("ASSISTANT"))
+                            {
+                                billPriceInsert1.setInMemberId(loginUser.getCreateUserId());
+                            }
+                            else
+                            {
+                                billPriceInsert1.setInMemberId(loginUser.getId());
+                            }
+
                         }
                         else if (loginUser.hasRole("COMMISSIONER"))
                         {
@@ -657,9 +1060,18 @@ public class BillServiceimpl implements BillService {
                         billPriceInsert3.setBillRankingStandard(Long.parseLong(rankend2[0]));
                         billPriceInsert3.setPrice(new BigDecimal(price2[0]));
                         billPriceInsert3.setBillId(billId);
-                        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+                        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ASSISTANT"))
                         {
-                            billPriceInsert3.setInMemberId(loginUser.getId());
+                            if (loginUser.hasRole("ASSISTANT"))
+                            {
+                                billPriceInsert3.setInMemberId(loginUser.getCreateUserId());
+                            }
+                            else
+                            {
+
+                                billPriceInsert3.setInMemberId(loginUser.getId());
+                            }
+
                         }
                         else if (loginUser.hasRole("COMMISSIONER"))
                         {
@@ -694,9 +1106,18 @@ public class BillServiceimpl implements BillService {
                         billPriceInsert5.setBillRankingStandard(Long.parseLong(rankend3[0]));
                         billPriceInsert5.setPrice(new BigDecimal(price3[0]));
                         billPriceInsert5.setBillId(billId);
-                        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT"))
+                        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ASSISTANT"))
                         {
-                            billPriceInsert5.setInMemberId(loginUser.getId());
+                            if (loginUser.hasRole("ASSISTANT"))
+                            {
+                                billPriceInsert5.setInMemberId(loginUser.getCreateUserId());
+                            }
+                            else
+                            {
+
+                                billPriceInsert5.setInMemberId(loginUser.getId());
+                            }
+
                         }
                         else if (loginUser.hasRole("COMMISSIONER"))
                         {
@@ -727,7 +1148,7 @@ public class BillServiceimpl implements BillService {
      * @return
      */
     @Override
-    public int distributorPrice(Map<String, String[]> params, User user) {
+    public int distributorPrice(Map<String, String[]> params, LoginUser user) {
 
         String[] selectContent=params.get("selectContent[0][userName]");
         String[] checkboxLength=params.get("checkboxLength");
@@ -746,13 +1167,13 @@ public class BillServiceimpl implements BillService {
             List<BillPrice> billPriceList= billPriceMapper.selectByBillId(billId);
             Boolean bool=true;
             //如果有了 就修改
-             if(billPriceList.size()>0)
+            if(billPriceList.size()>0)
             {
                 for (BillPrice billPrice1:billPriceList
-                     ) {
+                        ) {
                     if(billPrice1.getInMemberId().longValue()==user.getId().longValue())
                     {
-                         bool=false;
+                        bool=false;
                     }
                 }
             }
@@ -764,16 +1185,24 @@ public class BillServiceimpl implements BillService {
                 ret= new BigDecimal((String)price[0]);
                 billPrice.setPrice(ret);
                 billPrice.setBillRankingStandard(Long.parseLong(rankend[0]));
-                billPrice.setInMemberId(user.getId()); ;
+                if(user.hasRole("ASSISTANT"))
+                {
+                    billPrice.setInMemberId(user.getCreateUserId());
+                }
+                else
+                {
+                    billPrice.setInMemberId(user.getId());
+                }
+                ;
                 String[] updateUserId=params.get("selectContent["+i+"][updateUserId]");
                 billPrice.setOutMemberId(Long.parseLong(updateUserId[0]));
                 billPrice.setCreateTime(new Date());
                 billPriceMapper.insert(billPrice);
-                 Bill bill1=new Bill();
-                 bill1.setId(billId);
-                 bill1.setUpdateUserId(user.getId());
-                 bill1.setState(1);
-                 billMapper.updateByPrimaryKeySelective(bill1);
+                Bill bill1=new Bill();
+                bill1.setId(billId);
+                bill1.setUpdateUserId(user.getId());
+                bill1.setState(1);
+                billMapper.updateByPrimaryKeySelective(bill1);
                 if (!"NaN".equals(price1[0])) {
                     String[] id1=params.get("selectContent["+i+"][id]");
                     String[] rankend1=params.get("rankend1");
@@ -784,7 +1213,15 @@ public class BillServiceimpl implements BillService {
                     ret1= new BigDecimal((String)price1[0]);
                     billPrice1.setPrice(ret1);
                     billPrice1.setBillRankingStandard(Long.parseLong(rankend1[0]));
-                    billPrice1.setInMemberId(user.getId());
+                    if(user.hasRole("ASSISTANT"))
+                    {
+                        billPrice1.setInMemberId(user.getCreateUserId());
+                    }
+                    else
+                    {
+                        billPrice1.setInMemberId(user.getId());
+                    }
+
                     String[] updateUserId1=params.get("selectContent["+i+"][updateUserId]");
                     billPrice1.setOutMemberId(Long.parseLong(updateUserId1[0]));
                     billPrice1.setCreateTime(new Date());
@@ -799,7 +1236,15 @@ public class BillServiceimpl implements BillService {
                         ret2= new BigDecimal((String)price2[0]);
                         billPrice2.setPrice(ret2);
                         billPrice2.setBillRankingStandard(Long.parseLong(rankend2[0]));
-                        billPrice2.setInMemberId(user.getId());
+                        if(user.hasRole("ASSISTANT"))
+                        {
+                            billPrice2.setInMemberId(user.getCreateUserId());
+                        }
+                        else
+                        {
+                            billPrice2.setInMemberId(user.getId());
+                        }
+
                         String[] updateUserId2=params.get("selectContent["+i+"][updateUserId]");
                         billPrice2.setOutMemberId(Long.parseLong(updateUserId2[0]));
                         billPrice2.setCreateTime(new Date());
@@ -814,7 +1259,15 @@ public class BillServiceimpl implements BillService {
                             ret3= new BigDecimal((String)price3[0]);
                             billPrice3.setPrice(ret3);
                             billPrice3.setBillRankingStandard(Long.parseLong(rankend3[0]));
-                            billPrice3.setInMemberId(user.getId());
+                            if(user.hasRole("ASSISTANT"))
+                            {
+                                billPrice3.setInMemberId(user.getCreateUserId());
+                            }
+                            else
+                            {
+                                billPrice3.setInMemberId(user.getId());
+                            }
+
                             String[] updateUserId3=params.get("selectContent["+i+"][updateUserId]");
                             billPrice3.setOutMemberId(Long.parseLong(updateUserId3[0]));
                             billPrice3.setCreateTime(new Date());
@@ -841,7 +1294,7 @@ public class BillServiceimpl implements BillService {
      */
     @Override
     public int adminPrice(Map<String, String[]> params, User user) {
-       //获取参数
+        //获取参数
         String[] bill = params.get("rankend1");
         String[] selectContent = params.get("selectContent[0][userName]");
         String[] checkboxLength = params.get("checkboxLength");
@@ -879,11 +1332,13 @@ public class BillServiceimpl implements BillService {
                 BillSearchSupport billSearchSupport=billSearchSupportMapper.selectByBillId(billId);
                 int ApiId;
                 String wAction = "AddSearchTask";
-                String[] qkeyword = {billA.getKeywords()};
+                String keyword=billA.getKeywords();
+                keyword= keyword.replaceAll("[\\u00A0]+", "");
+                String[] qkeyword = {keyword};
 
-                String[] qurl = {billA.getWebsite().replace(" ","")};
+                String[] qurl = {billA.getWebsite()};
                 //组合参数
-                int[] timeSet = { 7,15 };
+                int[] timeSet = { 8,15 };
                 JSONObject jsonObj = new JSONObject();
                 jsonObj.put("keyword", qkeyword);
                 jsonObj.put("url", qurl);
@@ -944,14 +1399,14 @@ public class BillServiceimpl implements BillService {
                 List<Yby> ybyList=new ArrayList<Yby>();
                 //加密sign
                 Yby yby=new Yby();
-                yby.setKw(billA.getKeywords().replace(" ",""));
+                yby.setKw(billA.getKeywords().replaceAll("[\\u00A0]+", ""));
                 yby.setUrl(billA.getWebsite());
                 //判断搜索引擎
                 switch (billSearchSupport.getSearchSupport())
                 {
                     case "百度":
-                    yby.setSe(1);
-                    break;
+                        yby.setSe(1);
+                        break;
                     case "360":
                         yby.setSe(2);
                         break;
@@ -981,7 +1436,7 @@ public class BillServiceimpl implements BillService {
                 str=str.concat(JSON.toJSONString(md5Key));
                 str=str.concat(JSON.toJSONString(agid));
                 //加密sign
-               String sign= null;
+                String sign= null;
                 try {
                     sign = md5_urlEncode.EncoderByMd51(str);
                 } catch (NoSuchAlgorithmException e) {
@@ -1001,14 +1456,14 @@ public class BillServiceimpl implements BillService {
                 JSONObject jsign=new JSONObject();
                 jsign.put("sign",sign);
                 //拼接字符串
-               String str11= "{"+jagid.toString().replace("{","").replace("}","")+","+jstamp.toString().replace("{","").replace("}","")+","+
-                       jaction.toString().replace("{","").replace("}","")+","+jsign.toString().replace("{","").replace("}","")+","+
-                       jargs.toString().replace("\"[", "[").replace("]\"", "]").replace("\\","").replace("{\"args\"","\"args\"");
+                String str11= "{"+jagid.toString().replace("{","").replace("}","")+","+jstamp.toString().replace("{","").replace("}","")+","+
+                        jaction.toString().replace("{","").replace("}","")+","+jsign.toString().replace("{","").replace("}","")+","+
+                        jargs.toString().replace("\"[", "[").replace("]\"", "]").replace("\\","").replace("{\"args\"","\"args\"");
 
                 //Base64  编码
                 BASE64Encoder base64Encoder=new BASE64Encoder();
                 String data= null;
-                 try {
+                try {
                     data = base64Encoder.encode(str11.getBytes("UTF-8"));
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -1031,11 +1486,11 @@ public class BillServiceimpl implements BillService {
 
                             JSONArray OptimizationValue=jsonObject.getJSONArray("value");
                             String message= OptimizationValue.getJSONArray(0).get(1).toString();
-                           JSONArray value=customerRankingResult.getValue();
-                           JSONArray valueJSONArray= value.getJSONArray(0);
-                           ApiId=Integer.parseInt(valueJSONArray.get(0).toString());
-                           int ApiId1=Integer.parseInt(OptimizationValue.getJSONArray(0).get(0).toString());
-                           //录入价格
+                            JSONArray value=customerRankingResult.getValue();
+                            JSONArray valueJSONArray= value.getJSONArray(0);
+                            ApiId=Integer.parseInt(valueJSONArray.get(0).toString());
+                            int ApiId1=Integer.parseInt(OptimizationValue.getJSONArray(0).get(0).toString());
+                            //录入价格
                             BillPrice billPrice=new BillPrice();
                             billPrice.setBillId(billId);
                             BigDecimal ret = null;
@@ -1131,6 +1586,67 @@ public class BillServiceimpl implements BillService {
         }
         return 0;
     }
+
+    /**
+     * 审核不通过
+     * @param params
+     * @param user
+     * @return
+     */
+    @Override
+    public int billNotExamine(Map<String, String[]> params, LoginUser user) {
+        String[] checkboxLength=params.get("length");
+        int  length=Integer.parseInt(checkboxLength[0]);
+        for(int i=0;i<length;i++) {
+            //获取订单ID
+            String[] id=params.get("selectContent["+i+"][id]");
+            Long  billId=Long.parseLong(id[0]);
+            //获取订单
+            Bill bill=billMapper.selectByPrimaryKey(billId);
+            //修改订单的操作员
+            Bill newBill=new Bill();
+            newBill.setId(billId);
+            if(user.hasRole("SUPER_ADMIN"))
+            {
+                newBill.setState(-4);
+            }
+            else if(user.hasRole("DISTRIBUTOR")||user.hasRole("ASSISTANT"))
+            {
+                newBill.setState(-3);
+            }
+            else if(user.hasRole("AGENT"))
+            {
+                newBill.setState(-2);
+            }
+            billMapper.updateByPrimaryKeySelective(newBill);
+        }
+
+        return 0;
+    }
+    /**
+     * 待审核订单预览页面（提交订单页面）删除
+     * @param params
+     * @param user
+     * @return
+     */
+    @Override
+    public int deleteBillPendingAuditView(Map<String, String[]> params, LoginUser user) {
+        String[] checkboxLength=params.get("length");
+        int  length=Integer.parseInt(checkboxLength[0]);
+
+        for(int i=0;i<length;i++) {
+            //获取订单ID
+            String[] id=params.get("selectContent["+i+"][id]");
+            Long  billId=Long.parseLong(id[0]);
+            //删除数据
+            billPriceMapper.deleteByBillId(billId);
+            billSearchSupportMapper.deleteByBillId(billId);
+            billMapper.deleteByPrimaryKey(billId);
+        }
+
+        return 0;
+    }
+
     /**
      * 订单列表
      * @param params
@@ -1146,157 +1662,172 @@ public class BillServiceimpl implements BillService {
         int limit=Integer.parseInt(params.get("limit").toString()) ;
         int offset=Integer.parseInt(params.get("offset").toString()) ;
         int i=offset;
-           //上游
-           if(way==1)
-           {
+        //上游
+        if(way==1)
+        {
+            //先获取对应的订单
+            if(params.get("searchUserNameId")!=null)
+            {
+                User user1=userMapper.selectByPrimaryKey(Long.parseLong(params.get("searchUserNameId").toString()));
+                params.put("userId",user1.getId());
+            }
+            else
+            {
+                params.put("userId",user.getId());
+            }
+            //订单数
+            List<Bill> billList=billMapper.selectByOutMemberId(params);
+
+            Long total=billMapper.selectByOutMemberIdCount(params);
+
+
+            for (Bill bill: billList
+                    ) {
+                i++;
+                //调用方法  加入集合
+                BillDetails billDetails=this.insertBillDetails(bill, user,way);
+                billDetails.setdisplayId(i);
+                billDetails.setLength(total);
+                billDetailsList.add(billDetails);
+            }
+            Map<String,Object> map=new HashMap<>();
+            map.put("total",total);
+            map.put("rows",billDetailsList);
+            return  map;
+        }
+        //下游
+        else if(way==2)
+        {
+            if(user.hasRole("SUPER_ADMIN")||user.hasRole("AGENT"))
+            {
+                params.put("userId",user.getId());
                 //先获取对应的订单
-               if(params.get("searchUserNameId")!=null)
-               {
-                   User user1=userMapper.selectByPrimaryKey(Long.parseLong(params.get("searchUserNameId").toString()));
-                   params.put("userId",user1.getId());
-               }
-               else
-               {
-                   params.put("userId",user.getId());
-               }
-               //订单数
-               List<Bill> billList=billMapper.selectByOutMemberId(params);
-               Long total;
-               //判断当前登录的角色
-               if (user.hasRole("CUSTOMER"))
-               {
-                   total =billMapper.getBillListByCmmCount(params);
-               }
-               else
-               {
-                   // 判断搜索的客户是什么角色
-                   Long  userId=Long.parseLong(params.get("userId").toString());
-                   UserRole userRole=userRoleMapper.selectByUserId(userId);
-                   if (userRole.getRoleId().longValue()==6)
-                   {
-                       params.remove("userId");
-                       params.put("outMemberId",userId);
-                   }
+                List<Bill> billList=billMapper.selectByInMemberId(params);
+                Long total=billMapper.selectByInMemberIdCount(params);
+                for (Bill bill: billList
+                        ) {
+                    i++;
+                    //调用方法  加入集合
+                    BillDetails billDetails=this.insertBillDetails(bill, user,way);
+                    billDetails.setdisplayId(i);
+                    billDetails.setLength(total);
+                    User billAscriptionName=userMapper.selectByPrimaryKey(bill.getBillAscription());
+                    if(billAscriptionName!=null)
+                    {
+                        billDetails.setBillAscriptionName(billAscriptionName.getUserName());
+                    }
+                    billDetailsList.add(billDetails);
 
-                   total =billMapper.getBillListCount(params);
-               }
-               for (Bill bill: billList
-                       ) {
-                   i++;
-                   //调用方法  加入集合
-                   BillDetails billDetails=this.insertBillDetails(bill, user,way);
-                   billDetails.setdisplayId(i);
-                   billDetails.setLength(total);
-                   billDetailsList.add(billDetails);
-               }
-               Map<String,Object> map=new HashMap<>();
-               map.put("total",total);
-               map.put("rows",billDetailsList);
-               return  map;
-           }
-           //下游
-           else if(way==2)
-           {
-                 if(user.hasRole("SUPER_ADMIN")||user.hasRole("AGENT"))
-                 {
-                     params.put("userId",user.getId());
-                     //先获取对应的订单
-                     List<Bill> billList=billMapper.selectByInMemberId(params);
-                     Long total=billMapper.getBillListCount(params);
-                     for (Bill bill: billList
-                             ) {
-                         i++;
-                         //调用方法  加入集合
-                         BillDetails billDetails=this.insertBillDetails(bill, user,way);
-                         billDetails.setdisplayId(i);
-                         billDetails.setLength(total);
-                         billDetailsList.add(billDetails);
-                     }
-                     Map<String,Object> map=new HashMap<>();
-                     map.put("total",total);
-                     map.put("rows",billDetailsList);
-                     return  map;
-                 }
-                 else if(user.hasRole("DISTRIBUTOR"))
-                 {
-                     //先获取对应的订单
-                     params.put("userId",user.getId());
-                     List<Bill> billList=billMapper.selectByInMemberId(params);
-                     Long total=billMapper.getBillListCount(params);
-                     for (Bill bill: billList
-                             ) {
+                }
+                Map<String,Object> map=new HashMap<>();
+                map.put("total",total);
+                map.put("rows",billDetailsList);
+                return  map;
+            }
+            else if(user.hasRole("DISTRIBUTOR"))
+            {
+                //先获取对应的订单
+                Role role1=roleMapper.selectByRoleCode("AGENT");
+                params.put("roleId",role1.getId());
+                params.put("userId",user.getId());
+                List<Bill> billList=billMapper.selectByInMemberId(params);
+                Long total=billMapper.selectByInMemberIdCount(params);
+                for (Bill bill: billList
+                        ) {
 
-                         //调用方法  加入集合
-                         BillPrice billPrice=new BillPrice();
-                         billPrice.setBillId(bill.getId());
-                         billPrice.setInMemberId(user.getId());
-                         Long OutMemberId=  billPriceMapper.selectByBillPriceOutMemberId(billPrice);
-                         UserRole userRole=userRoleMapper.selectByUserId(OutMemberId);
-                         //查询渠道商的付款方是不是代理商
-                         if(userRole.getRoleId()==5)
-                         {
-                             i++;
-                             BillDetails billDetails=this.insertBillDetails(bill, user,way);
-                             billDetails.setdisplayId(i);
-                             billDetails.setLength(total);
-                             billDetailsList.add(billDetails);
-                         }
+                    //调用方法  加入集合
+                    BillPrice billPrice=new BillPrice();
+                    billPrice.setBillId(bill.getId());
+                    billPrice.setInMemberId(user.getId());
 
 
-                     }
-                     Map<String,Object> map=new HashMap<>();
-                     map.put("total",total);
-                     map.put("rows",billDetailsList);
-                     return  map;
-                 }
-                 else//操作员
-                 {
-                     //先获取对应的订单
-                     params.put("userId",user.getCreateUserId());
-                     params.put("billAscription",user.getId());
-                     List<Bill> billList=billMapper.selectByInMemberId(params);
-                     Long total=billMapper.getBillListCount(params);
-                     for (Bill bill: billList
-                             ) {
-                         i++;
-                         //调用方法  加入集合
-                         BillDetails billDetails=this.insertBillDetails(bill, user,way);
-                         billDetails.setdisplayId(i);
-                         billDetails.setLength(total);
-                         billDetailsList.add(billDetails);
-                     }
-                     Map<String,Object> map=new HashMap<>();
-                     map.put("total",total);
-                     map.put("rows",billDetailsList);
-                     return  map;
-                 }
+                    Long OutMemberId=  billPriceMapper.selectByBillPriceOutMemberId(billPrice);
+                    UserRole userRole=userRoleMapper.selectByUserId(OutMemberId);
+                    if(userRole!=null)
+                    {
+                        Role  role=roleMapper.selectByPrimaryKey(userRole.getRoleId());
+                        if(role!=null)
+                        {
+                            //查询渠道商的付款方是不是代理商
+                            if(role.getRoleCode().equals("AGENT"))
+                            {
 
-           }
-           else
-           {
+                                i++;
+                                BillDetails billDetails=this.insertBillDetails(bill, user,way);
+                                billDetails.setdisplayId(i);
+                                billDetails.setLength(total);
+                                billDetailsList.add(billDetails);
+                            }
+                            else
+                            {
+                                total--;
+                            }
+                        }
+                    }
 
-               //渠道商直属客户，先获取对应的订单
-               Role role=roleMapper.selectByRoleCode("CUSTOMER");
-               params.put("roleId",role.getId());
-               params.put("userId",user.getId());
-               List<Bill> billList=billMapper.selectByCustomerId(params);
-               Long total=billMapper.selectByCustomerIdCount(params);
-               for (Bill bill: billList
-                       ) {
-                       i++;
-                       BillDetails billDetails=this.insertBillDetails(bill, user,way);
-                       billDetails.setdisplayId(i);
-                        billDetails.setLength(total);
-                       billDetailsList.add(billDetails);
+                }
+
+
+                Map<String,Object> map=new HashMap<>();
+                map.put("total",total);
+                map.put("rows",billDetailsList);
+                return  map;
+            }
+            else//操作员
+            {
+                //先获取对应的订单
+                params.put("userId",user.getCreateUserId());
+                params.put("billAscription",user.getId());
+                List<Bill> billList=billMapper.selectByInMemberId(params);
+                Long total=billMapper.getBillListCount(params);
+                for (Bill bill: billList
+                        ) {
+                    i++;
+                    //调用方法  加入集合
+                    BillDetails billDetails=this.insertBillDetails(bill, user,way);
+                    billDetails.setdisplayId(i);
+                    billDetails.setLength(total);
+                    billDetailsList.add(billDetails);
+                }
+                Map<String,Object> map=new HashMap<>();
+                map.put("total",total);
+                map.put("rows",billDetailsList);
+                return  map;
+            }
+
+        }
+        else
+        {
+
+            //渠道商直属客户，先获取对应的订单
+            Role role=roleMapper.selectByRoleCode("CUSTOMER");
+            params.put("roleId",role.getId());
+            if(user.hasRole("ASSISTANT"))
+            {
+                params.put("userId",user.getCreateUserId());
+            }
+            else {
+                params.put("userId",user.getId());
+            }
+
+            List<Bill> billList=billMapper.selectByCustomerId(params);
+            Long total=billMapper.selectByCustomerIdCount(params);
+            for (Bill bill: billList
+                    ) {
+                i++;
+                BillDetails billDetails=this.insertBillDetails(bill, user,way);
+                billDetails.setdisplayId(i);
+                billDetails.setLength(total);
+                billDetailsList.add(billDetails);
 
 
 
-               }
-               Map<String,Object> map=new HashMap<>();
-               map.put("total",total);
-               map.put("rows",billDetailsList);
-               return  map;
-           }
+            }
+            Map<String,Object> map=new HashMap<>();
+            map.put("total",total);
+            map.put("rows",billDetailsList);
+            return  map;
+        }
 
 
     }
@@ -1331,7 +1862,14 @@ public class BillServiceimpl implements BillService {
             else
             {
                 billPrice.setBillId(bill.getId());
-                billPrice.setInMemberId(user.getId());
+                if(user.hasRole("ASSISTANT"))
+                {
+                    billPrice.setInMemberId(user.getCreateUserId());
+                }
+                else
+                {
+                    billPrice.setInMemberId(user.getId());
+                }
                 //查出对应单价
                 billPriceList=billPriceMapper.selectByBillPrice(billPrice);
             }
@@ -1357,7 +1895,15 @@ public class BillServiceimpl implements BillService {
 
                 BillPrice billPrice1=new BillPrice();
                 billPrice1.setBillId(bill.getId());
-                billPrice1.setInMemberId(user.getId());
+                if(user.hasRole("ASSISTANT"))
+                {
+                    billPrice1.setInMemberId(user.getCreateUserId());
+                }
+                else
+                {
+                    billPrice1.setInMemberId(user.getId());
+                }
+
                 List<BillPrice> billPriceList1= billPriceMapper.selectByBillPrice(billPrice1);
                 User user2= userMapper.selectByPrimaryKey(billPriceList1.get(0).getOutMemberId());
                 billDetails.setUserName(user2.getUserName());
@@ -1390,7 +1936,8 @@ public class BillServiceimpl implements BillService {
         }
         else
         {
-            if(user.hasRole("COMMISSIONER"))
+
+            if(user.hasRole("COMMISSIONER")||user.hasRole("ASSISTANT"))
             {
                 billPrice1.setInMemberId(user.getCreateUserId());
             }
@@ -1400,21 +1947,21 @@ public class BillServiceimpl implements BillService {
             }
 
         }
-      //判断今日消费
-       List<BillPrice>  billPrice2= billPriceMapper.selectByBillPrice(billPrice1);
-       if(billPrice2.size()>0)
-       {
-           for (BillPrice item:billPrice2
-                ) {
-               if(item.getBillRankingStandard()>=bill.getNewRanking())
-               {
-                   billDetails.setDayConsumption(item.getPrice());
+        //判断今日消费
+        List<BillPrice>  billPrice2= billPriceMapper.selectByBillPrice(billPrice1);
+        if(billPrice2.size()>0)
+        {
+            for (BillPrice item:billPrice2
+                    ) {
+                if(item.getBillRankingStandard()>=bill.getNewRanking())
+                {
+                    billDetails.setDayConsumption(item.getPrice());
 
-                   break;
-               }
-           }
-       }
-       //统计本月消费
+                    break;
+                }
+            }
+        }
+        //统计本月消费
         Calendar now =Calendar.getInstance();
         Map<String,Object> map=new HashMap<>();
         map.put("year",now.get(Calendar.YEAR));
@@ -1426,7 +1973,7 @@ public class BillServiceimpl implements BillService {
         }
         else
         {
-            if(user.hasRole("COMMISSIONER"))
+            if(user.hasRole("COMMISSIONER")||user.hasRole("ASSISTANT"))
             {
                 map.put("userId",user.getCreateUserId());
             }
@@ -1663,7 +2210,7 @@ public class BillServiceimpl implements BillService {
                             {
                                 bill.setOpstate(1);
                             }
-                            else
+                            else if (state==100)
                             {
                                 bill.setOpstate(2);
                             }
@@ -1741,16 +2288,50 @@ public class BillServiceimpl implements BillService {
     public int deleteBill(Map<String, String[]> params, LoginUser user) {
         String[] checkboxLength=params.get("length");
         int  length=Integer.parseInt(checkboxLength[0]);
+        Map<String, String[]> map=new HashMap<>(params);
+        String[] taskIdArr=new String[length];
         for(int i=0;i<length;i++)
         {
             String[] id=params.get("selectContent["+i+"][id]");
-            billSearchSupportMapper.deleteByBillId(Long.parseLong(id[0]));
-            billPriceMapper.deleteByBillId(Long.parseLong(id[0]));
-            billCostMapper.deleteByBillId(Long.parseLong(id[0]));
-            billOptimizationMapper.deleteByBillId(Long.parseLong(id[0]));
-            billMapper.deleteByPrimaryKey(Long.parseLong(id[0]));
+            //获取当前订单的TASKID
+            Bill bill=billMapper.selectByPrimaryKey(Long.parseLong(id[0]));
+            if(bill!=null)
+            {
+                //通过 TASKid 查询订单
+                List<Bill> billList=billMapper.selectByBillIdToGetTaskId(bill.getWebAppId());
+                if (!CollectionUtils.isEmpty(billList))
+                {
+                    //如果有多个重复订单 只删除当前数据库的数据
+                    if(billList.size()>1)
+                    {
+                        bill.setDeleteState(1);
+                        billMapper.updateByPrimaryKeySelective(bill);
+                    }
+                    //调用接口  删除对应的数据
+                    else
+                    {
+                        bill.setDeleteState(1);
+                        bill.setWebAppId(0);
+                        bill.setWebAppId1(0);
+                        billMapper.updateByPrimaryKeySelective(bill);
+                        //删除扣费通道
+                        String[] state={"999"};
+                        map.put("state",state);
+                        this.updateYBYstate(map,user);
+                        taskIdArr[i]=billList.get(0).getWebAppId().toString();
+
+
+
+                    }
+                }
+
+            }
+
 
         }
+        delSearchTask(taskIdArr);
+        //判断删除
+
         return 0;
     }
 
@@ -1766,7 +2347,7 @@ public class BillServiceimpl implements BillService {
     @Override
     public Map<String, Object> getPriceDetails(int limit,int offset,String billId, LoginUser user,String way) {
 
-       Map<String,Object> params=new HashMap<>();
+        Map<String,Object> params=new HashMap<>();
         List<BillCostDetails> billCostDetailsList=new ArrayList<>();
 
         if(way.equals("1"))//上游
@@ -1842,91 +2423,6 @@ public class BillServiceimpl implements BillService {
 
     }
 
-    /**
-     * 订单录入
-     * @param params
-     */
-    public  void  insertPirce(Map<String,Object> params)
-    {
-        Long customerId =Long.valueOf( params.get("customerId").toString());
-        Long CreateUserId =Long.valueOf( params.get("CreateUserId").toString());
-        Bill bill = new Bill();
-        bill.setWebsite(params.get("url").toString());
-        bill.setKeywords(params.get("keywords").toString());
-        bill.setCreateUserId((Long)params.get("CreateUserId"));
-        bill.setUpdateUserId((Long)params.get("CreateUserId"));
-        bill.setCreateTime(new Date());
-        //默认排名为200（无排名）
-        bill.setFirstRanking(200);
-        bill.setNewRanking(200);
-        bill.setStandardDays(0);
-        bill.setDayOptimization(0);
-        bill.setAllOptimization(0);
-        bill.setState(Integer.parseInt(params.get("state").toString()));
-        //正常单
-        bill.setBillType(1);
-        //优化状态（未优化）（调点击）
-        bill.setOpstate(0);
-        Long billId = billMapper.insert(bill);
-        //订单引擎表
-        BillSearchSupport billSearchSupport = new BillSearchSupport();
-        billSearchSupport.setBillId(bill.getId());
-        billSearchSupport.setSearchSupport(params.get("search").toString());
-        billSearchSupportMapper.insert(billSearchSupport);
-        //订单单价表
-        BillPrice billPrice = new BillPrice();
-        billPrice.setBillId(bill.getId());
-        BigDecimal ret = null;
-        ret= new BigDecimal((String)params.get("price") );
-        billPrice.setPrice(ret);
-        Long rankend =Long.valueOf( params.get("rankend").toString());
-        billPrice.setBillRankingStandard((rankend));
-        billPrice.setInMemberId(CreateUserId);
-        billPrice.setOutMemberId(customerId);
-        billPrice.setCreateTime(new Date());
-        billPriceMapper.insert(billPrice);
-        //判断价格
-        if (!"".equals(params.get("price1").toString()) && null != params.get("price1").toString()) {
-            BillPrice billPrice1 = new BillPrice();
-            billPrice1.setBillId(bill.getId());
-            BigDecimal ret1 = null;
-            ret1= new BigDecimal( (String)params.get("price1") );
-            billPrice1.setPrice(ret1);
-            Long rankend1 =Long.valueOf( params.get("rankend1").toString());
-            billPrice1.setBillRankingStandard(rankend1);
-            billPrice1.setInMemberId(CreateUserId);
-            billPrice1.setOutMemberId(customerId);
-            billPrice1.setCreateTime(new Date());
-            billPriceMapper.insert(billPrice1);
-            if (!"".equals(params.get("price2").toString()) && null != params.get("price2").toString()) {
-                BillPrice billPrice2 = new BillPrice();
-                billPrice2.setBillId(bill.getId());
-                BigDecimal ret2 = null;
-                ret2= new BigDecimal((String)params.get("price2") );
-                billPrice2.setPrice(ret2);
-                Long rankend2 =Long.valueOf( params.get("rankend").toString());
-                billPrice2.setBillRankingStandard(rankend2);
-                billPrice2.setInMemberId(CreateUserId);
-                billPrice2.setOutMemberId(customerId);
-                billPrice2.setCreateTime(new Date());
-                billPriceMapper.insert(billPrice2);
-                if (!"".equals(params.get("price3").toString()) && null != params.get("price3").toString()) {
-                    BillPrice billPrice3 = new BillPrice();
-                    billPrice3.setBillId(bill.getId());
-                    BigDecimal ret3 = null;
-                    ret3= new BigDecimal( (String)params.get("price3") );
-                    billPrice3.setPrice(ret3);
-                    Long rankend3 =Long.valueOf( params.get("rankend").toString());
-                    billPrice3.setBillRankingStandard(rankend3);
-                    billPrice3.setInMemberId(CreateUserId);
-                    billPrice3.setOutMemberId(customerId);
-                    billPrice3.setCreateTime(new Date());
-                    billPriceMapper.insert(billPrice3);
-
-                }
-            }
-        }
-    }
 
 
     /**
@@ -1945,12 +2441,12 @@ public class BillServiceimpl implements BillService {
             List<String> searchList=new ArrayList<>();
             List<String> keywordList=new ArrayList<>();
             for (Bill item:billList
-                 ) {
+                    ) {
                 BillSearchSupport billSearchSupport=billSearchSupportMapper.selectByBillId(item.getId());
                 if(searchList.size()>0)
                 {
                     for (String str: searchList
-                         ) {
+                            ) {
                         if(!billSearchSupport.getSearchSupport().equals(str))
                         {
                             searchList.add(billSearchSupport.getSearchSupport());
@@ -1964,7 +2460,7 @@ public class BillServiceimpl implements BillService {
                 keywordList.add(item.getKeywords());
             }
 
-        ;
+            ;
 
         }
         return null;
@@ -2042,6 +2538,27 @@ public class BillServiceimpl implements BillService {
         }
 
         return 0;
+    }
+
+    @Override
+    public int applyStopBillNotPass(Map<String, String[]> params, LoginUser user) {
+
+        String[] checkboxLength=params.get("length");
+        int  length=Integer.parseInt(checkboxLength[0]);
+
+        for(int i=0;i<length;i++)
+        {
+            String[] id=params.get("selectContent["+i+"][id]");
+            Long  billId=Long.parseLong(id[0]);
+            Bill  bill =new Bill();
+            bill.setId(billId);
+            bill.setApplyState(0);
+            billMapper.updateByPrimaryKeySelective(bill);
+
+        }
+
+        return 0;
+
     }
 
     /**
@@ -2259,11 +2776,244 @@ public class BillServiceimpl implements BillService {
 
     @Override
     public Map<String, Object> billClientSideSettlementTable(LoginUser loginUser) {
-
-
         return null;
     }
 
+    /**
+     * 优化方结算页面（今日消费）
+     * @param loginUser
+     * @return
+     */
+    @Override
+    public Map<String, Object> billDayCost(LoginUser loginUser,String searchTime) {
+        //获取渠道商的客户和代理商
+        List<User> userList=userMapper.getUserByCreateId(loginUser.getId());
+        Map<String,Object> params=new HashMap<>();
+        params.put("InUserId",loginUser.getId());
+        List<FundItemSum> fundItemSumList=new ArrayList<>();
+        SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat smm = new SimpleDateFormat("yyyy-MM");
+        if(searchTime==null)
+        {
+            searchTime=sm.format(new Date());
+        }
+        String monthTime= null;
+        try {
+            monthTime = smm.format(smm.parse(searchTime));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //本日
+        params.put("searchTime",searchTime);
+        //本月
+        params.put("monthTime",monthTime);
+
+        Long i=new Long(0);
+        for (User item:userList
+                ) {
+            //判断角色
+            UserRole userRole=userRoleMapper.selectByUserId(item.getId());
+            Role role=roleMapper.selectByPrimaryKey(userRole.getRoleId());
+            if(role.getRoleCode().equals("AGENT")||role.getRoleCode().equals("CUSTOMER"))
+            {
+                i++;
+                params.put("OutUserId",userRole.getUserId());
+                Double sumDay =billCostMapper.selectByBillDayCost(params);
+                Double sumMonth=billCostMapper.selectByBillMonthCost(params);
+                FundItemSum fundItemSum=new FundItemSum();
+                fundItemSum.setId(i);
+                fundItemSum.setUserName(item.getUserName());
+                FundAccount fundAccount=fundAccountMapper.selectByUserId(item.getId());
+                if(fundAccount!=null)
+                {
+                    fundItemSum.setBalance(fundAccount.getBalance());
+                }
+                else
+                {
+                    fundItemSum.setBalance(new BigDecimal(0));
+                }
+                fundItemSum.setChangeTime(searchTime);
+                fundItemSum.setChangeAmount(new BigDecimal(sumMonth));
+                fundItemSum.setdayAccountSum(new BigDecimal(sumDay));
+                fundItemSumList.add(fundItemSum);
+
+            }
+        }
+        Map<String,Object> map=new HashMap<>();
+        map.put("rows",fundItemSumList);
+        return map;
+    }
+    //客户消费
+    @Override
+    public Map<String, Object> billClientDayCost(LoginUser loginUser) {
+        //获取渠道商的客户和代理商
+        List<User> userList=new ArrayList<>();
+        Map<String,Object> params=new HashMap<>();
+        if(loginUser.hasRole("ASSISTANT"))
+        {
+            params.put("InUserId",loginUser.getCreateUserId());
+            userList=userMapper.getUserByCreateId(loginUser.getCreateUserId());
+        }
+        else
+        {
+            params.put("InUserId",loginUser.getId());
+            userList=userMapper.getUserByCreateId(loginUser.getId());
+        }
+
+        List<FundItemSum> fundItemSumList=new ArrayList<>();
+        Long i=new Long(0);
+        for (User item:userList
+                ) {
+            //判断角色
+            UserRole userRole=userRoleMapper.selectByUserId(item.getId());
+            Role role=roleMapper.selectByPrimaryKey(userRole.getRoleId());
+            if(role.getRoleCode().equals("CUSTOMER"))
+            {
+                i++;
+                params.put("OutUserId",userRole.getUserId());
+                Double sumDay =billCostMapper.selectByBillClientDayCost(params);
+                Double sumMonth=billCostMapper.selectByBillClientMonthCost(params);
+                FundItemSum fundItemSum=new FundItemSum();
+                fundItemSum.setId(i);
+                fundItemSum.setUserName(item.getUserName());
+                FundAccount fundAccount=fundAccountMapper.selectByUserId(item.getId());
+                if(fundAccount!=null)
+                {
+                    fundItemSum.setBalance(fundAccount.getBalance());
+                }
+                else
+                {
+                    fundItemSum.setBalance(new BigDecimal(0));
+                }
+                SimpleDateFormat sm=new SimpleDateFormat("yyyy-MM-dd");
+                fundItemSum.setChangeTime(sm.format(new Date()));
+                fundItemSum.setChangeAmount(new BigDecimal(sumMonth));
+                fundItemSum.setdayAccountSum(new BigDecimal(sumDay));
+                fundItemSumList.add(fundItemSum);
+
+            }
+        }
+        Map<String,Object> map=new HashMap<>();
+        map.put("rows",fundItemSumList);
+        return map;
+    }
+
+    /**
+     * 客户提交的订单
+     * @param params
+     * @param user
+     * @return
+     */
+    @Override
+    public int pendingAuditView1ListCmt(Map<String, String[]> params, LoginUser user) {
+        String[] selectContent=params.get("selectContent[0][userName]");
+        String[] checkboxLength=params.get("checkboxLength");
+        String[] price1=params.get("price1");
+        String[] price2=params.get("price2");
+        String[] price3=params.get("price3");
+
+        int  length=Integer.parseInt(checkboxLength[0]);
+        for(int i=0;i<length;i++)
+        {
+            String[] id=params.get("selectContent["+i+"][id]");
+            String[] price=params.get("price");
+            String[] rankend=params.get("rankend");
+            Long billId=Long.parseLong(id[0]);
+
+            Bill billNow=billMapper.selectByPrimaryKey(billId);
+            List<BillPrice> billPriceList= billPriceMapper.selectByBillId(billId);
+            Boolean bool=true;
+            //如果有了 就修改
+            if(billPriceList.size()>0)
+            {
+                for (BillPrice billPrice1:billPriceList
+                        ) {
+                    if(billPrice1.getInMemberId().longValue()==user.getId().longValue())
+                    {
+                        bool=false;
+                    }
+                }
+            }
+            if(bool)
+            {
+                BillPrice billPrice=new BillPrice();
+                billPrice.setBillId(billId);
+                BigDecimal ret = null;
+                ret= new BigDecimal((String)price[0]);
+                billPrice.setPrice(ret);
+                billPrice.setBillRankingStandard(Long.parseLong(rankend[0]));
+                billPrice.setInMemberId(user.getId()); ;
+                billPrice.setOutMemberId(billNow.getCreateUserId());
+                billPrice.setCreateTime(new Date());
+                billPriceMapper.insert(billPrice);
+                Bill bill1=new Bill();
+                bill1.setId(billId);
+                bill1.setUpdateUserId(user.getId());
+                if(user.hasRole("DISTRIBUTOR"))
+                {
+                    bill1.setState(1);
+                }
+                else
+                {
+                    bill1.setState(0);
+                }
+
+                billMapper.updateByPrimaryKeySelective(bill1);
+                if (!"NaN".equals(price1[0])) {
+                    String[] id1=params.get("selectContent["+i+"][id]");
+                    String[] rankend1=params.get("rankend1");
+                    Long billId1=Long.parseLong(id1[0]);
+                    BillPrice billPrice1=new BillPrice();
+                    billPrice1.setBillId(billId1);
+                    BigDecimal ret1 = null;
+                    ret1= new BigDecimal((String)price1[0]);
+                    billPrice1.setPrice(ret1);
+                    billPrice1.setBillRankingStandard(Long.parseLong(rankend1[0]));
+                    billPrice1.setInMemberId(user.getId());
+                    billPrice1.setOutMemberId(billNow.getCreateUserId());
+                    billPrice1.setCreateTime(new Date());
+                    billPriceMapper.insert(billPrice1);
+                    if (!"NaN".equals(price2[0])) {
+                        String[] id2=params.get("selectContent["+i+"][id]");
+                        String[] rankend2=params.get("rankend2");
+                        Long billId2=Long.parseLong(id2[0]);
+                        BillPrice billPrice2=new BillPrice();
+                        billPrice2.setBillId(billId2);
+                        BigDecimal ret2 = null;
+                        ret2= new BigDecimal((String)price2[0]);
+                        billPrice2.setPrice(ret2);
+                        billPrice2.setBillRankingStandard(Long.parseLong(rankend2[0]));
+                        billPrice2.setInMemberId(user.getId());
+                        billPrice2.setOutMemberId(billNow.getCreateUserId());
+                        billPrice2.setCreateTime(new Date());
+                        billPriceMapper.insert(billPrice2);
+                        if (!"NaN".equals(price3[0])) {
+                            String[] id3=params.get("selectContent["+i+"][id]");
+                            String[] rankend3=params.get("rankend3");
+                            Long billId3=Long.parseLong(id3[0]);
+                            BillPrice billPrice3=new BillPrice();
+                            billPrice3.setBillId(billId3);
+                            BigDecimal ret3 = null;
+                            ret3= new BigDecimal((String)price3[0]);
+                            billPrice3.setPrice(ret3);
+                            billPrice3.setBillRankingStandard(Long.parseLong(rankend3[0]));
+                            billPrice3.setInMemberId(user.getId());
+                            billPrice3.setOutMemberId(billNow.getCreateUserId());
+                            billPrice3.setCreateTime(new Date());
+                            billPriceMapper.insert(billPrice3);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                return  1;
+            }
+
+
+        }
+        return 0;
+    }
 
     /**
      * 批量修改价格
@@ -2273,78 +3023,78 @@ public class BillServiceimpl implements BillService {
      */
     @Override
     public String uploadPrice(List<String[]> fileList, LoginUser loginUser) {
-      if (!CollectionUtils.isEmpty(fileList))
-      {
-          int updateCount=0;
-          //循环EXCEL表格
-           String errorStr="";
-          for (int i=0;i<fileList.size();i++)
-          {
-              //获取参数
-               String keyword=fileList.get(i)[1];
-               String website=fileList.get(i)[2];
-               String searchName=fileList.get(i)[3];
-              BigDecimal price1= new BigDecimal(fileList.get(i)[7]) ;
-              BigDecimal price2= new BigDecimal(fileList.get(i)[8]) ;
-              int standardDays=Integer.parseInt(fileList.get(i)[10]);
-              //组包
-               Map<String,Object> params=new HashMap<>();
-               params.put("userId",1);
-               params.put("state",2);
-               params.put("keywords",keyword);
-               params.put("website",website);
-               params.put("searchName",searchName);
-               params.put("billAscription",loginUser.getId());
+        if (!CollectionUtils.isEmpty(fileList))
+        {
+            int updateCount=0;
+            //循环EXCEL表格
+            String errorStr="";
+            for (int i=0;i<fileList.size();i++)
+            {
+                //获取参数
+                String keyword=fileList.get(i)[1];
+                String website=fileList.get(i)[2];
+                String searchName=fileList.get(i)[3];
+                BigDecimal price1= new BigDecimal(fileList.get(i)[7]) ;
+                BigDecimal price2= new BigDecimal(fileList.get(i)[8]) ;
+                int standardDays=Integer.parseInt(fileList.get(i)[10]);
+                //组包
+                Map<String,Object> params=new HashMap<>();
+                params.put("userId",1);
+                params.put("state",2);
+                params.put("keywords",keyword);
+                params.put("website",website);
+                params.put("searchName",searchName);
+                params.put("billAscription",loginUser.getId());
 
-               //查询价格
-               List<BillPrice> billPriceList=billPriceMapper.selectByBillPriceList(params);
-               List<Bill> bill=billMapper.selectByBillByUpdateStandardDays(params);
+                //查询价格
+                List<BillPrice> billPriceList=billPriceMapper.selectByBillPriceList(params);
+                List<Bill> bill=billMapper.selectByBillByUpdateStandardDays(params);
 
-               if(!CollectionUtils.isEmpty(billPriceList)&&bill!=null&&!CollectionUtils.isEmpty(bill))
-               {
-                   if(bill.size()==1)
-                   {
-                       //修改价格
-                       BillPrice billPrice=new BillPrice();
-                       billPrice.setId(billPriceList.get(0).getId());
-                       billPrice.setPrice(price1);
-                       billPriceMapper.updateByPrimaryKeySelective(billPrice);
-                       //修改达标天数
-                       bill.get(0).setStandardDays(standardDays);
-                       billMapper.updateByPrimaryKeySelective(bill.get(0));
+                if(!CollectionUtils.isEmpty(billPriceList)&&bill!=null&&!CollectionUtils.isEmpty(bill))
+                {
+                    if(bill.size()==1)
+                    {
+                        //修改价格
+                        BillPrice billPrice=new BillPrice();
+                        billPrice.setId(billPriceList.get(0).getId());
+                        billPrice.setPrice(price1);
+                        billPriceMapper.updateByPrimaryKeySelective(billPrice);
+                        //修改达标天数
+                        bill.get(0).setStandardDays(standardDays);
+                        billMapper.updateByPrimaryKeySelective(bill.get(0));
 
-                       //判断第二个价格是否存在
-                       if (!price2.equals(BigDecimal.ZERO))
-                       {
-                           if (billPriceList.size()==1)
-                           {
-                               BillPrice billPrice1=new BillPrice();
-                               billPrice1.setBillId(billPriceList.get(0).getBillId());
-                               billPrice1.setInMemberId(billPriceList.get(0).getInMemberId());
-                               billPrice1.setOutMemberId(billPriceList.get(0).getOutMemberId());
-                               billPrice1.setPrice(price2);
-                               billPrice1.setCreateTime(new Date());
-                               billPrice1.setBillRankingStandard(new Long(20));
-                               billPriceMapper.insert(billPrice1);
-                           }
-                       }
-                       updateCount++;
-                   }
-                   else
-                   {
-                       errorStr+="关键词："+keyword+","+"网址："+website+"，有重复订单。";
-                       continue;
-                   }
+                        //判断第二个价格是否存在
+                        if (!price2.equals(BigDecimal.ZERO))
+                        {
+                            if (billPriceList.size()==1)
+                            {
+                                BillPrice billPrice1=new BillPrice();
+                                billPrice1.setBillId(billPriceList.get(0).getBillId());
+                                billPrice1.setInMemberId(billPriceList.get(0).getInMemberId());
+                                billPrice1.setOutMemberId(billPriceList.get(0).getOutMemberId());
+                                billPrice1.setPrice(price2);
+                                billPrice1.setCreateTime(new Date());
+                                billPrice1.setBillRankingStandard(new Long(20));
+                                billPriceMapper.insert(billPrice1);
+                            }
+                        }
+                        updateCount++;
+                    }
+                    else
+                    {
+                        errorStr+="关键词："+keyword+","+"网址："+website+"，有重复订单。";
+                        continue;
+                    }
 
-               }
-               else
-               {
-                   errorStr+="关键词："+keyword+","+"网址："+website+"，格式不正确（网址末尾或缺少/）";
-               }
+                }
+                else
+                {
+                    errorStr+="关键词："+keyword+","+"网址："+website+"，格式不正确（网址末尾或缺少/）";
+                }
 
-          }
-          return errorStr+"成功更新："+updateCount+"条记录。";
-      }
+            }
+            return errorStr+"成功更新："+updateCount+"条记录。";
+        }
         return null;
 
 
@@ -2582,12 +3332,36 @@ public class BillServiceimpl implements BillService {
         {
             yAxis="19100,19200,19300,19400,19500,19600,19700,19800,19900,20000";
         }
-
-
-
         return yAxis;
     }
 
+    public boolean  delSearchTask(String[] taskId)
+    {
+        //设置传入参数
+        String wAction="DelSearchTask";
+        JSONObject jsonobj=new JSONObject();
+        jsonobj.put("taskId",taskId);
+        jsonobj.put("time",System.currentTimeMillis());
+        jsonobj.put("userId",Define.userId);
+        jsonobj.put("businessType",1006);
+        //加密
+        String wParam=jsonobj.toString();
+        String wSign=null;
+        try {
+            wSign = md5_urlEncode.EncoderByMd5(wAction + Define.token + jsonobj.toString());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        //Map对象传入参数
+        Map<String,String> params=new HashMap<>();
+        params.put("wAction",wAction);
+        params.put("wParam",wParam);
+        params.put("wSign",wSign);
+        String result=  remoteService.delSearchTask(params);
 
+        return  false;
+    }
 
 }

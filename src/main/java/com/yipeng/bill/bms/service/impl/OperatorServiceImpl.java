@@ -2,6 +2,7 @@ package com.yipeng.bill.bms.service.impl;
 
 import com.yipeng.bill.bms.core.crypto.CryptoUtils;
 import com.yipeng.bill.bms.core.utils.DateUtils;
+import com.yipeng.bill.bms.dao.FundAccountMapper;
 import com.yipeng.bill.bms.dao.RoleMapper;
 import com.yipeng.bill.bms.dao.UserMapper;
 import com.yipeng.bill.bms.dao.UserRoleMapper;
@@ -29,12 +30,15 @@ public class OperatorServiceImpl implements OperatorService {
     private UserMapper userMapper;
     @Autowired
     private RoleMapper roleMapper;
+
     @Autowired
     private UserRoleMapper userRoleMapper;
     @Autowired
     private RoleService roleService;
     @Autowired
     private UserRoleService userRoleService;
+    @Autowired
+    private FundAccountMapper fundAccountMapper;
 
     @Override
     public int saveOperator(User user, LoginUser users) {
@@ -114,10 +118,6 @@ public class OperatorServiceImpl implements OperatorService {
 
             customerListDetailsList.add(customerListDetails);
 
-
-
-
-
         }
         Map<String, Object> modelMap = new HashMap();
         Role role= roleMapper.selectByRoleCode("COMMISSIONER");
@@ -151,5 +151,25 @@ public class OperatorServiceImpl implements OperatorService {
         user.setPassword(CryptoUtils.md5("123456"));
         userMapper.updateByPrimaryKeySelective(user);
         return 1;
+    }
+
+    @Override
+    public int deleteUser(User user, LoginUser loginUser) {
+
+        if (user.getId()!=null)
+        {
+            userRoleMapper.deleteByUserId(user.getId());
+            fundAccountMapper.deleteByUserId(user.getId());
+            userMapper.deleteByPrimaryKey(user.getId());
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+
+
+
+
     }
 }

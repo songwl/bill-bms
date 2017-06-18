@@ -1,6 +1,7 @@
 package com.yipeng.bill.bms.web;
 
 import com.mashape.unirest.request.HttpRequest;
+import com.yipeng.bill.bms.core.model.ResultMessage;
 import com.yipeng.bill.bms.service.userCompanyService;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.apache.commons.io.FilenameUtils;
@@ -24,8 +25,8 @@ import java.util.*;
 @Controller
 @RequestMapping(value = "/userCompany")
 public class userCompanyController extends  BillController {
-@Autowired
-private userCompanyService userCompanyService;
+    @Autowired
+    private userCompanyService userCompanyService;
     @RequestMapping("/userCompanyView")
     public  String userCompanyView ()
     {
@@ -36,8 +37,8 @@ private userCompanyService userCompanyService;
 
     @RequestMapping("/uploadFile")
     @ResponseBody
-    public Map<String,Object> uploadFile(HttpSession session, MultipartFile logoImgurl, MultipartFile img_url1, MultipartFile img_url2,
-                                         MultipartFile img_url3, HttpServletRequest request) throws IllegalStateException, IOException {
+    public ResultMessage uploadFile(HttpSession session, MultipartFile logoImgurl, MultipartFile img_url1, MultipartFile img_url2,
+                                    MultipartFile img_url3, HttpServletRequest request) throws IllegalStateException, IOException {
 
         //当前登录对象
         LoginUser loginUser=this.getCurrentAccount();
@@ -47,12 +48,20 @@ private userCompanyService userCompanyService;
         String[] website=map.get("website");
         if(!"".equals(website[0])&&logoImgurl!=null)
         {
-            userCompanyService.uploadFile(logoImgurl, img_url1,img_url2,img_url3,map,loginUser,request);
+            int a= userCompanyService.uploadFile(logoImgurl, img_url1,img_url2,img_url3,map,loginUser,request);
+            if (a==0)
+            {
+                return  this.ajaxDoneSuccess("绑定成功！");
+            }
+            else
+            {
+                return  this.ajaxDoneError("绑定失败!");
+            }
         }
 
 
 
-        return  null;
+        return  this.ajaxDoneError("未知错误!");
     }
 
 }

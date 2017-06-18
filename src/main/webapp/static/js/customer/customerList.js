@@ -68,12 +68,30 @@ $(document).ready(function () {
         $(".updateOperatorcmt").hide();
 
     })
-    //添加渠道商
+    //添加代理商
     $(".addAGENT").click(function () {
         $(".modal-backdrop").show();
         $(".addMemberDiv").slideDown();
         $(".modal-title").html("添加代理商");
         $("#addMemberId").val("2");
+        $("#nameDiv1").hide();
+        $("#nameDiv").show();
+        $("#viewbalance").show();
+        $("#viewstate").hide();
+        $("#viewpwd").show();
+        $("input[name='realName']").val("");
+        $("input[name='contact']").val("");
+        $("input[name='phone']").val("");
+        $("input[name='qq']").val("");
+        $(".addOperatorcmt").show();
+        $(".updateOperatorcmt").hide();
+    })
+    //添加助理
+    $(".addASSISTANT").click(function () {
+        $(".modal-backdrop").show();
+        $(".addMemberDiv").slideDown();
+        $(".modal-title").html("添加助理");
+        $("#addMemberId").val("3");
         $("#nameDiv1").hide();
         $("#nameDiv").show();
         $("#viewbalance").show();
@@ -194,6 +212,10 @@ $(document).ready(function () {
 
             })
         }
+        else
+        {
+            alert("信息填写不正确！");
+        }
 
     })
 
@@ -263,7 +285,7 @@ $(document).ready(function () {
 
     //更改客户信息
     $(".updateOperatorcmt").click(function () {
-        if(/^[A-Za-z]\w{5,12}$/.test($("input[name='userName1']").val()))
+        if(/^[A-Za-z]\w{5,18}$/.test($("input[name='userName1']").val()))
         {
             $.ajax({
                 type:'post',
@@ -282,6 +304,7 @@ $(document).ready(function () {
                     {
                         alert(result.message);
                         $(".addOperatorDiv").slideUp();
+                        $(".addMemberDiv").slideUp();
                         $(".modal-backdrop").hide();
                         $('#myTable').bootstrapTable('refresh');
                     }
@@ -326,7 +349,7 @@ var TableInit = function () {
             pagination: true,                   //是否显示分页（*）
             pageNumber: 1,                       //初始化加载第一页，默认第一页
             pageSize: 20,                       //每页的记录行数（*）
-            pageList: [20, 50, 100],        //可供选择的每页的行数（*）
+            pageList: [100, 500,1000],        //可供选择的每页的行数（*）
             sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
             queryParams: oTableInit.queryParams,//传递参数（*）
             queryParamsType: "",
@@ -397,7 +420,6 @@ var TableInit = function () {
                 }, {
                     field: 'qq',
                     align: 'center',
-                    sortable: true,
                     valign: 'middle',
                     title: 'qq'
                 },
@@ -405,7 +427,6 @@ var TableInit = function () {
                     field: 'phone',
                     align: 'center',
                     valign: 'middle',
-                    sortable: true,
                     title: '电话'
                 },
 
@@ -421,7 +442,6 @@ var TableInit = function () {
                     field: 'lastLoginTime',
                     align: 'center',
                     valign: 'middle',
-                    sortable: true,
                     title: '最新登录',
 
                 },
@@ -459,8 +479,9 @@ var TableInit = function () {
                     valign: 'middle',
                     title: '状态',
                     formatter:function (value,row,index) {
+
                         var a="";
-                        if(value==1)
+                        if(value==true)
                         {
                             a="<span style='color:#4382CF;cursor:pointer;' id='details'>正常</span>";
                         }
@@ -482,16 +503,28 @@ var TableInit = function () {
                     visible:false
 
                 },
+
                 {
                     field: 'operate',
                     title: '操作',
                     align: 'center',
                     valign: 'middle',
                     formatter:function (value,row,index) {
-                        var a="<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
-                            "<span style='color:#4382CF;cursor:pointer;' id='refund'>退款</span>   " +
-                            "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
-                            "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   ";
+
+                        var a='';
+                        if(row.roleName=='ASSISTANT')
+                        {
+                            a=  "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
+                                "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   ";
+
+                        }
+                        else
+                        {
+                            a="<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
+                                "<span style='color:#4382CF;cursor:pointer;' id='refund'>退款</span>   " +
+                                "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
+                                "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   ";
+                        }
 
                         return a;
                     },
@@ -579,6 +612,28 @@ var TableInit = function () {
                 $.ajax({
                     type:'post',
                     url:CTX+ "/operator/updatePwd",
+                    data:{id:row.customerId},
+                    success:function (result) {
+                        if(result.code==200)
+                        {
+                            alert(result.message);
+                            $('#myTable').bootstrapTable('refresh');
+                        }
+                        else
+                        {
+                            alert(result.Message);
+                        }
+                    }
+                })
+            }
+        },
+        'click #delete': function (e, value, row, index)
+        {
+            if(confirm("是否删除当前用户？"))
+            {
+                $.ajax({
+                    type:'post',
+                    url:CTX+ "/operator/deleteUser",
                     data:{id:row.customerId},
                     success:function (result) {
                         if(result.code==200)

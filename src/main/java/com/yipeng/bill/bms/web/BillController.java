@@ -7,10 +7,7 @@ import com.sun.corba.se.impl.protocol.giopmsgheaders.RequestMessage;
 import com.yipeng.bill.bms.core.model.Page;
 import com.yipeng.bill.bms.core.model.ResultMessage;
 import com.yipeng.bill.bms.core.utils.DateUtils;
-import com.yipeng.bill.bms.dao.BillCostMapper;
-import com.yipeng.bill.bms.dao.BillMapper;
-import com.yipeng.bill.bms.dao.BillPriceMapper;
-import com.yipeng.bill.bms.dao.UserMapper;
+import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.model.BillPriceDetails;
 import com.yipeng.bill.bms.service.BillService;
@@ -31,6 +28,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import sun.rmi.runtime.Log;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,6 +51,8 @@ public class BillController extends BaseController {
     private UserService userService;
     @Autowired
     private  UserMapper userMapper;
+    @Autowired
+    private RoleMapper roleMapper;
     /**
      * 上下层
      *
@@ -70,7 +70,6 @@ public class BillController extends BaseController {
         List<User> userList = userService.getSearchUser(user, way);
         model.put("userList", userList);
         model.addAttribute("bmsModel", bms);
-
         return "/bill/billList";
     }
 
@@ -82,10 +81,18 @@ public class BillController extends BaseController {
      */
     @RequestMapping(value = "/billCustomer")
     public String billCustomer(HttpServletRequest request, ModelMap modelMap) {
-        User user = this.getCurrentAccount();
+        LoginUser user = this.getCurrentAccount();
         Map<String, Long> params = new HashMap<>();
         //查询当前登录对象对应的客户
-        params.put("createId", user.getId());
+        if(user.hasRole("ASSISTANT"))
+        {
+            params.put("createId", user.getCreateUserId());
+        }
+        else
+        {
+            params.put("createId", user.getId());
+        }
+
         List<User> userList = userService.userCreater(params);
         modelMap.put("userList", userList);
         return "/bill/billCustomer";
@@ -261,15 +268,15 @@ public class BillController extends BaseController {
         LoginUser user = this.getCurrentAccount();
         if (user.hasRole("SUPER_ADMIN")) {
             //操作员
-            long ret = 3;
+            Role role=roleMapper.selectByRoleCode("COMMISSIONER");
             Map<String, Long> params = new HashMap<>();
-            params.put("role", ret);
+            params.put("role", role.getId());
             List<User> userList = userService.getUserAll(params);
             model.put("userList", userList);
             //渠道商
-            long ret1 = 4;
+            Role role1=roleMapper.selectByRoleCode("DISTRIBUTOR");
             Map<String, Long> params1 = new HashMap<>();
-            params1.put("role", ret1);
+            params1.put("role", role1.getId());
             List<User> distributorList = userService.getUserAll(params1);
             model.put("distributorList", distributorList);
         }
@@ -370,7 +377,7 @@ public class BillController extends BaseController {
                                                String state, String state2, String searchStandard,String standardDays,String addTime) {
         LoginUser user = this.getCurrentAccount();
         int way;
-        if (user.hasRole("DISTRIBUTOR")) {
+        if (user.hasRole("DISTRIBUTOR")||user.hasRole("ASSISTANT")) {
             way = 3;
         } else {
             way = 2;
@@ -457,6 +464,22 @@ public class BillController extends BaseController {
 
         return this.ajaxDoneSuccess(errorDetails);
     }
+    /**
+     * 客户提交订单
+     *
+     * @return
+     */
+    @RequestMapping(value = "/list/addBillByKehuCmt", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage addBillByKehuCmt(HttpServletRequest request) {
+
+        //getParameterMap()，获得请求参数map
+        Map<String, String[]> map = request.getParameterMap();
+        LoginUser user = this.getCurrentAccount();
+        String errorDetails = billService.saveKeHuBill(map, user);
+        return this.ajaxDoneSuccess(errorDetails);
+    }
+
 
     /**
      * 调整价格
@@ -495,7 +518,7 @@ public class BillController extends BaseController {
     public ResultMessage distributorPrice(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String[]> params = request.getParameterMap();
 
-        User user = this.getCurrentAccount();
+        LoginUser user = this.getCurrentAccount();
         if (user != null) {
             int a = billService.distributorPrice(params, user);
             if (a == 0) {
@@ -533,6 +556,8 @@ public class BillController extends BaseController {
         return this.ajaxDoneError("未登录");
 
     }
+
+
 
     /**
      * 优化停止
@@ -668,8 +693,9 @@ public class BillController extends BaseController {
         return "/bill/billPendingAuditView";
     }
 
+
     /**
-     * 待审核订单预览
+     * 渠道商待审核订单预览
      *
      * @param limit
      * @param offset
@@ -682,14 +708,118 @@ public class BillController extends BaseController {
                                                     String searchName, String searchUserName, String state) {
 
         LoginUser user = this.getCurrentAccount();
-
-
-        int way;
-        if (user.hasRole("DISTRIBUTOR")) {
+        offset = (offset - 1) * limit;
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        params.put("limit", limit);
+        params.put("offset", offset);
+        if (!keywords.isEmpty()) {
+            try {
+                keywords = new String(keywords.getBytes("ISO-8859-1"), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            params.put("keywords", keywords);
+        }
+        if (!website.isEmpty()) {
+            params.put("website", website);
+        }
+        if (!searchName.isEmpty()) {
+            try {
+                searchName = new String(searchName.getBytes("ISO-8859-1"), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            params.put("searchName", searchName);
+        }
+        if (!searchUserName.isEmpty()) {
+            params.put("searchUserNameId", searchUserName);
+        }
+        int way=0;
+        if (!state.isEmpty()) {
+            params.put("state", state);
+        }
+        if (user.hasRole("DISTRIBUTOR")||user.hasRole("ASSISTANT")) {
             way = 3;
-        } else {
+            params.put("state2", -4);
+        }
+        else  if (user.hasRole("AGENT")) {
+            params.put("state2", 0);
+            params.put("state3", -4);
+            params.put("state4", -3);
             way = 2;
         }
+        else if(user.hasRole("CUSTOMER"))
+        {
+            params.put("state2", 0);
+            params.put("state3", -4);
+            params.put("state4", -3);
+            params.put("state5", -2);
+            params.put("state6", -1);
+            way = 1;
+
+            Map<String, Object> modelMap = billService.pendingAuditViewKeHuList(params, user);
+            return modelMap;
+        }
+        else {
+            way = 2;
+        }
+
+
+        params.put("way", way);
+
+        Map<String, Object> modelMap = billService.getBillDetails(params, user);
+        return modelMap;
+    }
+
+    /**
+     * 待审核订单（预览）客户提交的订单
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/pendingAuditView1")
+    public String pendingAuditView1(HttpServletRequest request, ModelMap model) {
+        User user = this.getCurrentAccount();
+        Map<String, Long> params = new HashMap<>();
+        //查询当前登录对象对应的客户
+        params.put("createId", user.getId());
+        List<User> userList = userService.userCreater(params);
+        model.put("userList", userList);
+        return "/bill/billPendingAuditView1";
+    }
+    /**
+     * 待审核订单（客户自己提交的订单）
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/pendingAuditViewKeHu")
+    public String pendingAuditViewKeHu(HttpServletRequest request, ModelMap model) {
+        User user = this.getCurrentAccount();
+        Map<String, Long> params = new HashMap<>();
+        //查询当前登录对象对应的客户
+        params.put("createId", user.getId());
+        List<User> userList = userService.userCreater(params);
+        model.put("userList", userList);
+        return "/bill/billPendingAuditViewKeHu";
+    }
+
+    /**
+     * 客户提交订单待审核订单审核预览
+     *
+     * @param limit
+     * @param offset
+     * @return
+     */
+    @RequestMapping(value = "/pendingAuditView1List")
+    @ResponseBody
+    public Map<String, Object> pendingAuditView1List(HttpServletRequest request, @RequestParam(required = true) int limit,
+                                                     @RequestParam(required = true) int offset, String website, String keywords,
+                                                     String searchName, String searchUserName, String state) {
+
+        LoginUser user = this.getCurrentAccount();
+
+
         offset = (offset - 1) * limit;
         Map<String, Object> params = this.getSearchRequest(); //查询参数
 
@@ -723,10 +853,57 @@ public class BillController extends BaseController {
         }
         params.put("limit", limit);
         params.put("offset", offset);
-        params.put("way", way);
 
-        Map<String, Object> modelMap = billService.getBillDetails(params, user);
+
+        Map<String, Object> modelMap = billService.pendingAuditView1List(params, user);
         return modelMap;
+    }
+
+
+    /**
+     *  审核客户提交的订单
+     *
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/pendingAuditView1ListCmt", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage pendingAuditView1ListCmt(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String[]> params = request.getParameterMap();
+
+        LoginUser user = this.getCurrentAccount();
+        if (user != null) {
+            int a = billService.pendingAuditView1ListCmt(params, user);
+            if (a == 0) {
+                return this.ajaxDoneSuccess("审核成功！");
+            } else {
+                return this.ajaxDoneError("订单信息有误，无法审核！");
+            }
+
+        }
+        return this.ajaxDoneError("未登录");
+
+    }
+    /**
+     * s删除待审核订单
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/deleteBillPendingAuditView")
+    @ResponseBody
+    public ResultMessage deleteBillPendingAuditView(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap();
+        LoginUser user = this.getCurrentAccount();
+        if (user != null) {
+            int a = billService.deleteBillPendingAuditView(params, user);
+            return this.ajaxDoneSuccess("操作成功");
+
+        } else {
+            return this.ajaxDoneError("未登录");
+        }
+
     }
 
     /**
@@ -767,14 +944,14 @@ public class BillController extends BaseController {
     public String billFeedback(HttpServletRequest request, ModelMap modelMap) {
         String website = request.getParameter("website");
         LoginUser loginUser = this.getCurrentAccount();
-      /*  if (loginUser != null) {
+        if (loginUser != null) {
             billService.billFeedback(website);
-        }*/
+        }
         return "/bill/billFeedback";
     }
 
     /**
-     * 审核订单
+     * 审核订单(停单)
      *
      * @param model
      * @param way
@@ -854,6 +1031,28 @@ public class BillController extends BaseController {
     }
 
     /**
+     * 申请停单不通过
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/applyStopBillNotPass")
+    @ResponseBody
+    public ResultMessage applyStopBillNotPass(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap();
+        LoginUser user = this.getCurrentAccount();
+        if (user != null) {
+
+            int a = billService.applyStopBillNotPass(params, user);
+            return this.ajaxDoneSuccess("操作成功");
+
+        } else {
+            return this.ajaxDoneError("未登录");
+        }
+
+    }
+
+    /**
      * 审核订单table数据
      *
      * @param
@@ -869,6 +1068,8 @@ public class BillController extends BaseController {
 
         params.put("limit", limit);
         params.put("offset", offset);
+        params.put("sortOrder",sortOrder);
+        params.put("sortName",sortName);
         if (user.hasRole("SUPER_ADMIN")) {
             params.put("way", 2);
         } else {
@@ -902,6 +1103,8 @@ public class BillController extends BaseController {
 
         params.put("limit", limit);
         params.put("offset", offset);
+        params.put("sortOrder",sortOrder);
+        params.put("sortName",sortName);
         if (user.hasRole("SUPER_ADMIN")) {
             params.put("way", 2);
         } else {
@@ -918,7 +1121,27 @@ public class BillController extends BaseController {
         return modelMap;
 
     }
+    /**
+     * 申请不通过
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/billNotExamine")
+    @ResponseBody
+    public ResultMessage billNotExamine(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap();
+        LoginUser user = this.getCurrentAccount();
+        if (user != null) {
 
+            int a = billService.billNotExamine(params, user);
+            return this.ajaxDoneSuccess("操作成功");
+
+        } else {
+            return this.ajaxDoneError("未登录");
+        }
+
+    }
     /**
      * 优化结算
      *
@@ -932,6 +1155,45 @@ public class BillController extends BaseController {
         Map<String, Object> bms = billService.billOptimizationSettlement(loginUser);
         model.addAttribute("bmsModel", bms);
         return "/bill/billOptimizationSettlement";
+
+    }
+
+
+    /**
+     * 今日消费
+     *
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/billDayCost")
+    @ResponseBody
+    public Map<String, Object> billDayCost( String sortOrder, String sortName,String searchTime) {
+
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        LoginUser loginUser = this.getCurrentAccount();
+
+        Map<String, Object> modelMap = billService.billDayCost(loginUser,searchTime);
+        return modelMap;
+
+    }
+
+    /**
+     * 今日消费
+     *
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/billClientDayCost")
+    @ResponseBody
+    public Map<String, Object> billClientDayCost( String sortOrder, String sortName) {
+
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        LoginUser loginUser = this.getCurrentAccount();
+
+        Map<String, Object> modelMap = billService.billClientDayCost(loginUser);
+        return modelMap;
 
     }
     /**
@@ -1103,7 +1365,7 @@ public class BillController extends BaseController {
      */
     @RequestMapping(value = "/uploadPrice")
     @ResponseBody
-    public ResultMessage importUser(HttpServletRequest request,MultipartFile file) {
+    public ResultMessage uploadPrice(HttpServletRequest request,MultipartFile file) {
         LoginUser loginUser=this.getCurrentAccount();
 
         List<String[]> fileList=parseFile(file);
@@ -1126,6 +1388,8 @@ public class BillController extends BaseController {
         }
 
     }
+
+
 
 
     /**

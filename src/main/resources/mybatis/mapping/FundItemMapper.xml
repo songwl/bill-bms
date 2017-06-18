@@ -22,7 +22,7 @@
     id, fund_account_id, change_amount,balance, change_time, item_type
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from t_fund_item
     where id = #{id,jdbcType=BIGINT}
@@ -128,31 +128,39 @@
   <!--end管理员查看资金流水-->
   <!--专员查看资金流水-->
   <select id="selectByZhuanYuan"   resultMap="BaseResultMap1">
-   SELECT  DISTINCT a.* from t_fund_item as a,t_fund_account as b,t_user_role as c,t_bill_price as d,t_bill as e
+    SELECT  DISTINCT a.* from t_fund_item as a,t_fund_account as b,t_user_role as c,t_bill_price as d,t_bill as e
     where a.fund_account_id=b.id
-     and b.user_id=c.user_id
-     and b.user_id=d.out_member_id
-     and d.bill_id=e.id
-     and c.role_id=#{roleId,jdbcType=BIGINT}
-     and e.bill_ascription=#{userId,jdbcType=BIGINT}
-    ORDER BY a.change_time DESC
+    and b.user_id=c.user_id
+    and b.user_id=d.out_member_id
+    and d.bill_id=e.id
+    and c.role_id=#{roleId,jdbcType=BIGINT}
+    and e.bill_ascription=#{userId,jdbcType=BIGINT}
+    <if test="sortName != null">
+      <if test="sortName =='itemType'">
+        ORDER BY a.item_type ${sortOrder}
+      </if>
+      <if test="sortName =='changeTime'">
+        ORDER BY a.change_time ${sortOrder}
+      </if>
+    </if>
+    /*    ORDER BY a.change_time DESC*/
     limit #{offset},#{limit}
   </select>
   <select id="selectByZhuanYuanCount"   resultType="java.lang.Long">
-   SELECT COUNT(DISTINCT a.id)  from t_fund_item as a,t_fund_account as b,t_user_role as c,t_bill_price as d,t_bill as e
+    SELECT COUNT(DISTINCT a.id)  from t_fund_item as a,t_fund_account as b,t_user_role as c,t_bill_price as d,t_bill as e
     where a.fund_account_id=b.id
-     and b.user_id=c.user_id
-     and b.user_id=d.out_member_id
-     and d.bill_id=e.id
-     and c.role_id=#{roleId,jdbcType=BIGINT}
-     and e.bill_ascription=#{userId,jdbcType=BIGINT}
+    and b.user_id=c.user_id
+    and b.user_id=d.out_member_id
+    and d.bill_id=e.id
+    and c.role_id=#{roleId,jdbcType=BIGINT}
+    and e.bill_ascription=#{userId,jdbcType=BIGINT}
   </select>
   <!--end专员查看资金流水-->
 
   <!--渠道商和代理商查看资金流水-->
   <select id="selectByDAgent"   resultMap="BaseResultMap1">
     SELECT a.* from
-     t_fund_item as a,t_fund_account as b,t_user as c
+    t_fund_item as a,t_fund_account as b,t_user as c
     where a.fund_account_id=b.id
     and b.user_id=c.id
     and c.create_user_id=#{createId,jdbcType=BIGINT}
@@ -174,7 +182,15 @@
     t_fund_item as a,t_fund_account as b
     where a.fund_account_id=b.id
     and b.user_id=#{userId,jdbcType=BIGINT}
+    ORDER BY change_time DESC
     limit #{offset},#{limit}
+  </select>
+
+  <select id="selectByCustomerCount"  resultType="java.lang.Long">
+    SELECT COUNT(a.id) from
+    t_fund_item as a,t_fund_account as b
+    where a.fund_account_id=b.id
+    and b.user_id=#{userId,jdbcType=BIGINT}
   </select>
   <!--end客户查看资金流水-->
 
@@ -184,7 +200,7 @@
     <include refid="Base_Column_List" />
     from t_fund_item
     where
-     priceId=#{priceId,jdbcType=BIGINT}
+    priceId=#{priceId,jdbcType=BIGINT}
     and year(change_time)=#{year,jdbcType=INTEGER}
     and month(change_time)=#{month,jdbcType=INTEGER}
     and DAY(change_time) = #{day,jdbcType=INTEGER}
@@ -197,13 +213,14 @@
   </select>
 
   <select id="selectByDayFunItem"  resultMap="BaseResultMap">
-  SELECT
-  <include refid="Base_Column_List" />
-  from t_fund_item
-  where
-  fund_account_id=#{fundAccountId,jdbcType=BIGINT}
-  and year(change_time)=#{year,jdbcType=INTEGER}
-  and month(change_time)=#{month,jdbcType=INTEGER}
-  and DAY(change_time) = #{day,jdbcType=INTEGER}
+    SELECT
+    <include refid="Base_Column_List" />
+    from t_fund_item
+    where
+    fund_account_id=#{fundAccountId,jdbcType=BIGINT}
+    and year(change_time)=#{year,jdbcType=INTEGER}
+    and month(change_time)=#{month,jdbcType=INTEGER}
+    and DAY(change_time) = #{day,jdbcType=INTEGER}
+    and item_type = #{itemType,jdbcType=VARCHAR}
   </select>
 </mapper>

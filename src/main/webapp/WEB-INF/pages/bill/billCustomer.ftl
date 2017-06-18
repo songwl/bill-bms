@@ -18,8 +18,8 @@
 
             <div class="Import">
                 <span id="Import">&nbsp;<i class="fa fa-arrow-down"></i>&nbsp;导入</span>
-                <ul class="ImportPrice">
-                    <li id="Sameprice">相同价导入</li>
+                <ul class="ImportPrice" style="border: #d9d9d9 solid 1px;">
+                    <li id="Sameprice" style="border-bottom: #d9d9d9 solid 1px;">相同价导入</li>
                     <li id="Differentprice">不同价导入</li>
                 </ul>
             </div>
@@ -183,7 +183,7 @@
                             录入价格的时候请按对应的顺序录入，请谨慎录入。顺序（排名1，价格1，排名2，价格2,......）
                         </div>
                         <div class="form-group" style="margin-top:30px;">
-                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 78px;">
+                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 85px;">
                                 前
                                 <span class="red">N</span>名<span class="required">*</span>
                             </label>
@@ -191,7 +191,7 @@
                                 <input name="samePricerankend"   style="width: 35px;">
                             </div>
 
-                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 68px;">
+                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 75px;">
                                 <span>元/天</span><span class="required">*</span>
                             </label>
                             <div class="" style="width: 35px;float: left;">
@@ -219,8 +219,8 @@
                                 <input name="samePricerankend2"  style="width: 35px;">
                             </div>
 
-                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 68px;">
-                                <span>元/天</span><span class="required">*</span>
+                            <label class="col-md-1 control-label padding-right-0px padding-left-0px" style="width: 75px;">
+                                <span>元/天</span>
                             </label>
                             <div class="" style="width: 35px;float: left;">
                                 <input name="samePriceprice2"   style="width: 35px;">

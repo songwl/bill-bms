@@ -23,7 +23,7 @@ public class CallCostTask {
     @Autowired
     private BillCallCostService billCallCostService;
     @Autowired
-     private BillAccountAndItemService billAccountAndItemService;
+    private BillAccountAndItemService billAccountAndItemService;
     @Autowired
     private  BillPriceMapper billPriceMapper;
 
@@ -58,8 +58,9 @@ public class CallCostTask {
         map.put("year",now.get(Calendar.YEAR));
         map.put("month",now.get(Calendar.MONTH)+1);
         map.put("day",now.get(Calendar.DATE));
+        map.put("itemType","cost");
         //在这里开始计算流水和用户余额
-        List<BillPrice> billPriceList=billPriceMapper.selectByOutmemberList();//获取今日所有人付款人
+        List<BillPrice> billPriceList=billPriceMapper.selectByOutmemberList();//获取所有人付款人
         if(!CollectionUtils.isEmpty(billPriceList)) {
 
             try {

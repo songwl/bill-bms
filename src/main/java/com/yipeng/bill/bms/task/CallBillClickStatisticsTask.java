@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class CallBillClickStatisticsTask {
 
-   @Autowired
-   private BillClickStatisticsService billClickStatisticsService;
+    @Autowired
+    private BillClickStatisticsService billClickStatisticsService;
     public void execute(){
         billClickStatisticsService.insertBillClickStatistics();
     }

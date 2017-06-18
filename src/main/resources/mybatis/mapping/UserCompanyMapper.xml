@@ -17,7 +17,7 @@
     create_user_id, update_user_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from t_user_company
     where id = #{id,jdbcType=BIGINT}
@@ -150,6 +150,6 @@
     select
     <include refid="Base_Column_List" />
     from t_user_company
-    where web_site = #{website,jdbcType=BIGINT}
+    where web_site = #{website,jdbcType=VARCHAR}
   </select>
 </mapper>

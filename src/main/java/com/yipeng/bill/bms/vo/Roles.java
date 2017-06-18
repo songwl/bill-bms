@@ -10,7 +10,8 @@ public enum Roles {
     CUSTOMER("客户"),
     COMMISSIONER("专员"),
     SUPER_ADMIN("超级管理员"),
-    ADMIN("管理员");
+    ADMIN("管理员"),
+    ASSISTANT("助理");
 
     private String cnName;
 

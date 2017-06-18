@@ -79,7 +79,7 @@ var TableInit = function () {
                     field: 'itemType',
                     align: 'center',
                     valign: 'middle',
-
+                    sortable: true,
                     title: '交易类别',
                     formatter:function (value,row,index) {
                         var a="";
@@ -117,6 +117,7 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '变动时间',
+                    sortable: true,
 
                 }
 

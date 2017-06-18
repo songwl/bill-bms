@@ -36,4 +36,6 @@ public interface OperatorService {
      * @return
      */
     int updatePwd(User user,LoginUser loginUser);
+
+    int deleteUser(User user,LoginUser loginUser);
 }

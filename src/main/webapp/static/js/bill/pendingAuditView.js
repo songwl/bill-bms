@@ -7,7 +7,13 @@ var searchName=null;
 var searchUserName=null;
 var searchState=1;
 $(document).ready(function () {
-
+    //切换订单
+    $(".pass").click(function () {
+        $('.page-content').empty().load(CTX+'/order/pendingAuditView');
+    })
+    $(".pass1").click(function () {
+        $('.page-content').empty().load(CTX+'/order/pendingAuditView1');
+    })
     //显示搜索内容
     $(".search").click(function () {
         if($(".Navs2").css("display")=="block"){
@@ -23,6 +29,59 @@ $(document).ready(function () {
         }
 
 
+    })
+//删除订单
+    $("#deleteBill").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var len = selectContent.length;
+        var index;
+        if(selectContent == "") {
+            layer.alert('请选择一列数据!', {
+                skin: 'layui-layer-molv' //样式类名
+                ,closeBtn: 0
+            });
+
+        }else{
+            layer.confirm("是否删除订单？",{
+                btn:['确定','取消']
+            },function () {
+                    $.ajax({
+                        type:'post',
+                        url:CTX+'/order/deleteBillPendingAuditView',
+                        data:{selectContent: selectContent, length: len},
+                        beforeSend: function () {
+                            index  = layer.load(1, {
+                                shade: [0.1,'#fff'] //0.1透明度的白色背景
+                            });
+                        },
+                        success:function (result) {
+                            if(result.code==200)
+                            {
+                                layer.alert(result.message, {
+                                    skin: 'layui-layer-molv' //样式类名
+                                    ,closeBtn: 0
+                                });
+                            }
+                            else
+                            {
+                                layer.alert(result.message, {
+                                    skin: 'layui-layer-molv' //样式类名
+                                    ,closeBtn: 0
+                                });
+                            }
+                            $('#myTable').bootstrapTable('refresh');
+                            layer.close(index);
+                        }
+
+
+
+                    })
+            }
+            )
+
+
+
+        }
     })
 
     //复选框
@@ -72,6 +131,8 @@ $(document).ready(function () {
 
 
 })
+
+
 $(function () {
 
     //1.初始化Table
@@ -221,7 +282,15 @@ var TableInit = function () {
                     valign: 'middle',
                     title: '状态',
                     formatter:function (value,row,index) {
-                        var  a="<span style='color:#94b86e;'>待审核</span>";
+                        if(value==-1||value==-0||value==1)
+                        {
+                            var  a="<span style='color:#94b86e;'>待审核</span>";
+                        }
+                        else
+                        {
+                            var  a="<span style='color:#FF0000;'>未通过</span>";
+                        }
+
 
                         return a;
                     }

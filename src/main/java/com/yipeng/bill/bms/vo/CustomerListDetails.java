@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 /**
  * Created by Administrator on 2017/3/22.
  */
-public class CustomerListDetails {
+public class   CustomerListDetails {
     private int id;
     private Long customerId;
     private String userName;
@@ -20,6 +20,7 @@ public class CustomerListDetails {
     private int missionCount;
     private BigDecimal balance;
     private int dailiRole;
+    private  String roleName;
 
 
     public  int  getId(){return  id;}
@@ -50,4 +51,8 @@ public class CustomerListDetails {
     public  BigDecimal  setBalance(BigDecimal balance){return this.balance= balance;}
     public int getDailiRole(){return dailiRole;}
     public  int  setDailiRole(int dailiRole){return this.dailiRole= dailiRole;}
+
+    public String getRoleName(){return roleName;}
+    public  String setRoleName(String roleName){return this.roleName= roleName;}
+
 }

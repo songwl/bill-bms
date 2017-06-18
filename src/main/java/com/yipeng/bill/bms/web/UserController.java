@@ -56,23 +56,23 @@ public class UserController extends BaseController {
     public  String createUser(HttpServletRequest request, User user, ModelMap modelMap, HttpSession session,String code)
     {
         String codeSession = (String) session.getAttribute("code");
-       if(codeSession.toLowerCase().equals(code.toLowerCase()))
-       {
-           if(user.getUserName()!=""&&user.getPassword()!="")
-           {
-               userService.saveUser(user);
-               Long id=user.getId();
-           }
-           else
-           {
-               modelMap.addAttribute("loginFailureMessage", "填写信息不正确");
-           }
-       }
+        if(codeSession.toLowerCase().equals(code.toLowerCase()))
+        {
+            if(user.getUserName()!=""&&user.getPassword()!="")
+            {
+                userService.saveUser(user);
+                Long id=user.getId();
+            }
+            else
+            {
+                modelMap.addAttribute("loginFailureMessage", "填写信息不正确");
+            }
+        }
 
-       else
-       {
-           modelMap.addAttribute("loginFailureMessage", "验证码错误  !");
-       }
+        else
+        {
+            modelMap.addAttribute("loginFailureMessage", "验证码错误  !");
+        }
 
         return  "/user/login";
     }

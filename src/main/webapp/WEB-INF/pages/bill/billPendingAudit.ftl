@@ -10,9 +10,9 @@
         <span>优化管理</span>>
         <span>审核订单</span></div>
     <div class="nav_R right" id="divQx">
-    <#-- <div class="Import">
-      <span id="Import">&nbsp;
-        <i class="fa fa-arrow-down"></i>&nbsp;导出</span></div>-->
+        <div class="xxx"   id="deleteBill">
+            <span id="xxx">&nbsp;<i class="fa fa-remove"></i>&nbsp;删除</span>
+        </div>
         <div class="search">
           <span>&nbsp;
             <i class="fa fa-search"></i>&nbsp;查询</span></div>
@@ -52,7 +52,7 @@
                 <div id="toolbar" class="btn-group">
                     <button id="billExamine" type="button" class="btn btn-default">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>审核通过</button>
-                    <button id="testpm" type="button" class="btn btn-default">
+                    <button id="billNotExamine" type="button" class="btn btn-default">
                         <span class="glyphicon glyphicon-leaf" aria-hidden="true" id=""></span>审核不通过</button>
                 </div>
                 <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%;font-size: 13px;font-family: " 微软雅黑 "></table>
@@ -79,7 +79,7 @@
                             <div class="alert alert-info fade in">
                                 录入价格的时候请按对应的顺序录入，请谨慎录入。顺序（排名1，价格1，排名2，价格2,......）
                             </div>
-                            <div class="form-group" style="margin-top:30px; ">
+                            <div class="form-group" style="margin-bottom:50px;">
                                 <label class="col-md-1 control-label padding-right-0px padding-left-0px " style="width: 80px; ">
                                     前
                                     <span class="red">N</span>名<span class="required">*</span></label>

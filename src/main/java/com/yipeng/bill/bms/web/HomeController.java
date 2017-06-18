@@ -3,13 +3,9 @@ package com.yipeng.bill.bms.web;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.yipeng.bill.bms.dao.sendBoxMapper;
-import com.yipeng.bill.bms.domain.inBox;
-import com.yipeng.bill.bms.domain.noticepublish;
 import com.yipeng.bill.bms.service.HomeService;
 import com.yipeng.bill.bms.service.MessageService;
 import com.yipeng.bill.bms.service.RemoteService;
@@ -29,6 +25,8 @@ public class HomeController extends BaseController {
 	private HomeService homeService;
 	@Autowired
 	private RemoteService remoteService;
+	//@Autowired
+	//private AuthorityService authorityService;
 	@Autowired
 	private sendBoxMapper sendBoxMapper;
 	@Autowired
@@ -59,7 +57,7 @@ public class HomeController extends BaseController {
 
 	@RequestMapping(value = "/home")
 	public String home(ModelMap model) throws Exception {
-        LoginUser loginUser=this.getCurrentAccount();
+		LoginUser loginUser=this.getCurrentAccount();
 		Map<String, Object> bms=new HashMap<>();
 		/*Map<String, Object> bms=new HashMap<>();*/
 		List<noticepublish> inbox=homeService.getInBox(loginUser);
@@ -78,7 +76,7 @@ public class HomeController extends BaseController {
 		model.addAttribute("bmsModel", bms);
 		return bms;
 	}
-   //客户数
+	//客户数
 	@RequestMapping(value = "/userCount")
 	@ResponseBody
 	public Map<String, Object> userCount(ModelMap model) throws Exception {

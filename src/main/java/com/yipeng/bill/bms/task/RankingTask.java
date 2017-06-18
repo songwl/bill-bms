@@ -56,7 +56,7 @@ public class RankingTask {
                 for (Bill bill : billList) {
                     JSONObject jsonObj = new JSONObject();
                     jsonObj.put("businessType", businessType);
-                     int[] taskId={bill.getWebAppId()};
+                    int[] taskId={bill.getWebAppId()};
                     jsonObj.put("taskId", taskId);
                     jsonObj.put("time", System.currentTimeMillis());
                     jsonObj.put("userId", Define.userId);

@@ -24,11 +24,11 @@
     update_time, contact, qq, phone, last_login_time, login_count,daili_Role
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-  select
-  <include refid="Base_Column_List" />
-  from t_user
-  where id = #{id,jdbcType=BIGINT}
-</select>
+    select
+    <include refid="Base_Column_List" />
+    from t_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
   <select id="selectByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
@@ -44,7 +44,7 @@
       id = #{id,jdbcType=BIGINT}
     </if>
     <if test="password != null">
-     AND    password = #{password,jdbcType=VARCHAR}
+      AND    password = #{password,jdbcType=VARCHAR}
     </if>
   </select>
   <select id="userCreater" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -241,7 +241,7 @@
     select
     <include refid="Base_Column_List" />
     from t_user
-   limit #{1},#{0}
+    limit #{1},#{0}
   </select>
   <select id="getQueryUserAll" resultMap="BaseResultMap">
     select  a.*
@@ -269,17 +269,26 @@
     from t_user as a ,t_user_role as b
     where a.id=b.user_id
     AND
-    a.status=1
-    AND
     a.create_user_id= #{userId,jdbcType=BIGINT}
     <if test="roleId != null">
-     AND b.role_id = #{roleId,jdbcType=BIGINT}
+      AND b.role_id = #{roleId,jdbcType=BIGINT}
     </if>
     <if test="searchUserName != null">
       AND a.user_name LIKE CONCAT('%',#{searchUserName,jdbcType=VARCHAR},'%')
     </if>
     <if test="searchState != null">
       AND a.status = #{searchState,jdbcType=BIT}
+    </if>
+    <if test="sortName != null">
+      <if test="sortName =='userName'">
+        ORDER BY a.user_name ${sortOrder}
+      </if>
+      <if test="sortName =='realName'">
+        ORDER BY a.real_name ${sortOrder}
+      </if>
+      <if test="sortName =='createTime'">
+        ORDER BY a.create_time ${sortOrder}
+      </if>
     </if>
     limit #{offset},#{limit}
   </select>
@@ -299,6 +308,7 @@
     <if test="searchState != null">
       AND a.status = #{searchState,jdbcType=BIT}
     </if>
+
   </select>
 
   <select id="getUserBillAscription" resultMap="BaseResultMap">
@@ -365,12 +375,5 @@
     and a.role_id=4
     and b.status=0
   </select>
-  <select id="selectAllUsers"  resultMap="BaseResultMap">
-    select u.* from t_user as u ,t_user_role as ur
-    where u.id = ur.user_id and ur.role_id=#{role,jdbcType=VARCHAR}
-  </select>
-  <select id="selectAddressee"  resultMap="BaseResultMap">
-    select * from t_user
-    where create_user_id=#{currentid,jdbcType=VARCHAR}
-  </select>
+
 </mapper>

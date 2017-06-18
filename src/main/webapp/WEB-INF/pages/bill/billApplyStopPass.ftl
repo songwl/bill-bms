@@ -12,9 +12,11 @@
     <div class="nav_R right" id="divQx">
 
             <div id="applyPass">
-                <span>&nbsp;<i class="fa fa-stop"></i>&nbsp;审核通过</span>
-            </div>
-
+        <span>&nbsp;<i class="fa fa-play"></i>&nbsp;审核通过</span>
+    </div>
+        <div id="applyNotPass">
+            <span>&nbsp;<i class="fa fa-stop"></i>&nbsp;审核不通过</span>
+        </div>
     </div>
     <div class="cls">
     </div>

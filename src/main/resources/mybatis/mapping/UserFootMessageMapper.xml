@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yipeng.bill.bms.dao.UserFootMessageMapper">
+  <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.UserFootMessage">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="website" jdbcType="VARCHAR" property="website" />
+    <result column="footFont1" jdbcType="VARCHAR" property="footfont1" />
+    <result column="footFont2" jdbcType="VARCHAR" property="footfont2" />
+    <result column="copyrightInfo1" jdbcType="VARCHAR" property="copyrightinfo1" />
+    <result column="copyrightInfo2" jdbcType="VARCHAR" property="copyrightinfo2" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, website, footFont1, footFont2, copyrightInfo1, copyrightInfo2, create_time, create_user_id, 
+    update_time, update_user_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_user_footmessage
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_user_footmessage
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.UserFootMessage">
+    insert into t_user_footmessage (id, website, footFont1, 
+      footFont2, copyrightInfo1, copyrightInfo2, 
+      create_time, create_user_id, update_time, 
+      update_user_id)
+    values (#{id,jdbcType=BIGINT}, #{website,jdbcType=VARCHAR}, #{footfont1,jdbcType=VARCHAR}, 
+      #{footfont2,jdbcType=VARCHAR}, #{copyrightinfo1,jdbcType=VARCHAR}, #{copyrightinfo2,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUserId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.UserFootMessage">
+    insert into t_user_footmessage
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="website != null">
+        website,
+      </if>
+      <if test="footfont1 != null">
+        footFont1,
+      </if>
+      <if test="footfont2 != null">
+        footFont2,
+      </if>
+      <if test="copyrightinfo1 != null">
+        copyrightInfo1,
+      </if>
+      <if test="copyrightinfo2 != null">
+        copyrightInfo2,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUserId != null">
+        create_user_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUserId != null">
+        update_user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="website != null">
+        #{website,jdbcType=VARCHAR},
+      </if>
+      <if test="footfont1 != null">
+        #{footfont1,jdbcType=VARCHAR},
+      </if>
+      <if test="footfont2 != null">
+        #{footfont2,jdbcType=VARCHAR},
+      </if>
+      <if test="copyrightinfo1 != null">
+        #{copyrightinfo1,jdbcType=VARCHAR},
+      </if>
+      <if test="copyrightinfo2 != null">
+        #{copyrightinfo2,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        #{updateUserId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.UserFootMessage">
+    update t_user_footmessage
+    <set>
+      <if test="website != null">
+        website = #{website,jdbcType=VARCHAR},
+      </if>
+      <if test="footfont1 != null">
+        footFont1 = #{footfont1,jdbcType=VARCHAR},
+      </if>
+      <if test="footfont2 != null">
+        footFont2 = #{footfont2,jdbcType=VARCHAR},
+      </if>
+      <if test="copyrightinfo1 != null">
+        copyrightInfo1 = #{copyrightinfo1,jdbcType=VARCHAR},
+      </if>
+      <if test="copyrightinfo2 != null">
+        copyrightInfo2 = #{copyrightinfo2,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null">
+        create_user_id = #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        update_user_id = #{updateUserId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.UserFootMessage">
+    update t_user_footmessage
+    set website = #{website,jdbcType=VARCHAR},
+      footFont1 = #{footfont1,jdbcType=VARCHAR},
+      footFont2 = #{footfont2,jdbcType=VARCHAR},
+      copyrightInfo1 = #{copyrightinfo1,jdbcType=VARCHAR},
+      copyrightInfo2 = #{copyrightinfo2,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user_id = #{createUserId,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user_id = #{updateUserId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user_footmessage
+    where create_user_id = #{userId,jdbcType=BIGINT}
+  </select>
+  <select id="selectByWebsite" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user_footmessage
+    where website = #{website,jdbcType=VARCHAR}
+  </select>
+</mapper>

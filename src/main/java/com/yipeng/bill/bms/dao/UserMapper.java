@@ -43,7 +43,7 @@ public interface UserMapper {
     List<User> getUserByCreateId(Long userId);
     //待审核客户
     List<User> selectByReviewUser(Map<String,Object> params);
-  //待审核客户数量
+    //待审核客户数量
     Long  selectByReviewUserCount();
     //用户权限
     List<User> getUserRoleByCreateId(Map<String,Object> params);

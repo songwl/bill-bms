@@ -33,6 +33,7 @@ public class BillDetails {
     private Integer opstate;
     private List<BillPrice> billPriceList;
     private  Long length;
+    private String billAscriptionName;
 
     public  int  getdisplayId(){return  displayId;}
     public int setdisplayId(int displayId){return  this.displayId=displayId;}
@@ -110,5 +111,12 @@ public class BillDetails {
 
     public void setLength(Long length) {
         this.length = length;
+    }
+    public String getBillAscriptionName() {
+        return billAscriptionName;
+    }
+
+    public void setBillAscriptionName(String billAscriptionName) {
+        this.billAscriptionName = billAscriptionName;
     }
 }

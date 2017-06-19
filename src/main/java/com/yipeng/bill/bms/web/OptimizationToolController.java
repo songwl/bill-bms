@@ -78,7 +78,7 @@ public class OptimizationToolController extends BaseController {
     @RequestMapping(value = "/RestKeyt", method = RequestMethod.POST)
     @ResponseBody
     public String RestKeyt() {
-        String apiSign="897A54E9ECE5AFADB61F489B893E5869";
+/*        String apiSign="897A54E9ECE5AFADB61F489B893E5869";
         String xAction="selectPrice";
         String xParam="{'UserId':123,'Value':{'keyword':'护发素,婚纱'} }";
         Md5_UrlEncode md5_urlEncode = new Md5_UrlEncode();
@@ -92,7 +92,7 @@ public class OptimizationToolController extends BaseController {
             e.printStackTrace();
         }
         QueryOfferController queryOfferController=new QueryOfferController();
-        queryOfferController.GetPrice(xAction,xParam,xSign,apiSign);
+        queryOfferController.GetPrice(xAction,xParam,xSign,apiSign);*/
 
 
 

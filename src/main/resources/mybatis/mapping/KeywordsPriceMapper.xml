@@ -240,7 +240,7 @@
     where 1=2 or keywords in
     <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
       (#{item})
-    </foreach>+
+    </foreach>
   </select>
 
   <select id="selectByTaskId" parameterType="java.lang.Integer" resultMap="BaseResultMap">

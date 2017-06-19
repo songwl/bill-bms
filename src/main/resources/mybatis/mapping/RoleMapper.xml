@@ -87,4 +87,9 @@
     where role_code = #{roleCode,jdbcType=VARCHAR}
   </select>
 
+  <select id="selectAllRole"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_role
+  </select>
 </mapper>

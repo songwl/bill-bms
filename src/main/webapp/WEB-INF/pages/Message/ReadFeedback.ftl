@@ -49,7 +49,7 @@
                 <#else >
                     <div class="mail-body">
                         <div class="user_left">
-                            <img src="/static/img/laugh.png" alt=""><br>客服<br><span class="tw_time">${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
+                            <img src="/static/img/laugh.png" alt=""><br>对方<br><span class="tw_time">${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
                         <div style="max-width: 80%" class="replyleft">
                             <span style="">${sendBox.content}</span>
                         </div>
@@ -68,7 +68,7 @@
                     <#else >
                         <div class="mail-body">
                             <div class="user_left">
-                                <img src="/static/img/laugh.png" alt=""><br>客服<br><span class="tw_time">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
+                                <img src="/static/img/laugh.png" alt=""><br>对方<br><span class="tw_time">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
                             <div style="max-width: 80%" class="replyleft">
                                 <span style="">${item.replycontent}</span>
                             </div>

@@ -305,7 +305,8 @@
 
 
   <select id="selectAgentBill" resultMap="BaseResultMap">
-    select a.* from t_bill as a,t_user as b
+    select a.*
+    from t_bill as a,t_user as b
     where a.update_user_id=b.id
     and b.create_user_id=#{userId,jdbcType=BIGINT}
     and state=#{state,jdbcType=INTEGER}
@@ -316,7 +317,7 @@
     select COUNT(a.id)
     from t_bill as a,t_user as b
     where a.update_user_id=b.id
-    and a.create_user_id=#{userId,jdbcType=BIGINT}
+    and b.create_user_id=#{userId,jdbcType=BIGINT}
     and a.state=#{state,jdbcType=INTEGER}
     AND a.delete_state=0
   </select>

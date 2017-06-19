@@ -1,0 +1,25 @@
+@media (min-width: 1200px){
+	.container{ width: 1200px;}
+	.fhmm .collapse{ float: left;}
+}
+
+.btn{display:inline-block;margin-bottom:0;font-weight:normal;text-align:center;vertical-align:middle;cursor:pointer;background-image:none;border:1px solid transparent;white-space:nowrap;padding:12px 24px;font-size:14px;line-height:1.42857143;border-radius:6px;}
+.page-content-md{ padding:32px 0;}
+.text-center{ text-align: center;}
+.jion-text a.btn{ padding:8px 32px;}
+.btn-default,.btn-default:hover,.btn-default:focus{ 
+    background: none; font-size: 14px; color: #fff;border-color:#fff; padding:0 16px; -webkit-border-radius:3px; -moz-border-radius:3px; border-radius:3px;
+}
+.container{margin-right: auto;
+          margin-left: auto;
+}
+.footer-wrap{ background: #02101e;}
+.footer-power{ background: #010c16;}
+.footer-power p{ color: #fff; opacity:0.17; font-size:12px; line-height:22px;}
+
+.pro-jionus{ position: relative; min-height:190px;}
+#jionbg{position: absolute; top:0; left:0; width: 100%; height:100%; background-color:#1976d2; background-repeat: no-repeat; background-size: cover; background-position: 50% 50%;}
+.jion-text{ position: absolute; left:0; top:0; width: 100%;}
+.jion-text h3{ color: #fff; font-size:24px; opacity:0.97; padding:16px 0;}
+.jion-text a{text-decoration:none}
+.jion-text a.btn{ padding:8px 32px;}

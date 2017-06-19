@@ -60,9 +60,7 @@ a:focus {
     /*white-space: nowrap;*/
 }
 
-.nav.navbar-right > li > a {
-    color: #999c9e;
-}
+
 
 .nav > li.active > a {
     color: #ffffff;
@@ -394,11 +392,6 @@ body.mini-navbar .navbar-default .nav > li > .nav-second-level li a {
     z-index: 2030;
 }
 
-.navbar-fixed-top,
-.navbar-static-top {
-    background: #fff;
-    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05);
-}
 
 .fixed-nav #wrapper {
     padding-top: 60px;
@@ -556,10 +549,7 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
     font-weight: bold;
 }
 
-.white-bg .navbar-fixed-top,
-.white-bg .navbar-static-top {
-    background: #fff;
-}
+
 
 .top-navigation .navbar {
     margin-bottom: 0;
@@ -4357,14 +4347,7 @@ table.table-mail tr td {
 
 /* For handle diferent bg color in MVC version */
 
-.Dashboard_2 .navbar.navbar-static-top,
-.Dashboard_3 .navbar.navbar-static-top,
-.Dashboard_4_1 .navbar.navbar-static-top,
-.ComposeEmail .navbar.navbar-static-top,
-.EmailView .navbar.navbar-static-top,
-.Inbox .navbar.navbar-static-top {
-    background: #fff;
-}
+
 
 a.close-canvas-menu {
     position: absolute;
@@ -7285,9 +7268,7 @@ body.skin-1 {
     background: #3e495f;
 }
 
-.skin-1 .navbar-static-top {
-    background: #ffffff;
-}
+
 
 .skin-1 .dashboard-header {
     background: transparent;
@@ -7442,9 +7423,6 @@ body.skin-3 {
     background: #3e2c42;
 }
 
-.skin-3 .navbar-static-top {
-    background: #ffffff;
-}
 
 .skin-3 .dashboard-header {
     background: transparent;

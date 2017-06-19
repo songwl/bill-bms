@@ -1,10 +1,18 @@
 <#import "/base/base.ftl" as base>
 <#import "/base/dict.ftl" as dict>
-<@base.html "写信息">
+<@base.html "草稿箱">
 <link href="${ctx}/static/css/Message/animate.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/custom.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/Index.css" rel="stylesheet">
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
+<div class="Navs">
+    <div class="nav_L left">
+        <i class="fa fa-home">&nbsp;</i><span>信息系统</span> > <span>草稿箱</span>
+    </div>
+
+    <div class="cls">
+    </div>
+</div>
 <div class="wrapper wrapper-content">
     <div class="row">
         <div class="col-sm-3">

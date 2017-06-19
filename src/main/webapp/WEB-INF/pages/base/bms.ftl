@@ -29,6 +29,8 @@
     <link href="${ctx}/static/js/assets/css/style-responsive.css" rel="stylesheet" type="text/css"/>
     <link rel="shortcut icon" href="${ctx}/static/js/assets/img/favicon.ico"/>
     <link href="${ctx}/static/css/public/back.css" rel="stylesheet">
+    <link href="${ctx}/static/js/layer/skin/default/layer.css" rel="stylesheet">
+    <script src="${ctx}/static/js/layer/layer.js"></script>
     ${bms_head_content!""}
     </@base.headcontent>
 
@@ -490,7 +492,7 @@
                                 </a>
                             </li>
                             <li class="apiUpdate">
-                                <a href="/optimizationTool/ParameterSetting">
+                                <a href="${ctx}/optimizationTool/ParameterSetting">
                                     API参数设置
                                 </a>
                             </li>
@@ -498,7 +500,7 @@
                         </ul>
                     </li>
 
-                    <li class="" style="border-bottom: 1px solid #3d3d3d;">
+                  <#--  <li class="" style="border-bottom: 1px solid #3d3d3d;">
                         <a href="javascript:;">
                             <i class="glyphicon glyphicon-envelope"></i><span class="title"> 信息系统 </span>
                             <#if bmsModel.SendUnReadNum gt 0||bmsModel.InUnReadNum gt 0>
@@ -509,12 +511,12 @@
                         </a>
                         <ul class="sub-menu" style="background: #293038;">
                             <li class="">
-                                <a href="/Message/WriteMail">
+                                <a href="${ctx}/Message/WriteMail">
                                     写信息
                                 </a>
                             </li>
                             <li class="">
-                                <a href="/Message/InBox">
+                                <a href="${ctx}/Message/InBox">
                                     收件箱
                                     <#if bmsModel.InUnReadNum gt 0>
                                         <span class="label label-warning" id="">${bmsModel.InUnReadNum}</span>
@@ -522,7 +524,7 @@
                                 </a>
                             </li>
                             <li class="">
-                                <a href="/Message/SendBox">
+                                <a href="${ctx}/Message/SendBox">
                                     发件箱
                                     <#if bmsModel.SendUnReadNum gt 0>
                                         <span class="label label-warning" id="">${bmsModel.SendUnReadNum}</span>
@@ -530,18 +532,18 @@
                                 </a>
                             </li>
                             <li class="">
-                                <a href="/Message/DraftBox">
+                                <a href="${ctx}/Message/DraftBox">
                                     草稿箱
                                 </a>
                             </li>
                             <li class="">
-                                <a href="/Message/DustbinBox">
+                                <a href="${ctx}/Message/DustbinBox">
                                     垃圾箱
                                 </a>
                             </li>
 
                         </ul>
-                    </li>
+                    </li>-->
                     <li class="" style="border-bottom: 1px solid #3d3d3d;">
                         <a href="javascript:;">
                             <i class="	glyphicon glyphicon-bullhorn"></i><span class="title"> 公告系统 </span><span
@@ -550,13 +552,13 @@
                         <ul class="sub-menu" style="background: #293038;">
                             <#if bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")||bmsModel.user.hasRole("SECRETARY")>
                                 <li class="">
-                                    <a href="/Message/SendNotice">
+                                    <a href="${ctx}/Message/SendNotice">
                                         发布公告
                                     </a>
                                 </li>
                             </#if>
                             <li class="">
-                                <a href="/Message/NoticeSearch">
+                                <a href="${ctx}/Message/NoticeSearch">
                                     公告查询
                                 </a>
                             </li>
@@ -574,13 +576,13 @@
                         <ul class="sub-menu" style="background: #293038;">
                             <#if !bmsModel.user.hasRole("SUPER_ADMIN")&&!bmsModel.user.hasRole("SECRETARY")>
                                 <li class="">
-                                    <a href="/Message/SendFeedback">
+                                    <a href="${ctx}/Message/SendFeedback">
                                         提交反馈
                                     </a>
                                 </li>
                             </#if>
                             <li class="">
-                                <a href="/Message/FeedbackSearch">
+                                <a href="${ctx}/Message/FeedbackSearch">
                                     反馈查询
                                     <#if bmsModel.UnReadNum gt 0>
                                         <span class="label label-warning" id="">${bmsModel.UnReadNum}</span>

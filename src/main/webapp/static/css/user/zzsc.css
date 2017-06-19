@@ -58,12 +58,13 @@ body {
 	color:#fff;
 }
 #slideText {
-	width:400px;
+	width:450px;
 	height:28px;
 	background:rgba(0, 0, 0, 1);
 	color:#fff;
 	position:absolute;
 	left:0px;
+	opacity: 0.5;
 	bottom:0px;
 *background:transparent;
 filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b2000000, endColorstr=#b2000000);

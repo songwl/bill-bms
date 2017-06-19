@@ -5,6 +5,14 @@
 <link href="${ctx}/static/css/Message/custom.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/Index.css" rel="stylesheet">
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
+<div class="Navs">
+    <div class="nav_L left">
+        <i class="fa fa-home">&nbsp;</i><span>公告系统</span> > <span>发送公告</span>
+    </div>
+
+    <div class="cls">
+    </div>
+</div>
 <div class="wrapper wrapper-content">
     <div class="row">
         <#--<div class="col-sm-3">

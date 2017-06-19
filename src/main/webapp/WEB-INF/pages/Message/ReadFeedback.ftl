@@ -2,11 +2,20 @@
 <#import "/base/dict.ftl" as dict>
 <#import "/base/" as dict>
 
-<@base.html "写信息">
+<@base.html "反馈回复">
 <link href="${ctx}/static/css/Message/font-awesome.min.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/animate.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/custom.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/Index.css" rel="stylesheet">
+<link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
+<div class="Navs">
+    <div class="nav_L left">
+        <i class="fa fa-home">&nbsp;</i><span>反馈与帮助</span> > <span>反馈回复</span>
+    </div>
+
+    <div class="cls">
+    </div>
+</div>
 <div class="wrapper wrapper-content">
     <div class="row">
         <div class="col-sm-12 animated fadeInRight">
@@ -39,7 +48,7 @@
 
                 <#if sendBox.senduserid == loginUser>
                     <div class="mail-body">
-                        <div class="manage_right"><img src="/static/img/laugh.png" class="usertx"><br>我<br><span class="tw_time">${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
+                        <div class="manage_right"><img src="${ctx}/static/img/laugh.png" class="usertx"><br>我<br><span class="tw_time">${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
                         <div style="float: right;max-width: 80%" class="replyright">
                             <span style="float: right">${sendBox.content}</span>
                             <div style="clear: both"></div>
@@ -49,7 +58,7 @@
                 <#else >
                     <div class="mail-body">
                         <div class="user_left">
-                            <img src="/static/img/laugh.png" alt=""><br>对方<br><span class="tw_time">${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
+                            <img src="${ctx}/static/img/laugh.png" alt=""><br>对方<br><span class="tw_time">${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
                         <div style="max-width: 80%" class="replyleft">
                             <span style="">${sendBox.content}</span>
                         </div>
@@ -58,7 +67,7 @@
                 <#list messageReplyList as item>
                     <#if item.sendid == loginUser>
                         <div class="mail-body">
-                            <div class="manage_right"><img src="/static/img/laugh.png" class="usertx"><br>我<br><span class="tw_time">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
+                            <div class="manage_right"><img src="${ctx}/static/img/laugh.png" class="usertx"><br>我<br><span class="tw_time">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
                             <div style="float: right;max-width: 80%" class="replyright">
                                 <span style="float: right">${item.replycontent}</span>
                                 <div style="clear: both"></div>
@@ -68,7 +77,7 @@
                     <#else >
                         <div class="mail-body">
                             <div class="user_left">
-                                <img src="/static/img/laugh.png" alt=""><br>对方<br><span class="tw_time">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
+                                <img src="${ctx}/static/img/laugh.png" alt=""><br>对方<br><span class="tw_time">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
                             <div style="max-width: 80%" class="replyleft">
                                 <span style="">${item.replycontent}</span>
                             </div>
@@ -98,7 +107,7 @@
                         </button>
                     </#if>
                     <a class="btn btn-sm btn-white"<#-- href="javascript:history.go(-1)"-->
-                       onclick="$('.page-content').empty().load(CTX+'/Message/FeedbackSearch');" id=""><i
+                       onclick="$('.page-content').empty().load('${ctx}/Message/FeedbackSearch');" id=""><i
                             class="fa fa-reply"></i><span>返回</span></a>
                 </div>
                 <div class="clearfix"></div>
@@ -115,7 +124,7 @@
        style="display: none;width: 40px;height: 40px;line-height:40px;text-align: center;color: #64854c;"> <i
             class="fa fa-angle-up"></i></a>
     <a href="javascript:void(0)" title="刷新"
-       onclick="$('.page-content').empty().load(CTX+'/Message/ReadFeedback?FeedbackId=' + ${sendBox.id});"
+       onclick="$('.page-content').empty().load('${ctx}/Message/ReadFeedback?FeedbackId=' + ${sendBox.id});"
        style="display: inline-block;font-size: 14px;border-top:1px solid #eee;width: 40px;height: 40px;line-height: 40px;text-align: center;color: #aaaaaa;">
         <i class="glyphicon glyphicon-repeat"></i></a>
 </div>
@@ -203,7 +212,7 @@
                 success: function (data) {
                     if (data.message == 1) {
                         //window.location.reload();
-                        $('.page-content').empty().load(CTX + '/Message/ReadFeedback?FeedbackId=${sendBox.id}');
+                        $('.page-content').empty().load( '${ctx}/Message/ReadFeedback?FeedbackId=${sendBox.id}');
                     } else {
                         alert("处理失败!");
                     }
@@ -218,7 +227,7 @@
                 success: function (data) {
                     if (data.message == 1) {
                         //window.location.reload();
-                        $('.page-content').empty().load(CTX + '/Message/SendBox');
+                        $('.page-content').empty().load('${ctx}/Message/SendBox');
                     } else {
                         alert("处理失败!");
                     }
@@ -232,7 +241,7 @@
                 success: function (data) {
                     if (data.message == 1) {
                         //alert("删除成功！");
-                        $('.page-content').empty().load(CTX + '/Message/SendBox');
+                        $('.page-content').empty().load( '${ctx}/Message/SendBox');
                     } else {
                         alert("删除失败");
                     }
@@ -253,7 +262,7 @@
                 data: {id: ${sendBox.id}, ReplyContent: $("#replyText").val(), mailType: 1},
                 success: function (data) {
                     if (data.message == 1) {
-                        $('.page-content').empty().load('/Message/ReadFeedback?FeedbackId=' + ${sendBox.id});
+                        $('.page-content').empty().load('${ctx}/Message/ReadFeedback?FeedbackId=' + ${sendBox.id});
                     } else {
                         alert("回复失败");
                     }

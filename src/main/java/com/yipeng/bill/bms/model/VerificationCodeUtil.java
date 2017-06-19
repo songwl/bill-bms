@@ -3,15 +3,14 @@ package com.yipeng.bill.bms.model;
 /**
  * Created by Administrator on 2017/5/6.
  */
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
+
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageOutputStream;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Random;
-import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageOutputStream;
 
 /**
  * 验证码类，主要生成几种不同类型的验证码

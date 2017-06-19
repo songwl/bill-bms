@@ -6,6 +6,15 @@
 <link href="${ctx}/static/css/Message/animate.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/custom.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/Index.css" rel="stylesheet">
+<link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
+<div class="Navs">
+    <div class="nav_L left">
+        <i class="fa fa-home">&nbsp;</i><span>信息系统</span> > <span>收件箱</span>
+    </div>
+
+    <div class="cls">
+    </div>
+</div>
 <div class="wrapper wrapper-content">
     <div class="row">
         <div class="col-sm-3">
@@ -13,7 +22,7 @@
                 <div class="ibox-content mailbox-content">
                     <div class="file-manager">
                         <a class="btn btn-block btn-primary compose-mail" href="#"
-                           onclick="$('.page-content').empty().load('/Message/WriteMail');">写信</a>
+                           onclick="$('.page-content').empty().load('${ctx}/Message/WriteMail');">写信</a>
                         <div class="space-25"></div>
                         <h5>文件夹</h5>
                         <ul class="folder-list m-b-md" style="padding: 0">
@@ -24,7 +33,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#" onclick="$('.page-content').empty().load('/Message/SendBox');"> <i
+                                <a href="#" onclick="$('.page-content').empty().load('${ctx}/Message/SendBox');"> <i
                                         class="fa fa-envelope-o"></i>
                                     发件箱<span class="label label-warning pull-right" id="ReMailNum">0</span>
                                 </a>
@@ -33,13 +42,13 @@
                                 <a href="#"> <i class="fa fa-certificate"></i> 重要</a>
                             </li>-->
                             <li>
-                                <a href="#" onclick="$('.page-content').empty().load('/Message/DraftBox');">
+                                <a href="#" onclick="$('.page-content').empty().load('${ctx}/Message/DraftBox');">
                                     <i class="fa fa-file-text-o"></i> 草稿 <span
                                         class="label label-danger pull-right"></span>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" onclick="$('.page-content').empty().load('/Message/DustbinBox');"> <i class="fa fa-trash-o"></i> 垃圾箱</a>
+                                <a href="#" onclick="$('.page-content').empty().load('${ctx}/Message/DustbinBox');"> <i class="fa fa-trash-o"></i> 垃圾箱</a>
                             </li>
                         </ul>
                         <h5>分类</h5>
@@ -312,7 +321,7 @@
         window.ReadMailEvents = {
             'click .title': function (e, value, row, index) {
                 var StateId = $(".StateId").attr("data-state");
-                $(".page-content").empty().load("/Message/ReadInMail?MailId=" + row.id + "&StateId=" + StateId).fadeIn(1000);
+                $(".page-content").empty().load("${ctx}/Message/ReadInMail?MailId=" + row.id + "&StateId=" + StateId).fadeIn(1000);
                 //window.location.href = "/Message/ReadMail?MailId=" + row.id + "&StateId=" + StateId;
 
             }

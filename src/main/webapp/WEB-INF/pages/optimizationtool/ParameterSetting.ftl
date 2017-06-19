@@ -7,6 +7,15 @@
 <link href="${ctx}/static/css/Message/custom.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/Index.css" rel="stylesheet">
 
+<link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
+<div class="Navs">
+    <div class="nav_L left">
+        <i class="fa fa-home">&nbsp;</i><span>个人中心</span> > <span>API参数设置</span>
+    </div>
+
+    <div class="cls">
+    </div>
+</div>
 <div id="contentBox">
     <div class="sq-panel" style="height: 291px;">
         <div class="sq-panel-heading">
@@ -147,7 +156,6 @@
                 type: "post",
                 url: CTX + "/optimizationTool/RestKeyt",
                 success: function (data) {
-                    console.info(data);
                     $("#keypt").text("").text(data);
                 }
             });
@@ -155,7 +163,7 @@
         saveNotify: function () {
             var patt = /^(\d+(\.\d{1,2})?)$/g;
             if (!patt.test($("#notifyUrl").val())) {
-                alert("请输入正确的两位小数倍率")
+                layer.msg("请输入正确的两位小数倍率")
                 return;
             }
             $.ajax({
@@ -164,13 +172,13 @@
                 data: {rote: $("#notifyUrl").val()},
                 success: function (data) {
                     if (data == "1") {
-                        alert("成功!");
+                        layer.msg("成功!");
                     }
                     else if (data == "-1") {
-                        alert("请去设置正确的两位小数倍率!");
+                        layer.msg("请去设置正确的两位小数倍率!");
                     }
                     else {
-                        alert("失败");
+                        layer.msg("失败");
                     }
                 }
             });

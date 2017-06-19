@@ -366,3 +366,66 @@ CREATE TABLE `keywords_price` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `weiyi` (`keywords`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `inbox` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `sendId` bigint(20) DEFAULT NULL,
+  `sendUserId` varchar(255) DEFAULT NULL COMMENT '接收者编号',
+  `InUserId` varchar(255) DEFAULT NULL,
+  `mailType` int(11) DEFAULT NULL,
+  `Title` varchar(500) DEFAULT NULL,
+  `Content` varchar(5000) DEFAULT NULL,
+  `dealtState` int(11) DEFAULT NULL,
+  `affairState` int(11) DEFAULT NULL,
+  `InTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `messagereply` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `MessageId` bigint(20) NOT NULL,
+  `SendId` varchar(255) NOT NULL,
+  `InId` varchar(255) NOT NULL,
+  `ReplyContent` varchar(255) NOT NULL,
+  `ReplyTime` datetime NOT NULL,
+  `MessageType` int(11) NOT NULL,
+  `DealtState` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=132 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `noticepublish` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `SendId` varchar(255) DEFAULT NULL,
+  `InRole` varchar(255) DEFAULT NULL,
+  `MailType` int(11) DEFAULT NULL,
+  `Title` varchar(255) DEFAULT NULL,
+  `Content` varchar(255) DEFAULT NULL,
+  `dealtState` int(11) DEFAULT NULL,
+  `SendTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `offerset` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `userId` bigint(20) DEFAULT NULL,
+  `tokenId` varchar(255) DEFAULT NULL,
+  `rate` double DEFAULT NULL,
+  `updateTime` datetime DEFAULT NULL,
+  `createTime` datetime DEFAULT NULL,
+  `requestSecond` int(11) DEFAULT NULL,
+  `surplusSecond` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `sendbox` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `sendUserId` varchar(255) DEFAULT NULL,
+  `InUserId` varchar(255) DEFAULT NULL,
+  `mailType` int(11) DEFAULT NULL,
+  `Title` varchar(500) DEFAULT NULL,
+  `Content` varchar(5000) DEFAULT NULL,
+  `dealtState` int(11) DEFAULT NULL,
+  `affairState` int(11) DEFAULT NULL,
+  `SendTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;

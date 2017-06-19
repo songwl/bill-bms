@@ -4,9 +4,6 @@ import java.util.Date;
 
 public class KeywordToPrice {
 
-    private Integer taskid;
-
-
     private Double pricebaidupc;
 
     private Double pricebaiduwap;
@@ -20,14 +17,6 @@ public class KeywordToPrice {
     private String keywords;
 
     private static final long serialVersionUID = 1L;
-
-    public Integer getTaskid() {
-        return taskid;
-    }
-
-    public void setTaskid(Integer taskid) {
-        this.taskid = taskid;
-    }
 
     public Double getPricebaidupc() {
         return pricebaidupc;

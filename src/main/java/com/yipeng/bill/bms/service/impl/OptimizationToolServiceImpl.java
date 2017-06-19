@@ -9,6 +9,7 @@ import com.yipeng.bill.bms.domain.ForbiddenWords;
 import com.yipeng.bill.bms.domain.KeywordsPrice;
 import com.yipeng.bill.bms.domain.offerset;
 import com.yipeng.bill.bms.model.Define;
+import com.yipeng.bill.bms.model.KeywordToPrice;
 import com.yipeng.bill.bms.model.Md5_UrlEncode;
 import com.yipeng.bill.bms.service.OptimizationToolService;
 import com.yipeng.bill.bms.vo.LoginUser;
@@ -35,7 +36,7 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
     @Autowired
     private ForbiddenWordsMapper forbiddenWordsMapper;
     @Autowired
-    private KeywordsPriceMapper keywordsPriceMapper;
+    public KeywordsPriceMapper keywordsPriceMapper;
 
     @Autowired
     private RemoteServiceImpl remoteService;
@@ -208,21 +209,20 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
 
 
     @Override
-    public List<KeywordsPrice> GetPriceList(String[] arr, double rote) {
-        String where = "";
+    public List<KeywordToPrice> GetPriceList(List<String> list, double rote) {
+        /*String where = "";
         List<String> list = new ArrayList<String>();
         for (int i = 0; i < arr.length; i++) {
             //清除空格
             arr[i] = arr[i].replace("\t", "").replace(" ", "");
-            String aa = arr[i];
             where += " or words LIKE '" + arr[i] + "'";
             list.add(arr[i]);
-        }
+        }*/
         //去除重复关键词
         HashSet h = new HashSet(list);
         list.clear();
         list.addAll(h);
-        Map<String, Object> params = new HashMap<>();
+        /*Map<String, Object> params = new HashMap<>();
         params.put("words", where);
         List<ForbiddenWords> forbiddenWordsList = forbiddenWordsMapper.selectByWords(params);
         for (ForbiddenWords item : forbiddenWordsList
@@ -231,13 +231,14 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
         }
         if (CollectionUtils.isEmpty(list)) {
             return null;
-        }
+        }*/
         Map<String, Object> params2 = new HashMap<>();
         params2.put("list", list);
         params2.put("rote", rote);
-        List<KeywordsPrice> keywordsprices = keywordsPriceMapper.selectByword(params2);//查询本地数据
+        List<KeywordToPrice> keywordsprices = keywordsPriceMapper.selectBywordToPrice(params2);//查询本地数据
+        /*List<KeywordToPrice> keywordToPrices = keywordsPriceMapper.selectBywordToPriceHave(params2);//查询本地数据*/
         //if (!CollectionUtils.isEmpty(keywordsprices)) {
-        for (KeywordsPrice item : keywordsprices
+        for (KeywordToPrice item : keywordsprices
                 ) {
             list.remove(item.getKeywords());
         }
@@ -276,7 +277,6 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
                 KeywordsPrice keywordsPrice = new KeywordsPrice();
                 keywordsPrice.setTaskid(Integer.parseInt(array.getJSONArray(i).get(0).toString()));
                 keywordsPrice.setKeywords(list.get(i));
-                keywordsprices.add(keywordsPrice);
                 keywordsPriceMapper.insert(keywordsPrice);
             }
 

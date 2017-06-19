@@ -23,5 +23,7 @@ public interface KeywordsPriceMapper {
 
     List<KeywordToPrice> selectBywordToPrice(Map<String, Object> params2);
 
+    List<KeywordToPrice> selectBywordToPriceHave(Map<String, Object> params2);
+
     KeywordsPrice selectByTaskId(int taskid);
 }

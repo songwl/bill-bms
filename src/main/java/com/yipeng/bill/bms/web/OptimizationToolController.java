@@ -1,15 +1,21 @@
 package com.yipeng.bill.bms.web;
 
+import com.google.gson.JsonObject;
+import com.mchange.v1.db.sql.ConnectionUtils;
 import com.yipeng.bill.bms.core.model.ResultMessage;
 import com.yipeng.bill.bms.dao.offersetMapper;
 import com.yipeng.bill.bms.domain.KeywordsPrice;
+import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.domain.offerset;
+import com.yipeng.bill.bms.model.KeywordToPrice;
 import com.yipeng.bill.bms.model.Md5_UrlEncode;
 import com.yipeng.bill.bms.service.OptimizationToolService;
+import com.yipeng.bill.bms.service.impl.OptimizationToolServiceImpl;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +24,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
@@ -32,6 +42,8 @@ public class OptimizationToolController extends BaseController {
     private OptimizationToolService optimizationToolService;
     @Autowired
     private offersetMapper offersetMapper;
+    @Autowired
+    private QueryOfferController queryOfferController;
 
 
     /**
@@ -78,25 +90,20 @@ public class OptimizationToolController extends BaseController {
     @RequestMapping(value = "/RestKeyt", method = RequestMethod.POST)
     @ResponseBody
     public String RestKeyt() {
-/*        String apiSign="897A54E9ECE5AFADB61F489B893E5869";
-        String xAction="selectPrice";
-        String xParam="{'UserId':123,'Value':{'keyword':'护发素,婚纱'} }";
+        /*String apiSign = "842920E038C65EF9F833BC7DD391D991";
+        String xAction = "selectPrice";
+        String xParam = "{'UserId':1,'Value':{'keyword':'哈哈,凌晨,电子秤,婚庆公司'}}";
         Md5_UrlEncode md5_urlEncode = new Md5_UrlEncode();
         String xSign = null;
         //加密
         try {
-            xSign = md5_urlEncode.EncoderByMd5(xAction  + xParam);
+            xSign = md5_urlEncode.EncoderByMd5(xAction + xParam);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        QueryOfferController queryOfferController=new QueryOfferController();
-        queryOfferController.GetPrice(xAction,xParam,xSign,apiSign);*/
-
-
-
-
+        queryOfferController.GetPrice(xAction, xParam, xSign, apiSign);*/
         LoginUser loginUser = this.getCurrentAccount();
         String keypt = optimizationToolService.UpdateToken(loginUser);
         return keypt;
@@ -113,4 +120,6 @@ public class OptimizationToolController extends BaseController {
         boolean flag = optimizationToolService.UpdateRote(loginUser, Double.parseDouble(rote));
         return flag ? "1" : "0";
     }
+
+
 }

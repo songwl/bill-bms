@@ -20,6 +20,14 @@
     <result column="UpdateTime" jdbcType="TIMESTAMP" property="updatetime" />
     <result column="Keywords" jdbcType="VARCHAR" property="keywords" />
   </resultMap>
+  <resultMap id="KeywordToPriceMap" type="com.yipeng.bill.bms.model.KeywordToPrice">
+    <result column="PriceBaiduPc" jdbcType="DOUBLE" property="pricebaidupc" />
+    <result column="PriceBaiduWap" jdbcType="DOUBLE" property="pricebaiduwap" />
+    <result column="PriceSoPc" jdbcType="DOUBLE" property="pricesopc" />
+    <result column="PriceSogouPc" jdbcType="DOUBLE" property="pricesogoupc" />
+    <result column="PriceSm" jdbcType="DOUBLE" property="pricesm" />
+    <result column="Keywords" jdbcType="VARCHAR" property="keywords" />
+  </resultMap>
   <sql id="Base_Column_List">
     id, TaskId, IndexBaiduAll, IndexBaiduWap, IndexSoAll, BaiduCollectionCount, BaiduHomepageCount, 
     Degree, PriceBaiduPc, PriceBaiduWap, PriceSoPc, PriceSoWap, PriceSogouPc, PriceSogouWap, 
@@ -242,7 +250,26 @@
       (#{item})
     </foreach>
   </select>
+  <select id="selectBywordToPrice"  resultMap="KeywordToPriceMap">
+  select
+  keywords,#{rote,jdbcType=DOUBLE}*PriceBaiduPc as PriceBaiduPc,#{rote,jdbcType=DOUBLE}*PriceSogouPc as PriceSogouPc,#{rote,jdbcType=DOUBLE}*PriceSoPC as PriceSoPC,#{rote,jdbcType=DOUBLE}*PriceBaiduWap as PriceBaiduWap,#{rote,jdbcType=DOUBLE}*PriceSm as PriceSm
+  from keywords_price
+  where 1=2 or keywords in
+  <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+    (#{item})
+  </foreach>
+</select>
 
+  <select id="selectBywordToPriceHave"  resultMap="KeywordToPriceMap">
+    select
+    keywords,#{rote,jdbcType=DOUBLE}*PriceBaiduPc as PriceBaiduPc,#{rote,jdbcType=DOUBLE}*PriceSogouPc as PriceSogouPc,#{rote,jdbcType=DOUBLE}*PriceSoPC as PriceSoPC,#{rote,jdbcType=DOUBLE}*PriceBaiduWap as PriceBaiduWap,#{rote,jdbcType=DOUBLE}*PriceSm as PriceSm
+    from keywords_price
+    where 1=2 or keywords in
+    <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+      (#{item})
+    </foreach>
+      and PriceBaiduPc is not NULL and PriceSogouPc is not NULL and PriceSoPC is not NULL and PriceBaiduWap is not NULL and PriceSm is not NULL
+  </select>
   <select id="selectByTaskId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

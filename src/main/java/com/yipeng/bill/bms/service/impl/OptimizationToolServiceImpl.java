@@ -53,13 +53,13 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
         }
         //获取所输入的关键字
         String[] arr = keywords.split("\n");
-        String where = "";
+        //String where = "";
         List<String> list = new ArrayList<String>();
         for (int i = 0; i < arr.length; i++) {
             //清除空格
             arr[i] = arr[i].replace("\t", "").replace(" ", "");
             String aa = arr[i];
-            where += " or words LIKE '" + arr[i] + "'";
+            //where += " or words LIKE '" + arr[i] + "'";
             list.add(arr[i]);
         }
         //去除重复关键词
@@ -67,8 +67,8 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
         list.clear();
         list.addAll(h);
         Map<String, Object> params = new HashMap<>();
-        params.put("words", where);
-        List<ForbiddenWords> forbiddenWordsList = forbiddenWordsMapper.selectByWords(params);
+        params.put("list", list);
+        List<ForbiddenWords> forbiddenWordsList = forbiddenWordsMapper.selectByKeywords(params);
         for (ForbiddenWords item : forbiddenWordsList
                 ) {
             list.remove(item.getWords());//移除违禁词
@@ -262,16 +262,16 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
         HashSet h = new HashSet(list);
         list.clear();
         list.addAll(h);
-        /*Map<String, Object> params = new HashMap<>();
-        params.put("words", where);
-        List<ForbiddenWords> forbiddenWordsList = forbiddenWordsMapper.selectByWords(params);
+        Map<String, Object> params = new HashMap<>();
+        params.put("list", list);
+        List<ForbiddenWords> forbiddenWordsList = forbiddenWordsMapper.selectByKeywords(params);
         for (ForbiddenWords item : forbiddenWordsList
                 ) {
             list.remove(item.getWords());//移除违禁词
         }
         if (CollectionUtils.isEmpty(list)) {
             return null;
-        }*/
+        }
         Map<String, Object> params2 = new HashMap<>();
         params2.put("list", list);
         params2.put("rote", rote);

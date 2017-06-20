@@ -80,7 +80,7 @@
             </li>
         <#else>
             <#list bmsModel.inbox as item>
-                <li onclick="$('.page-content').empty().load('/Message/NoticeSearch').fadeIn(1000);" style="cursor: pointer;">
+                <li onclick="$('.page-content').empty().load('${ctx}/Message/NoticeSearch').fadeIn(1000);" style="cursor: pointer;">
                     <div class="newsLt" title="${item.title}"><i>●</i><b>最新公告</b>：${item.title}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期：${item.sendtime?string("yyyy-MM-dd HH:mm:ss")}
                     </div>
                     <div class="newsRt" title="${item.content}">内容：${item.content}</div>

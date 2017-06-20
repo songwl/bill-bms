@@ -97,22 +97,6 @@ public class OptimizationToolController extends BaseController {
     @RequestMapping(value = "/RestKeyt", method = RequestMethod.POST)
     @ResponseBody
     public String RestKeyt() {
-        /*String apiSign = "3D54B80C89F740E0990AAC5EC8481901";
-        String xAction = "selectPrice";
-        String xParam = "{'UserId':23,'Value':{'keyword':'哈哈,凌晨,电子秤,婚庆公司'}}";
-        Md5_UrlEncode md5_urlEncode = new Md5_UrlEncode();
-        String xSign = null;
-        //加密
-        try {
-            xSign = md5_urlEncode.EncoderByMd5(xAction + xParam);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        queryOfferController.GetPrice(xAction, xParam, xSign, apiSign);*/
-
-
         LoginUser loginUser = this.getCurrentAccount();
         offerset offerset = offersetMapper.selectByUserId(loginUser.getId());
         if (!loginUser.hasRole("DISTRIBUTOR") || offerset == null || offerset.getState() != 1) {

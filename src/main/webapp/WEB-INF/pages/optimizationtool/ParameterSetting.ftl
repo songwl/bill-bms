@@ -163,7 +163,7 @@
         RestKeyt: function () {
             var apiSign = "126263041AF3269DBC99093576C857B7";
             var xAction = "selectPrice";
-            var xParam = "{'UserId':23,'Value':{'keyword':'A2级防火复合板,mpp电力管,pp风阀厂家,ipn8710防腐钢管'}}";
+            var xParam = "{'UserId':'yunkewang','Value':{'keyword':'淫,赌,A2级防火复合板,mpp电力管,pp风阀厂家,ipn8710防腐钢管'}}";
             $.ajax({
                 type: "post",
                 url: "http://localhost:8080/bill//QueryOffer/GetPrice",
@@ -173,7 +173,7 @@
                 }
             });
 
-            /*$.ajax({
+           /* $.ajax({
                 type: "post",
                 url: CTX + "/optimizationTool/RestKeyt",
                 success: function (data) {

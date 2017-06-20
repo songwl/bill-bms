@@ -21,4 +21,5 @@ public interface ForbiddenWordsMapper {
     List<ForbiddenWords> selectBySelective();
 
     List<ForbiddenWords> selectByWords(Map<String,Object> params);
+    List<ForbiddenWords> selectByKeywords(Map<String,Object> params);
 }

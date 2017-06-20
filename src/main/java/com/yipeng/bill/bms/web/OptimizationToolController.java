@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.ErrorManager;
 import java.util.regex.Pattern;
 
 /**
@@ -63,8 +64,11 @@ public class OptimizationToolController extends BaseController {
     @RequestMapping(value = "/ParameterSetting")
     public String ParameterSetting(ModelMap modelMap) {
         LoginUser loginUser = this.getCurrentAccount();
-        modelMap.put("user", loginUser);
         offerset offerset = offersetMapper.selectByUserId(loginUser.getId());
+        if (!loginUser.hasRole("DISTRIBUTOR") || offerset == null || offerset.getState() != 1) {
+            return null;
+        }
+        modelMap.put("user", loginUser);
         modelMap.put("keypt", offerset.getTokenid());
         modelMap.put("rote", offerset.getRate());
         return "/optimizationtool/ParameterSetting";
@@ -110,6 +114,10 @@ public class OptimizationToolController extends BaseController {
 
 
         LoginUser loginUser = this.getCurrentAccount();
+        offerset offerset = offersetMapper.selectByUserId(loginUser.getId());
+        if (!loginUser.hasRole("DISTRIBUTOR") || offerset == null || offerset.getState() != 1) {
+            return null;
+        }
         String keypt = optimizationToolService.UpdateToken(loginUser);
         return keypt;
     }
@@ -122,6 +130,10 @@ public class OptimizationToolController extends BaseController {
             return "-1";
         }
         LoginUser loginUser = this.getCurrentAccount();
+        offerset offerset = offersetMapper.selectByUserId(loginUser.getId());
+        if (!loginUser.hasRole("DISTRIBUTOR") || offerset == null || offerset.getState() != 1) {
+            return "-2";
+        }
         boolean flag = optimizationToolService.UpdateRote(loginUser, Double.parseDouble(rote));
         return flag ? "1" : "0";
     }
@@ -142,7 +154,7 @@ public class OptimizationToolController extends BaseController {
 
     @RequestMapping(value = "/GetOffer", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMessage GetOffer(String dataUser){
+    public ResultMessage GetOffer(String dataUser) {
         LoginUser loginUser = this.getCurrentAccount();
         if (!loginUser.hasRole("SUPER_ADMIN")) {
             return this.ajaxDone(-1, "你没有权限", null);

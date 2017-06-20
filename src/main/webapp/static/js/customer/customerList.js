@@ -678,16 +678,17 @@ var TableInit = function () {
         'click #OfferSetUp': function (e, value, row, index) {
             $("#confim").attr("dataUser", row.customerId);
             $.ajax({
-                url:CTX + "/optimizationTool/GetOffer",
+                url: CTX + "/optimizationTool/GetOffer",
                 type: "post",
-                data:{dataUser:row.customerId},
+                data: {dataUser: row.customerId},
                 success: function (data) {
                     if (data.code == 0) {
                         $("#open").removeAttr("checked");
-                        $("#close").prop("checked","checked");
+                        $("#close").prop("checked", "checked");
                         $("#keywordNum").val("").hide();
                     }
-                    else {$("#open").prop("checked","checked");
+                    else {
+                        $("#open").prop("checked", "checked");
                         $("#close").removeAttr("checked");
                         $("#keywordNum").val(data.message).show();
                     }
@@ -696,11 +697,13 @@ var TableInit = function () {
             index1 = layer.open({
                 type: 1,
                 title: '报价设置',
-                skin: 'layui-layer-molv', //加上边框
+                skin: 'layui-layer-molv',
                 shade: 0.6,
                 area: ['30%', '40%'],
-                content: $('#offerSetUp') //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-
+                content: $('#offerSetUp'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                end: function () {
+                    $("#offerSetUp").hide();
+                }
             });
         }
     }

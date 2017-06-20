@@ -17,7 +17,7 @@
     </div>
 </div>
 <div id="contentBox">
-    <div class="sq-panel" style="height: 291px;">
+    <div class="sq-panel">
         <div class="sq-panel-heading">
             <div class="sq-panel-title">API参数设置</div>
         </div>
@@ -56,6 +56,15 @@
                                class="sq-input-reset sq-long-input necessary"
                                value="#{rote}" placeholder="请输入倍率">
                         <a href="#a_null" class="sq-btn btn-strong" id="saveNotify">保 存</a>
+                    </div>
+                </div>
+                <div class="form-group">
+
+                    <div class="sq-control-label">
+                        请求地址：
+                    </div>
+                    <div class="col-xs-10 sq-form-control validate-control">
+                        tj.yousouyun.com/bill/QueryOffer/GetPrice
                     </div>
                 </div>
             </div>
@@ -152,13 +161,25 @@
             $("#saveNotify").on("click", ParameterSet.saveNotify);
         },
         RestKeyt: function () {
+            var apiSign = "126263041AF3269DBC99093576C857B7";
+            var xAction = "selectPrice";
+            var xParam = "{'UserId':23,'Value':{'keyword':'A2级防火复合板,mpp电力管,pp风阀厂家,ipn8710防腐钢管'}}";
             $.ajax({
+                type: "post",
+                url: "http://localhost:8080/bill//QueryOffer/GetPrice",
+                data: {xAction: xAction, xParam: xParam, apiSign: apiSign},
+                success: function (data) {
+                    console.info(data);
+                }
+            });
+
+            /*$.ajax({
                 type: "post",
                 url: CTX + "/optimizationTool/RestKeyt",
                 success: function (data) {
                     $("#keypt").text("").text(data);
                 }
-            });
+            });*/
         },
         saveNotify: function () {
             var patt = /^(\d+(\.\d{1,2})?)$/g;
@@ -176,6 +197,9 @@
                     }
                     else if (data == "-1") {
                         layer.msg("请去设置正确的两位小数倍率!");
+                    }
+                    else if (data == "-2") {
+                        layer.msg("你没有权限，请联系管理员!");
                     }
                     else {
                         layer.msg("失败");

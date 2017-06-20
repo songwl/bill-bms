@@ -44,18 +44,11 @@ public class QueryOfferController extends BaseController {
 
     @RequestMapping(value = "/GetPrice", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMessage GetPrice(String xAction, String xParam, String xSign, String apiSign) throws SocketException {
+    public ResultMessage GetPrice(String xAction, String xParam,  String apiSign) throws SocketException {
 
         GetAddressIP getAddressIP = new GetAddressIP();
         String ip = getAddressIP.getAllNetInterfaces();
-        Logs logs = new Logs();
-        logs.setCreatetime(new Date());
-        logs.setOptype(101);
-        logs.setUserid(new Long(101));
-        logs.setOpobj("2");
-        logs.setOpremake("xAction数据:" + xAction + ",xParam数据:" + xParam + ",xSign数据:" + xSign + ",ip地址：" + ip);
-        logsMapper.insert(logs);
-        Md5_UrlEncode md5_urlEncode = new Md5_UrlEncode();
+        /*Md5_UrlEncode md5_urlEncode = new Md5_UrlEncode();
         String wSign = null;
         //加密
         try {
@@ -67,15 +60,30 @@ public class QueryOfferController extends BaseController {
         }
         if (!wSign.equals(xSign)) {
             return this.ajaxDone(-1, "xSign验证失败", null);
-        }
+        }*/
         com.google.gson.JsonParser parser = new com.google.gson.JsonParser();//创建Json解析器
         JsonObject json = (JsonObject) parser.parse(xParam);//json解析参数xParam
         String UserId = json.get("UserId").toString();//任务类型
         offerset offerset = offersetMapper.selectByUserId(Long.parseLong(UserId));//获取登录人的参数设置信息
         if (offerset == null || !apiSign.equals(offerset.getTokenid())) {//判断传入的apisingn是否与数据库里面的tokenid相等
+
+            Logs logs = new Logs();
+            logs.setCreatetime(new Date());
+            logs.setOptype(-100);
+            logs.setUserid(new Long(UserId));
+            logs.setOpobj("2");
+            logs.setOpremake("xAction数据:" + xAction + ",xParam数据:" + xParam + ",apiSign数据:" + apiSign + ",ip地址：" + ip+"，结果：apiSign验证失败");
+            logsMapper.insert(logs);
             return this.ajaxDone(-2, "apiSign验证失败", null);
         }
         if (offerset == null || offerset.getState() != 1) {
+            Logs logs = new Logs();
+            logs.setCreatetime(new Date());
+            logs.setOptype(-100);
+            logs.setUserid(new Long(UserId));
+            logs.setOpobj("2");
+            logs.setOpremake("xAction数据:" + xAction + ",xParam数据:" + xParam + ",apiSign数据:" + apiSign + ",ip地址：" + ip+"，结果：没有查询报价的权限");
+            logsMapper.insert(logs);
             return this.ajaxDone(-4, "没有查询报价的权限", null);
         }
         JsonObject json1 = (JsonObject) parser.parse(json.get("Value").toString());//获取参数关键词
@@ -105,7 +113,14 @@ public class QueryOfferController extends BaseController {
             stringList1.add(arr[i]);
         }
         if (stringList1.size() > offerset1.getSurplussecond()) {//判断关键词数量大于参数信息的剩余数量
-            return this.ajaxDone(-3, "请求的关键词数量超过总数，剩余关键词数量：" + offerset1.getRequestsecond(), null);
+            Logs logs = new Logs();
+            logs.setCreatetime(new Date());
+            logs.setOptype(-100);
+            logs.setUserid(new Long(UserId));
+            logs.setOpobj("2");
+            logs.setOpremake("xAction数据:" + xAction + ",xParam数据:" + xParam + ",apiSign数据:" + apiSign + ",ip地址：" + ip+"，结果：请求的关键词数量超过总数，剩余关键词数量：" + offerset1.getSurplussecond());
+            logsMapper.insert(logs);
+            return this.ajaxDone(-3, "请求的关键词数量超过总数，剩余关键词数量：" + offerset1.getSurplussecond(), null);
         }
         List<KeywordToPrice> keywordsPriceList = optimizationToolService.GetPriceList(stringList, offerset1.getRate());
 
@@ -128,6 +143,13 @@ public class QueryOfferController extends BaseController {
                 keywordsPriceList.add(keywordToPrice);
             }
         }
+        Logs logs = new Logs();
+        logs.setCreatetime(new Date());
+        logs.setOptype(-100);
+        logs.setUserid(new Long(UserId));
+        logs.setOpobj("2");
+        logs.setOpremake("xAction数据:" + xAction + ",xParam数据:" + xParam + ",apiSign数据:" + apiSign + ",ip地址：" + ip+"，结果：成功，剩余关键词数量：" + offerset1.getSurplussecond());
+        logsMapper.insert(logs);
         return this.ajaxDone(1, "成功，剩余关键词数" + offerset1.getSurplussecond(), keywordsPriceList);
     }
 

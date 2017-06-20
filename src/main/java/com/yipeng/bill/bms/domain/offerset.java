@@ -20,6 +20,8 @@ public class offerset implements Serializable {
 
     private Integer surplussecond;
 
+    private Integer state;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -84,5 +86,13 @@ public class offerset implements Serializable {
 
     public void setSurplussecond(Integer surplussecond) {
         this.surplussecond = surplussecond;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
     }
 }

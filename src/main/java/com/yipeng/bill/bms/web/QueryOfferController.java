@@ -6,8 +6,10 @@ import com.yipeng.bill.bms.core.model.ResultMessage;
 import com.yipeng.bill.bms.dao.LogsMapper;
 import com.yipeng.bill.bms.dao.UserMapper;
 import com.yipeng.bill.bms.dao.offersetMapper;
+import com.yipeng.bill.bms.domain.Logs;
 import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.domain.offerset;
+import com.yipeng.bill.bms.model.GetAddressIP;
 import com.yipeng.bill.bms.model.KeywordToPrice;
 import com.yipeng.bill.bms.model.Md5_UrlEncode;
 import com.yipeng.bill.bms.service.OptimizationToolService;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.yipeng.bill.bms.vo.LoginUser;
 
 import java.io.UnsupportedEncodingException;
+import java.net.SocketException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,14 +44,17 @@ public class QueryOfferController extends BaseController {
 
     @RequestMapping(value = "/GetPrice", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMessage GetPrice(String xAction, String xParam, String xSign, String apiSign) {
-       /* Logs logs = new Logs();
+    public ResultMessage GetPrice(String xAction, String xParam, String xSign, String apiSign) throws SocketException {
+
+        GetAddressIP getAddressIP = new GetAddressIP();
+        String ip = getAddressIP.getAllNetInterfaces();
+        Logs logs = new Logs();
         logs.setCreatetime(new Date());
-        logs.setOptype(1);
-        logs.setUserid(new Long(1));
+        logs.setOptype(101);
+        logs.setUserid(new Long(101));
         logs.setOpobj("2");
-        logs.setOpremake("xAction数据:" + xAction + ",xParam数据:" + xParam + ",xSign数据:" + xSign);
-        logsMapper.insert(logs);*/
+        logs.setOpremake("xAction数据:" + xAction + ",xParam数据:" + xParam + ",xSign数据:" + xSign + ",ip地址：" + ip);
+        logsMapper.insert(logs);
         Md5_UrlEncode md5_urlEncode = new Md5_UrlEncode();
         String wSign = null;
         //加密
@@ -69,8 +75,11 @@ public class QueryOfferController extends BaseController {
         if (offerset == null || !apiSign.equals(offerset.getTokenid())) {//判断传入的apisingn是否与数据库里面的tokenid相等
             return this.ajaxDone(-2, "apiSign验证失败", null);
         }
+        if (offerset == null || offerset.getState() != 1) {
+            return this.ajaxDone(-4, "没有查询报价的权限", null);
+        }
         JsonObject json1 = (JsonObject) parser.parse(json.get("Value").toString());//获取参数关键词
-        String KeyWords = json1.get("keyword").toString().substring(1,(json1.get("keyword").toString().length()-1));
+        String KeyWords = json1.get("keyword").toString().substring(1, (json1.get("keyword").toString().length() - 1));
         String[] arr = KeyWords.split(",");
         SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
         Date updatetime = null;
@@ -86,7 +95,7 @@ public class QueryOfferController extends BaseController {
             offerset.setUpdatetime(new Date());//修改最后一次修改时间为当前时间
             offersetMapper.updateByPrimaryKeySelective(offerset);
         }
-        offerset offerset1 = offersetMapper.selectByUserId(1l);//重新查询已调整的参数设置信息
+        offerset offerset1 = offersetMapper.selectByUserId(Long.parseLong(UserId));//重新查询已调整的参数设置信息
         List<String> stringList = new ArrayList<>();
         List<String> stringList1 = new ArrayList<>();
         for (int i = 0; i < arr.length; i++) {
@@ -121,4 +130,5 @@ public class QueryOfferController extends BaseController {
         }
         return this.ajaxDone(1, "成功，剩余关键词数" + offerset1.getSurplussecond(), keywordsPriceList);
     }
+
 }

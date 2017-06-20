@@ -491,59 +491,60 @@
                                     密码修改
                                 </a>
                             </li>
-                            <li class="apiUpdate">
-                                <a href="${ctx}/optimizationTool/ParameterSetting">
-                                    API参数设置
-                                </a>
-                            </li>
-
+                            <#if bmsModel.user.hasRole("DISTRIBUTOR")&&bmsModel.offerstate==1>
+                                <li class="apiUpdate">
+                                    <a href="${ctx}/optimizationTool/ParameterSetting">
+                                        API参数设置
+                                    </a>
+                                </li>
+                            </#if>
                         </ul>
                     </li>
 
-                  <#--  <li class="" style="border-bottom: 1px solid #3d3d3d;">
-                        <a href="javascript:;">
-                            <i class="glyphicon glyphicon-envelope"></i><span class="title"> 信息系统 </span>
-                            <#if bmsModel.SendUnReadNum gt 0||bmsModel.InUnReadNum gt 0>
-                                <span class="label label-warning"
-                                      id="">${bmsModel.SendUnReadNum+bmsModel.InUnReadNum}</span>
-                            </#if>
-                            <span class="arrow "></span>
-                        </a>
-                        <ul class="sub-menu" style="background: #293038;">
-                            <li class="">
-                                <a href="${ctx}/Message/WriteMail">
-                                    写信息
-                                </a>
-                            </li>
-                            <li class="">
-                                <a href="${ctx}/Message/InBox">
-                                    收件箱
-                                    <#if bmsModel.InUnReadNum gt 0>
-                                        <span class="label label-warning" id="">${bmsModel.InUnReadNum}</span>
-                                    </#if>
-                                </a>
-                            </li>
-                            <li class="">
-                                <a href="${ctx}/Message/SendBox">
-                                    发件箱
-                                    <#if bmsModel.SendUnReadNum gt 0>
-                                        <span class="label label-warning" id="">${bmsModel.SendUnReadNum}</span>
-                                    </#if>
-                                </a>
-                            </li>
-                            <li class="">
-                                <a href="${ctx}/Message/DraftBox">
-                                    草稿箱
-                                </a>
-                            </li>
-                            <li class="">
-                                <a href="${ctx}/Message/DustbinBox">
-                                    垃圾箱
-                                </a>
-                            </li>
+                <#--  <li class="" style="border-bottom: 1px solid #3d3d3d;">
+                      <a href="javascript:;">
+                          <i class="glyphicon glyphicon-envelope"></i><span class="title"> 信息系统 </span>
+                          <#if bmsModel.SendUnReadNum gt 0||bmsModel.InUnReadNum gt 0>
+                              <span class="label label-warning"
+                                    id="">${bmsModel.SendUnReadNum+bmsModel.InUnReadNum}</span>
+                          </#if>
+                          <span class="arrow "></span>
+                      </a>
+                      <ul class="sub-menu" style="background: #293038;">
+                          <li class="">
+                              <a href="${ctx}/Message/WriteMail">
+                                  写信息
+                              </a>
+                          </li>
+                          <li class="">
+                              <a href="${ctx}/Message/InBox">
+                                  收件箱
+                                  <#if bmsModel.InUnReadNum gt 0>
+                                      <span class="label label-warning" id="">${bmsModel.InUnReadNum}</span>
+                                  </#if>
+                              </a>
+                          </li>
+                          <li class="">
+                              <a href="${ctx}/Message/SendBox">
+                                  发件箱
+                                  <#if bmsModel.SendUnReadNum gt 0>
+                                      <span class="label label-warning" id="">${bmsModel.SendUnReadNum}</span>
+                                  </#if>
+                              </a>
+                          </li>
+                          <li class="">
+                              <a href="${ctx}/Message/DraftBox">
+                                  草稿箱
+                              </a>
+                          </li>
+                          <li class="">
+                              <a href="${ctx}/Message/DustbinBox">
+                                  垃圾箱
+                              </a>
+                          </li>
 
-                        </ul>
-                    </li>-->
+                      </ul>
+                  </li>-->
                     <li class="" style="border-bottom: 1px solid #3d3d3d;">
                         <a href="javascript:;">
                             <i class="	glyphicon glyphicon-bullhorn"></i><span class="title"> 公告系统 </span><span

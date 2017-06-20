@@ -206,6 +206,46 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
         return keypt;
     }
 
+    @Override
+    public Boolean setOffer(int type, String keywordNum, String dataUser) {
+        offerset offerset = offersetMapper.selectByUserId(Long.parseLong(dataUser));
+        if (offerset == null) {
+            int max = 999999;
+            int min = 100000;
+            Random random = new Random();
+            int sui = random.nextInt(max) % (max - min + 1) + min;
+            String keypt = null;
+            try {
+                keypt = md5_urlEncode.EncoderByMd5(sui + dataUser);
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            offerset offerset1 = new offerset();
+            offerset1.setUserid(Long.parseLong(dataUser));
+            offerset1.setUpdatetime(new Date());
+            offerset1.setState(type);
+            offerset1.setTokenid(keypt);
+            offerset1.setSurplussecond(type == 0 ? 0 : Integer.parseInt(keywordNum));
+            offerset1.setRate(1d);
+            offerset1.setCreatetime(new Date());
+            offerset1.setRequestsecond(type == 0 ? 0 : Integer.parseInt(keywordNum));
+            return offersetMapper.insert(offerset1) > 0;
+        }
+        if (type == 0) {
+            offerset.setState(0);
+            int num = offersetMapper.updateByPrimaryKeySelective(offerset);
+            return num > 0;
+        } else {
+            offerset.setState(1);
+            offerset.setUpdatetime(new Date());
+            offerset.setRequestsecond(Integer.parseInt(keywordNum));
+            offerset.setSurplussecond(Integer.parseInt(keywordNum));
+            int num = offersetMapper.updateByPrimaryKeySelective(offerset);
+            return num > 0;
+        }
+    }
 
 
     @Override
@@ -236,7 +276,7 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
         params2.put("list", list);
         params2.put("rote", rote);
         List<KeywordToPrice> keywordsprices = keywordsPriceMapper.selectBywordToPrice(params2);//查询本地数据
-        /*List<KeywordToPrice> keywordToPrices = keywordsPriceMapper.selectBywordToPriceHave(params2);//查询本地数据*/
+        List<KeywordToPrice> keywordToPrices = keywordsPriceMapper.selectBywordToPriceHave(params2);//查询本地数据
         //if (!CollectionUtils.isEmpty(keywordsprices)) {
         for (KeywordToPrice item : keywordsprices
                 ) {
@@ -281,7 +321,7 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
             }
 
         }
-        return keywordsprices;
+        return keywordToPrices;
     }
 
 }

@@ -408,12 +408,13 @@ CREATE TABLE `noticepublish` (
 CREATE TABLE `offerset` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `userId` bigint(20) DEFAULT NULL,
-  `tokenId` varchar(255) DEFAULT NULL,
-  `rate` double DEFAULT NULL,
-  `updateTime` datetime DEFAULT NULL,
-  `createTime` datetime DEFAULT NULL,
-  `requestSecond` int(11) DEFAULT NULL,
-  `surplusSecond` int(11) DEFAULT NULL,
+  `tokenId` varchar(255) DEFAULT NULL COMMENT 'api密钥',
+  `rate` double DEFAULT NULL COMMENT '倍率',
+  `updateTime` datetime DEFAULT NULL COMMENT '最后一次修改时间',
+  `createTime` datetime DEFAULT NULL COMMENT '创建时间',
+  `requestSecond` int(11) DEFAULT NULL COMMENT '关键词总数量',
+  `surplusSecond` int(11) DEFAULT NULL COMMENT '剩余关键词数量',
+  `state` int(11) DEFAULT NULL COMMENT '状态',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 

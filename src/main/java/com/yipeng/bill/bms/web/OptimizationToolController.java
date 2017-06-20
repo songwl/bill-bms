@@ -7,11 +7,13 @@ import com.yipeng.bill.bms.dao.offersetMapper;
 import com.yipeng.bill.bms.domain.KeywordsPrice;
 import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.domain.offerset;
+import com.yipeng.bill.bms.model.GetAddressIP;
 import com.yipeng.bill.bms.model.KeywordToPrice;
 import com.yipeng.bill.bms.model.Md5_UrlEncode;
 import com.yipeng.bill.bms.service.OptimizationToolService;
 import com.yipeng.bill.bms.service.impl.OptimizationToolServiceImpl;
 import com.yipeng.bill.bms.vo.LoginUser;
+import org.aspectj.apache.bcel.generic.RET;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.net.SocketException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -90,9 +93,9 @@ public class OptimizationToolController extends BaseController {
     @RequestMapping(value = "/RestKeyt", method = RequestMethod.POST)
     @ResponseBody
     public String RestKeyt() {
-        /*String apiSign = "842920E038C65EF9F833BC7DD391D991";
+        /*String apiSign = "3D54B80C89F740E0990AAC5EC8481901";
         String xAction = "selectPrice";
-        String xParam = "{'UserId':1,'Value':{'keyword':'哈哈,凌晨,电子秤,婚庆公司'}}";
+        String xParam = "{'UserId':23,'Value':{'keyword':'哈哈,凌晨,电子秤,婚庆公司'}}";
         Md5_UrlEncode md5_urlEncode = new Md5_UrlEncode();
         String xSign = null;
         //加密
@@ -104,6 +107,8 @@ public class OptimizationToolController extends BaseController {
             e.printStackTrace();
         }
         queryOfferController.GetPrice(xAction, xParam, xSign, apiSign);*/
+
+
         LoginUser loginUser = this.getCurrentAccount();
         String keypt = optimizationToolService.UpdateToken(loginUser);
         return keypt;
@@ -121,5 +126,32 @@ public class OptimizationToolController extends BaseController {
         return flag ? "1" : "0";
     }
 
+    @RequestMapping(value = "/SetOffer", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage SetOffer(int type, String keywordNum, String dataUser) {
+        LoginUser loginUser = this.getCurrentAccount();
+        if (!loginUser.hasRole("SUPER_ADMIN")) {
+            return this.ajaxDone(-1, "你没有权限", null);
+        }
+        if (type != 0 && type != 1) {
+            return this.ajaxDone(-2, "异常错误", null);
+        }
+        boolean flag = optimizationToolService.setOffer(type, keywordNum, dataUser);
+        return this.ajaxDone(flag ? 0 : 1, flag ? "成功" : "失败", null);
+    }
+
+    @RequestMapping(value = "/GetOffer", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage GetOffer(String dataUser){
+        LoginUser loginUser = this.getCurrentAccount();
+        if (!loginUser.hasRole("SUPER_ADMIN")) {
+            return this.ajaxDone(-1, "你没有权限", null);
+        }
+        offerset offerset = offersetMapper.selectByUserId(Long.parseLong(dataUser));
+        if (offerset == null || offerset.getState() == 0) {
+            return this.ajaxDone(0, "", null);
+        }
+        return this.ajaxDone(1, offerset.getRequestsecond().toString(), null);
+    }
 
 }

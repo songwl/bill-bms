@@ -17,7 +17,6 @@ import com.yipeng.bill.bms.vo.LoginUser;
 import com.yipeng.bill.bms.vo.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.rmi.runtime.Log;
 
 import java.util.*;
 
@@ -133,7 +132,7 @@ public class OperatorServiceImpl implements OperatorService {
      * @return
      */
     @Override
-    public int updateOperator(User user,LoginUser loginUser) {
+    public int updateOperator(User user, LoginUser loginUser) {
 
         user.setUpdateUserId(loginUser.getId());
         user.setUpdateTime(new Date());

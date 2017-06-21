@@ -21,10 +21,10 @@ public interface RemoteService {
      */
     CustomerRankingResult getCustomerRanking(CustomerRankingParam customerRankingParam) throws IOException, NoSuchAlgorithmException;
 
-    CustomerOptimizationResult getOptimizationApi(Map<String,String> params);
+    CustomerOptimizationResult getOptimizationApi(Map<String, String> params);
 
 
-    String getPriceApiId(Map<String,String> params);
+    String getPriceApiId(Map<String, String> params);
 
-    String delSearchTask(Map<String,String> params);
+    String delSearchTask(Map<String, String> params);
 }

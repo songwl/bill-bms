@@ -14,7 +14,7 @@
     id, user_id, balance, create_time, create_user_id, update_time, update_user_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select
+    select 
     <include refid="Base_Column_List" />
     from t_fund_account
     where id = #{id,jdbcType=BIGINT}

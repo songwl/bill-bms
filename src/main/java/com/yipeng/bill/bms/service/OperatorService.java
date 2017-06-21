@@ -3,7 +3,6 @@ package com.yipeng.bill.bms.service;
 import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.vo.LoginUser;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,13 +28,13 @@ public interface OperatorService {
      * @param params
      * @return
      */
-    int updateOperator(User user,LoginUser loginUser);
+    int updateOperator(User user, LoginUser loginUser);
     /**
      * 重置密码
      * @param params
      * @return
      */
-    int updatePwd(User user,LoginUser loginUser);
+    int updatePwd(User user, LoginUser loginUser);
 
-    int deleteUser(User user,LoginUser loginUser);
+    int deleteUser(User user, LoginUser loginUser);
 }

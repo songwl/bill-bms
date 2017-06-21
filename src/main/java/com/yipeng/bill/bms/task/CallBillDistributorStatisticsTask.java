@@ -1,6 +1,5 @@
 package com.yipeng.bill.bms.task;
 
-import com.yipeng.bill.bms.service.BillClickStatisticsService;
 import com.yipeng.bill.bms.service.BillDistributorStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 

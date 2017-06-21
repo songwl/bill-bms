@@ -68,7 +68,6 @@
     <div class="nav_L left">
         <i class="fa fa-home">&nbsp;</i><span>管理后台</span> > <span>系统概况</span>
     </div>
-
 </div>
 <div class="news" style="height:30px;overflow:hidden;position:relative;">
 
@@ -89,6 +88,7 @@
         </#if>
     </ul>
 </div>
+
 <div class="row row-bg">
     <#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("ADMIN")||bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")||bmsModel.user.hasRole("ASSISTANT")>
         <div class="col-sm-6 col-md-2 hidden-xs">
@@ -365,26 +365,6 @@
 <script type="text/javascript">
 
 
-    $(function () {
-        timer = null
-        num = 0
-        clearInterval(timer);
-        var lilength = $('.news ul li').length;
-        timer = setInterval(function () {
-            num -= 30;
-            $('.news ul').animate({'top': '' + num + 'px'}, 1000, function () {
-
-                if (num <= (lilength ) * -30) {
-                    num = 0;
-                    $('.news ul').css('top', 0)
-                }
-                ;
-            });
-
-
-        }, 4000);
-
-    })
     //异步加载首页数据，解决加载慢的问题
     //1,客户数
     $.ajax({

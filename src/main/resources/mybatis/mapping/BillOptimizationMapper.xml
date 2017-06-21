@@ -11,7 +11,7 @@
     id, bill_id, optimization_count, optimization_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select
+    select 
     <include refid="Base_Column_List" />
     from t_bill_optimization
     where id = #{id,jdbcType=BIGINT}
@@ -83,7 +83,7 @@
       optimization_date = #{optimizationDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <!--周数据-->
+<!--周数据-->
   <select id="selectByBillIdOfWeek"    resultType="java.lang.Integer">
    select
     IFNULL(SUM(optimization_count),0)
@@ -93,7 +93,7 @@
     and b.bill_ascription=#{billAscription,jdbcType=BIGINT}
     AND YEARWEEK(date_format(optimization_date,'%Y-%m-%d')) = YEARWEEK(now())
   </select>
-  <!--月数据-->
+<!--月数据-->
   <select id="selectByBillIdOfMonth"   resultType="java.lang.Integer">
     select
     IFNULL(SUM(optimization_count),0)

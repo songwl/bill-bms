@@ -25,12 +25,12 @@
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, website, keywords, create_time, update_time, create_user_id, update_user_id,
+    id, website, keywords, create_time, update_time, create_user_id, update_user_id, 
     first_ranking, new_ranking,change_ranking, web_app_id,web_app_id1,standard_days, day_optimization, all_optimization, state,
     opstate,bill_type,bill_ascription,apply_state,delete_state
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select
+    select 
     <include refid="Base_Column_List" />
     from t_bill
     where id = #{id,jdbcType=BIGINT}
@@ -40,17 +40,17 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.yipeng.bill.bms.domain.Bill"  useGeneratedKeys="true" keyColumn="id" keyProperty="id">
-    insert into t_bill (id, website, keywords,
-    create_time, update_time, create_user_id,
-    update_user_id, first_ranking, new_ranking, change_ranking,
-    web_app_id,web_app_id1,standard_days, day_optimization, all_optimization,
-    state,opstate,bill_type,bill_ascription,apply_state,delete_state)
-    values (#{id,jdbcType=BIGINT}, #{website,jdbcType=VARCHAR}, #{keywords,jdbcType=VARCHAR},
-    #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=BIGINT},
-    #{updateUserId,jdbcType=BIGINT}, #{firstRanking,jdbcType=INTEGER}, #{newRanking,jdbcType=INTEGER}, #{changeRanking,jdbcType=INTEGER},
-    #{webAppId,jdbcType=INTEGER},#{webAppId1,jdbcType=INTEGER}, #{standardDays,jdbcType=INTEGER}, #{dayOptimization,jdbcType=INTEGER}, #{allOptimization,jdbcType=INTEGER},
-    #{state,jdbcType=INTEGER},#{opstate,jdbcType=INTEGER},#{billType,jdbcType=INTEGER},
-    #{billAscription,jdbcType=BIGINT},#{applyState,jdbcType=INTEGER},#{deleteState,jdbcType=INTEGER})
+    insert into t_bill (id, website, keywords, 
+      create_time, update_time, create_user_id, 
+      update_user_id, first_ranking, new_ranking, change_ranking,
+      web_app_id,web_app_id1,standard_days, day_optimization, all_optimization,
+      state,opstate,bill_type,bill_ascription,apply_state,delete_state)
+    values (#{id,jdbcType=BIGINT}, #{website,jdbcType=VARCHAR}, #{keywords,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=BIGINT}, 
+      #{updateUserId,jdbcType=BIGINT}, #{firstRanking,jdbcType=INTEGER}, #{newRanking,jdbcType=INTEGER}, #{changeRanking,jdbcType=INTEGER},
+      #{webAppId,jdbcType=INTEGER},#{webAppId1,jdbcType=INTEGER}, #{standardDays,jdbcType=INTEGER}, #{dayOptimization,jdbcType=INTEGER}, #{allOptimization,jdbcType=INTEGER},
+      #{state,jdbcType=INTEGER},#{opstate,jdbcType=INTEGER},#{billType,jdbcType=INTEGER},
+      #{billAscription,jdbcType=BIGINT},#{applyState,jdbcType=INTEGER},#{deleteState,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.Bill">
     insert into t_bill
@@ -255,25 +255,25 @@
   <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.Bill">
     update t_bill
     set website = #{website,jdbcType=VARCHAR},
-    keywords = #{keywords,jdbcType=VARCHAR},
-    create_time = #{createTime,jdbcType=TIMESTAMP},
-    update_time = #{updateTime,jdbcType=TIMESTAMP},
-    create_user_id = #{createUserId,jdbcType=BIGINT},
-    update_user_id = #{updateUserId,jdbcType=BIGINT},
-    first_ranking = #{firstRanking,jdbcType=INTEGER},
-    new_ranking = #{newRanking,jdbcType=INTEGER},
-    change_ranking = #{changeRanking,jdbcType=INTEGER},
-    web_app_id = #{webAppId,jdbcType=INTEGER},
-    web_app_id1 = #{webAppId1,jdbcType=INTEGER},
-    standard_days = #{standardDays,jdbcType=INTEGER},
-    day_optimization = #{dayOptimization,jdbcType=INTEGER},
-    all_optimization = #{allOptimization,jdbcType=INTEGER},
-    state = #{state,jdbcType=INTEGER},
-    opstate = #{opstate,jdbcType=INTEGER},
-    bill_type = #{billType,jdbcType=INTEGER},
-    bill_ascription= #{billAscription,jdbcType=BIGINT},
-    apply_state = #{applyState,jdbcType=INTEGER},
-    delete_state = #{deleteState,jdbcType=INTEGER}
+      keywords = #{keywords,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      create_user_id = #{createUserId,jdbcType=BIGINT},
+      update_user_id = #{updateUserId,jdbcType=BIGINT},
+      first_ranking = #{firstRanking,jdbcType=INTEGER},
+      new_ranking = #{newRanking,jdbcType=INTEGER},
+      change_ranking = #{changeRanking,jdbcType=INTEGER},
+      web_app_id = #{webAppId,jdbcType=INTEGER},
+      web_app_id1 = #{webAppId1,jdbcType=INTEGER},
+       standard_days = #{standardDays,jdbcType=INTEGER},
+      day_optimization = #{dayOptimization,jdbcType=INTEGER},
+      all_optimization = #{allOptimization,jdbcType=INTEGER},
+      state = #{state,jdbcType=INTEGER},
+      opstate = #{opstate,jdbcType=INTEGER},
+      bill_type = #{billType,jdbcType=INTEGER},
+      bill_ascription= #{billAscription,jdbcType=BIGINT},
+     apply_state = #{applyState,jdbcType=INTEGER},
+     delete_state = #{deleteState,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectList" resultMap="BaseResultMap">
@@ -305,13 +305,13 @@
 
 
   <select id="selectAgentBill" resultMap="BaseResultMap">
-    select a.*
-    from t_bill as a,t_user as b
+   select a.*
+   from t_bill as a,t_user as b
     where a.update_user_id=b.id
     and b.create_user_id=#{userId,jdbcType=BIGINT}
     and state=#{state,jdbcType=INTEGER}
     AND a.delete_state=0
-    limit #{offset},#{limit}
+     limit #{offset},#{limit}
   </select>
   <select id="selectAgentBillCount" resultType="java.lang.Long">
     select COUNT(a.id)
@@ -319,7 +319,7 @@
     where a.update_user_id=b.id
     and b.create_user_id=#{userId,jdbcType=BIGINT}
     and a.state=#{state,jdbcType=INTEGER}
-    AND a.delete_state=0
+     AND a.delete_state=0
   </select>
 
   <select id="selectAllSelective" resultMap="BaseResultMap">
@@ -370,14 +370,14 @@
     <if test="newRanking != null">
       AND  new_ranking = #{newRanking,jdbcType=INTEGER}
     </if>
-    <if test="webAppId != null">
+     <if test="webAppId != null">
       AND  web_app_id = #{webAppId,jdbcType=INTEGER}
     </if>
     <if test="webAppId1 != null">
       AND  web_app_id1 = #{webAppId1,jdbcType=INTEGER}
     </if>
-    <if test="standardDays != null">
-      AND  standard_days = #{standardDays,jdbcType=INTEGER}
+     <if test="standardDays != null">
+       AND  standard_days = #{standardDays,jdbcType=INTEGER}
     </if>
     <if test="dayOptimization != null">
       AND  day_optimization = #{dayOptimization,jdbcType=INTEGER}
@@ -394,21 +394,21 @@
     <if test="billType != null">
       AND  bill_type = #{billType,jdbcType=INTEGER}
     </if>
-    <if test="billAscription != null">
-      AND  bill_ascription= #{billAscription,jdbcType=BIGINT}
+     <if test="billAscription != null">
+       AND  bill_ascription= #{billAscription,jdbcType=BIGINT}
     </if>
     <if test="applyState != null">
       AND  apply_state= #{applyState,jdbcType=INTEGER}
     </if>
     limit #{offset},#{limit}
   </select>
-  <!--下游-->
+<!--下游-->
 
   <select id="selectByInMemberId"  resultMap="BaseResultMap">
     select DISTINCT a.*
     from t_bill as a
     INNER JOIN  t_bill_price as b on a.id=b.bill_id
-    INNER  JOIN  t_bill_search_support as d ON a.id=d.bill_id
+   INNER  JOIN  t_bill_search_support as d ON a.id=d.bill_id
     INNER  JOIN t_user as e ON b.out_member_id=e.id
     <if test="roleId != null">
       INNER  JOIN t_user_role as f ON b.out_member_id=f.user_id
@@ -1515,7 +1515,7 @@
       AND  DATE_FORMAT(a.create_time,'%Y-%m-%d')  &lt;= DATE_FORMAT( #{addTime2,jdbcType=VARCHAR},'%Y-%m-%d')
     </if>
   </select>
-  <!--客户订单数-->
+<!--客户订单数-->
   <select id="getBillListByCmmCount" resultType="java.lang.Long">
     select COUNT(DISTINCT a.id)
     from t_bill as a,t_bill_price as b,t_bill_search_support as d
@@ -1590,7 +1590,7 @@
 
 
 
-  <!--客户订单-->
+<!--客户订单-->
   <select id="getBillCountByCmm"  resultMap="BaseResultMap">
     select DISTINCT a.*
     from t_bill as a,t_bill_price as b,t_bill_search_support as d,t_user as e
@@ -1876,7 +1876,7 @@
     <if test="billAscription != null">
       AND  a.bill_ascription = #{billAscription,jdbcType=BIGINT}
     </if>
-    GROUP  BY a.website
+     GROUP  BY a.website
     <if test="sortName =='webSite'">
       ORDER BY a.website ${sortOrder}
     </if>

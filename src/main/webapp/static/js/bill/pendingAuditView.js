@@ -1,27 +1,27 @@
 /**
  * Created by Administrator on 2017/3/16.
  */
-var website=null;
-var keywords=null;
-var searchName=null;
-var searchUserName=null;
-var searchState=1;
+var website = null;
+var keywords = null;
+var searchName = null;
+var searchUserName = null;
+var searchState = 1;
+var index1;
 $(document).ready(function () {
     //切换订单
     $(".pass").click(function () {
-        $('.page-content').empty().load(CTX+'/order/pendingAuditView');
+        $('.page-content').empty().load(CTX + '/order/pendingAuditView');
     })
     $(".pass1").click(function () {
-        $('.page-content').empty().load(CTX+'/order/pendingAuditView1');
+        $('.page-content').empty().load(CTX + '/order/pendingAuditView1');
     })
     //显示搜索内容
     $(".search").click(function () {
-        if($(".Navs2").css("display")=="block"){
+        if ($(".Navs2").css("display") == "block") {
             $(".Navs2").slideUp();
 
         }
-        else
-        {
+        else {
             $(".Navs2").slideDown();
             $(".samepriceDiv").slideUp();
             $(".differentpriceDiv").slideUp();
@@ -35,38 +35,36 @@ $(document).ready(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
         var len = selectContent.length;
         var index;
-        if(selectContent == "") {
+        if (selectContent == "") {
             layer.alert('请选择一列数据!', {
                 skin: 'layui-layer-molv' //样式类名
-                ,closeBtn: 0
+                , closeBtn: 0
             });
 
-        }else{
-            layer.confirm("是否删除订单？",{
-                btn:['确定','取消']
-            },function () {
+        } else {
+            layer.confirm("是否删除订单？", {
+                    btn: ['确定', '取消']
+                }, function () {
                     $.ajax({
-                        type:'post',
-                        url:CTX+'/order/deleteBillPendingAuditView',
-                        data:{selectContent: selectContent, length: len},
+                        type: 'post',
+                        url: CTX + '/order/deleteBillPendingAuditView',
+                        data: {selectContent: selectContent, length: len},
                         beforeSend: function () {
-                            index  = layer.load(1, {
-                                shade: [0.1,'#fff'] //0.1透明度的白色背景
+                            index = layer.load(1, {
+                                shade: [0.1, '#fff'] //0.1透明度的白色背景
                             });
                         },
-                        success:function (result) {
-                            if(result.code==200)
-                            {
+                        success: function (result) {
+                            if (result.code == 200) {
                                 layer.alert(result.message, {
                                     skin: 'layui-layer-molv' //样式类名
-                                    ,closeBtn: 0
+                                    , closeBtn: 0
                                 });
                             }
-                            else
-                            {
+                            else {
                                 layer.alert(result.message, {
                                     skin: 'layui-layer-molv' //样式类名
-                                    ,closeBtn: 0
+                                    , closeBtn: 0
                                 });
                             }
                             $('#myTable').bootstrapTable('refresh');
@@ -74,11 +72,9 @@ $(document).ready(function () {
                         }
 
 
-
                     })
-            }
+                }
             )
-
 
 
         }
@@ -87,10 +83,10 @@ $(document).ready(function () {
     //复选框
     $("#btn_update").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
-        if(selectContent == "") {
+        if (selectContent == "") {
             alert('请选择一列数据!');
 
-        }else{
+        } else {
             $(".modal-backdrop").show();
             $(".changepriceDiv").slideDown();
 
@@ -98,36 +94,28 @@ $(document).ready(function () {
     })
     $("#searchButton").click(function () {
 
-        if($("#website").val()!="")
-        {
-            website=$("#website").val();
+        if ($("#website").val() != "") {
+            website = $("#website").val();
         }
-        else
-        {
-            website=null
+        else {
+            website = null
         }
-        if($("#keywords").val()!="")
-        {
-            keywords=$("#keywords").val();
+        if ($("#keywords").val() != "") {
+            keywords = $("#keywords").val();
         }
-        else
-        {
-            keywords=null;
+        else {
+            keywords = null;
         }
-        if($("#searchName option:selected").text()!="--请选择--")
-        {
-            searchName=$("#searchName option:selected").text();
+        if ($("#searchName option:selected").text() != "--请选择--") {
+            searchName = $("#searchName option:selected").text();
         }
-        else
-        {
-            searchName=null;
+        else {
+            searchName = null;
         }
-
 
 
         $('#myTable').bootstrapTable('refresh');
     });
-
 
 
 })
@@ -152,7 +140,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#myTable').bootstrapTable({
-            url: CTX+'/order/pendingAuditViewList',         //请求后台的URL（*）
+            url: CTX + '/order/pendingAuditViewList',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
@@ -160,7 +148,7 @@ var TableInit = function () {
             pagination: true,                   //是否显示分页（*）
             pageNumber: 1,                       //初始化加载第一页，默认第一页
             pageSize: 50,                       //每页的记录行数（*）
-            pageList:[100,200,300,500,1000],        //可供选择的每页的行数（*）
+            pageList: [100, 200, 300, 500, 1000],        //可供选择的每页的行数（*）
             sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
             queryParams: oTableInit.queryParams,//传递参数（*）
             queryParamsType: "",
@@ -171,13 +159,13 @@ var TableInit = function () {
             rowStyle: function (row, index) {
                 //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
                 var strclass = "";
-                if ((row.id)%2==0){
+                if ((row.id) % 2 == 0) {
                     strclass = '';
                 }
                 else {
                     strclass = 'active';
                 }
-                return { classes: strclass }
+                return {classes: strclass}
             },
             columns: [
                 {
@@ -190,13 +178,13 @@ var TableInit = function () {
                     valign: 'middle',
                     title: '序号',
 
-                },{
+                }, {
                     field: 'id',
                     sortable: true,
                     align: 'center',
                     valign: 'middle',
                     title: '数据库序号',
-                    visible:false
+                    visible: false
 
                 },
                 {
@@ -238,9 +226,9 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '价格1',
-                    formatter:function (value,row,index) {
-                        var a="";
-                        a=value[0]["price"];
+                    formatter: function (value, row, index) {
+                        var a = "";
+                        a = value[0]["price"];
                         return a;
                     }
 
@@ -252,15 +240,13 @@ var TableInit = function () {
                     valign: 'middle',
                     sortable: true,
                     title: '价格2',
-                    formatter:function (value,row,index) {
-                        var a="";
-                        if(value[1]!=null)
-                        {
-                            a=value[1]["price"];
+                    formatter: function (value, row, index) {
+                        var a = "";
+                        if (value[1] != null) {
+                            a = value[1]["price"];
                         }
-                        else
-                        {
-                            a="-";
+                        else {
+                            a = "-";
                         }
 
                         return a;
@@ -274,21 +260,19 @@ var TableInit = function () {
                     valign: 'middle',
                     sortable: true,
                     title: '修改者ID',
-                    visible:false
+                    visible: false
                 },
                 {
                     field: "state",
                     align: 'center',
                     valign: 'middle',
                     title: '状态',
-                    formatter:function (value,row,index) {
-                        if(value==-1||value==-0||value==1)
-                        {
-                            var  a="<span style='color:#94b86e;'>待审核</span>";
+                    formatter: function (value, row, index) {
+                        if (value == -1 || value == -0 || value == 1) {
+                            var a = "<span style='color:#94b86e;'>待审核</span>";
                         }
-                        else
-                        {
-                            var  a="<span style='color:#FF0000;'>未通过</span>";
+                        else {
+                            var a = "<span style='color:#FF0000;'>未通过</span>";
                         }
 
 
@@ -297,20 +281,32 @@ var TableInit = function () {
 
 
                 },
-
-              /*  {
+                {
                     field: 'operate',
                     title: '操作',
                     align: 'center',
                     valign: 'middle',
-                    formatter:function (value,row,index) {
-                        var a="<span style='color:#4382CF;cursor:pointer;' id='details'>修改</span>";
-
+                    formatter: function (value, row, index) {
+                        var a = "<span style='color:#4382CF;cursor:pointer;' id='updateBill'>修改</span> ";
                         return a;
                     },
-                    events:operateEvents
+                    events: operateEvents
 
-                },*/
+                }
+
+                /*  {
+                 field: 'operate',
+                 title: '操作',
+                 align: 'center',
+                 valign: 'middle',
+                 formatter:function (value,row,index) {
+                 var a="<span style='color:#4382CF;cursor:pointer;' id='details'>修改</span>";
+
+                 return a;
+                 },
+                 events:operateEvents
+
+                 },*/
 
 
             ],
@@ -325,31 +321,76 @@ var TableInit = function () {
             offset: params.pageNumber,  //页码
             sortOrder: params.sortOrder,
             sortName: params.sortName,
-            website:website,
-            keywords:keywords,
-            searchName:searchName,
-            searchUserName:searchUserName,
-            state:searchState,
+            website: website,
+            keywords: keywords,
+            searchName: searchName,
+            searchUserName: searchUserName,
+            state: searchState,
 
         };
         return temp;
     }
-  /*  window.operateEvents = {
-        'click #details': function (e, value, row, index) {
-            $("#billCostDetail").show();
-            $(".modal-backdrop").show();
+    window.operateEvents = {
+        'click #updateBill': function (e, value, row, index) {
+            $("#keyword").val(row.keywords);
+            $("#websiteNow").val(row.website);
+            $("#billIdInput").val(row.id);
+            index1 = layer.open({
+                type: 1,
+                title: '修改订单',
+                skin: 'layui-layer-molv',
+                shade: 0.6,
+                area: ['30%', '40%'],
+                content: $('#offerSetUp'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                end: function (e, u) {
+                    $('#offerSetUp').hide();
+                }
+            });
 
-        }
+        },
 
-    }*/
+    }
 
 
     return oTableInit;
 };
+//修改订单
+$("#confirmUpdateBill").click(function () {
+    if ($("#keyword").val() != "" && $("#websiteNow").val() != "" && $("#billIdInput").val() != "") {
+        $.ajax({
+            type: 'post',
+            url: CTX + '/order/updateBillDetails',
+            data: {billId: $("#billIdInput").val(), keyword: $("#keyword").val(), website: $("#websiteNow").val()},
+            success: function (result) {
+                if (result.code == 200) {
+                    layer.alert(result.message, {
+                        skin: 'layui-layer-molv' //样式类名  自定义样式
+                        , anim: 4 //动画类型
+                        , icon: 1   // icon
+                    });
+                    $('#myTable').bootstrapTable('refresh');
+                }
+                else {
+                    layer.alert(result.message, {
+                        skin: 'layui-layer-molv' //样式类名  自定义样式
+                        , anim: 6 //动画类型
+                        , icon: 2   // icon
+                    });
+                    $("#keyword").val("");
+                    $("#websiteNow").val("");
+                }
+            }
 
-
-
-
+        });
+    }
+    else {
+        layer.alert('填写信息有误,请核对信息！', {
+            skin: 'layui-layer-molv' //样式类名  自定义样式
+            , anim: 4 //动画类型
+            , icon: 2   // icon
+        });
+    }
+})
 
 $(function () {
     $("#queren").click(function () {
@@ -358,8 +399,8 @@ $(function () {
     });
 
 });
-function detail( ) {
-    var bid=$("input[name='Bid']").val();
+function detail() {
+    var bid = $("input[name='Bid']").val();
 
 
 }

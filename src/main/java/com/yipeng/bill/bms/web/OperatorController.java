@@ -1,12 +1,12 @@
 package com.yipeng.bill.bms.web;
 
 import com.yipeng.bill.bms.core.model.ResultMessage;
+import com.yipeng.bill.bms.dao.RoleMapper;
+import com.yipeng.bill.bms.domain.Role;
 import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.service.OperatorService;
-import com.yipeng.bill.bms.service.UserService;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -21,10 +22,12 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping(value ="/operator")
-public class OperatorController extends  BaseController {
+public class OperatorController extends BaseController {
 
     @Autowired
     private OperatorService operatorService;
+    @Autowired
+    private RoleMapper roleMapper;
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     public  String list(HttpServletRequest request)
     {
@@ -67,32 +70,35 @@ public class OperatorController extends  BaseController {
     @ResponseBody
     public Map<String,Object> getCustomerBill(int limit, int offset,String searchUserName,String searchState)
     {
-
-
-        Long roleId=new Long(3);
-        offset=(offset-1)*limit;
-        Map<String, Object> params = this.getSearchRequest(); //查询参数
-        User user=this.getCurrentAccount();
-        params.put("limit",limit);
-        params.put("offset",offset);
-        params.put("roleId",roleId);
-        params.put("user",user);
-        if(!searchUserName.isEmpty())
+        Map<String, Object> modelMap=new HashMap<>();
+        Role role=roleMapper.selectByRoleCode("COMMISSIONER");
+        if(role!=null)
         {
-            try{
-                searchUserName = new String(searchUserName.getBytes("ISO-8859-1"),"utf-8");
-            }
-            catch (UnsupportedEncodingException e)
+            offset=(offset-1)*limit;
+            Map<String, Object> params = this.getSearchRequest(); //查询参数
+            User user=this.getCurrentAccount();
+            params.put("limit",limit);
+            params.put("offset",offset);
+            params.put("roleId",role.getId());
+            params.put("user",user);
+            if(!searchUserName.isEmpty())
             {
-                e.printStackTrace();
+                try{
+                    searchUserName = new String(searchUserName.getBytes("ISO-8859-1"),"utf-8");
+                }
+                catch (UnsupportedEncodingException e)
+                {
+                    e.printStackTrace();
+                }
+                params.put("searchUserName",searchUserName);
             }
-            params.put("searchUserName",searchUserName);
+            if(!searchState.isEmpty())
+            {
+                params.put("searchState",searchState);
+            }
+
+           modelMap= operatorService.getOperator(params);
         }
-        if(!searchState.isEmpty())
-        {
-            params.put("searchState",searchState);
-        }
-        Map<String, Object> modelMap= operatorService.getOperator(params);
 
         return  modelMap;
     }
@@ -105,7 +111,7 @@ public class OperatorController extends  BaseController {
      */
     @RequestMapping(value = "/updateOperator",method =RequestMethod.POST)
     @ResponseBody
-    public ResultMessage updateOperator(HttpServletRequest request,User user)
+    public ResultMessage updateOperator(HttpServletRequest request, User user)
     {
         LoginUser user1=this.getCurrentAccount();
         if(user1!=null)
@@ -128,7 +134,7 @@ public class OperatorController extends  BaseController {
      */
     @RequestMapping(value = "/updatePwd",method =RequestMethod.POST)
     @ResponseBody
-    public ResultMessage updatePwd(HttpServletRequest request,User user)
+    public ResultMessage updatePwd(HttpServletRequest request, User user)
     {
         LoginUser user1=this.getCurrentAccount();
         if(user1!=null)
@@ -143,9 +149,37 @@ public class OperatorController extends  BaseController {
         }
 
     }
+    /**
+     * 重置密码
+     * @param request
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "/deleteUser",method =RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage deleteUser(HttpServletRequest request, User user)
+    {
+        LoginUser user1=this.getCurrentAccount();
+        if(user1!=null)
+        {
 
+            int a=operatorService.deleteUser(user,user1);
+            if(a==1)
+            {
+                return this.ajaxDoneSuccess("删除成功!");
+            }
+            else
+            {
+                return  this.ajaxDoneError("删除失败！");
+            }
 
+        }
+        else
+        {
+            return  this.ajaxDoneError("未知错误！");
+        }
 
+    }
 
 }
 

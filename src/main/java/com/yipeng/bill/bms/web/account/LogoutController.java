@@ -1,28 +1,26 @@
 package com.yipeng.bill.bms.web.account;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.yipeng.bill.bms.core.utils.ServletUtil;
 import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.UserCompany;
 import com.yipeng.bill.bms.domain.UserFootMessage;
 import com.yipeng.bill.bms.domain.UserHyperlink;
 import com.yipeng.bill.bms.domain.UserImgurl;
+import com.yipeng.bill.bms.web.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.yipeng.bill.bms.core.utils.ServletUtil;
-import com.yipeng.bill.bms.web.BaseController;
-
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- *
+ * 
  * Created by song on 2016/6/2.
  */
 @Controller
@@ -32,13 +30,13 @@ public class LogoutController extends BaseController {
 	@Autowired
 	private UserMapper userMapper;
 	@Autowired
-	UserCompanyMapper userCompanyMapper;
+    UserCompanyMapper userCompanyMapper;
 	@Autowired
-	UserImgurlMapper userImgurlMapper;
+    UserImgurlMapper userImgurlMapper;
 	@Autowired
-	UserHyperlinkMapper userHyperlinkMapper;
+    UserHyperlinkMapper userHyperlinkMapper;
 	@Autowired
-	UserFootMessageMapper userFootMessageMapper;
+    UserFootMessageMapper userFootMessageMapper;
 	@RequestMapping(value = "")
 	public String logout(HttpServletRequest request, HttpServletResponse response,ModelMap map) {
 		ServletUtil.removeSession(request, response, ServletUtil.SESSION_USER);

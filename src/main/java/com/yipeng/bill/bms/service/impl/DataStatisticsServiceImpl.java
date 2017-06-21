@@ -6,7 +6,6 @@ import com.yipeng.bill.bms.model.BillOptimizations;
 import com.yipeng.bill.bms.model.DistributorData;
 import com.yipeng.bill.bms.service.DataStatisticsService;
 import com.yipeng.bill.bms.vo.LoginUser;
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -27,18 +26,18 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
     @Autowired
     private BillMapper billMapper;
     @Autowired
-    private  UserMapper userMapper;
+    private UserMapper userMapper;
 
     @Autowired
-    private  BillPriceMapper billPriceMapper;
+    private BillPriceMapper billPriceMapper;
     @Autowired
-    private  BillCostMapper billCostMapper;
+    private BillCostMapper billCostMapper;
     @Autowired
     private BillClickStatisticsMapper billClickStatisticsMapper;
     @Autowired
-    private  BillDistributorStatisticsMapper billDistributorStatisticsMapper;
+    private BillDistributorStatisticsMapper billDistributorStatisticsMapper;
     @Autowired
-    private  BillCommissionerStatisticsMapper billCommissionerStatisticsMapper;
+    private BillCommissionerStatisticsMapper billCommissionerStatisticsMapper;
     /**
      * 调点击
      * @param params
@@ -55,7 +54,7 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
         params.put("day",now.get(Calendar.DATE));
         List<BillClickStatistics> billClickStatisticsList=billClickStatisticsMapper.selectByDateNow(params);
         for (BillClickStatistics item:billClickStatisticsList
-                ) {
+             ) {
             User user=userMapper.selectByPrimaryKey(item.getUserid());
             BillOptimizations billOptimizations=new BillOptimizations();
             billOptimizations.setId(item.getId());
@@ -87,9 +86,9 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
             map.put("year",now.get(Calendar.YEAR));
             map.put("month",now.get(Calendar.MONTH)+1);
             map.put("day",now.get(Calendar.DATE));
-            List<BillDistributorStatistics> billDistributorStatisticsList=billDistributorStatisticsMapper.selectByDay(map);
+           List<BillDistributorStatistics> billDistributorStatisticsList=billDistributorStatisticsMapper.selectByDay(map);
             for (BillDistributorStatistics item:billDistributorStatisticsList
-                    ) {
+                 ) {
                 DistributorData distributorData=new DistributorData();
                 User user1=userMapper.selectByPrimaryKey(item.getUserid());
                 distributorData.setUserName(user1.getUserName());
@@ -122,172 +121,172 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
         mapCaozuo.put("month",now.get(Calendar.MONTH)+1);
         mapCaozuo.put("day",now.get(Calendar.DATE));
 
-        List<DistributorData> distributorDataList=new ArrayList<DistributorData>();
+            List<DistributorData> distributorDataList=new ArrayList<DistributorData>();
 
-        //先获取所有的操作员
-        Role role=roleMapper.selectByRoleCode("COMMISSIONER");
-        UserRole userRole=new UserRole();
-        userRole.setRoleId(role.getId());
-        //操作员集合
-        List<UserRole> userRoleList=userRoleMapper.selectByUserRole(userRole);
-        //判断
-        if(!CollectionUtils.isEmpty(userRoleList))
-        {
-            for (UserRole item:userRoleList
-                    ) {
-                User user1=userMapper.selectByPrimaryKey(item.getUserId());
-                //获取操作员对应的所有订单
-                Map<String,Object> map=new HashMap<>();
-                map.put("userId",user1.getCreateUserId());
-                map.put("state",2);
-                map.put("state2",3);
-                map.put("billAscription",user1.getId());
-                List<Bill> billList=billMapper.selectByInMemberId(map);
-                //判断订单是否为空
-                if (!CollectionUtils.isEmpty(billList))
-                {
-                    Double week=0.0;
-                    Double month=0.0;
-                    Double all=0.0;
-                    int keywordsCount=0;//关键词达标
-                    //循环所有订单 统计数据
-                    for (Bill bill:billList
-                            ) {
-                        //查询数据（单价ID）
-                        BillPrice billPrice=new BillPrice();
-                        billPrice.setBillId(bill.getId());
-                        billPrice.setInMemberId(user1.getCreateUserId());
-                        List<BillPrice>    billPrices=billPriceMapper.selectByBillPriceSingle(billPrice);
-                        //通过订单ID和单价ID 统计数据
-                        for (BillPrice billpriceitem:billPrices
+            //先获取所有的操作员
+            Role role=roleMapper.selectByRoleCode("COMMISSIONER");
+            UserRole userRole=new UserRole();
+            userRole.setRoleId(role.getId());
+            //操作员集合
+            List<UserRole> userRoleList=userRoleMapper.selectByUserRole(userRole);
+            //判断
+            if(!CollectionUtils.isEmpty(userRoleList))
+            {
+                for (UserRole item:userRoleList
+                        ) {
+                    User user1=userMapper.selectByPrimaryKey(item.getUserId());
+                    //获取操作员对应的所有订单
+                    Map<String,Object> map=new HashMap<>();
+                    map.put("userId",user1.getCreateUserId());
+                    map.put("state",2);
+                    map.put("state2",3);
+                    map.put("billAscription",user1.getId());
+                    List<Bill> billList=billMapper.selectByInMemberId(map);
+                    //判断订单是否为空
+                    if (!CollectionUtils.isEmpty(billList))
+                    {
+                        Double week=0.0;
+                        Double month=0.0;
+                        Double all=0.0;
+                        int keywordsCount=0;//关键词达标
+                        //循环所有订单 统计数据
+                        for (Bill bill:billList
                                 ) {
-                            Map<String,Object> map1=new HashMap<>();
-                            map1.put("billId",bill.getId());
-                            map1.put("billPriceId",billpriceitem.getId());
-                            week+=billCostMapper.selectByBillCostOfWeek(map1);
-                            month+=billCostMapper.selectByBillCostOfMonth(map1);
-                            all+=billCostMapper.selectByBillCostOfAll(map1);
-                        }
-                        ;
-                        //统计关键词达标
-                        if(bill.getState()==2)
-                        {
-                            List<BillPrice> billPriceList=billPriceMapper.selectByBillId(bill.getId());
-                            if (!CollectionUtils.isEmpty(billPriceList))
+                            //查询数据（单价ID）
+                            BillPrice billPrice=new BillPrice();
+                            billPrice.setBillId(bill.getId());
+                            billPrice.setInMemberId(user1.getCreateUserId());
+                            List<BillPrice>    billPrices=billPriceMapper.selectByBillPriceSingle(billPrice);
+                            //通过订单ID和单价ID 统计数据
+                            for (BillPrice billpriceitem:billPrices
+                                    ) {
+                                Map<String,Object> map1=new HashMap<>();
+                                map1.put("billId",bill.getId());
+                                map1.put("billPriceId",billpriceitem.getId());
+                                week+=billCostMapper.selectByBillCostOfWeek(map1);
+                                month+=billCostMapper.selectByBillCostOfMonth(map1);
+                                all+=billCostMapper.selectByBillCostOfAll(map1);
+                            }
+                            ;
+                            //统计关键词达标
+                            if(bill.getState()==2)
                             {
-                                for (BillPrice priceItem:billPriceList
-                                        ) {
-                                    if(bill.getNewRanking()<=priceItem.getBillRankingStandard())
-                                    {
-                                        keywordsCount+=1;
-                                        break;
+                                List<BillPrice> billPriceList=billPriceMapper.selectByBillId(bill.getId());
+                                if (!CollectionUtils.isEmpty(billPriceList))
+                                {
+                                    for (BillPrice priceItem:billPriceList
+                                            ) {
+                                        if(bill.getNewRanking()<=priceItem.getBillRankingStandard())
+                                        {
+                                            keywordsCount+=1;
+                                            break;
+                                        }
                                     }
                                 }
                             }
+
+
                         }
+                        //订单数
+                        Long count=billMapper.getBillListCount(map);
+                        //统计订单达标率
+                        //按网址分组的个数  对应的操作员
+                        List<Bill> billList1=billMapper.getBillGroupByWebsiteTwo(map);
+                        //订单达标率
+                        double billStandard=0;
+                        DecimalFormat df = new DecimalFormat("0.00");//格式化小数
+                        if(!CollectionUtils.isEmpty(billList1))
+                        {
+                            //达标订单个数
+                            int billCount=0;
+                            for (Bill billItem:billList1
+                                    ) {
 
+                                map.put("website",billItem.getWebsite());
+                                map.put("searchStandard",1);
+                                List<Bill> billListStandardCount=billMapper.selectByInMemberId(map);
+                                if (!CollectionUtils.isEmpty(billListStandardCount))
+                                {
+                                    billCount+=1;
+                                }
+                            }
+                            billStandard=((double)billCount/billList1.size())*100;
+                        }
+                        //统计关键词达标率
+                        double keywordStandard=0;
+                        keywordStandard=((double)keywordsCount/billList.size())*100;// 关键词达标个数/订单总数
+                        //本月新增订单数
+                        Map<String,Object> monthMap=new HashMap<>();
+                        monthMap.put("userId",user1.getCreateUserId());
+                        monthMap.put("state",2);
+                        monthMap.put("state2",3);
+                        monthMap.put("billAscription",user1.getId());
+                        int monthAddCount=billMapper.getBillMonthAdd(monthMap);
 
-                    }
-                    //订单数
-                    Long count=billMapper.getBillListCount(map);
-                    //统计订单达标率
-                    //按网址分组的个数  对应的操作员
-                    List<Bill> billList1=billMapper.getBillGroupByWebsiteTwo(map);
-                    //订单达标率
-                    double billStandard=0;
-                    DecimalFormat df = new DecimalFormat("0.00");//格式化小数
-                    if(!CollectionUtils.isEmpty(billList1))
-                    {
-                        //达标订单个数
-                        int billCount=0;
-                        for (Bill billItem:billList1
-                                ) {
+                        //预计业绩
 
-                            map.put("website",billItem.getWebsite());
-                            map.put("searchStandard",1);
-                            List<Bill> billListStandardCount=billMapper.selectByInMemberId(map);
-                            if (!CollectionUtils.isEmpty(billListStandardCount))
+                        Calendar a = Calendar.getInstance();
+                        a.set(Calendar.DATE, 1);//把日期设置为当月第一天
+                        a.roll(Calendar.DATE, -1);//日期回滚一天，也就是最后一天
+                        int maxDate = a.get(Calendar.DATE);//本月总天数
+                        Calendar b = Calendar.getInstance();
+                        int nowDay=b.get(Calendar.DAY_OF_MONTH);//当前天数
+                        double expect=(month/nowDay)*maxDate;//预计业绩
+
+                         mapCaozuo.put("userId",item.getUserId());
+                        //判断今日的是否存在
+                        BillCommissionerStatistics billCommissionerStatisticsExists=billCommissionerStatisticsMapper.selectByDay(mapCaozuo);
+                        if (billCommissionerStatisticsExists==null)
+                        {
+                            BillCommissionerStatistics billCommissionerStatistics=new BillCommissionerStatistics();
+                            billCommissionerStatistics.setUserid(user1.getId());
+                            billCommissionerStatistics.setWeekCost(new BigDecimal(week));
+                            billCommissionerStatistics.setMonthCost(new BigDecimal(month));
+                            billCommissionerStatistics.setAllCost(new BigDecimal(all));
+                            billCommissionerStatistics.setBillCount(count);
+                            billCommissionerStatistics.setBillApprovalRate(new BigDecimal(billStandard));
+                            billCommissionerStatistics.setKeywordsApprovalRate(new BigDecimal(keywordStandard));
+                            billCommissionerStatistics.setBillMonthAddCount(monthAddCount);
+                            billCommissionerStatistics.setUserExpectAchievement(new BigDecimal(expect));
+                            billCommissionerStatistics.setCreateTime(new Date());
+                            billCommissionerStatistics.setCreateUserId(item.getUserId());
+                            try
                             {
-                                billCount+=1;
+                                billCommissionerStatisticsMapper.insert(billCommissionerStatistics);
+                            }
+                            catch (Exception e)
+                            {
+                                throw  e;
+                            }
+
+                        }
+                        else {
+                            billCommissionerStatisticsExists.setId(billCommissionerStatisticsExists.getId());
+                            billCommissionerStatisticsExists.setUserid(user1.getId());
+                            billCommissionerStatisticsExists.setWeekCost(new BigDecimal(week));
+                            billCommissionerStatisticsExists.setMonthCost(new BigDecimal(month));
+                            billCommissionerStatisticsExists.setAllCost(new BigDecimal(all));
+                            billCommissionerStatisticsExists.setBillCount(count);
+                            billCommissionerStatisticsExists.setBillApprovalRate(new BigDecimal(billStandard));
+                            billCommissionerStatisticsExists.setKeywordsApprovalRate(new BigDecimal(keywordStandard));
+                            billCommissionerStatisticsExists.setBillMonthAddCount(monthAddCount);
+                            billCommissionerStatisticsExists.setUserExpectAchievement(new BigDecimal(expect));
+
+                            try
+                            {
+                                billCommissionerStatisticsMapper.updateByPrimaryKey(billCommissionerStatisticsExists);
+                            }
+                            catch (Exception e)
+                            {
+                                throw  e;
                             }
                         }
-                        billStandard=((double)billCount/billList1.size())*100;
-                    }
-                    //统计关键词达标率
-                    double keywordStandard=0;
-                    keywordStandard=((double)keywordsCount/billList.size())*100;// 关键词达标个数/订单总数
-                    //本月新增订单数
-                    Map<String,Object> monthMap=new HashMap<>();
-                    monthMap.put("userId",user1.getCreateUserId());
-                    monthMap.put("state",2);
-                    monthMap.put("state2",3);
-                    monthMap.put("billAscription",user1.getId());
-                    int monthAddCount=billMapper.getBillMonthAdd(monthMap);
 
-                    //预计业绩
-
-                    Calendar a = Calendar.getInstance();
-                    a.set(Calendar.DATE, 1);//把日期设置为当月第一天
-                    a.roll(Calendar.DATE, -1);//日期回滚一天，也就是最后一天
-                    int maxDate = a.get(Calendar.DATE);//本月总天数
-                    Calendar b = Calendar.getInstance();
-                    int nowDay=b.get(Calendar.DAY_OF_MONTH);//当前天数
-                    double expect=(month/nowDay)*maxDate;//预计业绩
-
-                    mapCaozuo.put("userId",item.getUserId());
-                    //判断今日的是否存在
-                    BillCommissionerStatistics billCommissionerStatisticsExists=billCommissionerStatisticsMapper.selectByDay(mapCaozuo);
-                    if (billCommissionerStatisticsExists==null)
-                    {
-                        BillCommissionerStatistics billCommissionerStatistics=new BillCommissionerStatistics();
-                        billCommissionerStatistics.setUserid(user1.getId());
-                        billCommissionerStatistics.setWeekCost(new BigDecimal(week));
-                        billCommissionerStatistics.setMonthCost(new BigDecimal(month));
-                        billCommissionerStatistics.setAllCost(new BigDecimal(all));
-                        billCommissionerStatistics.setBillCount(count);
-                        billCommissionerStatistics.setBillApprovalRate(new BigDecimal(billStandard));
-                        billCommissionerStatistics.setKeywordsApprovalRate(new BigDecimal(keywordStandard));
-                        billCommissionerStatistics.setBillMonthAddCount(monthAddCount);
-                        billCommissionerStatistics.setUserExpectAchievement(new BigDecimal(expect));
-                        billCommissionerStatistics.setCreateTime(new Date());
-                        billCommissionerStatistics.setCreateUserId(item.getUserId());
-                        try
-                        {
-                            billCommissionerStatisticsMapper.insert(billCommissionerStatistics);
-                        }
-                        catch (Exception e)
-                        {
-                            throw  e;
-                        }
 
                     }
-                    else {
-                        billCommissionerStatisticsExists.setId(billCommissionerStatisticsExists.getId());
-                        billCommissionerStatisticsExists.setUserid(user1.getId());
-                        billCommissionerStatisticsExists.setWeekCost(new BigDecimal(week));
-                        billCommissionerStatisticsExists.setMonthCost(new BigDecimal(month));
-                        billCommissionerStatisticsExists.setAllCost(new BigDecimal(all));
-                        billCommissionerStatisticsExists.setBillCount(count);
-                        billCommissionerStatisticsExists.setBillApprovalRate(new BigDecimal(billStandard));
-                        billCommissionerStatisticsExists.setKeywordsApprovalRate(new BigDecimal(keywordStandard));
-                        billCommissionerStatisticsExists.setBillMonthAddCount(monthAddCount);
-                        billCommissionerStatisticsExists.setUserExpectAchievement(new BigDecimal(expect));
-
-                        try
-                        {
-                            billCommissionerStatisticsMapper.updateByPrimaryKey(billCommissionerStatisticsExists);
-                        }
-                        catch (Exception e)
-                        {
-                            throw  e;
-                        }
-                    }
-
-
                 }
             }
-        }
-
+            
 
         return null;
     }

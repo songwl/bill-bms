@@ -18,5 +18,5 @@ public interface BillClickStatisticsMapper {
 
     int updateByPrimaryKey(BillClickStatistics record);
 
-    List<BillClickStatistics> selectByDateNow(Map<String,Object> params);
+    List<BillClickStatistics> selectByDateNow(Map<String, Object> params);
 }

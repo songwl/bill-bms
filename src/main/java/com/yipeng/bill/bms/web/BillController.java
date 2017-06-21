@@ -1,43 +1,34 @@
 package com.yipeng.bill.bms.web;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.sun.corba.se.impl.protocol.giopmsgheaders.RequestMessage;
-import com.yipeng.bill.bms.core.model.Page;
 import com.yipeng.bill.bms.core.model.ResultMessage;
-import com.yipeng.bill.bms.core.utils.DateUtils;
-import com.yipeng.bill.bms.dao.*;
-import com.yipeng.bill.bms.domain.*;
-import com.yipeng.bill.bms.model.BillPriceDetails;
+import com.yipeng.bill.bms.dao.RoleMapper;
+import com.yipeng.bill.bms.dao.UserMapper;
+import com.yipeng.bill.bms.domain.Role;
+import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.service.BillService;
 import com.yipeng.bill.bms.service.UserService;
-import com.yipeng.bill.bms.vo.BillDetails;
 import com.yipeng.bill.bms.vo.LoginUser;
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import sun.rmi.runtime.Log;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2017/3/10.
@@ -50,7 +41,7 @@ public class BillController extends BaseController {
     @Autowired
     private UserService userService;
     @Autowired
-    private  UserMapper userMapper;
+    private UserMapper userMapper;
     @Autowired
     private RoleMapper roleMapper;
     /**
@@ -305,7 +296,7 @@ public class BillController extends BaseController {
                                               String website, String keywords, String searchName, String searchUserName,
                                               String state, String state2, String searchStandard,String standardDays,String createTime) throws UnsupportedEncodingException {
         offset = (offset - 1) * limit;
-        Map<String, Object> params = this.getSearchRequest(); //查询参数
+            Map<String, Object> params = this.getSearchRequest(); //查询参数
         LoginUser loginUser = this.getCurrentAccount();
         if (!keywords.isEmpty()) {
             try {
@@ -506,6 +497,78 @@ public class BillController extends BaseController {
 
     }
 
+    /**
+     * 修改订单信息（待审核的订单）
+     *
+     * @return
+     */
+    @RequestMapping(value = "/updateBillDetails", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage updateBillDetails(HttpServletRequest request, Long billId, String website, String keyword) {
+
+        LoginUser loginUser = this.getCurrentAccount();
+        if (loginUser != null) {
+            int a = billService.updateBillDetails(billId,website,keyword, loginUser);
+            if (a == 0) {
+                return this.ajaxDoneSuccess("修改成功!");
+            } else if (a==1){
+                return this.ajaxDoneError("网址填写错误!");
+            }
+            else if (a==2){
+                return this.ajaxDoneError("请不要输入违禁词!");
+            }
+            else if (a==3){
+                return this.ajaxDoneError("未知错误!");
+            }
+            else if (a==4){
+                return this.ajaxDoneError("修改失败!");
+            }
+            else  {
+                return this.ajaxDoneError("未知错误!");
+            }
+
+        } else {
+            return this.ajaxDoneError("未登录");
+        }
+
+
+    }
+    /**
+     * 修改订单信息（优化中的订单）
+     *
+     * @return
+     */
+    @RequestMapping(value = "/updateBillDetailsYouHua", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage updateBillDetailsYouHua(HttpServletRequest request, Long billId, String website, String keyword) {
+
+        LoginUser loginUser = this.getCurrentAccount();
+        if (loginUser != null) {
+            int a = billService.updateBillDetailsYouHua(billId,website,keyword, loginUser);
+            if (a == 0) {
+                return this.ajaxDoneSuccess("修改成功!");
+            } else if (a==1){
+                return this.ajaxDoneError("网址填写错误!");
+            }
+            else if (a==2){
+                return this.ajaxDoneError("请不要输入违禁词!");
+            }
+            else if (a==3){
+                return this.ajaxDoneError("未知错误!");
+            }
+            else if (a==4){
+                return this.ajaxDoneError("修改失败!");
+            }
+            else  {
+                return this.ajaxDoneError("未知错误!");
+            }
+
+        } else {
+            return this.ajaxDoneError("未登录");
+        }
+
+
+    }
     /**
      * 渠道商审核订单
      *
@@ -814,8 +877,8 @@ public class BillController extends BaseController {
     @RequestMapping(value = "/pendingAuditView1List")
     @ResponseBody
     public Map<String, Object> pendingAuditView1List(HttpServletRequest request, @RequestParam(required = true) int limit,
-                                                     @RequestParam(required = true) int offset, String website, String keywords,
-                                                     String searchName, String searchUserName, String state) {
+                                                    @RequestParam(required = true) int offset, String website, String keywords,
+                                                    String searchName, String searchUserName, String state) {
 
         LoginUser user = this.getCurrentAccount();
 
@@ -1053,6 +1116,152 @@ public class BillController extends BaseController {
     }
 
     /**
+     * 申请优化(功能)
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/applyToOptimization")
+    @ResponseBody
+    public ResultMessage applyToOptimization(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap();
+        LoginUser loginUser = this.getCurrentAccount();
+        if (loginUser != null) {
+
+            int a = billService.applyToOptimization(params, loginUser);
+            return this.ajaxDoneSuccess("操作成功");
+
+        } else {
+            return this.ajaxDoneError("未登录");
+        }
+
+    }
+
+    /**
+     * 审核申请优化界面(优化方)
+     *
+     * @param model
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/billApplyToOptimization")
+    public String billApplyToOptimization(ModelMap model) {
+
+        Map<String, Object> bms = new HashMap<>();
+        LoginUser user = this.getCurrentAccount();
+        bms.put("user", user);
+        model.addAttribute("bmsModel", bms);
+
+        return "/bill/billApplyToOptimization";
+    }
+    /**
+     * 审核申请优化界面(渠道方)
+     *
+     * @param model
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/billApplyToOptimizationBySon")
+    public String billApplyToOptimizationBySon(ModelMap model) {
+
+        Map<String, Object> bms = new HashMap<>();
+        LoginUser user = this.getCurrentAccount();
+        bms.put("user", user);
+        model.addAttribute("bmsModel", bms);
+
+        return "/bill/billApplyToOptimizationBySon";
+    }
+    /**
+     * 审核申请优化通过table数据
+     *
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/billApplyToOptimizationBySonTable")
+    @ResponseBody
+    public Map<String, Object> billApplyToOptimizationBySonTable(int limit, int offset, String sortOrder, String sortName) {
+        offset = (offset - 1) * limit;
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        LoginUser user = this.getCurrentAccount();
+
+        params.put("limit", limit);
+        params.put("offset", offset);
+        params.put("sortOrder",sortOrder);
+        params.put("sortName",sortName);
+        if (user.hasRole("SUPER_ADMIN")) {
+            params.put("way", 2);
+        } else {
+            params.put("way", 1);
+        }
+
+        if (user.hasRole("DISTRIBUTOR")) {
+            params.put("applyState", -2);
+        } else {
+            params.put("applyState", -1);
+        }
+        params.put("state", 3);
+        Map<String, Object> modelMap = billService.getBillDetails(params, user);
+        return modelMap;
+
+    }
+    /**
+     * 审核申请优化通过table数据
+     *
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/billApplyToOptimizationTable")
+    @ResponseBody
+    public Map<String, Object> billApplyToOptimizationTable(int limit, int offset, String sortOrder, String sortName) {
+        offset = (offset - 1) * limit;
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        LoginUser user = this.getCurrentAccount();
+
+        params.put("limit", limit);
+        params.put("offset", offset);
+        params.put("sortOrder",sortOrder);
+        params.put("sortName",sortName);
+        if (user.hasRole("SUPER_ADMIN")) {
+            params.put("way", 2);
+        } else {
+            params.put("way", 1);
+        }
+
+        if (user.hasRole("DISTRIBUTOR")) {
+            params.put("applyState", -1);
+        } else {
+            params.put("applyState", -2);
+        }
+        params.put("state", 3);
+        Map<String, Object> modelMap = billService.getBillDetails(params, user);
+        return modelMap;
+
+    }
+    /**
+     * 申请优化的订单通过审核
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/billApplyToOptimizationPass")
+    @ResponseBody
+    public ResultMessage billApplyToOptimizationPass(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap();
+        LoginUser loginUser = this.getCurrentAccount();
+        if (loginUser != null) {
+
+            int a = billService.billApplyToOptimizationPass(params, loginUser);
+            return this.ajaxDoneSuccess("操作成功");
+
+        } else {
+            return this.ajaxDoneError("未登录");
+        }
+
+    }
+
+    /**
      * 审核订单table数据
      *
      * @param
@@ -1122,7 +1331,7 @@ public class BillController extends BaseController {
 
     }
     /**
-     * 申请不通过
+     * 申请不通过（订单主状态）
      *
      * @param request
      * @return
@@ -1256,7 +1465,7 @@ public class BillController extends BaseController {
 
     }
     /**
-     * 订单切换确认
+     * 订单切换渠道商确认
      *
      * @param request
      * @return
@@ -1269,6 +1478,27 @@ public class BillController extends BaseController {
         if (user != null) {
 
             int a = billService.billChangeCmt(params, user);
+            return this.ajaxDoneSuccess("调整成功");
+
+        } else {
+            return this.ajaxDoneError("未登录");
+        }
+
+    }
+    /**
+     * 订单切换客户确认
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/billChangeToKeHucmt")
+    @ResponseBody
+    public ResultMessage billChangeToKeHucmt(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap();
+        LoginUser loginUser = this.getCurrentAccount();
+        if (loginUser!= null) {
+
+            int a = billService.billChangeToKeHucmt(params, loginUser);
             return this.ajaxDoneSuccess("调整成功");
 
         } else {
@@ -1365,7 +1595,7 @@ public class BillController extends BaseController {
      */
     @RequestMapping(value = "/uploadPrice")
     @ResponseBody
-    public ResultMessage uploadPrice(HttpServletRequest request,MultipartFile file) {
+    public ResultMessage uploadPrice(HttpServletRequest request, MultipartFile file) {
         LoginUser loginUser=this.getCurrentAccount();
 
         List<String[]> fileList=parseFile(file);

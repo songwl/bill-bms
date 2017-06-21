@@ -37,8 +37,8 @@ public class BillManageServiceImpl implements BillManageService {
     private BillSearchSupportMapper billSearchSupportMapper;
     @Autowired
     private UserService userService;
-    @Autowired
-    private  FundAccountMapper fundAccountMapper;
+      @Autowired
+      private FundAccountMapper fundAccountMapper;
 
     /**
      * 管理员订单管理
@@ -325,7 +325,7 @@ public class BillManageServiceImpl implements BillManageService {
         List<BillDetails> billDetailsList=new ArrayList<>();
         Map<String,Object> map=new HashMap<>();
 
-        SimpleDateFormat sm=new SimpleDateFormat("yyyy-MM-dd");
+         SimpleDateFormat sm=new SimpleDateFormat("yyyy-MM-dd");
         String  dateNow=sm.format(new Date());
         //根据权限来判断
         //管理员
@@ -470,7 +470,7 @@ public class BillManageServiceImpl implements BillManageService {
     }
 
     @Override
-    public Map<String, Object> performanceStatisticsTable(LoginUser loginUser,String searchTime) {
+    public Map<String, Object> performanceStatisticsTable(LoginUser loginUser, String searchTime) {
         //获取渠道商的客户和代理商
         List<User> userList = userService.getSearchUser(loginUser, "2");
         Map<String, Object> params = new HashMap<>();
@@ -513,14 +513,14 @@ public class BillManageServiceImpl implements BillManageService {
             {
                 fundItemSum.setChangeAmount(new BigDecimal(sumMonth));
             }
-            if(sumDay==null)
-            {
-                fundItemSum.setdayAccountSum(new BigDecimal(0));
-            }
-            else
-            {
-                fundItemSum.setdayAccountSum(new BigDecimal(sumDay));
-            }
+          if(sumDay==null)
+          {
+              fundItemSum.setdayAccountSum(new BigDecimal(0));
+          }
+          else
+          {
+              fundItemSum.setdayAccountSum(new BigDecimal(sumDay));
+          }
 
             fundItemSumList.add(fundItemSum);
 

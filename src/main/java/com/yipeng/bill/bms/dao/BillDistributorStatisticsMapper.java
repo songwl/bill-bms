@@ -18,7 +18,7 @@ public interface BillDistributorStatisticsMapper {
 
     int updateByPrimaryKey(BillDistributorStatistics record);
 
-    BillDistributorStatistics selectByDayExsits(Map<String,Object> params);
+    BillDistributorStatistics selectByDayExsits(Map<String, Object> params);
 
-    List<BillDistributorStatistics> selectByDay(Map<String,Object> params);
+    List<BillDistributorStatistics> selectByDay(Map<String, Object> params);
 }

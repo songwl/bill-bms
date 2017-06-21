@@ -1,6 +1,5 @@
 package com.yipeng.bill.bms.dao;
 
-import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.domain.UserCompany;
 
 public interface UserCompanyMapper {

@@ -28,9 +28,11 @@ $("#billNotExamine").click(function () {
     var index;
     if (selectContent=="")
     {
-        layer.alert('请选择一列数据!', {
-            skin: 'layui-layer-molv' //样式类名
-            ,closeBtn: 0
+        layer.alert('请选择一列数据', {
+            skin: 'layui-layer-molv' //样式类名  自定义样式
+            ,anim: 6 //动画类型
+            ,icon: 4   // icon
+
         });
     }
     else

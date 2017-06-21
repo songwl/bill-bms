@@ -1,13 +1,11 @@
 package com.yipeng.bill.bms.web;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import com.yipeng.bill.bms.domain.User;
+import com.yipeng.bill.bms.core.model.Page;
+import com.yipeng.bill.bms.core.model.ResultMessage;
+import com.yipeng.bill.bms.core.spring.interceptor.BaseCommController;
+import com.yipeng.bill.bms.core.spring.interceptor.HttpLocalThread;
+import com.yipeng.bill.bms.core.utils.ServletUtil;
+import com.yipeng.bill.bms.core.utils.WebUtils;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -16,13 +14,12 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
-import com.yipeng.bill.bms.core.model.LoginAccount;
-import com.yipeng.bill.bms.core.model.Page;
-import com.yipeng.bill.bms.core.model.ResultMessage;
-import com.yipeng.bill.bms.core.spring.interceptor.BaseCommController;
-import com.yipeng.bill.bms.core.spring.interceptor.HttpLocalThread;
-import com.yipeng.bill.bms.core.utils.ServletUtil;
-import com.yipeng.bill.bms.core.utils.WebUtils;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 

@@ -1,7 +1,6 @@
 package com.yipeng.bill.bms.task;
 
 import com.yipeng.bill.bms.service.DataStatisticsService;
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;

@@ -18,10 +18,10 @@ public interface BillPriceMapper {
     int updateByPrimaryKeySelective(BillPrice record);
 
     int updateByPrimaryKey(BillPrice record);
-    int selectBillCount(Long UserId);
-    Long selectByBillPriceOutMemberId(BillPrice billPrice);
+   int selectBillCount(Long UserId);
+   Long selectByBillPriceOutMemberId(BillPrice billPrice);
     List<BillPrice>  selectByBillPriceSingle(BillPrice record);
-    List<BillPrice>  selectByBillPriceList(Map<String,Object> params);
+    List<BillPrice>  selectByBillPriceList(Map<String, Object> params);
 
     List<BillPrice> selectByOutmemberList();
 }

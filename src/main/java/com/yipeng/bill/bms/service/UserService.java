@@ -1,13 +1,10 @@
 package com.yipeng.bill.bms.service;
 
-import com.yipeng.bill.bms.core.model.Page;
-import com.yipeng.bill.bms.domain.Bill;
 import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.vo.LoginUser;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Created by Administrator on 2017/3/7.
@@ -52,11 +49,11 @@ public interface UserService {
      * @param params
      * @return
      */
-    List<User> userCreater(Map<String,Long> params);
+    List<User> userCreater(Map<String, Long> params);
 
-    List<User> getUserAll(Map<String,Long> params);
+    List<User> getUserAll(Map<String, Long> params);
 
-    List<User> getSearchUser(LoginUser loginUser,String way);
+    List<User> getSearchUser(LoginUser loginUser, String way);
 
     /**
      * 修改信息

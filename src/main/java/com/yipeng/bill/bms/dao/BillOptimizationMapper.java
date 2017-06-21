@@ -17,10 +17,10 @@ public interface BillOptimizationMapper {
 
     int updateByPrimaryKey(BillOptimization record);
 
-    int selectByBillIdOfWeek(Map<String,Object> params);
+    int selectByBillIdOfWeek(Map<String, Object> params);
 
 
-    int selectByBillIdOfMonth(Map<String,Object> params);
+    int selectByBillIdOfMonth(Map<String, Object> params);
 
-    int selectByBillIdOfAll(Map<String,Object> params);
+    int selectByBillIdOfAll(Map<String, Object> params);
 }

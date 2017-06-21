@@ -21,6 +21,7 @@
             <#if bmsModel.userLogoimgUrl??>
                 <img   title="" height="40" width="140" src="${ctx}/static/img/upload/${bmsModel.userLogoimgUrl}">
             </#if>
+
         </h1>
         <h2 class="logo-title">登录</h2>
         <ul class="header-nav">
@@ -28,6 +29,7 @@
                 <#list userHyperlinkList as item>
                     <li class="nav-first">
                         <a href="${item.hyperlink}" target="_blank">${item.title}</a></li>
+
                 </#list>
             </#if>
         <#--<li class="nav-first">
@@ -54,6 +56,7 @@
                 <li><img   title="" height="300" width="400" src="${ctx}/static/img/gundong1.jpg"></li>
                 <li><img   title="" height="300" width="400" src="${ctx}/static/img/gundong2.jpg"></li>
                 <li><img   title="" height="300" width="400" src="${ctx}/static/img/gundong3.jpg"></li>
+
             </#if>
 
         </ul>
@@ -62,7 +65,7 @@
             <li class="active">1</li>
             <li class="">2</li>
             <li class="">3</li>
-        <#-- &lt;#&ndash; <li class="">4</li>&ndash;&gt;-->
+       <#-- &lt;#&ndash; <li class="">4</li>&ndash;&gt;-->
         </ul>
         <ul id="textBall">
             <li class="active"><a href="javascript:void(0)"></a></li>
@@ -127,7 +130,7 @@
                     <input id="fm-login-submit" value="登录" class="fm-button1 fm-submit" tabindex="4" name="submit-btn" type="submit" style="width: 236px;margin:0 auto;></div>
                 <div id="login-other">
                     <div class="register">
-                        <a href="${rc.contextPath}/user/register">立即注册</a>
+               <#-- <a href="${rc.contextPath}/user/register">立即注册</a>-->
                     </div>
                 <#--<div class="test">
                      接口测试</div>-->
@@ -151,7 +154,7 @@
 <div class="footer-wrap">
     <div class="footer-power text-center page-content-md">
         <div class="container">${userFootMessage.copyrightinfo1}<p>${userFootMessage.copyrightinfo2} <br>
-        </p></div>
+             </p></div>
     </div>
 </div>
 

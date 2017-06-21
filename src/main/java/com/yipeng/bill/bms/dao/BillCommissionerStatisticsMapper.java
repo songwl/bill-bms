@@ -1,6 +1,5 @@
 package com.yipeng.bill.bms.dao;
 
-import com.yipeng.bill.bms.domain.Bill;
 import com.yipeng.bill.bms.domain.BillCommissionerStatistics;
 
 import java.util.List;
@@ -19,7 +18,7 @@ public interface BillCommissionerStatisticsMapper {
 
     int updateByPrimaryKey(BillCommissionerStatistics record);
 
-    BillCommissionerStatistics selectByDay(Map<String,Object> params);
+    BillCommissionerStatistics selectByDay(Map<String, Object> params);
 
-    List<BillCommissionerStatistics> selectByGetAll(Map<String,Object> params);
+    List<BillCommissionerStatistics> selectByGetAll(Map<String, Object> params);
 }

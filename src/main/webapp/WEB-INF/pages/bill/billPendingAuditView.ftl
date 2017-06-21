@@ -95,4 +95,25 @@
 </div>
 <div class="modal-backdrop in" style="display: none">
 </div>
+
+<div id="offerSetUp" style="display: none;">
+
+    <div class="modal-body">
+        <div class="form-group">
+            <div>
+                <span>关键词：</span>
+                <input type="text" class="form-control setkeyword" id="keyword" placeholder="关键词"   onkeyup="this.value=this.value.replace(/\s+/g,'')"/>
+            </div>
+
+            <br>
+            <div>
+                <span>网址：</span>
+                <input type="text" class="form-control setkeyword" id="websiteNow" placeholder="网址"   onkeyup="this.value=this.value.replace(/\s+/g,'')"/>
+            </div>
+            <input type="hidden" value="" id="billIdInput"  />
+        </div>
+        <button id="confirmUpdateBill" class="btn btn-success form-control"><span class="glyphicon glyphicon-send">&nbsp;</span><span>确认</span></button>
+    </div>
+</div>
+
 </@base.html>

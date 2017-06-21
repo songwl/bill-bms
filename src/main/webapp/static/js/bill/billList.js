@@ -27,6 +27,8 @@ $(document).ready(function () {
         $(".billExamineDiv").slideUp();
         $(".billChangeDiv").slideUp();
         $(".samepriceDiv").slideUp();
+        $(".billChangeToKeHuDiv").slideUp();
+
     })
     $(".cancel").click(function () {
 
@@ -36,6 +38,7 @@ $(document).ready(function () {
         $(".billExamineDiv").slideUp();
         $(".billChangeDiv").slideUp();
         $(".samepriceDiv").slideUp();
+        $(".billChangeToKeHuDiv").slideUp();
 
     })
     //显示搜索内容
@@ -58,50 +61,44 @@ $(document).ready(function () {
     })
     //客户导入订单确认
     $(".addBillByKehuCmt").click(function () {
-        var search= $("#searchengineid option:selected").text();
-        var keyword= $.trim($("#keyword").val());
-        var url=$.trim($("#url").val());
-        if(search==""||keyword==""||url==""||search == "--请选择--")
-        {
+        var search = $("#searchengineid option:selected").text();
+        var keyword = $.trim($("#keyword").val());
+        var url = $.trim($("#url").val());
+        if (search == "" || keyword == "" || url == "" || search == "--请选择--") {
             alert("请将信息填写完整！");
         }
-        else
-        {
+        else {
 
-            var keyword_arr=$.trim(keyword).split('\n');
-            var url_arr=$.trim(url).split('\n');
+            var keyword_arr = $.trim(keyword).split('\n');
+            var url_arr = $.trim(url).split('\n');
 
             console.info(keyword_arr.length);
             console.info(url_arr.length);
-            console.info(keyword_arr.length>1&&keyword_arr.length!=url_arr.length);
-            if(keyword_arr.length>=1&&keyword_arr.length!=url_arr.length)
-            {
+            console.info(keyword_arr.length > 1 && keyword_arr.length != url_arr.length);
+            if (keyword_arr.length >= 1 && keyword_arr.length != url_arr.length) {
                 alert("网址行数为1或者与关键词一一对应");
                 return;
             }
-            else
-            {
+            else {
                 $.ajax({
-                    type:"post",
-                    url:CTX+"/order/list/addBillByKehuCmt",
-                    dataType:'json',
+                    type: "post",
+                    url: CTX + "/order/list/addBillByKehuCmt",
+                    dataType: 'json',
                     contentType: "application/x-www-form-urlencoded; charset=utf-8",
-                    data:{
-                        search:search,
-                        keyword:keyword,
-                        url:url,
+                    data: {
+                        search: search,
+                        keyword: keyword,
+                        url: url,
                     },
                     beforeSend: function () {
                         $(".pload").show();
-                        $('.addBillByKehuCmt').attr('disabled',"true");
+                        $('.addBillByKehuCmt').attr('disabled', "true");
                     },
-                    success:function (result) {
+                    success: function (result) {
                         $(".pload").hide();
-                        if(result.code==200)
-                        {
+                        if (result.code == 200) {
 
-                            if(result.message=="")
-                            {
+                            if (result.message == "") {
                                 alert("导入成功!");
                                 $(".modal-backdrop").hide();
                                 $(".samepriceDiv").slideUp();
@@ -112,15 +109,13 @@ $(document).ready(function () {
                                 $('.addBillByKehuCmt').removeAttr("disabled");
 
                             }
-                            else
-                            {
+                            else {
 
-                                alert(result.message+" !");
+                                alert(result.message + " !");
                                 $('.addBillByKehuCmt').removeAttr("disabled");
                             }
                         }
-                        else
-                        {
+                        else {
 
                             alert("系统繁忙，请稍后再试！");
                             $('.addBillByKehuCmt').removeAttr("disabled");
@@ -267,7 +262,7 @@ $(document).ready(function () {
             }
         }
     })
-//调价
+    //调价
     $("#updatePrice").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
         if (selectContent == "") {
@@ -280,7 +275,101 @@ $(document).ready(function () {
         }
 
     })
+    //订单切换客户
+    $("#billToChange").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var len = selectContent.length;
+        if (selectContent == "") {
+            layer.alert('请选择一列数据', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
+        }
+        else {
 
+            $(".modal-backdrop").show();
+            $(".billChangeToKeHuDiv").slideDown();
+
+        }
+    })
+    $(".billChangeToKeHucmt").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var len = selectContent.length;
+        var kehu = $("#selectKeHulist  option:selected").val();
+
+        $.ajax({
+            type: "post",
+            url: CTX + "/order/billChangeToKeHucmt",
+            data: {selectContent: selectContent, length: len, kehu: kehu},
+            success: function (result) {
+                if (result.code == 200) {
+                    $('#myTable').bootstrapTable('refresh');
+                    $(".billChangeToKeHuDiv").slideUp();
+                    $(".modal-backdrop").hide();
+                }
+                layer.alert(result.message, {
+                    skin: 'layui-layer-molv' //样式类名
+                    , closeBtn: 0
+                });
+
+
+            }
+
+        })
+    })
+    //申请优化
+    $("#applyToOptimization").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var len = selectContent.length;
+        if (selectContent == "") {
+            layer.alert('请选择一列数据', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
+        }
+        else {
+            var str = "";
+            //判断是否为合作停的订单
+            for (var i = 0; i < selectContent.length; i++) {
+                if (selectContent[i]["state"] == 2) {
+                    str += selectContent[i]["keywords"] + ",  ";
+                }
+            }
+            if (str != "") {
+                str += "  订单正在优化中!"
+                layer.alert(str, {
+                    skin: 'layui-layer-molv' //样式类名
+                    , closeBtn: 0
+                });
+            }
+            else {
+                layer.confirm('是否申请优化？', {
+                        btn: ['确定', '取消']
+                    }, function () {
+                        $.ajax({
+                            type: "post",
+                            url: CTX + "/order/applyToOptimization",
+                            data: {selectContent: selectContent, length: len},
+                            success: function (result) {
+                                if (result.code == 200) {
+                                    $('#myTable').bootstrapTable('refresh');
+                                }
+                                layer.alert(result.message, {
+                                    skin: 'layui-layer-molv' //样式类名
+                                    , closeBtn: 0
+                                })
+                            }
+                        })
+                    }
+                )
+
+            }
+
+
+        }
+    })
 
     //调价确认
     $(".updatePricecmt").click(function () {
@@ -392,22 +481,23 @@ $(document).ready(function () {
         var len = selectContent.length;
         var index;
         if (selectContent == "") {
-            layer.alert('请选择一列数据!', {
-                skin: 'layui-layer-molv' //样式类名
-                ,closeBtn: 0
+            layer.alert('请选择一列数据', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
             });
 
         } else {
             layer.confirm('是否删除当前订单？', {
-                btn: ['确定','取消'] //按钮
-            }, function(){
+                btn: ['确定', '取消'] //按钮
+            }, function () {
                 $.ajax({
                     type: "post",
                     url: CTX + "/order/billList/deleteBill",
                     data: {selectContent: selectContent, length: len},
                     beforeSend: function () {
-                        index  = layer.load(1, {
-                            shade: [0.1,'#fff'] //0.1透明度的白色背景
+                        index = layer.load(1, {
+                            shade: [0.1, '#fff'] //0.1透明度的白色背景
                         });
                     },
                     success: function (result) {
@@ -415,7 +505,7 @@ $(document).ready(function () {
 
                             layer.alert(result.message, {
                                 skin: 'layui-layer-molv' //样式类名
-                                ,closeBtn: 0
+                                , closeBtn: 0
                             });
                             $('#myTable').bootstrapTable('refresh');
 
@@ -423,7 +513,7 @@ $(document).ready(function () {
                         else {
                             layer.alert(result.message, {
                                 skin: 'layui-layer-molv' //样式类名
-                                ,closeBtn: 0
+                                , closeBtn: 0
                             });
 
                         }
@@ -440,7 +530,11 @@ $(document).ready(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
         var len = selectContent.length;
         if (selectContent == "") {
-            alert('请选择一列数据!');
+            layer.alert('请选择一列数据', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
 
         } else {
             if (confirm("是否启动优化?")) {
@@ -462,87 +556,97 @@ $(document).ready(function () {
             }
         }
     })
-})
-//订单切换
-$("#billChangeClick").click(function () {
-    var selectContent = $('#myTable').bootstrapTable('getSelections');
-    if (selectContent == "") {
-        alert('请选择一列数据!');
 
-    } else {
-        $.ajax({
-            type: 'get',
-            url: CTX + '/order/getAllUsers',
-            success: function (result) {
-                if (result != null) {
-                    var str = "";
-                    $.each(result, function (index, item) {
-                        str += "<option>" + item.userName + "</option>";
-                    });
-                    $("#selectlist").empty().append(str);
-                }
-            }
+    //订单切换
+    $("#billChangeClick").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        if (selectContent == "") {
+            layer.alert('请选择一列数据', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
 
-        })
-
-        $(".billChangeDiv").slideDown();
-        $(".modal-backdrop").show();
-
-    }
-})
-//订单切换确认
-$(".billChangecmt").click(function () {
-    var selectContent = $('#myTable').bootstrapTable('getSelections');
-    var len = selectContent.length;
-    var caozuoyuan1 = $("#selectlist  option:selected").val();
-
-    $.ajax({
-        type: "post",
-        url: CTX + "/order/billChangeCmt",
-        data: {selectContent: selectContent, length: len, caozuoyuan1: caozuoyuan1},
-        success: function (result) {
-            if (result.code == 200) {
-                alert(result.message);
-                $('#myTable').bootstrapTable('refresh');
-                $(".billChangeDiv").slideUp();
-                $(".modal-backdrop").hide();
-            }
-            else {
-                alert(result.message);
-            }
-        }
-
-    })
-})
-
-
-//申请停单
-$("#applyStopBill").click(function () {
-    var selectContent = $('#myTable').bootstrapTable('getSelections');
-    var len = selectContent.length;
-    if (selectContent == "") {
-        alert('请选择一列数据!');
-
-    } else {
-        if (confirm("是否申请停单?")) {
+        } else {
             $.ajax({
-                type: "post",
-                url: CTX + "/order/applyStopBillConfirm",
-                data: {selectContent: selectContent, length: len},
+                type: 'get',
+                url: CTX + '/order/getAllUsers',
                 success: function (result) {
-                    if (result.code == 200) {
-                        alert(result.message);
-                        $('#myTable').bootstrapTable('refresh');
-                    }
-                    else {
-                        alert(result.message);
+                    if (result != null) {
+                        var str = "";
+                        $.each(result, function (index, item) {
+                            str += "<option>" + item.userName + "</option>";
+                        });
+                        $("#selectlist").empty().append(str);
                     }
                 }
 
             })
+
+            $(".billChangeDiv").slideDown();
+            $(".modal-backdrop").show();
+
         }
-    }
+    })
+//订单切换确认
+    $(".billChangecmt").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var len = selectContent.length;
+        var caozuoyuan1 = $("#selectlist  option:selected").val();
+
+        $.ajax({
+            type: "post",
+            url: CTX + "/order/billChangeCmt",
+            data: {selectContent: selectContent, length: len, caozuoyuan1: caozuoyuan1},
+            success: function (result) {
+                if (result.code == 200) {
+                    alert(result.message);
+                    $('#myTable').bootstrapTable('refresh');
+                    $(".billChangeDiv").slideUp();
+                    $(".modal-backdrop").hide();
+                }
+                else {
+                    alert(result.message);
+                }
+            }
+
+        })
+    })
+
+
+    //申请停单
+    $("#applyStopBill").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var len = selectContent.length;
+        if (selectContent == "") {
+            layer.alert('请选择一列数据', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
+
+        } else {
+            if (confirm("是否申请停单?")) {
+                $.ajax({
+                    type: "post",
+                    url: CTX + "/order/applyStopBillConfirm",
+                    data: {selectContent: selectContent, length: len},
+                    success: function (result) {
+                        if (result.code == 200) {
+                            alert(result.message);
+                            $('#myTable').bootstrapTable('refresh');
+                        }
+                        else {
+                            alert(result.message);
+                        }
+                    }
+
+                })
+            }
+        }
+    })
 })
+
 
 $(function () {
 
@@ -553,7 +657,7 @@ $(function () {
     oTable1.Init();
     //2.初始化Button的点击事件
     /*  var oButtonInit = new ButtonInit();
-      oButtonInit.Init();*/
+     oButtonInit.Init();*/
 
 });
 var TableInit = function () {
@@ -607,7 +711,7 @@ var TableInit = function () {
                     sortable: true,
                     align: 'center',
                     valign: 'middle',
-                    title: '序号',
+                    title: '数据库序号',
                     visible: false
                 },
                 {
@@ -768,7 +872,14 @@ var TableInit = function () {
                     title: '达标天',
 
                 },
+                   {
+                    field: "roleName",
+                    align: 'center',
+                    valign: 'middle',
+                    title: '角色',
+                    visible:false
 
+                },
                 {
                     field: "state",
                     align: 'center',
@@ -795,6 +906,12 @@ var TableInit = function () {
                     valign: 'middle',
                     formatter: function (value, row, index) {
                         var a = "<span style='color:#4382CF;cursor:pointer;' id='details'>详情</span> ";
+                        if(row.roleName=='SUPER_ADMIN'||row.roleName=='ADMIN'||row.roleName=='COMMISSIONER')
+                        {
+                            a += " <span style='color:#4382CF;cursor:pointer;' id='updateBill'>修改</span> ";
+                        }
+
+
                         $("#length").html(row.length + "条记录");
                         return a;
                     },
@@ -806,6 +923,8 @@ var TableInit = function () {
             ],
 
         });
+
+
     };
 
     //得到查询的参数
@@ -843,19 +962,78 @@ var TableInit = function () {
 
             $('#pricetable').bootstrapTable('refresh');
         },
-        'click #feedback': function (e, value, row, index) {
-            e.preventDefault();
-            var url = this.href;
-            if (url != null && url != 'javascript:;') {
-                $.get(url, function (data) {
-                    $('.page-content').html(data);
+            'click #updateBill': function (e, value, row, index) {
+                $("#keywordUpdate").val(row.keywords);
+                $("#websiteUpdate").val(row.website);
+                $("#billIdInput").val(row.id);
+                index1 = layer.open({
+                    type: 1,
+                    title: '修改订单',
+                    skin: 'layui-layer-molv',
+                    shade: 0.6,
+                    area: ['30%', '40%'],
+                    content: $('#offerSetUp'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                    end: function (e, u) {
+                        $('#offerSetUp').hide();
+                    }
                 });
+
             }
         }
-    }
+
 
     return oTableInit;
+  /*  e.preventDefault();
+    var url = this.href;
+    if (url != null && url != 'javascript:;') {
+        $.get(url, function (data) {
+            $('.page-content').html(data);
+        });
+    }*/
 };
+
+
+//修改订单
+$("#confirmUpdateBill").click(function () {
+    if ($("#keywordUpdate").val() != "" && $("#websiteUpdate").val() != "" && $("#billIdInput").val() != "") {
+        $.ajax({
+            type: 'post',
+            url: CTX + '/order/updateBillDetailsYouHua',
+            data: {billId: $("#billIdInput").val(), keyword: $("#keywordUpdate").val(), website: $("#websiteUpdate").val()},
+            success: function (result) {
+                if (result.code == 200) {
+                    layer.alert(result.message, {
+                        skin: 'layui-layer-molv' //样式类名  自定义样式
+                        , anim: 4 //动画类型
+                        , icon: 1   // icon
+                    });
+                    $('#myTable').bootstrapTable('refresh');
+                }
+                else {
+                    layer.alert(result.message, {
+                        skin: 'layui-layer-molv' //样式类名  自定义样式
+                        , anim: 6 //动画类型
+                        , icon: 2   // icon
+                    });
+                    $("#keyword").val("");
+                    $("#websiteNow").val("");
+                }
+            }
+
+        });
+    }
+    else {
+        layer.alert('填写信息有误,请核对信息！', {
+            skin: 'layui-layer-molv' //样式类名  自定义样式
+            , anim: 4 //动画类型
+            , icon: 2   // icon
+        });
+    }
+})
+
+
+
+
 
 var TableInit1 = function () {
     var oTableInit1 = new Object();

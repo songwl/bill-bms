@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -19,7 +19,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping(value = "/billManage")
-public class BillManageController extends  BaseController {
+public class BillManageController extends BaseController {
 
     @Autowired
     private BillManageService billManageService;

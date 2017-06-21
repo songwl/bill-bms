@@ -3,6 +3,7 @@ package com.yipeng.bill.bms.task;
 import com.yipeng.bill.bms.dao.BillMapper;
 import com.yipeng.bill.bms.domain.Bill;
 import com.yipeng.bill.bms.model.Define;
+import com.yipeng.bill.bms.model.Md5_UrlEncode;
 import com.yipeng.bill.bms.service.RemoteService;
 import com.yipeng.bill.bms.vo.CustomerRankingParam;
 import com.yipeng.bill.bms.vo.CustomerRankingResult;
@@ -10,7 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import com.yipeng.bill.bms.model.Md5_UrlEncode;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
@@ -56,7 +57,7 @@ public class RankingTask {
                 for (Bill bill : billList) {
                     JSONObject jsonObj = new JSONObject();
                     jsonObj.put("businessType", businessType);
-                    int[] taskId={bill.getWebAppId()};
+                     int[] taskId={bill.getWebAppId()};
                     jsonObj.put("taskId", taskId);
                     jsonObj.put("time", System.currentTimeMillis());
                     jsonObj.put("userId", Define.userId);

@@ -47,13 +47,13 @@ public class LoginController extends BaseController {
 	@Autowired
 	private UserMapper userMapper;
 	@Autowired
-	UserCompanyMapper userCompanyMapper;
+    UserCompanyMapper userCompanyMapper;
 	@Autowired
-	UserImgurlMapper userImgurlMapper;
+    UserImgurlMapper userImgurlMapper;
 	@Autowired
-	UserHyperlinkMapper userHyperlinkMapper;
+    UserHyperlinkMapper userHyperlinkMapper;
 	@Autowired
-	UserFootMessageMapper userFootMessageMapper;
+    UserFootMessageMapper userFootMessageMapper;
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(HttpServletRequest request,ModelMap map) {
 		//获取当前访问的网址
@@ -96,41 +96,41 @@ public class LoginController extends BaseController {
 		User user = userService.getUserByName(userName);
 		String codeSession = (String) session.getAttribute("code");
 
-		if(user!=null)
-		{
-			if(user.getUserName().equals(userName)&&user.getPassword().equals(CryptoUtils.md5(password)))
+			if(user!=null)
 			{
-				if(codeSession.toLowerCase().equals(code.toLowerCase()))
+				if(user.getUserName().equals(userName)&&user.getPassword().equals(CryptoUtils.md5(password)))
 				{
-					if(user.getStatus())
+					if(codeSession.toLowerCase().equals(code.toLowerCase()))
 					{
-						int loginCount=user.getLoginCount();
-						user.setLastLoginTime(new Date());
-						user.setLoginCount(loginCount+1);
-						userMapper.updateByPrimaryKeySelective(user);
-						boolean flag = executeLogin(request, response, user);
-						return "redirect:/index";
-					}
+						if(user.getStatus())
+						{
+							int loginCount=user.getLoginCount();
+							user.setLastLoginTime(new Date());
+							user.setLoginCount(loginCount+1);
+							userMapper.updateByPrimaryKeySelective(user);
+							boolean flag = executeLogin(request, response, user);
+							return "redirect:/index";
+						}
+						else
+						{
+							modelMap.addAttribute("loginFailureMessage", "您无权限登录系统,请联系管理!");
+							return "/user/login";
+
+						}
+
+			    	}
 					else
 					{
-						modelMap.addAttribute("loginFailureMessage", "您无权限登录系统,请联系管理!");
+						modelMap.addAttribute("loginFailureMessage", "验证码错误");
 						return "/user/login";
-
 					}
-
-				}
-				else
-				{
-					modelMap.addAttribute("loginFailureMessage", "验证码错误");
-					return "/user/login";
-				}
 			}
 		}
 
 
 
-		modelMap.addAttribute("loginFailureMessage", "用户名密码错误");
-		return "/user/login";
+			modelMap.addAttribute("loginFailureMessage", "用户名密码错误");
+			return "/user/login";
 
 
 

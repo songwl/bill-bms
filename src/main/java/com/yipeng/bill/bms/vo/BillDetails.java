@@ -3,7 +3,6 @@ package com.yipeng.bill.bms.vo;
 import com.yipeng.bill.bms.domain.BillPrice;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,6 +33,7 @@ public class BillDetails {
     private List<BillPrice> billPriceList;
     private  Long length;
     private String billAscriptionName;
+    private  String roleName;
 
     public  int  getdisplayId(){return  displayId;}
     public int setdisplayId(int displayId){return  this.displayId=displayId;}
@@ -84,6 +84,7 @@ public class BillDetails {
     public Long getCreateUserId() {
         return createUserId;
     }
+    private Integer applyState;
 
     public void setCreateUserId(Long createUserId) {
         this.createUserId = createUserId;
@@ -118,5 +119,16 @@ public class BillDetails {
 
     public void setBillAscriptionName(String billAscriptionName) {
         this.billAscriptionName = billAscriptionName;
+    }
+
+    public String getRoleName(){return roleName;}
+    public  String setRoleName(String roleName){return this.roleName= roleName;}
+
+    public Integer getApplyState() {
+        return applyState;
+    }
+
+    public void setApplyState(Integer applyState) {
+        this.applyState = applyState;
     }
 }

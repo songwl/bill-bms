@@ -1,7 +1,5 @@
 package com.yipeng.bill.bms.model;
 
-import java.math.BigInteger;
-
 /**
  * Created by Administrator on 2017/4/26.
  */

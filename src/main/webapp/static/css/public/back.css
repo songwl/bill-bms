@@ -105,7 +105,7 @@ header {
 }
 
 .navbar {
-	background: #09C !important;
+	background: #09C;
 	min-height: 48px;
 	filter: none;
 	top: 0;

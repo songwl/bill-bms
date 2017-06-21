@@ -1,15 +1,18 @@
 package com.yipeng.bill.bms.task;
 
-import com.yipeng.bill.bms.dao.*;
-import com.yipeng.bill.bms.domain.*;
+import com.yipeng.bill.bms.dao.BillMapper;
+import com.yipeng.bill.bms.dao.BillPriceMapper;
+import com.yipeng.bill.bms.domain.Bill;
+import com.yipeng.bill.bms.domain.BillPrice;
 import com.yipeng.bill.bms.service.BillAccountAndItemService;
 import com.yipeng.bill.bms.service.BillCallCostService;
-import com.yipeng.bill.bms.service.SearchRateService;
-import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by song on 17/3/26.
@@ -23,9 +26,9 @@ public class CallCostTask {
     @Autowired
     private BillCallCostService billCallCostService;
     @Autowired
-    private BillAccountAndItemService billAccountAndItemService;
+     private BillAccountAndItemService billAccountAndItemService;
     @Autowired
-    private  BillPriceMapper billPriceMapper;
+    private BillPriceMapper billPriceMapper;
 
     public void execute(){
         int offset = 0;
@@ -64,7 +67,7 @@ public class CallCostTask {
         if(!CollectionUtils.isEmpty(billPriceList)) {
 
             try {
-                for (BillPrice item : billPriceList
+                  for (BillPrice item : billPriceList
                         ) {
 
                     map.put("userId", item.getOutMemberId());

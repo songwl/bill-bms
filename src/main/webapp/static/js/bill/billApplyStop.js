@@ -5,6 +5,16 @@
 
 
 $(document).ready(function () {
+    //切换订单页面
+    $("#pass").click(function () {
+        $('.page-content').empty().load(CTX+'/order/billApplyStop');
+    })
+    $("#pass1").click(function () {
+        $('.page-content').empty().load(CTX+'/order/billApplyToOptimizationBySon');
+    })
+
+
+
     //申请停单不通过
     $("#applyNotPass").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
@@ -322,7 +332,7 @@ var TableInit = function () {
 
                 },
                 {
-                    field: "opstate",
+                    field: "applyState",
                     align: 'center',
                     valign: 'middle',
                     title: '状态',

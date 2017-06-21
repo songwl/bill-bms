@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.*;
 
@@ -22,7 +21,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping(value = "/dataStatistics")
-public class DataStatisticsController extends  BaseController{
+public class DataStatisticsController extends BaseController {
 
     @Autowired
     private DataStatisticsService dataStatisticsService;
@@ -88,9 +87,9 @@ public class DataStatisticsController extends  BaseController{
             List<BillCommissionerStatistics> billCommissionerStatisticsList=billCommissionerStatisticsMapper.selectByGetAll(mapCaozuo);
            /* List<DistributorData> distributorDataList=dataStatisticsService.commissionerData(params,loginUser);
 */
-            List<DistributorData> distributorDataList=new ArrayList<>();
+           List<DistributorData> distributorDataList=new ArrayList<>();
             for (BillCommissionerStatistics item:billCommissionerStatisticsList
-                    ) {
+                 ) {
                 DistributorData distributorData=new DistributorData();
                 User user1=userMapper.selectByPrimaryKey(item.getUserid());
                 distributorData.setUserName(user1.getUserName());

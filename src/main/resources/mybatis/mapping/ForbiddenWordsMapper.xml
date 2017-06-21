@@ -9,7 +9,7 @@
     id, words
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select
+    select 
     <include refid="Base_Column_List" />
     from t_forbidden_words
     where id = #{id,jdbcType=BIGINT}
@@ -61,7 +61,6 @@
     <include refid="Base_Column_List" />
     from t_forbidden_words
   </select>
-
   <select id="selectByWords"   resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
@@ -77,5 +76,13 @@
     <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
       (#{item})
     </foreach>
+  </select>
+
+  <select id="selectByKeyWord"   resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_forbidden_words
+    where 1=1 AND
+    words = #{keyword,jdbcType=VARCHAR}
   </select>
 </mapper>

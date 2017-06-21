@@ -19,27 +19,27 @@ public interface FundItemMapper {
 
     int updateByPrimaryKey(FundItem record);
 
-    Long getFundItemListCount(Map<String,Object> params);
+    Long getFundItemListCount(Map<String, Object> params);
 
-    Long getFundItemListByOtherCount(Map<String,Object> params);
+    Long getFundItemListByOtherCount(Map<String, Object> params);
     //管理员
-    List<FundItemSum> selectByAdmin(Map<String,Object> params);
-    Long selectByAdminCount(Map<String,Object> params);
+    List<FundItemSum> selectByAdmin(Map<String, Object> params);
+    Long selectByAdminCount(Map<String, Object> params);
     //专员
-    List<FundItemSum> selectByZhuanYuan(Map<String,Object> params);
-    Long selectByZhuanYuanCount(Map<String,Object> params);
+    List<FundItemSum> selectByZhuanYuan(Map<String, Object> params);
+    Long selectByZhuanYuanCount(Map<String, Object> params);
     //渠道商和代理商
-    List<FundItemSum> selectByDAgent(Map<String,Object> params);
-    Long selectByDAgentCount(Map<String,Object> params);
+    List<FundItemSum> selectByDAgent(Map<String, Object> params);
+   Long selectByDAgentCount(Map<String, Object> params);
     //客户
-    List<FundItemSum> selectByCustomer(Map<String,Object> params);
-    Long selectByCustomerCount(Map<String,Object> params);
+    List<FundItemSum> selectByCustomer(Map<String, Object> params);
+    Long selectByCustomerCount(Map<String, Object> params);
 
     //查询今日单价对象对应的记录
-    FundItem selectByItemPriceId(Map<String,Object> params);
+    FundItem selectByItemPriceId(Map<String, Object> params);
 
-    Long selectByMaxId(Map<String,Object> params);
+    Long selectByMaxId(Map<String, Object> params);
 
-    FundItem selectByDayFunItem(Map<String,Object> params);
+    FundItem selectByDayFunItem(Map<String, Object> params);
 
 }

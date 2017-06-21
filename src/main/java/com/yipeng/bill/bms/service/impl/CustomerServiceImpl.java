@@ -8,12 +8,11 @@ import com.yipeng.bill.bms.model.FundItemSum;
 import com.yipeng.bill.bms.service.CustomerService;
 import com.yipeng.bill.bms.service.RoleService;
 import com.yipeng.bill.bms.service.UserRoleService;
-import com.yipeng.bill.bms.vo.*;
-import freemarker.template.utility.DateUtil;
-import org.apache.commons.collections.map.HashedMap;
+import com.yipeng.bill.bms.vo.CustomerListDetails;
+import com.yipeng.bill.bms.vo.LoginUser;
+import com.yipeng.bill.bms.vo.Roles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -22,7 +21,7 @@ import java.util.*;
  * Created by 鱼在我这里。 on 2017/3/19.
  */
 @Service
-public class CustomerServiceImpl implements CustomerService{
+public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private UserMapper userMapper;
     @Autowired
@@ -38,9 +37,9 @@ public class CustomerServiceImpl implements CustomerService{
     @Autowired
     private BillPriceMapper billPriceMapper;
     @Autowired
-    private  FundItemMapper fundItemMapper;
+    private FundItemMapper fundItemMapper;
     @Override
-    public int savaUser(User user, int addMemberId, LoginUser loginUser,String realName,String contact,String phone,String qq, BigDecimal balance) {
+    public int savaUser(User user, int addMemberId, LoginUser loginUser, String realName, String contact, String phone, String qq, BigDecimal balance) {
 
         User user1=userMapper.selectByUserName(user.getUserName());
         if(user1!=null)
@@ -49,62 +48,147 @@ public class CustomerServiceImpl implements CustomerService{
         }
         else
         {
-            //如果是超级管理员，创建的渠道商
-            if(loginUser.hasRole("SUPER_ADMIN"))
-            {
-                user.setStatus(true);
-                user.setCreateTime(new Date());
-                user.setPassword(CryptoUtils.md5(user.getPassword()));
-                user.setCreateUserId(loginUser.getId());
-                user.setRealName(realName);
-                user.setContact(contact);
-                user.setPhone(phone);
-                user.setQq(qq);
-                user.setLoginCount(0);
-                user.setDailiRole(0);
-                user.setStatus(true);
-                int num = userMapper.insert(user);
-                //资金余额
-                FundAccount fundAccount=new FundAccount();
-                fundAccount.setUserId(user.getId());
-                fundAccount.setBalance(balance);
-                fundAccount.setCreateTime(new Date());
-                fundAccount.setCreateUserId(loginUser.getId());
-                fundAccountMapper.insert(fundAccount);
-
-                //用户权限
-                Role role=roleService.getRoleByRoleCode(Roles.DISTRIBUTOR.name());
-                if(role!=null)
-                {
-                    UserRole userRole1 = new UserRole();
-                    userRole1.setUserId(user.getId());
-                    userRole1.setRoleId(role.getId());
-                    userRoleService.saveUserRole(userRole1);
-                }
-                return  num;
-
-            }
-            //如果是渠道商，判断创建用户
-            else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("ASSISTANT"))
-            {
-                if(addMemberId==1)
+                //如果是超级管理员，创建的渠道商
+                if(loginUser.hasRole("SUPER_ADMIN"))
                 {
                     user.setStatus(true);
                     user.setCreateTime(new Date());
                     user.setPassword(CryptoUtils.md5(user.getPassword()));
-                    if(loginUser.hasRole("ASSISTANT"))
-                    {
-                        user.setCreateUserId(loginUser.getCreateUserId());
-                    }
-                    else
-                    {
-                        user.setCreateUserId(loginUser.getId());
-                    }
-
+                    user.setCreateUserId(loginUser.getId());
                     user.setRealName(realName);
                     user.setContact(contact);
                     user.setPhone(phone);
                     user.setQq(qq);
+                    user.setLoginCount(0);
+                    user.setDailiRole(0);
+                    user.setStatus(true);
+                    int num = userMapper.insert(user);
+                    //资金余额
+                    FundAccount fundAccount=new FundAccount();
+                    fundAccount.setUserId(user.getId());
+                    fundAccount.setBalance(balance);
+                    fundAccount.setCreateTime(new Date());
+                    fundAccount.setCreateUserId(loginUser.getId());
+                   fundAccountMapper.insert(fundAccount);
+
+                    //用户权限
+                    Role role=roleService.getRoleByRoleCode(Roles.DISTRIBUTOR.name());
+                    if(role!=null)
+                    {
+                        UserRole userRole1 = new UserRole();
+                        userRole1.setUserId(user.getId());
+                        userRole1.setRoleId(role.getId());
+                        userRoleService.saveUserRole(userRole1);
+                    }
+                    return  num;
+
+                }
+                //如果是渠道商，判断创建用户
+                else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("ASSISTANT"))
+                {
+                    if(addMemberId==1)
+                    {
+                        user.setStatus(true);
+                        user.setCreateTime(new Date());
+                        user.setPassword(CryptoUtils.md5(user.getPassword()));
+                        if(loginUser.hasRole("ASSISTANT"))
+                        {
+                            user.setCreateUserId(loginUser.getCreateUserId());
+                        }
+                        else
+                        {
+                            user.setCreateUserId(loginUser.getId());
+                        }
+
+                        user.setRealName(realName);
+                        user.setContact(contact);
+                        user.setPhone(phone);
+                        user.setQq(qq);
+                        user.setLoginCount(0);
+                        user.setDailiRole(0);
+                        int num = userMapper.insert(user);
+                        //资金余额
+                        FundAccount fundAccount=new FundAccount();
+                        fundAccount.setUserId(user.getId());
+                        fundAccount.setBalance(balance);
+                        fundAccount.setCreateTime(new Date());
+                        fundAccount.setCreateUserId(loginUser.getId());
+                        fundAccountMapper.insert(fundAccount);
+
+                        Role role=roleService.getRoleByRoleCode(Roles.CUSTOMER.name());
+                        if(role!=null)
+                        {
+                            UserRole userRole1 = new UserRole();
+                            userRole1.setUserId(user.getId());
+                            userRole1.setRoleId(role.getId());
+                            userRoleService.saveUserRole(userRole1);
+                        }
+                        return  num;
+                    }
+                    //代理商
+                    else if(addMemberId==2)
+                    {
+                        user.setStatus(true);
+                        user.setCreateTime(new Date());
+                        user.setPassword(CryptoUtils.md5(user.getPassword()));
+                        if(loginUser.hasRole("ASSISTANT"))
+                        {
+                            user.setCreateUserId(loginUser.getCreateUserId());
+                        }
+                        else
+                        {
+                            user.setCreateUserId(loginUser.getId());
+                        }
+                        user.setLoginCount(0);
+                        user.setDailiRole(0);
+                        int num = userMapper.insert(user);
+                        //资金余额
+                        FundAccount fundAccount=new FundAccount();
+                        fundAccount.setUserId(user.getId());
+                        fundAccount.setBalance(balance);
+                        fundAccount.setCreateTime(new Date());
+                        fundAccount.setCreateUserId(loginUser.getId());
+                        fundAccountMapper.insert(fundAccount);
+
+                        Role role=roleService.getRoleByRoleCode(Roles.AGENT.name());
+                        if(role!=null)
+                        {
+                            UserRole userRole1 = new UserRole();
+                            userRole1.setUserId(user.getId());
+                            userRole1.setRoleId(role.getId());
+                            userRoleService.saveUserRole(userRole1);
+                        }
+                        return  num;
+                    }
+                    //助理
+                    else
+                    {
+                        user.setStatus(true);
+                        user.setCreateTime(new Date());
+                        user.setPassword(CryptoUtils.md5(user.getPassword()));
+                        user.setCreateUserId(loginUser.getId());
+                        user.setLoginCount(0);
+                        user.setDailiRole(0);
+                        int num = userMapper.insert(user);
+                        Role role=roleService.getRoleByRoleCode(Roles.ASSISTANT.name());
+                        if(role!=null)
+                        {
+                            UserRole userRole1 = new UserRole();
+                            userRole1.setUserId(user.getId());
+                            userRole1.setRoleId(role.getId());
+                            userRoleService.saveUserRole(userRole1);
+                        }
+                        return  num;
+
+                    }
+                }
+                //如果是代理商，创建客户
+                else
+                {
+                    user.setStatus(true);
+                    user.setCreateTime(new Date());
+                    user.setPassword(CryptoUtils.md5(user.getPassword()));
+                    user.setCreateUserId(loginUser.getId());
                     user.setLoginCount(0);
                     user.setDailiRole(0);
                     int num = userMapper.insert(user);
@@ -126,91 +210,6 @@ public class CustomerServiceImpl implements CustomerService{
                     }
                     return  num;
                 }
-                //代理商
-                else if(addMemberId==2)
-                {
-                    user.setStatus(true);
-                    user.setCreateTime(new Date());
-                    user.setPassword(CryptoUtils.md5(user.getPassword()));
-                    if(loginUser.hasRole("ASSISTANT"))
-                    {
-                        user.setCreateUserId(loginUser.getCreateUserId());
-                    }
-                    else
-                    {
-                        user.setCreateUserId(loginUser.getId());
-                    }
-                    user.setLoginCount(0);
-                    user.setDailiRole(0);
-                    int num = userMapper.insert(user);
-                    //资金余额
-                    FundAccount fundAccount=new FundAccount();
-                    fundAccount.setUserId(user.getId());
-                    fundAccount.setBalance(balance);
-                    fundAccount.setCreateTime(new Date());
-                    fundAccount.setCreateUserId(loginUser.getId());
-                    fundAccountMapper.insert(fundAccount);
-
-                    Role role=roleService.getRoleByRoleCode(Roles.AGENT.name());
-                    if(role!=null)
-                    {
-                        UserRole userRole1 = new UserRole();
-                        userRole1.setUserId(user.getId());
-                        userRole1.setRoleId(role.getId());
-                        userRoleService.saveUserRole(userRole1);
-                    }
-                    return  num;
-                }
-                //助理
-                else
-                {
-                    user.setStatus(true);
-                    user.setCreateTime(new Date());
-                    user.setPassword(CryptoUtils.md5(user.getPassword()));
-                    user.setCreateUserId(loginUser.getId());
-                    user.setLoginCount(0);
-                    user.setDailiRole(0);
-                    int num = userMapper.insert(user);
-                    Role role=roleService.getRoleByRoleCode(Roles.ASSISTANT.name());
-                    if(role!=null)
-                    {
-                        UserRole userRole1 = new UserRole();
-                        userRole1.setUserId(user.getId());
-                        userRole1.setRoleId(role.getId());
-                        userRoleService.saveUserRole(userRole1);
-                    }
-                    return  num;
-
-                }
-            }
-            //如果是代理商，创建客户
-            else
-            {
-                user.setStatus(true);
-                user.setCreateTime(new Date());
-                user.setPassword(CryptoUtils.md5(user.getPassword()));
-                user.setCreateUserId(loginUser.getId());
-                user.setLoginCount(0);
-                user.setDailiRole(0);
-                int num = userMapper.insert(user);
-                //资金余额
-                FundAccount fundAccount=new FundAccount();
-                fundAccount.setUserId(user.getId());
-                fundAccount.setBalance(balance);
-                fundAccount.setCreateTime(new Date());
-                fundAccount.setCreateUserId(loginUser.getId());
-                fundAccountMapper.insert(fundAccount);
-
-                Role role=roleService.getRoleByRoleCode(Roles.CUSTOMER.name());
-                if(role!=null)
-                {
-                    UserRole userRole1 = new UserRole();
-                    userRole1.setUserId(user.getId());
-                    userRole1.setRoleId(role.getId());
-                    userRoleService.saveUserRole(userRole1);
-                }
-                return  num;
-            }
 
 
         }
@@ -236,38 +235,38 @@ public class CustomerServiceImpl implements CustomerService{
             Role role=roleMapper.selectByRoleCode("DISTRIBUTOR");
             params.put("roleId",role.getId());
             params.put("userId",user.getId());
-            List<User> userList=userMapper.getUserRoleByCreateId(params);
-            Long total=userMapper.getUserRoleByCreateIdCount(params);
+             List<User> userList=userMapper.getUserRoleByCreateId(params);
+             Long total=userMapper.getUserRoleByCreateIdCount(params);
             for (User user1: userList
-                    ) {
-                i++;
-                CustomerListDetails customerListDetails=new CustomerListDetails();
-                customerListDetails.setId(i);
-                customerListDetails.setCustomerId(user1.getId());
-                customerListDetails.setUserName(user1.getUserName());
-                customerListDetails.setRealName(user1.getRealName());
-                customerListDetails.setContact(user1.getContact());
-                customerListDetails.setPhone(user1.getPhone());
-                customerListDetails.setQq(user1.getQq());
-                customerListDetails.setStatus(user1.getStatus());
-                customerListDetails.setCreateTime(DateUtils.formatDate(user1.getCreateTime()));
-                customerListDetails.setDailiRole(user1.getDailiRole());
-                customerListDetails.setRoleName(user.getRoles().get(0));
-                if(user1.getLastLoginTime()!=null)
-                {
-                    customerListDetails.setLastLoginTime(DateUtils.formatDate(user1.getLastLoginTime()));
-                }
-                customerListDetails.setLoginCount(user1.getLoginCount());
+                 ) {
+                     i++;
+                     CustomerListDetails customerListDetails=new CustomerListDetails();
+                     customerListDetails.setId(i);
+                     customerListDetails.setCustomerId(user1.getId());
+                     customerListDetails.setUserName(user1.getUserName());
+                     customerListDetails.setRealName(user1.getRealName());
+                     customerListDetails.setContact(user1.getContact());
+                     customerListDetails.setPhone(user1.getPhone());
+                     customerListDetails.setQq(user1.getQq());
+                     customerListDetails.setStatus(user1.getStatus());
+                     customerListDetails.setCreateTime(DateUtils.formatDate(user1.getCreateTime()));
+                     customerListDetails.setDailiRole(user1.getDailiRole());
+                     customerListDetails.setRoleName(user.getRoles().get(0));
+                     if(user1.getLastLoginTime()!=null)
+                     {
+                         customerListDetails.setLastLoginTime(DateUtils.formatDate(user1.getLastLoginTime()));
+                     }
+                     customerListDetails.setLoginCount(user1.getLoginCount());
 
-                int count=billPriceMapper.selectBillCount(user1.getId());
+                     int count=billPriceMapper.selectBillCount(user1.getId());
 
-                FundAccount fundAccount= fundAccountMapper.selectByUserId(user1.getId());
-                if(fundAccount!=null)
-                {
-                    customerListDetails.setBalance(fundAccount.getBalance());
-                }
-                customerListDetails.setMissionCount(count);
-                customerListDetailsList.add(customerListDetails);
+                     FundAccount fundAccount= fundAccountMapper.selectByUserId(user1.getId());
+                     if(fundAccount!=null)
+                     {
+                         customerListDetails.setBalance(fundAccount.getBalance());
+                     }
+                     customerListDetails.setMissionCount(count);
+                     customerListDetailsList.add(customerListDetails);
 
             }
             Map<String,Object> map=new HashMap<>();
@@ -285,7 +284,7 @@ public class CustomerServiceImpl implements CustomerService{
             List<User> userList=userMapper.getUserBillAscription(params);
             Long total=userMapper.getUserBillAscriptionCount(params);
             for (User user1: userList
-                    ) {
+                 ) {
 
                 i++;
                 CustomerListDetails customerListDetails=new CustomerListDetails();
@@ -390,9 +389,9 @@ public class CustomerServiceImpl implements CustomerService{
         int offset=Integer.parseInt(params.get("offset").toString()) ;
         int i=offset;
         List<CustomerListDetails> customerListDetailsList=new ArrayList<>();
-        List<User> userList=userMapper.selectByReviewUser(params);
+       List<User> userList=userMapper.selectByReviewUser(params);
         for (User user: userList
-                ) {
+             ) {
             CustomerListDetails customerListDetails=new CustomerListDetails();
             i++;
             customerListDetails.setId(i);
@@ -440,51 +439,51 @@ public class CustomerServiceImpl implements CustomerService{
     @Override
     public int Recharge(String customerId,String RechargeSum,LoginUser user) {
 
-        Double  nums=Double.parseDouble(RechargeSum);
-        FundAccount fundAccount=fundAccountMapper.selectByUserId(Long.parseLong(customerId));
-        if(fundAccount==null)
-        {
-            FundAccount fundAccount1=new FundAccount();
-            fundAccount1.setUserId(Long.parseLong(customerId));
-            fundAccount1.setBalance(new BigDecimal(nums));
-            fundAccount1.setCreateTime(new Date());
-            fundAccount1.setCreateUserId(user.getId());
-            fundAccount1.setUpdateTime(new Date());
-            fundAccount1.setUpdateUserId(user.getId());
-            fundAccountMapper.insert(fundAccount1);
-            FundItem fundItem = new FundItem();
-            fundItem.setFundAccountId(fundAccount1.getId());
-            fundItem.setChangeAmount(new BigDecimal(nums));
-            FundAccount fundAccount2=fundAccountMapper.selectByPrimaryKey(fundAccount1.getId());
-            fundItem.setBalance(fundAccount2.getBalance());
-            fundItem.setChangeTime(new Date());
-            fundItem.setItemType("recharge"); //充值
-            fundItemMapper.insert(fundItem);
-            return  1;
-        }
-        else
-        {
-            Double sum;
-            sum=nums +Double.parseDouble(fundAccount.getBalance().toString());
-            FundAccount fundAccount1=new FundAccount();
-            User user1=userMapper.selectByPrimaryKey(Long.parseLong(customerId));
-            fundAccount1.setId(fundAccount.getId());
-            fundAccount1.setUserId(user1.getId());
-            fundAccount1.setBalance(new BigDecimal(sum));
-            fundAccount1.setUpdateTime(new Date());
-            fundAccount1.setUpdateUserId(user.getId());
-            fundAccountMapper.updateByPrimaryKeySelective(fundAccount1);
+            Double  nums=Double.parseDouble(RechargeSum);
+            FundAccount fundAccount=fundAccountMapper.selectByUserId(Long.parseLong(customerId));
+            if(fundAccount==null)
+            {
+                FundAccount fundAccount1=new FundAccount();
+                fundAccount1.setUserId(Long.parseLong(customerId));
+                fundAccount1.setBalance(new BigDecimal(nums));
+                fundAccount1.setCreateTime(new Date());
+                fundAccount1.setCreateUserId(user.getId());
+                fundAccount1.setUpdateTime(new Date());
+                fundAccount1.setUpdateUserId(user.getId());
+                fundAccountMapper.insert(fundAccount1);
+                FundItem fundItem = new FundItem();
+                fundItem.setFundAccountId(fundAccount1.getId());
+                fundItem.setChangeAmount(new BigDecimal(nums));
+                FundAccount fundAccount2=fundAccountMapper.selectByPrimaryKey(fundAccount1.getId());
+                fundItem.setBalance(fundAccount2.getBalance());
+                fundItem.setChangeTime(new Date());
+                fundItem.setItemType("recharge"); //充值
+                fundItemMapper.insert(fundItem);
+                return  1;
+            }
+            else
+            {
+                Double sum;
+                sum=nums +Double.parseDouble(fundAccount.getBalance().toString());
+                FundAccount fundAccount1=new FundAccount();
+                User user1=userMapper.selectByPrimaryKey(Long.parseLong(customerId));
+                fundAccount1.setId(fundAccount.getId());
+                fundAccount1.setUserId(user1.getId());
+                fundAccount1.setBalance(new BigDecimal(sum));
+                fundAccount1.setUpdateTime(new Date());
+                fundAccount1.setUpdateUserId(user.getId());
+                fundAccountMapper.updateByPrimaryKeySelective(fundAccount1);
 
-            FundItem fundItem = new FundItem();
-            fundItem.setFundAccountId(fundAccount.getId());
-            fundItem.setChangeAmount(new BigDecimal(nums));
-            FundAccount fundAccount2=fundAccountMapper.selectByPrimaryKey(fundAccount1.getId());
-            fundItem.setBalance(fundAccount2.getBalance());
-            fundItem.setChangeTime(new Date());
-            fundItem.setItemType("recharge"); //充值
-            fundItemMapper.insert(fundItem);
-            return  1;
-        }
+                FundItem fundItem = new FundItem();
+                fundItem.setFundAccountId(fundAccount.getId());
+                fundItem.setChangeAmount(new BigDecimal(nums));
+                FundAccount fundAccount2=fundAccountMapper.selectByPrimaryKey(fundAccount1.getId());
+                fundItem.setBalance(fundAccount2.getBalance());
+                fundItem.setChangeTime(new Date());
+                fundItem.setItemType("recharge"); //充值
+                fundItemMapper.insert(fundItem);
+                return  1;
+            }
 
 
 
@@ -551,110 +550,110 @@ public class CustomerServiceImpl implements CustomerService{
      */
     @Override
     public Map<String, Object> fundAccountList(Map<String, Object> params,LoginUser user) {
-        //判断角色获取对应的客户
-        //管理员
+       //判断角色获取对应的客户
+          //管理员
         Long offset=Long.parseLong(params.get("offset").toString()) ;
         Long i=offset;
-        if(user.hasRole("SUPER_ADMIN"))
-        {
-            Role role=roleMapper.selectByRoleCode("DISTRIBUTOR");
-            params.put("roleId",role.getId());
-            List<FundItemSum> fundItemSumList= fundItemMapper.selectByAdmin(params);
-            for (FundItemSum item :fundItemSumList
-                    ) {
-                i++;
-                FundAccount fundAccount=fundAccountMapper.selectByPrimaryKey(item.getFundAccountId());
-                item.setId(i);
-                if(fundAccount!=null)
-                {
-                    User user1=userMapper.selectByPrimaryKey(fundAccount.getUserId());
-                    item.setUserName(user1.getUserName());
-                }
-            }
-            Long total=fundItemMapper.selectByAdminCount(params);
-            Map<String,Object> map=new HashMap<>();
-            map.put("rows",fundItemSumList);
-            map.put("total",total);
-            return map;
-        }
-        //操作员
-        else if(user.hasRole("COMMISSIONER"))
-        {
-            Role role=roleMapper.selectByRoleCode("DISTRIBUTOR");
-            params.put("roleId",role.getId());
-            params.put("userId",user.getId());
-            List<FundItemSum> fundItemSumList= fundItemMapper.selectByZhuanYuan(params);
-            for (FundItemSum item :fundItemSumList
-                    ) {
-                i++;
-                FundAccount fundAccount=fundAccountMapper.selectByPrimaryKey(item.getFundAccountId());
-                item.setId(i);
-                if(fundAccount!=null)
-                {
-                    User user1=userMapper.selectByPrimaryKey(fundAccount.getUserId());
-                    item.setUserName(user1.getUserName());
-                }
-            }
-            Long total=fundItemMapper.selectByZhuanYuanCount(params);
-            Map<String,Object> map=new HashMap<>();
-            map.put("rows",fundItemSumList);
-            map.put("total",total);
-            return map;
-        }
-        //渠道商和代理商
-        else if(user.hasRole("DISTRIBUTOR")||user.hasRole("AGENT")||user.hasRole("ASSISTANT"))
-        {
-            if(user.hasRole("ASSISTANT"))
+            if(user.hasRole("SUPER_ADMIN"))
             {
-                params.put("createId",user.getCreateUserId());
+                  Role role=roleMapper.selectByRoleCode("DISTRIBUTOR");
+                  params.put("roleId",role.getId());
+                  List<FundItemSum> fundItemSumList= fundItemMapper.selectByAdmin(params);
+                 for (FundItemSum item :fundItemSumList
+                     ) {
+                    i++;
+                    FundAccount fundAccount=fundAccountMapper.selectByPrimaryKey(item.getFundAccountId());
+                    item.setId(i);
+                    if(fundAccount!=null)
+                    {
+                        User user1=userMapper.selectByPrimaryKey(fundAccount.getUserId());
+                        item.setUserName(user1.getUserName());
+                    }
+                }
+                Long total=fundItemMapper.selectByAdminCount(params);
+                Map<String,Object> map=new HashMap<>();
+                map.put("rows",fundItemSumList);
+                map.put("total",total);
+                return map;
             }
+            //操作员
+            else if(user.hasRole("COMMISSIONER"))
+            {
+                Role role=roleMapper.selectByRoleCode("DISTRIBUTOR");
+                params.put("roleId",role.getId());
+                params.put("userId",user.getId());
+                List<FundItemSum> fundItemSumList= fundItemMapper.selectByZhuanYuan(params);
+                for (FundItemSum item :fundItemSumList
+                        ) {
+                    i++;
+                    FundAccount fundAccount=fundAccountMapper.selectByPrimaryKey(item.getFundAccountId());
+                    item.setId(i);
+                    if(fundAccount!=null)
+                    {
+                        User user1=userMapper.selectByPrimaryKey(fundAccount.getUserId());
+                        item.setUserName(user1.getUserName());
+                    }
+                }
+                Long total=fundItemMapper.selectByZhuanYuanCount(params);
+                Map<String,Object> map=new HashMap<>();
+                map.put("rows",fundItemSumList);
+                map.put("total",total);
+                return map;
+            }
+            //渠道商和代理商
+            else if(user.hasRole("DISTRIBUTOR")||user.hasRole("AGENT")||user.hasRole("ASSISTANT"))
+            {
+                if(user.hasRole("ASSISTANT"))
+                {
+                    params.put("createId",user.getCreateUserId());
+                }
+                else
+                {
+                    params.put("createId",user.getId());
+                }
+
+
+                    List<FundItemSum> fundItemSumList= fundItemMapper.selectByDAgent(params);
+
+                for (FundItemSum item :fundItemSumList
+                        ) {
+                    i++;
+                    item.setId(i);
+                    FundAccount fundAccount=fundAccountMapper.selectByPrimaryKey(item.getFundAccountId());
+                    if(fundAccount!=null)
+                    {
+                        User user1=userMapper.selectByPrimaryKey(fundAccount.getUserId());
+                        item.setUserName(user1.getUserName());
+                    }
+                }
+                Long total=fundItemMapper.selectByDAgentCount(params);
+                Map<String,Object> map=new HashMap<>();
+                map.put("rows",fundItemSumList);
+                map.put("total",total);
+                return map;
+
+            }
+            //客户
             else
             {
-                params.put("createId",user.getId());
-            }
+                params.put("userId",user.getId());
 
-
-            List<FundItemSum> fundItemSumList= fundItemMapper.selectByDAgent(params);
-
-            for (FundItemSum item :fundItemSumList
-                    ) {
-                i++;
-                item.setId(i);
-                FundAccount fundAccount=fundAccountMapper.selectByPrimaryKey(item.getFundAccountId());
-                if(fundAccount!=null)
-                {
-                    User user1=userMapper.selectByPrimaryKey(fundAccount.getUserId());
-                    item.setUserName(user1.getUserName());
+                List<FundItemSum> fundItemSumList= fundItemMapper.selectByCustomer(params);
+                Long total=fundItemMapper.selectByCustomerCount(params);
+                for (FundItemSum item :fundItemSumList
+                        ) {
+                    FundAccount fundAccount=fundAccountMapper.selectByPrimaryKey(item.getFundAccountId());
+                    if(fundAccount!=null)
+                    {
+                        User user1=userMapper.selectByPrimaryKey(fundAccount.getUserId());
+                        item.setUserName(user1.getUserName());
+                    }
                 }
+                Map<String,Object> map=new HashMap<>();
+                map.put("total",total);
+                map.put("rows",fundItemSumList);
+                return map;
             }
-            Long total=fundItemMapper.selectByDAgentCount(params);
-            Map<String,Object> map=new HashMap<>();
-            map.put("rows",fundItemSumList);
-            map.put("total",total);
-            return map;
-
-        }
-        //客户
-        else
-        {
-            params.put("userId",user.getId());
-
-            List<FundItemSum> fundItemSumList= fundItemMapper.selectByCustomer(params);
-            Long total=fundItemMapper.selectByCustomerCount(params);
-            for (FundItemSum item :fundItemSumList
-                    ) {
-                FundAccount fundAccount=fundAccountMapper.selectByPrimaryKey(item.getFundAccountId());
-                if(fundAccount!=null)
-                {
-                    User user1=userMapper.selectByPrimaryKey(fundAccount.getUserId());
-                    item.setUserName(user1.getUserName());
-                }
-            }
-            Map<String,Object> map=new HashMap<>();
-            map.put("total",total);
-            map.put("rows",fundItemSumList);
-            return map;
-        }
 
     }
 

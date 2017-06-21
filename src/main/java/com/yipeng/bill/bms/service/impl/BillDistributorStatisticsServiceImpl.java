@@ -2,7 +2,6 @@ package com.yipeng.bill.bms.service.impl;
 
 import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
-import com.yipeng.bill.bms.model.DistributorData;
 import com.yipeng.bill.bms.service.BillDistributorStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,9 +28,9 @@ public class BillDistributorStatisticsServiceImpl implements BillDistributorStat
     @Autowired
     private BillPriceMapper billPriceMapper;
     @Autowired
-    private  BillCostMapper billCostMapper;
+    private BillCostMapper billCostMapper;
     @Autowired
-    private  BillDistributorStatisticsMapper billDistributorStatisticsMapper;
+    private BillDistributorStatisticsMapper billDistributorStatisticsMapper;
 
     @Override
     public int insertBillDistributorStatistics() {
@@ -161,6 +160,6 @@ public class BillDistributorStatisticsServiceImpl implements BillDistributorStat
                 }
             }
         }
-        return  0;
+      return  0;
     }
 }

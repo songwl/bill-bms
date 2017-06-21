@@ -7,7 +7,6 @@ import com.yipeng.bill.bms.model.CaptchaUtil;
 import com.yipeng.bill.bms.service.UserRoleService;
 import com.yipeng.bill.bms.service.UserService;
 import com.yipeng.bill.bms.vo.LoginUser;
-import org.aspectj.weaver.ast.Var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import sun.misc.Cache;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -53,26 +51,26 @@ public class UserController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/register",method = RequestMethod.POST)
-    public  String createUser(HttpServletRequest request, User user, ModelMap modelMap, HttpSession session,String code)
+    public  String createUser(HttpServletRequest request, User user, ModelMap modelMap, HttpSession session, String code)
     {
         String codeSession = (String) session.getAttribute("code");
-        if(codeSession.toLowerCase().equals(code.toLowerCase()))
-        {
-            if(user.getUserName()!=""&&user.getPassword()!="")
-            {
-                userService.saveUser(user);
-                Long id=user.getId();
-            }
-            else
-            {
-                modelMap.addAttribute("loginFailureMessage", "填写信息不正确");
-            }
-        }
+       if(codeSession.toLowerCase().equals(code.toLowerCase()))
+       {
+           if(user.getUserName()!=""&&user.getPassword()!="")
+           {
+               userService.saveUser(user);
+               Long id=user.getId();
+           }
+           else
+           {
+               modelMap.addAttribute("loginFailureMessage", "填写信息不正确");
+           }
+       }
 
-        else
-        {
-            modelMap.addAttribute("loginFailureMessage", "验证码错误  !");
-        }
+       else
+       {
+           modelMap.addAttribute("loginFailureMessage", "验证码错误  !");
+       }
 
         return  "/user/login";
     }
@@ -104,7 +102,7 @@ public class UserController extends BaseController {
      */
     @RequestMapping(value = "/updateUser",method = RequestMethod.POST)
     @ResponseBody
-    public ResultMessage updateUser(HttpServletRequest request,User user) {
+    public ResultMessage updateUser(HttpServletRequest request, User user) {
 
         LoginUser loginUser=this.getCurrentAccount();
         if(loginUser!=null)
@@ -167,7 +165,7 @@ public class UserController extends BaseController {
      */
     @RequestMapping(value = "/updateUserPwd",method = RequestMethod.POST)
     @ResponseBody
-    public ResultMessage updateUserPwd(HttpServletRequest request,String password) {
+    public ResultMessage updateUserPwd(HttpServletRequest request, String password) {
 
         LoginUser loginUser=this.getCurrentAccount();
         if(loginUser!=null)

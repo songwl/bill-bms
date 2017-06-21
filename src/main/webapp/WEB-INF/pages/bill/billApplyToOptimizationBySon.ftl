@@ -4,7 +4,7 @@
 <@base.html "停单待通过">
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <script src="${ctx}/static/js/public/pace.js"></script>
-<script src="${ctx}/static/js/bill/billApplyStopPass.js"></script>
+<script src="${ctx}/static/js/bill/billApplyToOptimizationBySon.js"></script>
 <div class="Navs" >
     <div class="nav_L left">
         <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>停单待通过</span>
@@ -65,7 +65,7 @@
         <div class="panel panel-primary" id="list-panel">
             <div class="panel-body">
                 <div class="panel-nav">
-                    <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;停单待通过</div>
+                    <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;优化待通过</div>
                     <div class="Nav_Right">
                         <div id="continue">审核列表</div>
                         <!--
@@ -75,13 +75,7 @@
                     </div>
                     <div class="cls"></div>
                 </div>
-                <div id="toolbar" class="btn-group">
-                    <button id="applyPass" type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>审核通过</button>
-                    <button id="applyNotPass" type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-leaf" aria-hidden="true" id="">
-                        </span>审核不通过</button>
-                </div>
+
                 <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%;font-size: 13px;font-family: "微软雅黑">
                 </table>
             </div>

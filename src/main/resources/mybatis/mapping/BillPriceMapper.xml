@@ -13,7 +13,7 @@
     id, bill_id, price,bill_ranking_standard ,in_member_id, out_member_id, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select
+    select 
     <include refid="Base_Column_List" />
     from t_bill_price
     where id = #{id,jdbcType=BIGINT}
@@ -130,19 +130,19 @@
       AND bill_id = #{billId,jdbcType=BIGINT}
     </if>
     <if test="price != null">
-      AND  price = #{price,jdbcType=DECIMAL}
+     AND  price = #{price,jdbcType=DECIMAL}
     </if>
     <if test="billRankingStandard != null">
-      AND  #{billRankingStandard,jdbcType=BIGINT}
+    AND  #{billRankingStandard,jdbcType=BIGINT}
     </if>
     <if test="inMemberId != null">
-      AND  in_member_id = #{inMemberId,jdbcType=BIGINT}
+    AND  in_member_id = #{inMemberId,jdbcType=BIGINT}
     </if>
     <if test="outMemberId != null">
-      AND out_member_id = #{outMemberId,jdbcType=BIGINT}
+     AND out_member_id = #{outMemberId,jdbcType=BIGINT}
     </if>
     <if test="createTime != null">
-      AND  create_time = #{createTime,jdbcType=TIMESTAMP}
+    AND  create_time = #{createTime,jdbcType=TIMESTAMP}
     </if>
   </select>
   <select id="selectBillCount" parameterType="java.lang.Long" resultType="java.lang.Integer">

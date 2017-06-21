@@ -1,217 +1,80 @@
-/**
- * Created by 鱼在我这里。 on 2017/5/10.
- */
-
-$(document).ready(function () {
-
 //切换订单页面
-    $("#pass").click(function () {
-        $('.page-content').empty().load(CTX+'/order/billApplyStopPass');
-    })
-    $("#pass1").click(function () {
-        $('.page-content').empty().load(CTX+'/order/billApplyToOptimization');
-    })
+$("#pass").click(function () {
+    $('.page-content').empty().load(CTX+'/order/billApplyStopPass');
+})
+$("#pass1").click(function () {
+    $('.page-content').empty().load(CTX+'/order/billApplyToOptimization');
+})
 
+//申请优化审核
+$("#applyPass").click(function () {
+    var selectContent = $('#myTable').bootstrapTable('getSelections');
+    var len =selectContent.length;
+    if(selectContent == "") {
+        layer.alert('请选择一列数据', {
+            skin: 'layui-layer-molv' //样式类名  自定义样式
+            ,anim: 6 //动画类型
+            ,icon: 4   // icon
+        });
 
-
-    $(".close").click(function () {
-        $(".modal-backdrop").hide();
-        $(".OptimizationUpdateDiv").slideUp();
-    })
-    $(".cancel").click(function () {
-        $(".modal-backdrop").hide();
-        $(".OptimizationUpdateDiv").slideUp();
-    })
-
-
-    //显示搜索内容
-    $(".search").click(function () {
-        if($(".Navs2").css("display")=="block"){
-            $(".Navs2").slideUp();
-
-        }
-        else
-        {
-            $(".Navs2").slideDown();
-
-        }
-    })
-    //搜索按钮
-    $("#searchButton").click(function () {
-
-        if($("#website").val()!="")//网址
-        {
-            website=$.trim($("#website").val());
-        }
-        else
-        {
-            website=null
-        }
-        if($("#keywords").val()!="")//关键词
-        {
-            keywords=$.trim($("#keywords").val())
-        }
-        else
-        {
-            keywords=null;
-        }
-        if($("#searchName option:selected").text()!="--请选择--")//搜索引擎
-        {
-            searchName=$("#searchName option:selected").text();
-        }
-        else
-        {
-            searchName=null;
-        }
-        if($("#searchUserName").val()!="--请选择--")//客户名称
-        {
-            searchUserName=  $("#searchUserName").val();
-        }
-        else
-        {
-            searchUserName=null;
-        }
-        if($("#searchStandard option:selected").val()!="--请选择--"&&$("#searchStandard option:selected").val()!="0")//是否达标
-        {
-            searchStandard=  $("#searchStandard").val();
-        }
-        else
-        {
-            searchStandard=null;
-        }
-        if($("#firstRanking1").val()!="")//初排1
-        {
-            firstRanking1=$.trim($("#firstRanking1").val());
-        }
-        else
-        {
-            firstRanking1=null;
-        }
-        if($("#firstRanking2").val()!="")//初排2
-        {
-            firstRanking2=$.trim($("#firstRanking2").val());
-        }
-        else
-        {
-            firstRanking2=null;
-        }
-        if($("#newRanking1").val()!="")//新排1
-        {
-            newRanking1=$.trim($("#newRanking1").val());
-        }
-        else
-        {
-            newRanking1=null;
-        }
-        if($("#newRanking2").val()!="")//新排2
-        {
-            newRanking2=$.trim($("#newRanking2").val());
-        }
-        else
-        {
-            newRanking2=null;
-        }
-        if($("#newchange1").val()!="")//新变1
-        {
-            newchange1=$.trim($("#newchange1").val());
-        }
-        else
-        {
-            newchange1=null;
-        }
-        if($("#newchange2").val()!="")//新变2
-        {
-            newchange2=$.trim($("#newchange2").val());
-        }
-        else
-        {
-            newchange2=null;
-        }
-        if($("#addTime1").val()!="")//新排2
-        {
-            addTime1=$.trim($("#addTime1").val());
-        }
-        else
-        {
-            addTime1=null;
-        }
-        if($("#addTime2").val()!="")//新排2
-        {
-            addTime2=$.trim($("#addTime2").val());
-        }
-        else
-        {
-            addTime2=null;
-        }
-        $('#myTable').bootstrapTable('refresh');
-    });
-
-    //申请停单审核
-    $("#applyPass").click(function () {
-        var selectContent = $('#myTable').bootstrapTable('getSelections');
-        var len =selectContent.length;
-        if(selectContent == "") {
-            alert('请选择一列数据!');
-
-        }else{
-            if(confirm("是否通过审核?"))
-            {
-                $.ajax({
-                    type:"post",
-                    url:CTX+"/order/applyStopBillPass",
-                    data:{ selectContent:selectContent,length:len},
-                    success:function (result) {
-                        if(result.code==200)
-                        {
-                            alert(result.message);
-                            $('#myTable').bootstrapTable('refresh');
-                        }
-                        else
-                        {
-                            alert(result.message);
-                        }
+    }else{
+        layer.confirm('是否通过申请优化？',{
+            btn:['确定','取消']
+        },function () {
+            $.ajax({
+                type:"post",
+                url:CTX+"/order/billApplyToOptimizationPass",
+                data:{ selectContent:selectContent,length:len},
+                success:function (result) {
+                    if(result.code==200)
+                    {
+                        $('#myTable').bootstrapTable('refresh');
                     }
+                    layer.alert(result.message, {
+                        skin: 'layui-layer-molv' //样式类名
+                        ,closeBtn: 0
+                    })
+                }
 
-                })
-            }
-        }
-    })
-    //申请停单不通过
-    $("#applyNotPass").click(function () {
-        var selectContent = $('#myTable').bootstrapTable('getSelections');
-        var len =selectContent.length;
-        if(selectContent == "") {
-            layer.alert('请选择一列数据', {
-                skin: 'layui-layer-molv' //样式类名  自定义样式
-                ,anim: 6 //动画类型
-                ,icon: 4   // icon
-            });
+            })
 
-        }else{
-            layer.confirm('是否不通过停单申请？',{
-                btn:['确定','取消']
-            },function () {
-                $.ajax({
-                    type:"post",
-                    url:CTX+"/order/applyStopBillNotPass",
-                    data:{ selectContent:selectContent,length:len},
-                    success:function (result) {
-                        if(result.code==200)
-                        {
-                            $('#myTable').bootstrapTable('refresh');
-                        }
-                        layer.alert(result.message, {
-                            skin: 'layui-layer-molv' //样式类名
-                            ,closeBtn: 0
-                        })
+        })
+
+
+    }
+})
+//申请停单不通过
+$("#applyNotPass").click(function () {
+    var selectContent = $('#myTable').bootstrapTable('getSelections');
+    var len =selectContent.length;
+    if(selectContent == "") {
+        alert('请选择一列数据!');
+
+    }else{
+        if(confirm("是否不通过审核?"))
+        {
+            $.ajax({
+                type:"post",
+                url:CTX+"/order/applyStopBillNotPass",
+                data:{ selectContent:selectContent,length:len},
+                success:function (result) {
+                    if(result.code==200)
+                    {
+                        alert(result.message);
+                        $('#myTable').bootstrapTable('refresh');
                     }
-
-                })
+                    else
+                    {
+                        alert(result.message);
+                    }
+                }
 
             })
         }
-    })
+    }
 })
+
+
 $(function () {
 
     //1.初始化Table
@@ -223,7 +86,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#myTable').bootstrapTable({
-            url: CTX+'/order/billApplyStopPassTable',         //请求后台的URL（*）
+            url: CTX+'/order/billApplyToOptimizationTable',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
@@ -359,14 +222,14 @@ var TableInit = function () {
 
                 },
                 {
-                    field: "applyState",
+                    field: "opstate",
                     align: 'center',
                     valign: 'middle',
                     title: '状态',
                     formatter:function (value,row,index) {
                         var a="";
 
-                        a="<span style='color:#94b86e;'>停单审核中</span>";
+                        a="<span style='color:#94b86e;'>申请优化中</span>";
 
                         return a;
                     }

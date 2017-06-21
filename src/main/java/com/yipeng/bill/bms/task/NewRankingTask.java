@@ -1,6 +1,5 @@
 package com.yipeng.bill.bms.task;
 
-import com.yipeng.bill.bms.core.utils.DateUtils;
 import com.yipeng.bill.bms.dao.BillMapper;
 import com.yipeng.bill.bms.domain.Bill;
 import com.yipeng.bill.bms.model.Define;
@@ -93,7 +92,7 @@ public class NewRankingTask {
                             //用来做中间转换的Date
                             Date   date= null;
 
-                            //将字符串转换成日期格式
+                                //将字符串转换成日期格式
                             try {
                                 date = from_type.parse(UpdateTime);
                             } catch (ParseException e) {

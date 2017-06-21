@@ -4,8 +4,6 @@ import com.yipeng.bill.bms.core.model.ResultMessage;
 import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.service.CustomerService;
 import com.yipeng.bill.bms.vo.LoginUser;
-import jdk.nashorn.internal.ir.RuntimeNode;
-import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +23,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping(value = "/customer")
-public class CustomerController extends  BaseController{
+public class CustomerController extends BaseController {
 
     @Autowired
     private CustomerService customerService;
@@ -97,7 +94,7 @@ public class CustomerController extends  BaseController{
     @RequestMapping(value = "/customerList",method = RequestMethod.POST)
     @ResponseBody
     public ResultMessage createUser(HttpServletRequest request, User user, int addMemberId,
-                                    String realName,String contact,String phone,String qq, BigDecimal balance)
+                                    String realName, String contact, String phone, String qq, BigDecimal balance)
     {
         LoginUser loginUser=this.getCurrentAccount();
         int a=customerService.savaUser(user,addMemberId,loginUser,realName,contact,phone,qq,balance);
@@ -158,7 +155,7 @@ public class CustomerController extends  BaseController{
      */
     @RequestMapping(value ="/customerAudit",method = RequestMethod.POST)
     @ResponseBody
-    public  ResultMessage customerAudit(HttpServletRequest request, @RequestParam Long customerId)
+    public ResultMessage customerAudit(HttpServletRequest request, @RequestParam Long customerId)
     {
 
         LoginUser user=this.getCurrentAccount();
@@ -167,15 +164,15 @@ public class CustomerController extends  BaseController{
         {
             if(user.hasRole("SUPER_ADMIN"))
             {
-                int a=customerService.customerAudit(customerId);
-                if(a==1)
-                {
-                    return  this.ajaxDoneSuccess("审核成功！");
-                }
-                else
-                {
-                    return  this.ajaxDoneError("审核失败，请稍后再试！");
-                }
+                 int a=customerService.customerAudit(customerId);
+                 if(a==1)
+                 {
+                     return  this.ajaxDoneSuccess("审核成功！");
+                 }
+                 else
+                 {
+                     return  this.ajaxDoneError("审核失败，请稍后再试！");
+                 }
             }
 
         }
@@ -211,22 +208,22 @@ public class CustomerController extends  BaseController{
     @RequestMapping(value="/fundAccountList")
     @ResponseBody
     public Map<String,Object> fundAccountList(int limit,int offset,String sortOrder, String sortName) {
-        LoginUser user=this.getCurrentAccount();
+         LoginUser user=this.getCurrentAccount();
         offset = (offset - 1) * limit;
-        if(user!=null)
-        {
+         if(user!=null)
+         {
 
-            Map<String,Object> params=new HashMap<>();
-            params.put("limit",limit);
-            params.put("offset",offset);
-            if (sortName != null) {
-                params.put("sortName", sortName);
-                params.put("sortOrder", sortOrder);
-            }
-            Map<String, Object> modelMap=  customerService.fundAccountList(params,user);
-            return  modelMap;
-        }
-        return  null;
+             Map<String,Object> params=new HashMap<>();
+             params.put("limit",limit);
+             params.put("offset",offset);
+             if (sortName != null) {
+                 params.put("sortName", sortName);
+                 params.put("sortOrder", sortOrder);
+             }
+             Map<String, Object> modelMap=  customerService.fundAccountList(params,user);
+             return  modelMap;
+         }
+         return  null;
 
     }
     /**
@@ -234,17 +231,17 @@ public class CustomerController extends  BaseController{
      * @param request
      * @return
      */
-    @RequestMapping(value = "/Recharge",method = RequestMethod.POST)
-    @ResponseBody
-    public  ResultMessage Recharge(HttpServletRequest request)
+     @RequestMapping(value = "/Recharge",method = RequestMethod.POST)
+     @ResponseBody
+    public ResultMessage Recharge(HttpServletRequest request)
     {
         LoginUser user=this.getCurrentAccount();
         if(user!=null)
         {
             String customerId=request.getParameter("customerId");
             String RechargeSum=request.getParameter("RechargeSum");
-            int a= customerService.Recharge(customerId,RechargeSum,user);
-            return  this.ajaxDoneSuccess("充值成功！");
+           int a= customerService.Recharge(customerId,RechargeSum,user);
+           return  this.ajaxDoneSuccess("充值成功！");
         }
 
         return  this.ajaxDoneError("充值失败，请稍后再试!");
@@ -257,7 +254,7 @@ public class CustomerController extends  BaseController{
      */
     @RequestMapping(value = "/Refound",method = RequestMethod.POST)
     @ResponseBody
-    public  ResultMessage Refound(HttpServletRequest request)
+    public ResultMessage Refound(HttpServletRequest request)
     {
         LoginUser user=this.getCurrentAccount();
         if(user!=null)
@@ -291,7 +288,7 @@ public class CustomerController extends  BaseController{
      */
     @RequestMapping(value = "/updateDailiRole",method = RequestMethod.POST)
     @ResponseBody
-    public  ResultMessage updateDailiRole(HttpServletRequest request)
+    public ResultMessage updateDailiRole(HttpServletRequest request)
     {
         LoginUser user=this.getCurrentAccount();
         if(user!=null)

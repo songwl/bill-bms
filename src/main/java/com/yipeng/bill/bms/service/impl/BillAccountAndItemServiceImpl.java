@@ -5,7 +5,6 @@ import com.yipeng.bill.bms.domain.FundAccount;
 import com.yipeng.bill.bms.domain.FundItem;
 import com.yipeng.bill.bms.domain.Logs;
 import com.yipeng.bill.bms.service.BillAccountAndItemService;
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,14 +35,14 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
     public int BillAccountAndItem(Map<String, Object> params) {
         try
         {
-            Calendar now =Calendar.getInstance();
-            params.put("year",now.get(Calendar.YEAR));
-            params.put("month",now.get(Calendar.MONTH)+1);
-            params.put("day",now.get(Calendar.DATE));
-            params.put("itemType","cost");
-            Double cost=billCostMapper.selectByUseDayCost(params);
-            if (cost!=0)
-            {
+        Calendar now =Calendar.getInstance();
+        params.put("year",now.get(Calendar.YEAR));
+        params.put("month",now.get(Calendar.MONTH)+1);
+        params.put("day",now.get(Calendar.DATE));
+        params.put("itemType","cost");
+        Double cost=billCostMapper.selectByUseDayCost(params);
+        if (cost!=0)
+        {
 
                 //获取当前用户的FUNDACCOUNT
                 FundAccount fundAccount = fundAccountMapper.selectByUserId(Long.parseLong(params.get("userId").toString()));
@@ -105,7 +104,7 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
                         logs.setUserid(new Long(1));
                         logs.setCreatetime(new Date());
 
-                        int a = logsMapper.insert(logs);
+                            int a = logsMapper.insert(logs);
 
                         fundAccount.setBalance(fundAccount.getBalance().subtract(new BigDecimal(cost)));
 
@@ -133,9 +132,9 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
 
                 }
 
-            }
-            //判断fundItem今日是否存在()
-            else {
+        }
+        //判断fundItem今日是否存在()
+        else {
                 //获取当前用户的FUNDACCOUNT
                 FundAccount fundAccount = fundAccountMapper.selectByUserId(Long.parseLong(params.get("userId").toString()));
                 //获取今日的FUNDITEM
@@ -152,7 +151,7 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
                 }
 
 
-            }
+         }
         }
         catch (Exception e)
         {

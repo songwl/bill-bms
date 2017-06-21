@@ -1,10 +1,7 @@
 package com.yipeng.bill.bms.web;
 
-import com.mashape.unirest.request.HttpRequest;
 import com.yipeng.bill.bms.core.model.ResultMessage;
-import com.yipeng.bill.bms.service.userCompanyService;
 import com.yipeng.bill.bms.vo.LoginUser;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,20 +10,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Map;
 
 /**
  * Created by 鱼在我这里。 on 2017/5/7.
  */
 @Controller
 @RequestMapping(value = "/userCompany")
-public class userCompanyController extends  BillController {
-    @Autowired
-    private userCompanyService userCompanyService;
+public class userCompanyController extends BillController {
+@Autowired
+private com.yipeng.bill.bms.service.userCompanyService userCompanyService;
     @RequestMapping("/userCompanyView")
     public  String userCompanyView ()
     {
@@ -48,15 +42,15 @@ public class userCompanyController extends  BillController {
         String[] website=map.get("website");
         if(!"".equals(website[0])&&logoImgurl!=null)
         {
-            int a= userCompanyService.uploadFile(logoImgurl, img_url1,img_url2,img_url3,map,loginUser,request);
-            if (a==0)
-            {
-                return  this.ajaxDoneSuccess("绑定成功！");
-            }
-            else
-            {
-                return  this.ajaxDoneError("绑定失败!");
-            }
+           int a= userCompanyService.uploadFile(logoImgurl, img_url1,img_url2,img_url3,map,loginUser,request);
+           if (a==0)
+           {
+               return  this.ajaxDoneSuccess("绑定成功！");
+           }
+           else
+           {
+               return  this.ajaxDoneError("绑定失败!");
+           }
         }
 
 

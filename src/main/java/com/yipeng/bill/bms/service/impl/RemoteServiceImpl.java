@@ -1,6 +1,5 @@
 package com.yipeng.bill.bms.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 import com.yipeng.bill.bms.model.Md5_UrlEncode;
 import com.yipeng.bill.bms.service.RemoteService;
@@ -20,11 +19,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
-import sun.misc.BASE64Encoder;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +39,7 @@ public class RemoteServiceImpl implements RemoteService {
     Md5_UrlEncode md5_urlEncode=new Md5_UrlEncode();
     @Override
     public CustomerRankingResult getCustomerRanking(CustomerRankingParam customerRankingParam)throws IOException, NoSuchAlgorithmException  {
-        //返回对象
+         //返回对象
         CustomerRankingResult result = new CustomerRankingResult();
         //请求返回
         String json=getTaskId(customerRankingParam);
@@ -132,7 +128,7 @@ public class RemoteServiceImpl implements RemoteService {
         String body = "";
 
         //创建httpclient对象
-        CloseableHttpClient client = HttpClients.createDefault();
+         CloseableHttpClient client = HttpClients.createDefault();
         //创建post方式请求对象
         HttpPost httpPost = new HttpPost(url);
 

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  * Created by song on 17/3/12.
  */
 @Service
-public class RoleServiceImpl implements RoleService{
+public class RoleServiceImpl implements RoleService {
     @Autowired
     private RoleMapper roleMapper;
 

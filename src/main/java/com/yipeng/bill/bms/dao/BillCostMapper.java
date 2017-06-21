@@ -1,12 +1,9 @@
 package com.yipeng.bill.bms.dao;
 
-import com.yipeng.bill.bms.domain.Bill;
 import com.yipeng.bill.bms.domain.BillCost;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public interface BillCostMapper {
     int deleteByPrimaryKey(Long id);
@@ -29,103 +26,103 @@ public interface BillCostMapper {
 
     int selectByPriceCount(Map<String, Object> modelMap);
 
-    List<BillCost> getPriceByMap(Map<String,Object> params);
+    List<BillCost> getPriceByMap(Map<String, Object> params);
 
-    Long getPriceByMapCount(Map<String,Object> params);
+    Long getPriceByMapCount(Map<String, Object> params);
 
     /**
      * @param params
      * @return
      */
-    Double MonthConsumption(Map<String,Object> params);
-    Double MonthConsumptionCommissioner(Map<String,Object> params);
-    Double MonthConsumptionCustomer(Map<String,Object> params);
+    Double MonthConsumption(Map<String, Object> params);
+    Double MonthConsumptionCommissioner(Map<String, Object> params);
+    Double MonthConsumptionCustomer(Map<String, Object> params);
 
-    int  selectByBillCostOfDay(Map<String,Object> params);
-    Double selectByBillCostOfWeek(Map<String,Object> params);
-    Double selectByBillCostOfMonthNow(Map<String,Object> params);
-    Double selectByBillCostOfMonth(Map<String,Object> params);
-    Double selectByBillCostOfAll(Map<String,Object> params);
+    int  selectByBillCostOfDay(Map<String, Object> params);
+    Double selectByBillCostOfWeek(Map<String, Object> params);
+    Double selectByBillCostOfMonthNow(Map<String, Object> params);
+    Double selectByBillCostOfMonth(Map<String, Object> params);
+    Double selectByBillCostOfAll(Map<String, Object> params);
 
-    Double  selectByBillCostOfDaySum(Map<String,Object> params);
+    Double  selectByBillCostOfDaySum(Map<String, Object> params);
 
     /**
      * 扣费  判断当天订单是否消费
      * @param params
      * @return
      */
-    List<BillCost> selectByDayCost(Map<String,Object> params);
+    List<BillCost> selectByDayCost(Map<String, Object> params);
 
     /**
      * 扣费  通过单价Id判断今日是否存在
      * @param params
      * @return
      */
-    BillCost selectByDayCostPriceId(Map<String,Object> params);
+       BillCost selectByDayCostPriceId(Map<String, Object> params);
     /**
      * 获取上一次的扣费记录
      * @param params
      * @return
      */
-    BillCost selectByCostByOutId(Map<String,Object> params);
+        BillCost selectByCostByOutId(Map<String, Object> params);
 
     /**
      * 判断今日消费是否存在
      * @param params
      * @return
      */
-    BillCost selectByDayCostExisit(Map<String,Object> params);
+        BillCost selectByDayCostExisit(Map<String, Object> params);
 
     /**
      * 获取每个付款人的消费
      * @param params
      * @return
      */
-    Double selectByUseDayCost(Map<String,Object> params);
+    Double selectByUseDayCost(Map<String, Object> params);
 
     /**
      * 优化方结算（本日）
      * @param params
      * @return
      */
-    Double selectByBillDayCost(Map<String,Object> params);
+    Double selectByBillDayCost(Map<String, Object> params);
 
     /**
      * 优化方结算（本月）
      * @param params
      * @return
      */
-    Double selectByBillMonthCost(Map<String,Object> params);
+    Double selectByBillMonthCost(Map<String, Object> params);
 
     /**
      * 客户方结算（本日）
      * @param params
      * @return
      */
-    Double selectByBillClientDayCost(Map<String,Object> params);
+    Double selectByBillClientDayCost(Map<String, Object> params);
 
     /**
      * 客户方结算（本月）
      * @param params
      * @return
      */
-    Double selectByBillClientMonthCost(Map<String,Object> params);
+    Double selectByBillClientMonthCost(Map<String, Object> params);
 
     /**
      * 操作员业绩（本日）
      * @param params
      * @return
      */
-    Double selectByBillCaoZuoYuanDayCost(Map<String,Object> params);
+    Double selectByBillCaoZuoYuanDayCost(Map<String, Object> params);
 
     /**
      * 操作员业绩（本月）
      * @param params
      * @return
      */
-    Double selectByBillCaoZuoYuanMonthCost(Map<String,Object> params);
+    Double selectByBillCaoZuoYuanMonthCost(Map<String, Object> params);
 
     List<BillCost>  selectByGetBillToOne();
-    List<BillCost> selectByCaoZuoyuanGetBillToOne(Map<String,Object> params);
-    List<BillCost> selectByQuDaoGetBillToOne(Map<String,Object> params);
+    List<BillCost> selectByCaoZuoyuanGetBillToOne(Map<String, Object> params);
+    List<BillCost> selectByQuDaoGetBillToOne(Map<String, Object> params);
 }

@@ -1,7 +1,6 @@
 package com.yipeng.bill.bms.vo;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 /**
  * Created by song on 17/4/11.

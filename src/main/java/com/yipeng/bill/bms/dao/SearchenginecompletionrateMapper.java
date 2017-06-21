@@ -18,5 +18,5 @@ public interface SearchenginecompletionrateMapper {
     int updateByPrimaryKey(Searchenginecompletionrate record);
 
     //查询今日是否存在记录
-    Searchenginecompletionrate selectByUsedIdAndDay(Map<String,Object> params);
+    Searchenginecompletionrate selectByUsedIdAndDay(Map<String, Object> params);
 }

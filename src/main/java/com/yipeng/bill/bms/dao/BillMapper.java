@@ -1,7 +1,6 @@
 package com.yipeng.bill.bms.dao;
 
 import com.yipeng.bill.bms.domain.Bill;
-import com.yipeng.bill.bms.vo.LoginUser;
 
 import java.util.List;
 import java.util.Map;
@@ -19,106 +18,104 @@ public interface BillMapper {
 
     int updateByPrimaryKey(Bill record);
 
-    List<Bill> selectList(Map<String,Object> params);
+    List<Bill> selectList(Map<String, Object> params);
 
-    List<Bill> selectAll(Map<String,Object> params);
+    List<Bill> selectAll(Map<String, Object> params);
 
     Long  selectAllCount(int state);
 
-    List<Bill> selectAgentBill(Map<String,Object> params);
+    List<Bill> selectAgentBill(Map<String, Object> params);
 
-    Long  selectAgentBillCount(Map<String,Object> params);
+    Long  selectAgentBillCount(Map<String, Object> params);
 
-    List<Bill> selectAllSelective(Map<String,Object> params);
+    List<Bill> selectAllSelective(Map<String, Object> params);
 
-    List<Bill> selectBill(Map<String,Object> params);
+    List<Bill> selectBill(Map<String, Object> params);
     /**
      * 通过收款方来查询对应的订单
      * @param params
      * @return
      */
-    List<Bill>  selectByInMemberId(Map<String,Object> params);
-    Long selectByInMemberIdCount(Map<String,Object> params);
+    List<Bill>  selectByInMemberId(Map<String, Object> params);
+    Long selectByInMemberIdCount(Map<String, Object> params);
     /**
      * 通过付款方来查询对应的订单
      * @param params
      * @return
      */
-    List<Bill>  selectByOutMemberId(Map<String,Object> params);
-
-    Long selectByOutMemberIdCount(Map<String,Object> params);
+    List<Bill>  selectByOutMemberId(Map<String, Object> params);
+    Long selectByOutMemberIdCount(Map<String, Object> params);
     /**
      * 根据角色来获取订单(渠道商直属客户)
      * @param params
      * @return
      */
-    List<Bill>  selectByCustomerId(Map<String,Object> params);
+    List<Bill>  selectByCustomerId(Map<String, Object> params);
 
-    Long selectByCustomerIdCount(Map<String,Object> params);
+    Long selectByCustomerIdCount(Map<String, Object> params);
 
     /**
      * 除客户之外其他角色的订单数
      * @param params
      * @return
      */
-    Long getBillListCount(Map<String,Object> params);
+    Long getBillListCount(Map<String, Object> params);
     /**
      * 客户的订单数
      * @param params
      * @return
      */
-    Long getBillListByCmmCount(Map<String,Object> params);
+    Long getBillListByCmmCount(Map<String, Object> params);
     /**
      * 客户的订单
      * @param params
      * @return
      */
-    List<Bill> getBillCountByCmm(Map<String,Object> params);
+    List<Bill> getBillCountByCmm(Map<String, Object> params);
     /**
      * 按网址分组
      * @param params
      * @return
      */
-    List<Bill> getBillGroupByWebsite(Map<String,Object> params);
+    List<Bill> getBillGroupByWebsite(Map<String, Object> params);
+    List<Bill> getBillGroupByWebsiteTwo(Map<String, Object> params);
 
-    List<Bill> getBillGroupByWebsiteTwo(Map<String,Object> params);
     /**
      * 本月新增订单数
      * @param params
      * @return
      */
-    int getBillMonthAdd(Map<String,Object> params);
+    int getBillMonthAdd(Map<String, Object> params);
 
     /**
      * 按网址分组
      * @param params
      * @return
      */
-    List<Bill>  selectBillGroupByWebsite(Map<String,Object> params);
+    List<Bill>  selectBillGroupByWebsite(Map<String, Object> params);
 
-    List<Bill>  selectByNewRanking(Map<String,Object> params);
-    Long selectByNewRankingCount(Map<String,Object> params);
+    List<Bill>  selectByNewRanking(Map<String, Object> params);
+    Long selectByNewRankingCount(Map<String, Object> params);
 
     //审核订单预览
-    List<Bill>  selectByBillAudit(Map<String,Object> params);
+    List<Bill>  selectByBillAudit(Map<String, Object> params);
     //审核订单预览的个数
-    Long selectByBillAuditCount(Map<String,Object> params);
+    Long selectByBillAuditCount(Map<String, Object> params);
 
-    List<Bill>  selectByBillByUpdateStandardDays(Map<String,Object> params);
+    List<Bill>  selectByBillByUpdateStandardDays(Map<String, Object> params);
     //达标数量
-    int selectBillDabiaoCount(Map<String,Object> params);
+     int selectBillDabiaoCount(Map<String, Object> params);
 
-    //通过TASKID查询
+     //通过TASKID查询
     List<Bill> selectByBillIdToGetTaskId(int taskId);
     //审核客户提交订单页面
-    List<Bill> selectByPendingAuditView1List(Map<String,Object> params);
-
-    Long selectByPendingAuditView1ListCount(Map<String,Object> params);
+    List<Bill> selectByPendingAuditView1List(Map<String, Object> params);
+    Long selectByPendingAuditView1ListCount(Map<String, Object> params);
 
     //审核客户提交订单页面
-    List<Bill> selectByAuditViewKeHuList(Map<String,Object> params);
+    List<Bill> selectByAuditViewKeHuList(Map<String, Object> params);
+    Long selectByAuditViewKeHuListCount(Map<String, Object> params);
 
-    Long selectByAuditViewKeHuListCount(Map<String,Object> params);
 
     List<String> selectAllKeywords();
 }

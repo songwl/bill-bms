@@ -11,7 +11,7 @@
     id, role_name, role_code, role_desc
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select
+    select 
     <include refid="Base_Column_List" />
     from t_role
     where id = #{id,jdbcType=BIGINT}
@@ -92,4 +92,5 @@
     <include refid="Base_Column_List" />
     from t_role
   </select>
+
 </mapper>

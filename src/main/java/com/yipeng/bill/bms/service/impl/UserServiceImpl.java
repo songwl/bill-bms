@@ -2,7 +2,9 @@ package com.yipeng.bill.bms.service.impl;
 
 import com.yipeng.bill.bms.core.crypto.CryptoUtils;
 import com.yipeng.bill.bms.dao.*;
-import com.yipeng.bill.bms.domain.*;
+import com.yipeng.bill.bms.domain.Role;
+import com.yipeng.bill.bms.domain.User;
+import com.yipeng.bill.bms.domain.UserRole;
 import com.yipeng.bill.bms.service.RoleService;
 import com.yipeng.bill.bms.service.UserRoleService;
 import com.yipeng.bill.bms.service.UserService;
@@ -12,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -98,7 +99,7 @@ public class UserServiceImpl implements UserService {
         List<User> userList=userMapper.userCreater(createId);
         List<User> userList1=new ArrayList<>() ;
         for (User user:userList
-                ) {
+             ) {
             List<UserRole> userRoles=userRoleService.findUserRolesByUserId(user.getId());
 
             if(!CollectionUtils.isEmpty(userRoles))
@@ -124,18 +125,18 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<User> getUserAll(Map<String, Long> params) {
-        long userRole=params.get("role");
-        List<UserRole>  userRoleList=userRoleMapper.selectByRoleId(userRole);
-        List<User> userList =new ArrayList<>();
-        if(userRoleList!=null)
-        {
-            for (UserRole userRole1: userRoleList
-                    ) {
-                User user=userMapper.selectByPrimaryKey(userRole1.getUserId());
-                userList.add(user);
-            }
+          long userRole=params.get("role");
+          List<UserRole>  userRoleList=userRoleMapper.selectByRoleId(userRole);
+          List<User> userList =new ArrayList<>();
+          if(userRoleList!=null)
+          {
+              for (UserRole userRole1: userRoleList
+                   ) {
+                  User user=userMapper.selectByPrimaryKey(userRole1.getUserId());
+                  userList.add(user);
+              }
 
-        }
+          }
 
 
         return userList;
@@ -147,7 +148,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public List<User> getSearchUser(LoginUser loginUser,String way) {
+    public List<User> getSearchUser(LoginUser loginUser, String way) {
         List<User> userList=new ArrayList<>();
 
         if(way.equals("1"))
@@ -190,7 +191,7 @@ public class UserServiceImpl implements UserService {
             {
                 List<User> userList1=userMapper.getUserByCreateId(loginUser.getId());
                 for (User user: userList1
-                        ) {
+                     ) {
                     UserRole userRole=userRoleMapper.selectByUserId(user.getId());
                     Role role=roleMapper.selectByPrimaryKey(userRole.getRoleId());
                     if(role.getRoleCode().equals("AGENT"))
@@ -224,7 +225,7 @@ public class UserServiceImpl implements UserService {
             user.setUpdateTime(new Date());
             user.setUpdateUserId(user.getId());
             int a=userMapper.updateByPrimaryKeySelective(user);
-            return  1;
+             return  1;
         }
         else
         {

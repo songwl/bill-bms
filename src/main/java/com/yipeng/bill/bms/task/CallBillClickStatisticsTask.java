@@ -1,7 +1,6 @@
 package com.yipeng.bill.bms.task;
 
 import com.yipeng.bill.bms.service.BillClickStatisticsService;
-import com.yipeng.bill.bms.service.DataStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -9,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class CallBillClickStatisticsTask {
 
-    @Autowired
-    private BillClickStatisticsService billClickStatisticsService;
+   @Autowired
+   private BillClickStatisticsService billClickStatisticsService;
     public void execute(){
         billClickStatisticsService.insertBillClickStatistics();
     }

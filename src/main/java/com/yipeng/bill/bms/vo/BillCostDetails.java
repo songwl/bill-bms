@@ -1,7 +1,6 @@
 package com.yipeng.bill.bms.vo;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * Created by Administrator on 2017/4/6.

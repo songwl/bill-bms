@@ -25,13 +25,13 @@ public interface DataStatisticsService {
      * @param user
      * @return
      */
-    List<DistributorData> distributorData(Map<String,Object> params, LoginUser user);
+    List<DistributorData> distributorData(Map<String, Object> params, LoginUser user);
     /**
      * 操作员数据
      * @param params
      * @param user
      * @return
      */
-    List<DistributorData> commissionerData(Map<String,Object> params);
+    List<DistributorData> commissionerData(Map<String, Object> params);
 
 }

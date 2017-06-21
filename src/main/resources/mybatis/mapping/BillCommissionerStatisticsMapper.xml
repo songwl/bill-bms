@@ -23,7 +23,7 @@
     update_user_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select
+    select 
     <include refid="Base_Column_List" />
     from t_bill_commissioner_statistics
     where id = #{id,jdbcType=BIGINT}

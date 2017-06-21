@@ -4,22 +4,12 @@ import com.yipeng.bill.bms.dao.BillMapper;
 import com.yipeng.bill.bms.dao.BillOptimizationMapper;
 import com.yipeng.bill.bms.domain.Bill;
 import com.yipeng.bill.bms.domain.BillOptimization;
-import com.yipeng.bill.bms.model.Define;
-import com.yipeng.bill.bms.model.Md5_UrlEncode;
 import com.yipeng.bill.bms.service.RemoteService;
-import com.yipeng.bill.bms.vo.CustomerRankingParam;
-import com.yipeng.bill.bms.vo.CustomerRankingResult;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -60,11 +50,11 @@ public class OptimizationTask {
                     billOptimization.setOptimizationDate(new Date());
                     billOptimizationMapper.insert(billOptimization);
                     //日优化
-                    int single=bill.getDayOptimization();
-                    //总优化
-                    int All=bill.getAllOptimization();
-                    bill.setAllOptimization(single+All);
-                    billMapper.updateByPrimaryKeySelective(bill);
+                     int single=bill.getDayOptimization();
+                     //总优化
+                     int All=bill.getAllOptimization();
+                     bill.setAllOptimization(single+All);
+                     billMapper.updateByPrimaryKeySelective(bill);
                 }
             }
             if (CollectionUtils.isEmpty(billList) || billList.size()<limit) { //查询为空或者不足limit条,说明已查询结束

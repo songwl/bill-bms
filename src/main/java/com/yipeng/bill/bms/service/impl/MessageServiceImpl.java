@@ -21,17 +21,17 @@ import java.util.Map;
 public class MessageServiceImpl implements MessageService {
 
     @Autowired
-    RoleMapper roleMapper;
+     private   RoleMapper roleMapper;
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
     @Autowired
-    sendBoxMapper sendBoxMapper;
+    private sendBoxMapper sendBoxMapper;
     @Autowired
-    inBoxMapper inBoxMapper;
+    private inBoxMapper inBoxMapper;
     @Autowired
-    noticepublishMapper noticepublishMapper;
+    private   noticepublishMapper noticepublishMapper;
     @Autowired
-    messageReplyMapper messageReplyMapper;
+    private messageReplyMapper messageReplyMapper;
 
     @Override
     public List<Role> getBumen() {

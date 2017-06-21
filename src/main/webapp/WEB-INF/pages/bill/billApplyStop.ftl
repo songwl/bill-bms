@@ -10,8 +10,11 @@
         <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>停单审核中</span>
     </div>
     <div class="nav_R right" id="divQx">
-        <div id="applyNotPass">
-            <span>&nbsp;<i class="fa fa-exchange"></i>&nbsp;取消停单</span>
+        <div id="pass">
+            <span>&nbsp;<i class="fa fa-stop"></i>&nbsp;停单待通过</span>
+        </div>
+        <div id="pass1">
+            <span>&nbsp;<i class="fa fa-play"></i>&nbsp;优化待通过</span>
         </div>
     </div>
     <div class="cls">
@@ -73,7 +76,13 @@
                     </div>
                     <div class="cls"></div>
                 </div>
+                <div id="toolbar" class="btn-group">
+                    <button id="applyNotPass" type="button" class="btn btn-default">
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                        取消停单
+                    </button>
 
+                </div>
                 <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%;font-size: 13px;font-family: "微软雅黑">
                 </table>
             </div>

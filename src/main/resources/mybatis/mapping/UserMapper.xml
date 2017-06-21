@@ -24,11 +24,11 @@
     update_time, contact, qq, phone, last_login_time, login_count,daili_Role
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from t_user
-    where id = #{id,jdbcType=BIGINT}
-  </select>
+  select
+  <include refid="Base_Column_List" />
+  from t_user
+  where id = #{id,jdbcType=BIGINT}
+</select>
   <select id="selectByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
@@ -44,7 +44,7 @@
       id = #{id,jdbcType=BIGINT}
     </if>
     <if test="password != null">
-      AND    password = #{password,jdbcType=VARCHAR}
+     AND    password = #{password,jdbcType=VARCHAR}
     </if>
   </select>
   <select id="userCreater" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -241,7 +241,7 @@
     select
     <include refid="Base_Column_List" />
     from t_user
-    limit #{1},#{0}
+   limit #{1},#{0}
   </select>
   <select id="getQueryUserAll" resultMap="BaseResultMap">
     select  a.*
@@ -271,7 +271,7 @@
     AND
     a.create_user_id= #{userId,jdbcType=BIGINT}
     <if test="roleId != null">
-      AND b.role_id = #{roleId,jdbcType=BIGINT}
+     AND b.role_id = #{roleId,jdbcType=BIGINT}
     </if>
     <if test="searchUserName != null">
       AND a.user_name LIKE CONCAT('%',#{searchUserName,jdbcType=VARCHAR},'%')

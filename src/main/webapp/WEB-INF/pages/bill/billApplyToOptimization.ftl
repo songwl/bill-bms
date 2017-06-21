@@ -4,7 +4,7 @@
 <@base.html "停单待通过">
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <script src="${ctx}/static/js/public/pace.js"></script>
-<script src="${ctx}/static/js/bill/billApplyStopPass.js"></script>
+<script src="${ctx}/static/js/bill/billApplyToOptimization.js"></script>
 <div class="Navs" >
     <div class="nav_L left">
         <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>停单待通过</span>
@@ -65,7 +65,7 @@
         <div class="panel panel-primary" id="list-panel">
             <div class="panel-body">
                 <div class="panel-nav">
-                    <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;停单待通过</div>
+                    <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;优化待通过</div>
                     <div class="Nav_Right">
                         <div id="continue">审核列表</div>
                         <!--

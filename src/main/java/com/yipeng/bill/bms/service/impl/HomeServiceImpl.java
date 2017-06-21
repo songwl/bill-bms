@@ -6,8 +6,6 @@ import com.yipeng.bill.bms.service.HomeService;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import sun.rmi.runtime.Log;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -31,11 +29,9 @@ public class HomeServiceImpl implements HomeService {
     @Autowired
     private FundAccountMapper fundAccountMapper;
     @Autowired
-    private  BillPriceMapper billPriceMapper;
+    private BillPriceMapper billPriceMapper;
     @Autowired
-    private   SearchenginecompletionrateMapper searchenginecompletionrateMapper;
-    @Autowired
-    private  inBoxMapper inBoxMapper;
+    private SearchenginecompletionrateMapper searchenginecompletionrateMapper;
     @Autowired
     private  noticepublishMapper noticepublishMapper;
     /**
@@ -402,7 +398,7 @@ public class HomeServiceImpl implements HomeService {
                 Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
                 if(MaxYbyNewCost<=keywordsSum)
                 {
-                    MaxYbyNewCost=keywordsSum;
+                     MaxYbyNewCost=keywordsSum;
                 }
                 seriesNowMonthSum+=keywordsSum+",";
             }
@@ -632,7 +628,7 @@ public class HomeServiceImpl implements HomeService {
             Double sum=billCostMapper.MonthConsumptionCustomer(params);
             map.put("MonthConsumption",sum);
         }
-        return map;
+            return map;
     }
     //本日消费
     @Override
@@ -678,7 +674,7 @@ public class HomeServiceImpl implements HomeService {
         }
 
 
-        return map;
+            return map;
     }
     //任务数
     @Override
@@ -945,7 +941,7 @@ public class HomeServiceImpl implements HomeService {
         }
         return map;
     }
-    //搜狗
+   //搜狗
     @Override
     public Map<String, Object> sougouCompleteness(LoginUser loginUser) {
         Map<String, Object> map=new HashMap<>();
@@ -972,7 +968,7 @@ public class HomeServiceImpl implements HomeService {
         }
         return map;
     }
-    //神马
+//神马
     @Override
     public Map<String, Object> shenmaCompleteness(LoginUser loginUser) {
         Map<String, Object> map=new HashMap<>();
@@ -1200,6 +1196,7 @@ public class HomeServiceImpl implements HomeService {
 
     public String getYAxis(int max)
     {
+
         String yAxis="";
         if(max<=50)
         {
@@ -1266,7 +1263,6 @@ public class HomeServiceImpl implements HomeService {
         {
             yAxis="4100,4200,4300,4400,4500,4600,4700,4800,4900,5000";
         }
-
         else if(max<=6000&&max>5000)
         {
             yAxis="5100,5200,5300,5400,5500,5600,5700,5800,5900,6000";
@@ -1291,60 +1287,22 @@ public class HomeServiceImpl implements HomeService {
         {
             yAxis="9100,9200,9300,9400,9500,9600,9700,9800,9900,10000";
         }
-        else if(max<=11000&&max>10000)
+
+
+        else if(max<=15000&&max>10000)
         {
-            yAxis="10100,10200,10300,10400,10500,10600,10700,10800,10900,11000";
+            yAxis="10500,11000,11500,12000,12500,13000,13500,14000,14500,15000";
         }
 
-        else if(max<=12000&&max>11000)
+        else if(max<=20000&&max>15000)
         {
-            yAxis="11100,11200,11300,11400,11500,11600,11700,11800,11900,12000";
+            yAxis="15500,16000,16500,17000,17500,18000,18500,19000,19500,20000";
         }
-        else if(max<=13000&&max>12000)
+        else if(max<=25000&&max>20000)
         {
-            yAxis="12100,12200,12300,12400,12500,12600,12700,12800,12900,13000";
+            yAxis="20500,21000,21500,22000,22500,23000,23500,24000,24500,25000";
         }
 
-        else if(max<=14000&&max>13000)
-        {
-            yAxis="13100,13200,13300,13400,13500,13600,13700,13800,13900,14000";
-        }
-        else if(max<=15000&&max>14000)
-        {
-            yAxis="14100,14200,14300,14400,14500,14600,14700,14800,14900,15000";
-        }
-        else if(max<=16000&&max>15000)
-        {
-            yAxis="15100,15200,15300,15400,15500,15600,15700,15800,15900,16000";
-        }
-        else if(max<=17000&&max>16000)
-        {
-            yAxis="16100,16200,16300,16400,16500,16600,16700,16800,16900,17000";
-        }
-        else if(max<=18000&&max>17000)
-        {
-            yAxis="17100,17200,17300,17400,17500,17600,17700,17800,17900,18000";
-        }
-        else if(max<=19000&&max>18000)
-        {
-            yAxis="18100,18200,18300,18400,18500,18600,18700,18800,18900,19000";
-        }
-        else if(max<=20000&&max>19000)
-        {
-            yAxis="19100,19200,19300,19400,19500,19600,19700,19800,19900,20000";
-        }
-        else if(max<=21000&&max>20000)
-        {
-            yAxis="20100,20200,20300,20400,20500,20600,20700,20800,20900,21000";
-        }
-        else if(max<=22000&&max>21000)
-        {
-            yAxis="21100,21200,21300,21400,21500,21600,21700,21800,21900,22000";
-        }
-        else if(max<=23000&&max>22000)
-        {
-            yAxis="22100,22200,22300,22400,22500,22600,22700,22800,22900,23000";
-        }
 
         return yAxis;
     }
@@ -1443,60 +1401,20 @@ public class HomeServiceImpl implements HomeService {
         }
 
 
-        else if(max<=11000&&max>10000)
+        else if(max<=15000&&max>10000)
         {
-            yAxis="10100,10200,10300,10400,10500,10600,10700,10800,10900,11000";
+            yAxis="10500,11000,11500,12000,12500,13000,13500,14000,14500,15000";
         }
 
-        else if(max<=12000&&max>11000)
+        else if(max<=20000&&max>15000)
         {
-            yAxis="11100,11200,11300,11400,11500,11600,11700,11800,11900,12000";
+            yAxis="15500,16000,16500,17000,17500,18000,18500,19000,19500,20000";
         }
-        else if(max<=13000&&max>12000)
+        else if(max<=25000&&max>20000)
         {
-            yAxis="12100,12200,12300,12400,12500,12600,12700,12800,12900,13000";
+            yAxis="20500,21000,21500,22000,22500,23000,23500,24000,24500,25000";
         }
 
-        else if(max<=14000&&max>13000)
-        {
-            yAxis="13100,13200,13300,13400,13500,13600,13700,13800,13900,14000";
-        }
-        else if(max<=15000&&max>14000)
-        {
-            yAxis="14100,14200,14300,14400,14500,14600,14700,14800,14900,15000";
-        }
-        else if(max<=16000&&max>15000)
-        {
-            yAxis="15100,15200,15300,15400,15500,15600,15700,15800,15900,16000";
-        }
-        else if(max<=17000&&max>16000)
-        {
-            yAxis="16100,16200,16300,16400,16500,16600,16700,16800,16900,17000";
-        }
-        else if(max<=18000&&max>17000)
-        {
-            yAxis="17100,17200,17300,17400,17500,17600,17700,17800,17900,18000";
-        }
-        else if(max<=19000&&max>18000)
-        {
-            yAxis="18100,18200,18300,18400,18500,18600,18700,18800,18900,19000";
-        }
-        else if(max<=20000&&max>19000)
-        {
-            yAxis="19100,19200,19300,19400,19500,19600,19700,19800,19900,20000";
-        }
-        else if(max<=21000&&max>20000)
-        {
-            yAxis="20100,20200,20300,20400,20500,20600,20700,20800,20900,21000";
-        }
-        else if(max<=22000&&max>21000)
-        {
-            yAxis="21100,21200,21300,21400,21500,21600,21700,21800,21900,22000";
-        }
-        else if(max<=23000&&max>22000)
-        {
-            yAxis="22100,22200,22300,22400,22500,22600,22700,22800,22900,23000";
-        }
 
         return yAxis;
     }
@@ -1510,4 +1428,5 @@ public class HomeServiceImpl implements HomeService {
         List<noticepublish> inBoxList=noticepublishMapper.selectByInUser(params);
         return inBoxList;
     }
+
 }

@@ -10,7 +10,7 @@
     id, bill_id, search_support
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select
+    select 
     <include refid="Base_Column_List" />
     from t_bill_search_support
     where id = #{id,jdbcType=BIGINT}

@@ -119,7 +119,7 @@ $(".samepricecmt").click(function () {
                                jQuery("input[name='samePriceprice3']").val("");
                                 $("#searchengineid").val("0");
                                 $("#sameSelect").val("0");
-
+                                $(".modal-backdrop").hide();
 
                             }
                             else
@@ -161,4 +161,5 @@ $(".samepricecmt").click(function () {
 
 
     }
+
 })

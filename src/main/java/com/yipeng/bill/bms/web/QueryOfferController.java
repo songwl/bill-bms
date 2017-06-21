@@ -63,8 +63,14 @@ public class QueryOfferController extends BaseController {
         if (!wSign.equals(xSign)) {
             return this.ajaxDone(-1, "xSign验证失败", null);
         }*/
+        JsonObject json;
         com.google.gson.JsonParser parser = new com.google.gson.JsonParser();//创建Json解析器
-        JsonObject json = (JsonObject) parser.parse(xParam);//json解析参数xParam
+        try {
+            json = (JsonObject) parser.parse(xParam);//json解析参数xParam
+        }catch (Exception e)
+        {
+            return this.ajaxDone(-5, "JSon格式解析失败", null);
+        }
         String UserId = json.get("UserId").getAsString();//任务类型
         UserId = userMapper.selectByUserName(UserId).getId().toString();
         offerset offerset = offersetMapper.selectByUserId(Long.parseLong(UserId));//获取登录人的参数设置信息

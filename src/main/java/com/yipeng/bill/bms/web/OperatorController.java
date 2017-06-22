@@ -33,7 +33,6 @@ public class OperatorController extends BaseController {
     {
         return "/operator/list";
     }
-
     /**
      * 添加操作员
      * @param request
@@ -41,12 +40,13 @@ public class OperatorController extends BaseController {
      */
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    public ResultMessage createCommissioner(HttpServletRequest request, User user)
+    public ResultMessage list(HttpServletRequest request, User user)
     {
         LoginUser users=this.getCurrentAccount();
+        String role="COMMISSIONER";
         if(users.hasRole("SUPER_ADMIN"))
         {
-            int a=operatorService.saveOperator(user,users);
+            int a=operatorService.saveOperator(user,users,role);
             if(a==0)
             {
                 return this.ajaxDoneError("用户名已经存在！");
@@ -61,14 +61,14 @@ public class OperatorController extends BaseController {
         return  this.ajaxDoneError("系统错误，请稍后再试！");
     }
     /**
-     * 操作员列表
+     * 获取操作员列表
      * @param limit
      * @param offset
      * @return
      */
     @RequestMapping(value = "/getOperator")
     @ResponseBody
-    public Map<String,Object> getCustomerBill(int limit, int offset,String searchUserName,String searchState)
+    public Map<String,Object> getOperator(int limit, int offset,String searchUserName,String searchState)
     {
         Map<String, Object> modelMap=new HashMap<>();
         Role role=roleMapper.selectByRoleCode("COMMISSIONER");
@@ -103,6 +103,82 @@ public class OperatorController extends BaseController {
         return  modelMap;
     }
 
+
+    @RequestMapping(value = "/adminList",method = RequestMethod.GET)
+    public  String adminList(HttpServletRequest request)
+    {
+        return "/operator/adminList";
+    }
+    /**
+     * 添加操作员
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/adminList",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage adminList(HttpServletRequest request, User user)
+    {
+        LoginUser users=this.getCurrentAccount();
+        String role="ADMIN";
+        if(users.hasRole("SUPER_ADMIN"))
+        {
+            int a=operatorService.saveOperator(user,users,role);
+            if(a==0)
+            {
+                return this.ajaxDoneError("用户名已经存在！");
+
+            }
+            else
+            {
+                return  this.ajaxDoneSuccess("注册成功");
+            }
+
+        }
+        return  this.ajaxDoneError("系统错误，请稍后再试！");
+    }
+
+    /**
+     * 获取运维列表
+     * @param limit
+     * @param offset
+     * @return
+     */
+    @RequestMapping(value = "/getAdminList")
+    @ResponseBody
+    public Map<String,Object> getAdminList(int limit, int offset,String searchUserName,String searchState)
+    {
+        Map<String, Object> modelMap=new HashMap<>();
+        Role role=roleMapper.selectByRoleCode("ADMIN");
+        if(role!=null)
+        {
+            offset=(offset-1)*limit;
+            Map<String, Object> params = this.getSearchRequest(); //查询参数
+            User user=this.getCurrentAccount();
+            params.put("limit",limit);
+            params.put("offset",offset);
+            params.put("roleId",role.getId());
+            params.put("user",user);
+            if(!searchUserName.isEmpty())
+            {
+                try{
+                    searchUserName = new String(searchUserName.getBytes("ISO-8859-1"),"utf-8");
+                }
+                catch (UnsupportedEncodingException e)
+                {
+                    e.printStackTrace();
+                }
+                params.put("searchUserName",searchUserName);
+            }
+            if(!searchState.isEmpty())
+            {
+                params.put("searchState",searchState);
+            }
+
+            modelMap= operatorService.getOperator(params);
+        }
+
+        return  modelMap;
+    }
     /**
      * 修改信息
      * @param request

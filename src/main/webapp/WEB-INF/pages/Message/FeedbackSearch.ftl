@@ -6,6 +6,7 @@
 <link href="${ctx}/static/css/Message/animate.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/custom.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/Index.css" rel="stylesheet">
+<link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <div class="Navs">
     <div class="nav_L left">
         <i class="fa fa-home">&nbsp;</i><span>反馈与帮助</span> > <span>反馈查询</span>
@@ -17,6 +18,15 @@
 <div class="wrapper wrapper-content">
     <div class="row">
         <div class="col-sm-12 animated fadeInRight">
+            <div class="col-sm-12" style="padding-left: 0px;padding-right: 0px;">
+                <div style="float: left">
+                    <img src="${ctx}/static/img/bg_p4.gif"  class="usertx">
+                </div>
+                <div style="float: right">
+                    <img src="${ctx}/static/img/bg_p3.gif"  class="usertx">
+                </div>
+                <div style="clear: both;"></div>
+            </div>
             <div class="mail-box-header">
 
                 <div class="pull-right mail-search">
@@ -36,14 +46,14 @@
                 <div class="mail-tools tooltip-demo m-t-md">
                     <div class="btn-group pull-right">
 
-                        <#if !loginUser.hasRole("SUPER_ADMIN")&&!loginUser.hasRole("SECRETARY")>
+                        <#if !loginUser.hasRole("SUPER_ADMIN")&&!loginUser.hasRole("ADMIN")>
                             <button class="btn btn-white btn-sm fsgg" data-toggle="0" check=""
                                     onclick="loadSendOrReceive(0)"
                                     style="background: #eee;">
                                 <i class="fa fa-arrow-up">发送反馈</i>
                             </button>
                         </#if>
-                        <#if loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("ADMIN")||loginUser.hasRole("COMMISSIONER")||loginUser.hasRole("AGENT")||loginUser.hasRole("SECRETARY")>
+                        <#if loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("ADMIN")||loginUser.hasRole("COMMISSIONER")||loginUser.hasRole("AGENT")||loginUser.hasRole("ADMIN")>
                             <button class="btn btn-white btn-sm jsgg" data-toggle="1" check=""
                                     onclick="loadSendOrReceive(1)">
                                 <i class="fa fa-arrow-down">接收反馈</i>
@@ -97,7 +107,7 @@
     //setInterval('MailAllNum()', 500);
 
     var num = 1;
-        <#if !loginUser.hasRole("SUPER_ADMIN")&&!loginUser.hasRole("SECRETARY")>
+        <#if !loginUser.hasRole("SUPER_ADMIN")&&!loginUser.hasRole("ADMIN")>
         num = 0;
         </#if>
     var SearchContent = "";

@@ -18,6 +18,15 @@
 <div class="wrapper wrapper-content">
     <div class="row">
         <div class="col-sm-12 animated fadeInRight">
+            <div class="col-sm-12" style="padding-left: 0px;padding-right: 0px;">
+                <div style="float: left">
+                    <img src="${ctx}/static/img/bg_p4.gif"  class="usertx">
+                </div>
+                <div style="float: right">
+                    <img src="${ctx}/static/img/bg_p3.gif"  class="usertx">
+                </div>
+                <div style="clear: both;"></div>
+            </div>
             <div class="mail-box-header">
 
                 <div class="pull-right mail-search">
@@ -35,7 +44,7 @@
                 </h2>
                 <div class="mail-tools tooltip-demo m-t-md">
                     <div class="btn-group pull-right">
-                        <#if loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("SECRETARY")>
+                        <#if loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ADMIN")>
                             <button class="btn btn-white btn-sm fsgg" data-toggle="0" onclick="loadSendOrReceive(0)"
                                     style="background: #eee;">
                                 <i class="fa fa-arrow-up">发送公告</i>
@@ -93,7 +102,7 @@
     //setInterval('MailAllNum()', 500);
 
     var num = 1;
-        <#if loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("SECRETARY")>
+        <#if loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ADMIN")>
         num = 0;
         </#if>
     var SearchContent = "";

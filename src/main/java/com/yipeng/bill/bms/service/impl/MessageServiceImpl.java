@@ -235,7 +235,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public int SendNotice(Map<String, String[]> data, LoginUser loginUser) {
-        if (!loginUser.hasRole("SUPER_ADMIN") && !loginUser.hasRole("DISTRIBUTOR") && !loginUser.hasRole("AGENT")&& !loginUser.hasRole("SECRETARY")) {
+        if (!loginUser.hasRole("SUPER_ADMIN") && !loginUser.hasRole("DISTRIBUTOR") && !loginUser.hasRole("AGENT")&& !loginUser.hasRole("ADMIN")) {
             return 2;
         }
         Long SendUserId = loginUser.getId();

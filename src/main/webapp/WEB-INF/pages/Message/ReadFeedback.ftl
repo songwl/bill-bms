@@ -18,7 +18,17 @@
 </div>
 <div class="wrapper wrapper-content">
     <div class="row">
+
         <div class="col-sm-12 animated fadeInRight">
+            <div class="col-sm-12" style="padding-left: 0px;padding-right: 0px;">
+                <div style="float: left">
+                    <img src="${ctx}/static/img/bg_p4.gif"  class="usertx">
+                </div>
+                <div style="float: right">
+                    <img src="${ctx}/static/img/bg_p3.gif"  class="usertx">
+                </div>
+                <div style="clear: both;"></div>
+            </div>
             <div class="mail-box-header">
             <#-- <div class="pull-right tooltip-demo">
                  <a href="mail_compose.html" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top"
@@ -37,9 +47,9 @@
                     </h3>
 
                     <#if sendBox.senduserid != loginUser>
-                        <h3>
+                        <h5>
                             <span class="font-noraml">反馈者： </span>${sendUserName}
-                        </h3>
+                        </h5>
                     </#if>
                 </div>
             </div>
@@ -48,7 +58,7 @@
 
                 <#if sendBox.senduserid == loginUser>
                     <div class="mail-body">
-                        <div class="manage_right"><img src="${ctx}/static/img/laugh.png" class="usertx"><br>我<br><span class="tw_time">${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
+                        <div class="manage_right"><img src="${ctx}/static/img/timg.jpg" width="50" height="50" class="usertx"><br>我<br><span class="tw_time">${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
                         <div style="float: right;max-width: 80%" class="replyright">
                             <span style="float: right">${sendBox.content}</span>
                             <div style="clear: both"></div>
@@ -58,7 +68,7 @@
                 <#else >
                     <div class="mail-body">
                         <div class="user_left">
-                            <img src="${ctx}/static/img/laugh.png" alt=""><br>对方<br><span class="tw_time">${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
+                            <img src="${ctx}/static/img/timg.jpg" width="50" height="50" alt=""><br>对方<br><span class="tw_time">${sendBox.sendtime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
                         <div style="max-width: 80%" class="replyleft">
                             <span style="">${sendBox.content}</span>
                         </div>
@@ -67,7 +77,7 @@
                 <#list messageReplyList as item>
                     <#if item.sendid == loginUser>
                         <div class="mail-body">
-                            <div class="manage_right"><img src="${ctx}/static/img/laugh.png" class="usertx"><br>我<br><span class="tw_time">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
+                            <div class="manage_right"><img src="${ctx}/static/img/timg.jpg"  width="50" height="50" class="usertx"><br>我<br><span class="tw_time">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
                             <div style="float: right;max-width: 80%" class="replyright">
                                 <span style="float: right">${item.replycontent}</span>
                                 <div style="clear: both"></div>
@@ -77,7 +87,7 @@
                     <#else >
                         <div class="mail-body">
                             <div class="user_left">
-                                <img src="${ctx}/static/img/laugh.png" alt=""><br>对方<br><span class="tw_time">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
+                                <img src="${ctx}/static/img/timg.jpg" width="50" height="50" alt=""><br>对方<br><span class="tw_time">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span></div>
                             <div style="max-width: 80%" class="replyleft">
                                 <span style="">${item.replycontent}</span>
                             </div>
@@ -85,7 +95,7 @@
                     </#if>
                 </#list>
                 <div class="mail-body" id="Reply" style="height: 200px;display: none">
-                            <textarea id="replyText" class="col-sm-10" style="height:150px; margin-left:120px;resize:none;"></textarea>
+                            <textarea id="replyText" class="col-sm-10" style="height:150px; margin-left:120px;resize:none;border:1px solid #9d9d9d"></textarea>
                 </div>
 
                 <div class="mail-body text-right tooltip-demo">

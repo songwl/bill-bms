@@ -17,6 +17,7 @@
     .details * {
         font-size: 18px !important;
     }
+
     .news {
         margin-bottom: 1px;
         padding: 0px 10px;
@@ -79,7 +80,8 @@
             </li>
         <#else>
             <#list bmsModel.inbox as item>
-                <li onclick="$('.page-content').empty().load('${ctx}/Message/NoticeSearch').fadeIn(1000);" style="cursor: pointer;">
+                <li onclick="$('.page-content').empty().load('${ctx}/Message/NoticeSearch').fadeIn(1000);"
+                    style="cursor: pointer;">
                     <div class="newsLt" title="${item.title}"><i>●</i><b>最新公告</b>：${item.title}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日期：${item.sendtime?string("yyyy-MM-dd HH:mm:ss")}
                     </div>
                     <div class="newsRt" title="${item.content}">内容：${item.content}</div>
@@ -90,7 +92,7 @@
 </div>
 
 <div class="row row-bg">
-    <#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("ADMIN")||bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")||bmsModel.user.hasRole("ASSISTANT")>
+    <#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")||bmsModel.user.hasRole("ASSISTANT")>
         <div class="col-sm-6 col-md-2 hidden-xs">
             <div class="dashboard-stat red">
                 <div class="visual">
@@ -105,21 +107,6 @@
         </div>
     </#if>
     <#if bmsModel.user.hasRole("CUSTOMER")>
-    <#--<div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="dashboard-stat blue">
-            <div class="widget-content">
-                <div class="visual cyan">
-                    <i class="fa fa-user"></i>
-                </div>
-                <div class="title">
-                    账户余额
-                </div>
-                <div class="value"  id="balance">
-
-                </div>
-            </div>
-        </div>
-    </div>-->
         <div class="col-sm-6 col-md-2 hidden-xs">
             <div class="dashboard-stat blue">
                 <div class="visual">
@@ -133,149 +120,137 @@
             </div>
         </div>
     </#if>
-
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="dashboard-stat blue">
-            <div class="visual">
-                <i class="fa fa-dollar"></i>
-            </div>
-            <div class="details">
-                <div class="number">客户本月消费</div>
-                <div class="desc" id="MonthConsumption"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="dashboard-stat green">
-            <div class="visual">
-                <i class="fa fa-dollar"></i>
-            </div>
-            <div class="details">
-                <div class="number">客户今日消费</div>
-                <div class="desc" id="DayConsumption"></div>
+    <#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")||bmsModel.user.hasRole("ASSISTANT")||bmsModel.user.hasRole("CUSTOMER")>
+        <div class="col-sm-6 col-md-2 hidden-xs">
+            <div class="dashboard-stat blue">
+                <div class="visual">
+                    <i class="fa fa-dollar"></i>
+                </div>
+                <div class="details">
+                    <div class="number">客户本月消费</div>
+                    <div class="desc" id="MonthConsumption"></div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="dashboard-stat purple">
-            <div class="visual">
-                <i class="fa fa-tasks"></i>
-            </div>
-            <div class="details">
-                <div class="number">累计任务数</div>
-                <div class="desc" id="AllbillCount"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="dashboard-stat blue">
-            <div class="visual">
-                <i class="fa fa-tasks"></i>
-            </div>
-            <div class="details">
-                <div class="number">当前任务数</div>
-                <div class="desc" id="billCount"></div>
+        <div class="col-sm-6 col-md-2 hidden-xs">
+            <div class="dashboard-stat green">
+                <div class="visual">
+                    <i class="fa fa-dollar"></i>
+                </div>
+                <div class="details">
+                    <div class="number">客户今日消费</div>
+                    <div class="desc" id="DayConsumption"></div>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="dashboard-stat yellow">
-            <div class="visual">
-                <i class="fa fa-tasks"></i>
-            </div>
-            <div class="details">
-                <div class="number">今日达标任务</div>
-                <div class="desc" id="standardSum"></div>
+        <div class="col-sm-6 col-md-2 hidden-xs">
+            <div class="dashboard-stat purple">
+                <div class="visual">
+                    <i class="fa fa-tasks"></i>
+                </div>
+                <div class="details">
+                    <div class="number">累计任务数</div>
+                    <div class="desc" id="AllbillCount"></div>
+                </div>
             </div>
         </div>
-    </div>
+        <div class="col-sm-6 col-md-2 hidden-xs">
+            <div class="dashboard-stat blue">
+                <div class="visual">
+                    <i class="fa fa-tasks"></i>
+                </div>
+                <div class="details">
+                    <div class="number">当前任务数</div>
+                    <div class="desc" id="billCount"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-2 hidden-xs">
+            <div class="dashboard-stat yellow">
+                <div class="visual">
+                    <i class="fa fa-tasks"></i>
+                </div>
+                <div class="details">
+                    <div class="number">今日达标任务</div>
+                    <div class="desc" id="standardSum"></div>
+                </div>
+            </div>
+        </div>
+    </#if>
 </div>
+    <#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")||bmsModel.user.hasRole("ASSISTANT")||bmsModel.user.hasRole("CUSTOMER")>
+    <div class="row row-bg">
+        <div class="col-sm-6 col-md-2 hidden-xs">
+            <div class="dashboard-stat blue">
+                <div class="visual">
+                    <i class="fa fa-bar-chart-o"></i>
+                </div>
+                <div class="details">
+                    <div class="number">总完成率</div>
+                    <div class="desc" id="AllCompleteness"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-2 hidden-xs">
+            <div class="dashboard-stat blue">
+                <div class="visual">
+                    <i class="fa fa-bar-chart-o"></i>
+                </div>
+                <div class="details">
+                    <div class="number">百度完成率</div>
+                    <div class="desc" id="baiduCompleteness"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-2 hidden-xs">
+            <div class="dashboard-stat blue">
+                <div class="visual">
+                    <i class="fa fa-bar-chart-o"></i>
+                </div>
+                <div class="details">
+                    <div class="number">百度手机完成率</div>
+                    <div class="desc" id="baiduWapCompleteness"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-2 hidden-xs">
+            <div class="dashboard-stat blue">
+                <div class="visual">
+                    <i class="fa fa-bar-chart-o"></i>
+                </div>
+                <div class="details">
+                    <div class="number">360完成率</div>
+                    <div class="desc" id="sanliulingCompleteness"></div>
+                </div>
+            </div>
+        </div>
 
-<div class="row row-bg">
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="dashboard-stat blue">
-            <div class="visual">
-                <i class="fa fa-bar-chart-o"></i>
-            </div>
-            <div class="details">
-                <div class="number">总完成率</div>
-                <div class="desc" id="AllCompleteness"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="dashboard-stat blue">
-            <div class="visual">
-                <i class="fa fa-bar-chart-o"></i>
-            </div>
-            <div class="details">
-                <div class="number">百度完成率</div>
-                <div class="desc" id="baiduCompleteness"></div>
+        <div class="col-sm-6 col-md-2 hidden-xs">
+            <div class="dashboard-stat blue">
+                <div class="visual">
+                    <i class="fa fa-bar-chart-o"></i>
+                </div>
+                <div class="details">
+                    <div class="number">搜狗完成率</div>
+                    <div class="desc" id="sougouCompleteness"></div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="dashboard-stat blue">
-            <div class="visual">
-                <i class="fa fa-bar-chart-o"></i>
-            </div>
-            <div class="details">
-                <div class="number">百度手机完成率</div>
-                <div class="desc" id="baiduWapCompleteness"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="dashboard-stat blue">
-            <div class="visual">
-                <i class="fa fa-bar-chart-o"></i>
-            </div>
-            <div class="details">
-                <div class="number">360完成率</div>
-                <div class="desc" id="sanliulingCompleteness"></div>
+        <div class="col-sm-6 col-md-2 hidden-xs">
+            <div class="dashboard-stat blue">
+                <div class="visual">
+                    <i class="fa fa-bar-chart-o"></i>
+                </div>
+                <div class="details">
+                    <div class="number">神马完成率</div>
+                    <div class="desc" id="shenmaCompleteness"></div>
+                </div>
             </div>
         </div>
-    </div>
-<#--<div class="col-sm-6 col-md-2 hidden-xs">
-    <div class="dashboard-stat blue">
-        <div class="widget-content">
-            <div class="visual cyan">
-                <i class="fa fa-tasks"></i>
-            </div>
-            <div class="title">
-                360手机完成率
-            </div>
-            <div class="value">
-            ${bmsModel.sanliulingWapCompleteness}%
-            </div>
-        </div>
-    </div>
-</div>-->
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="dashboard-stat blue">
-            <div class="visual">
-                <i class="fa fa-bar-chart-o"></i>
-            </div>
-            <div class="details">
-                <div class="number">搜狗完成率</div>
-                <div class="desc" id="sougouCompleteness"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="dashboard-stat blue">
-            <div class="visual">
-                <i class="fa fa-bar-chart-o"></i>
-            </div>
-            <div class="details">
-                <div class="number">神马完成率</div>
-                <div class="desc" id="shenmaCompleteness"></div>
-            </div>
-        </div>
-    </div>
 
-</div>
+    </div>
+    </#if>
+
 </div>
 
 <#--<div class="row row-bg">
@@ -297,26 +272,27 @@
 
 </div>-->
 
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="widget box">
-            <div class="widget-header" style="text-align:left;">
-                <h4>
-                    <i class="fa fa-line-chart"></i>任务消费走势
-                </h4>
-                <div class="toolbar no-padding">
-                    <div class="btn-group">
+    <#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")||bmsModel.user.hasRole("ASSISTANT")||bmsModel.user.hasRole("CUSTOMER")>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget box">
+                <div class="widget-header" style="text-align:left;">
+                    <h4>
+                        <i class="fa fa-line-chart"></i>任务消费走势
+                    </h4>
+                    <div class="toolbar no-padding">
+                        <div class="btn-group">
                         <span class="btn btn-xs widget-collapse">
                             <i class="icon-angle-down"></i>
                         </span>
+                        </div>
                     </div>
                 </div>
+                <div id="container1" style="width: 100%; height: 400px; float:left;;"></div>
             </div>
-            <div id="container1" style="width: 100%; height: 400px; float:left;;"></div>
         </div>
     </div>
-</div>
+    </#if>
     <#if bmsModel.user.hasRole("SUPER_ADMIN")>
     <div class="row" STYLE="margin-top: 15px;">
         <div class="col-md-12">
@@ -340,29 +316,51 @@
         </div>
     </div>
     </#if>
-<div class="row" STYLE="margin-top: 15px;">
-    <div class="col-md-12">
-        <div class="widget box">
-            <div class="widget-header" style="text-align:left;">
-                <h4>
-                    <i class="fa fa-plus"></i>新增排名
-                </h4>
-                <div class="toolbar no-padding">
-                    <div class="btn-group">
+    <#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")||bmsModel.user.hasRole("ASSISTANT")||bmsModel.user.hasRole("CUSTOMER")>
+    <div class="row" STYLE="margin-top: 15px;">
+        <div class="col-md-12">
+            <div class="widget box">
+                <div class="widget-header" style="text-align:left;">
+                    <h4>
+                        <i class="fa fa-plus"></i>新增排名
+                    </h4>
+                    <div class="toolbar no-padding">
+                        <div class="btn-group">
                         <span class="btn btn-xs widget-collapse">
                             <i class="icon-angle-down"></i>
                         </span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%">
+                <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%">
 
-            </table>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+    </#if>
+    <script type="text/javascript">
 
-<script type="text/javascript">
+    $(function () {
+        timer = null
+        num = 0
+        clearInterval(timer);
+        var lilength = $('.news ul li').length;
+        timer = setInterval(function () {
+            num -= 30;
+            $('.news ul').animate({'top': '' + num + 'px'}, 1000, function () {
+
+                if (num <= (lilength ) * -30) {
+                    num = 0;
+                    $('.news ul').css('top', 0)
+                }
+                ;
+            });
+
+
+        }, 4000);
+
+    })
 
 
     //异步加载首页数据，解决加载慢的问题
@@ -475,7 +473,7 @@
             chart: {
                 borderColor: '#D9D9D9',
                 borderWidth: 1,
-                type: 'line'
+                type: 'area'
             },
             credits: {
                 enabled: false,//不显示highCharts版权信息
@@ -539,7 +537,7 @@
             chart: {
                 borderColor: '#D9D9D9',
                 borderWidth: 1,
-                type: 'line'
+                type: 'area'
             },
             credits: {
                 enabled: false,//不显示highCharts版权信息
@@ -585,6 +583,7 @@
         })
 
     }
+
 </script>
 
 </@base.html>

@@ -321,7 +321,7 @@
 					<#if bmsModel.user.hasRole("SUPER_ADMIN") >
 					<li class="" style="border-bottom: 1px solid #3d3d3d;">
 						<a href="javascript:;">
-							<i class="fa fa-paperclip"></i><span class="title"> 操作员管理 </span><span class="arrow "></span>
+							<i class="fa fa-paperclip"></i><span class="title"> 人员管理 </span><span class="arrow "></span>
 						</a>
 						<ul class="sub-menu"  style="background: #293038;">
 							<li>
@@ -329,6 +329,11 @@
 									操作员列表
 								</a>
 							</li>
+                            <li>
+                                <a href="${ctx}/operator/adminList">
+                                    运维列表
+                                </a>
+                            </li>
 
 						</ul>
 					</li>
@@ -337,7 +342,7 @@
 		<#if bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")||bmsModel.user.hasRole("ASSISTANT")>
        			 <li class="" style="border-bottom: 1px solid #3d3d3d;">
 						<a href="javascript:;">
-							<i class="fa fa-magic"></i><span class="title"> 资金管理 </span><span class="arrow "></span>
+							<i class="fa fa-magic"></i><span class="title"> 资金管理 </span><span class="arrow"></span>
 						</a>
 						<ul class="sub-menu"  style="background: #293038;">
 							<li>
@@ -447,17 +452,20 @@
                             </ul>
                         </li>
                     </#if>
-                    <#if bmsModel.user.hasRole("SUPER_ADMIN") || bmsModel.user.hasRole("COMMISSIONER") >
+                    <#if bmsModel.user.hasRole("SUPER_ADMIN") || bmsModel.user.hasRole("COMMISSIONER")  || bmsModel.user.hasRole("DISTRIBUTOR")>
                         <li class="" style="border-bottom: 1px solid #3d3d3d;">
                             <a href="javascript:;">
                                 <i class="fa fa-wrench"></i><span class="title"> 优化工具 </span><span class="arrow "></span>
                             </a>
                             <ul class="sub-menu"  style="background: #293038;">
+                          <#if (bmsModel.user.hasRole("DISTRIBUTOR")&&bmsModel.offerstate==1)||bmsModel.user.hasRole("SUPER_ADMIN") || bmsModel.user.hasRole("COMMISSIONER") >
                                 <li>
                                     <a href="${ctx}/optimizationTool/keywordpricesearch">
                                         关键词价格查询
                                     </a>
                                 </li>
+                            </#if>
+                        <#if bmsModel.user.hasRole("SUPER_ADMIN") || bmsModel.user.hasRole("COMMISSIONER") >
                                 <li>
                                     <a href="javascript:;">
                                         关键词排名查询
@@ -474,24 +482,11 @@
                                         网址收录查询
                                     </a>
                                 </li>
+                        </#if>
+                            </ul>
+                        </li>
+                    </#if>
 
-                            </ul>
-                        </li>
-                    </#if>
-                    <#if bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("DISTRIBUTOR")>
-                        <li class="" style="border-bottom: 1px solid #3d3d3d;">
-                            <a href="javascript:;">
-                                <i class="fa fa-magnet"></i><span class="title"> 自定义桌面 </span><span class="arrow "></span>
-                            </a>
-                            <ul class="sub-menu"  style="background: #293038;">
-                                <li class="bbbb">
-                                    <a href="${ctx}/userCompany/userCompanyView">
-                                        自定义页面
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    </#if>
 
 					<li class="" style="border-bottom: 1px solid #3d3d3d;">
 						<a href="javascript:;">
@@ -568,7 +563,7 @@
                                 class="arrow "></span>
                         </a>
                         <ul class="sub-menu" style="background: #293038;">
-                            <#if bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")||bmsModel.user.hasRole("SECRETARY")>
+                            <#if bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")>
                                 <li class="">
                                     <a href="${ctx}/Message/SendNotice">
                                         发布公告
@@ -592,7 +587,7 @@
                             <span class="arrow "></span>
                         </a>
                         <ul class="sub-menu" style="background: #293038;">
-                            <#if !bmsModel.user.hasRole("SUPER_ADMIN")&&!bmsModel.user.hasRole("SECRETARY")>
+                            <#if !bmsModel.user.hasRole("SUPER_ADMIN")&&!bmsModel.user.hasRole("ADMIN")>
                                 <li class="">
                                     <a href="${ctx}/Message/SendFeedback">
                                         提交反馈
@@ -609,6 +604,21 @@
                             </li>
 
                         </ul>
+                    </li>
+                    <#if bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("DISTRIBUTOR")>
+                    <li class="" style="border-bottom: 1px solid #3d3d3d;">
+                        <a href="javascript:;">
+                            <i class="fa fa-magnet"></i><span class="title"> 自定义桌面 </span><span class="arrow "></span>
+                        </a>
+                        <ul class="sub-menu"  style="background: #293038;">
+                            <li class="bbbb">
+                                <a href="${ctx}/userCompany/userCompanyView">
+                                    自定义页面
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    </#if>
 				</ul>
 			</div>
 		</div>

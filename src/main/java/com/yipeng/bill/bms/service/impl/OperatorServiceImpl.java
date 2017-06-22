@@ -40,7 +40,7 @@ public class OperatorServiceImpl implements OperatorService {
     private FundAccountMapper fundAccountMapper;
 
     @Override
-    public int saveOperator(User user, LoginUser users) {
+    public int saveOperator(User user, LoginUser users,String roleName) {
 
         User user1=userMapper.selectByUserName(user.getUserName());
         if(user1!=null)
@@ -59,7 +59,15 @@ public class OperatorServiceImpl implements OperatorService {
             user.setContact(user.getContact());
             user.setRealName(user.getRealName());
             int num = userMapper.insert(user);
-            Role role=roleService.getRoleByRoleCode(Roles.COMMISSIONER.name());
+            Role role=null;
+            if(roleName.equals("COMMISSIONER"))
+            {
+                role=roleService.getRoleByRoleCode(Roles.COMMISSIONER.name());
+            }
+           else
+            {
+                role=roleService.getRoleByRoleCode(Roles.ADMIN.name());
+            }
 
             if(role!=null)
             {
@@ -70,11 +78,6 @@ public class OperatorServiceImpl implements OperatorService {
             }
             return  num;
         }
-
-
-
-
-
 
     }
 
@@ -119,7 +122,7 @@ public class OperatorServiceImpl implements OperatorService {
 
         }
         Map<String, Object> modelMap = new HashMap();
-        Role role= roleMapper.selectByRoleCode("COMMISSIONER");
+        Role role= roleMapper.selectByPrimaryKey(Long.parseLong(params.get("roleId").toString()));
         int roleCount=userRoleMapper.getCount(role.getId());
         modelMap.put("total",roleCount);
         modelMap.put("rows",customerListDetailsList);

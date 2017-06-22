@@ -111,7 +111,7 @@
                     <div class="mail-text h-200">
 
                         <div class="summernote">
-                            <textarea class="col-sm-10" style="height:150px; margin-left:120px;resize:none;"
+                            <textarea class="col-sm-10" style="height:150px; margin-left:120px;resize:none;border:1px solid #9d9d9d"
                                       id="content" name="content"></textarea>
                         </div>
                         <div class="clearfix"></div>

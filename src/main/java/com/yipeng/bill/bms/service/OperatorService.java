@@ -15,7 +15,7 @@ public interface OperatorService {
      * @param user
      * @return
      */
-    int saveOperator(User user, LoginUser users);
+    int saveOperator(User user, LoginUser users,String roleName);
 
     /**
      * 获取操作员列表

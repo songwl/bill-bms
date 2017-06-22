@@ -1,17 +1,17 @@
 <#import "/base/base.ftl" as base>
 <#import "/base/dict.ftl" as dict>
 
-<@base.html "操作员列表">
+<@base.html "运维列表">
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
-<script src="${ctx}/static/js/operator/operatorList.js"></script>
+<script src="${ctx}/static/js/operator/adminList.js"></script>
 <div class="Navs">
     <div class="nav_L left">
-        <i class="fa fa-home">&nbsp;</i><span>人员管理</span> > <span>操作员列表</span>
+        <i class="fa fa-home">&nbsp;</i><span>人员管理</span> > <span>运维列表</span>
     </div>
     <div class="nav_R right" id="divQx">
 
         <div class="Import">
-            <span id="addOperator">&nbsp;<i class="fa fa-plus"></i>&nbsp;添加操作员</span>
+            <span id="addOperator">&nbsp;<i class="fa fa-plus"></i>&nbsp;添加运维</span>
 
         </div>
         <div class="search">
@@ -47,7 +47,7 @@
         <div class="panel panel-primary" id="list-panel">
             <div class="panel-body">
                 <div class="panel-nav">
-                    <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;操作员列表</div>
+                    <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;运维列表</div>
                     <div class="Nav_Right">
                     </div>
                     <div class="cls"></div>
@@ -71,7 +71,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="bootbox-close-button close">×</button>
-                <h4 class="modal-title">添加操作员</h4>
+                <h4 class="modal-title">添加运维</h4>
             </div>
             <div class="modal-body" style="max-height: 574px;">
                 <div class="bootbox-body">
@@ -146,9 +146,9 @@
                                 状态<span class="required">* </span>
                             </label>
                             <div class="col-md-9">
-                               <select id="viewstatus" name="status">
+                                <select id="viewstatus" name="status">
 
-                               </select>
+                                </select>
                             </div>
                         </div>
                         <input type="hidden" value="" name="operator">

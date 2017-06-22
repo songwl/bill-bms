@@ -93,27 +93,27 @@ $(".addOperatorcmt").click(function () {
                 phone:$("input[name='phone']").val(),
                 qq:$("input[name='qq']").val(),
             },
-            url:CTX+"/operator/list",
+            url:CTX+"/operator/adminList",
             dataType:"json",
             success:function (result) {
 
-                  if(result.code==200)
-                  {
-                      alert(result.message);
-                      $(".addOperatorDiv").slideUp();
-                      $(".modal-backdrop").hide();
-                      $('#myTable').bootstrapTable('refresh');
-                  }
-                  else
-                  {
-                      alert(result.Message);
-                  }
+                if(result.code==200)
+                {
+                    alert(result.message);
+                    $(".addOperatorDiv").slideUp();
+                    $(".modal-backdrop").hide();
+                    $('#myTable').bootstrapTable('refresh');
+                }
+                else
+                {
+                    alert(result.Message);
+                }
 
             }
 
         })
     }
-  else
+    else
     {
         alert("填写信息有误，请重新输入！");
     }
@@ -121,36 +121,36 @@ $(".addOperatorcmt").click(function () {
 
 
 
-//更改操作员信息
+//更改人员信息
 $(".updateOperatorcmt").click(function () {
     if(/^[A-Za-z]\w{5,12}$/.test($("input[name='userName1']").val()))
     {
-          $.ajax({
-              type:'post',
-              url:CTX+"/operator/updateOperator",
-              data:{
-                  id:$("input[name='operator']").val(),
-                  userName:  $("input[name='userName1']").val(),
-                  realName:$("input[name='realName']").val(),
-                  contact:$("input[name='contact']").val(),
-                  phone:$("input[name='phone']").val(),
-                  qq:$("input[name='qq']").val(),
-                  status:$("#viewstatus option:selected").val()
-              },
-              success:function (result) {
-                  if(result.code==200)
-                  {
-                      alert(result.message);
-                      $(".addOperatorDiv").slideUp();
-                      $(".modal-backdrop").hide();
-                      $('#myTable').bootstrapTable('refresh');
-                  }
-                  else
-                  {
-                      alert(result.Message);
-                  }
-              }
-          })
+        $.ajax({
+            type:'post',
+            url:CTX+"/operator/updateOperator",
+            data:{
+                id:$("input[name='operator']").val(),
+                userName:  $("input[name='userName1']").val(),
+                realName:$("input[name='realName']").val(),
+                contact:$("input[name='contact']").val(),
+                phone:$("input[name='phone']").val(),
+                qq:$("input[name='qq']").val(),
+                status:$("#viewstatus option:selected").val()
+            },
+            success:function (result) {
+                if(result.code==200)
+                {
+                    alert(result.message);
+                    $(".addOperatorDiv").slideUp();
+                    $(".modal-backdrop").hide();
+                    $('#myTable').bootstrapTable('refresh');
+                }
+                else
+                {
+                    alert(result.Message);
+                }
+            }
+        })
     }
     else
     {
@@ -159,36 +159,36 @@ $(".updateOperatorcmt").click(function () {
 })
 
 //添加操作员
-    $("#addOperator").click(function () {
+$("#addOperator").click(function () {
 
-        $(".modal-backdrop").show();
-        $(".addOperatorDiv").slideDown();
-        $("#nameDiv").show();
-        $("#nameDiv1").hide();
-        $(".modal-title").html("添加操作员");
-       $(".addOperatorcmt").show();
-        $(".updateOperatorcmt").hide();
-        $("#viewpwd").show();
-        $("#viewstate").hide();
-        $("input[name='userName']").val("");
-        $("input[name='realName']").val("");
-        $("input[name='contact']").val("");
-        $("input[name='phone']").val("");
-        $("input[name='qq']").val("");
-
-
-    })
-    $(".close").click(function () {
-        $(".addOperatorDiv").slideUp();
-        $(".modal-backdrop").hide();
+    $(".modal-backdrop").show();
+    $(".addOperatorDiv").slideDown();
+    $("#nameDiv").show();
+    $("#nameDiv1").hide();
+    $(".modal-title").html("添加运维");
+    $(".addOperatorcmt").show();
+    $(".updateOperatorcmt").hide();
+    $("#viewpwd").show();
+    $("#viewstate").hide();
+    $("input[name='userName']").val("");
+    $("input[name='realName']").val("");
+    $("input[name='contact']").val("");
+    $("input[name='phone']").val("");
+    $("input[name='qq']").val("");
 
 
-    })
-    $(".cancel").click(function () {
-        $(".addOperatorDiv").slideUp();
-        $(".modal-backdrop").hide();
+})
+$(".close").click(function () {
+    $(".addOperatorDiv").slideUp();
+    $(".modal-backdrop").hide();
 
-    })
+
+})
+$(".cancel").click(function () {
+    $(".addOperatorDiv").slideUp();
+    $(".modal-backdrop").hide();
+
+})
 
 $(function () {
 
@@ -205,7 +205,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#myTable').bootstrapTable({
-            url: CTX+'/operator/getOperator',         //请求后台的URL（*）
+            url: CTX+'/operator/getAdminList',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
@@ -224,10 +224,10 @@ var TableInit = function () {
             //height: 700,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
             uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
             /*   showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
-            cardView: false,                    //是否显示详细视图
-           detailView: false,                   //是否显示父子表
-            showExport: true,                     //是否显示导出
-            exportDataType: "basic",*/
+             cardView: false,                    //是否显示详细视图
+             detailView: false,                   //是否显示父子表
+             showExport: true,                     //是否显示导出
+             exportDataType: "basic",*/
             rowStyle: function (row, index) {
                 //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
                 var strclass = "";
@@ -268,7 +268,7 @@ var TableInit = function () {
                     formatter:function (value,row,index) {
                         var a="";
 
-                            a="<span style='color:#4382CF;cursor:pointer;' id='details'>"+value+"</span>";
+                        a="<span style='color:#4382CF;cursor:pointer;' id='details'>"+value+"</span>";
 
 
                         return a;
@@ -337,7 +337,7 @@ var TableInit = function () {
                         var a="";
                         if(value==1)
                         {
-                       a="<span style='color:#4382CF;cursor:pointer;' id='details'>正常</span>";
+                            a="<span style='color:#4382CF;cursor:pointer;' id='details'>正常</span>";
                         }
                         else
                         {

@@ -102,6 +102,7 @@ public class BillController extends BaseController {
             way = "2";
             Map<String, Object> bms = new HashMap<>();
             List<User> userList = userService.getSearchUser(user, way);
+            bms.put("user", user);
             model.put("userList", userList);
             model.addAttribute("bmsModel", bms);
         }

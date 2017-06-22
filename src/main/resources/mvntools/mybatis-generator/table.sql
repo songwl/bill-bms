@@ -354,20 +354,7 @@ CREATE TABLE `t_bill_distributor_statistics` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='渠道商统计表';
 
-CREATE TABLE `keywords_price` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `keywords` varchar(255) NOT NULL,
-  `baidu` varchar(255) DEFAULT NULL,
-  `sougou` varchar(255) DEFAULT NULL,
-  `sanliuling` varchar(255) DEFAULT NULL,
-  `sjbaidu` varchar(255) DEFAULT NULL,
-  `shenma` varchar(255) DEFAULT NULL,
-  `apiid` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `weiyi` (`keywords`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8;
-
-CREATE TABLE `inbox` (
+ CREATE TABLE `inbox` (
   `Id` bigint(20) NOT NULL AUTO_INCREMENT,
   `sendId` bigint(20) DEFAULT NULL,
   `sendUserId` varchar(255) DEFAULT NULL COMMENT '接收者编号',
@@ -379,7 +366,29 @@ CREATE TABLE `inbox` (
   `affairState` int(11) DEFAULT NULL,
   `InTime` datetime DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `keywords_price` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `TaskId` int(11) NOT NULL,
+  `IndexBaiduAll` int(255) DEFAULT NULL,
+  `IndexBaiduWap` int(255) DEFAULT NULL,
+  `IndexSoAll` int(255) DEFAULT NULL,
+  `BaiduCollectionCount` int(255) DEFAULT NULL,
+  `BaiduHomepageCount` int(255) DEFAULT NULL,
+  `Degree` int(11) DEFAULT NULL,
+  `PriceBaiduPc` double(255,2) DEFAULT NULL,
+  `PriceBaiduWap` double(255,2) DEFAULT NULL,
+  `PriceSoPc` double(255,2) DEFAULT NULL,
+  `PriceSoWap` double(255,2) DEFAULT NULL,
+  `PriceSogouPc` double(255,2) DEFAULT NULL,
+  `PriceSogouWap` double(255,2) DEFAULT NULL,
+  `PriceSm` double(255,2) DEFAULT NULL,
+  `UpdateTime` datetime DEFAULT NULL,
+  `Keywords` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `weiyi` (`TaskId`,`Keywords`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1648 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `messagereply` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -391,7 +400,7 @@ CREATE TABLE `messagereply` (
   `MessageType` int(11) NOT NULL,
   `DealtState` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=132 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=136 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `noticepublish` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -403,7 +412,7 @@ CREATE TABLE `noticepublish` (
   `dealtState` int(11) DEFAULT NULL,
   `SendTime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `offerset` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -416,7 +425,7 @@ CREATE TABLE `offerset` (
   `surplusSecond` int(11) DEFAULT NULL COMMENT '剩余关键词数量',
   `state` int(11) DEFAULT NULL COMMENT '状态',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `sendbox` (
   `Id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -429,4 +438,4 @@ CREATE TABLE `sendbox` (
   `affairState` int(11) DEFAULT NULL,
   `SendTime` datetime DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;

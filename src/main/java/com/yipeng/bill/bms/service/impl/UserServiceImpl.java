@@ -159,9 +159,18 @@ public class UserServiceImpl implements UserService {
         else if(way.equals("2"))
         {
 
-            if (loginUser.hasRole("SUPER_ADMIN"))
+            if (loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("ADMIN"))
             {
-                List<User> userList1=  userMapper.getUserByCreateId(loginUser.getId());
+                List<User> userList1=new ArrayList<>();
+                if(loginUser.hasRole("SUPER_ADMIN"))
+                {
+                   userList1=  userMapper.getUserByCreateId(loginUser.getId());
+                }
+                else
+                {
+                    userList1=  userMapper.getUserByCreateId(loginUser.getCreateUserId());
+                }
+
                 for (User user:userList1
                         ) {
                     UserRole userRole=userRoleMapper.selectByUserId(user.getId());

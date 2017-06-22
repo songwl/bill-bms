@@ -9,7 +9,9 @@
     <div class="nav_L left">
         <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>关键词优化</span>
     </div>
+
     <div class="nav_R right" id="divQx">
+        <#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("COMMISSIONER")>
         <div id="OptimizationUpdate">
             <span>&nbsp;<i class="fa fa-exchange"></i>&nbsp;优化调整</span>
         </div>
@@ -19,14 +21,15 @@
         <div id="OptimizationStop">
             <span>&nbsp;<i class="fa fa-stop"></i>&nbsp;优化离线</span>
         </div>
+      </#if>
         <div class="search">
             <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
         </div>
-
     </div>
     <div class="cls">
     </div>
-</div>
+
+        </div>
 <div class="Navs2" style="width: 100%; height: 100px; line-height: 50px;border-left: 1px solid #d9d9d9;background: #eee;z-index: 99;display: none;">
     <div class="nav_R2 right col-md-11" >
         <input type="hidden" name="type" value="${way}" id="way">

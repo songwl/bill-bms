@@ -148,7 +148,7 @@ public class MessageController extends BaseController {
     @RequestMapping(value = "/FeedbackSearch")
     public String FeedbackSearch(ModelMap modelMap) {
         LoginUser loginUser = this.getCurrentAccount();
-        if (loginUser.hasRole("SECRETARY")) {
+        if (loginUser.hasRole("ADMIN")) {
             loginUser.setId(1l);
         }
         modelMap.put("loginUser", loginUser);
@@ -165,7 +165,7 @@ public class MessageController extends BaseController {
     @RequestMapping(value = "/ReadFeedback")
     public String ReadFeedback(ModelMap modelMap, Long FeedbackId) {
         LoginUser loginUser = this.getCurrentAccount();
-        if (loginUser.hasRole("SECRETARY")) {
+        if (loginUser.hasRole("ADMIN")) {
             loginUser.setId(1l);
         }
         sendBox sendBox = sendBoxMapper.selectByPrimaryKey(FeedbackId);
@@ -546,7 +546,7 @@ public class MessageController extends BaseController {
     @ResponseBody
     public Map<String, Object> GetFeedbackSearch(int limit, int offset, String SearchContent, int type) {
         LoginUser loginUser = this.getCurrentAccount();
-        if (loginUser.hasRole("SECRETARY")) {
+        if (loginUser.hasRole("ADMIN")) {
             loginUser.setId(1l);
         }
         Map<String, Object> params = this.getSearchRequest(); //查询参数
@@ -563,7 +563,7 @@ public class MessageController extends BaseController {
     public ResultMessage replySubmit(HttpServletRequest httpRequest) {
         Map<String, String[]> param = httpRequest.getParameterMap();
         LoginUser loginUser = this.getCurrentAccount();
-        if (loginUser.hasRole("SECRETARY")) {
+        if (loginUser.hasRole("ADMIN")) {
             loginUser.setId(1l);
         }
         boolean flag = messageService.replySubmit(param, loginUser);

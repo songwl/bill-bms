@@ -428,14 +428,29 @@
                                     最新排名
                                 </a>
                             </li>
+                            <li>
+                                <a href="${ctx}/billManage/getStandardBill">
+                                    达标任务
+                                </a>
+                            </li>
+                            <li>
+                                <a href="${ctx}/billManage/getDeclineBill">
+                                    下滑排名
+                                </a>
+                            </li>
                         </#if>
                          <#if  bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("ASSISTANT")>
-                                    <#if  bmsModel.user.hasRole("COMMISSIONER")>
+                                  <#if  bmsModel.user.hasRole("COMMISSIONER")>
                                         <li>
                                             <a href="${ctx}/billManage/performanceStatistics">
                                                 业绩统计
                                             </a>
                                         </li>
+                                      <li>
+                                          <a href="${ctx}/billManage/getDeclineBill">
+                                              下滑排名
+                                          </a>
+                                      </li>
                                     </#if>
                                     <li>
                                         <a href="${ctx}/billManage/manageListByOther">
@@ -447,25 +462,31 @@
                                             最新排名
                                         </a>
                                     </li>
+                                     <li>
+                                         <a href="${ctx}/billManage/getStandardBill">
+                                             达标任务
+                                         </a>
+                                     </li>
 
                                 </#if>
                             </ul>
                         </li>
                     </#if>
-                    <#if bmsModel.user.hasRole("SUPER_ADMIN") || bmsModel.user.hasRole("COMMISSIONER")  || bmsModel.user.hasRole("DISTRIBUTOR")>
+
+
+
+                    <#if bmsModel.user.hasRole("SUPER_ADMIN") || bmsModel.user.hasRole("COMMISSIONER")>
                         <li class="" style="border-bottom: 1px solid #3d3d3d;">
                             <a href="javascript:;">
-                                <i class="fa fa-wrench"></i><span class="title"> 优化工具 </span><span class="arrow "></span>
+                                <i class="fa fa-wrench"></i><span class="title"> 优化工具 </span><span class="arrow"></span>
                             </a>
                             <ul class="sub-menu"  style="background: #293038;">
-                          <#if (bmsModel.user.hasRole("DISTRIBUTOR")&&bmsModel.offerstate==1)||bmsModel.user.hasRole("SUPER_ADMIN") || bmsModel.user.hasRole("COMMISSIONER") >
-                                <li>
-                                    <a href="${ctx}/optimizationTool/keywordpricesearch">
-                                        关键词价格查询
-                                    </a>
-                                </li>
-                            </#if>
-                        <#if bmsModel.user.hasRole("SUPER_ADMIN") || bmsModel.user.hasRole("COMMISSIONER") >
+                                    <li>
+                                        <a href="${ctx}/optimizationTool/keywordpricesearch">
+                                            关键词价格查询
+                                        </a>
+                                    </li>
+
                                 <li>
                                     <a href="javascript:;">
                                         关键词排名查询
@@ -482,11 +503,23 @@
                                         网址收录查询
                                     </a>
                                 </li>
-                        </#if>
                             </ul>
                         </li>
                     </#if>
-
+                    <#if bmsModel.user.hasRole("DISTRIBUTOR")&&bmsModel.offerstate==1 >
+                        <li class="" style="border-bottom: 1px solid #3d3d3d;">
+                            <a href="javascript:;">
+                                <i class="fa fa-wrench"></i><span class="title"> 优化工具 </span><span class="arrow"></span>
+                            </a>
+                            <ul class="sub-menu"  style="background: #293038;">
+                                    <li>
+                                        <a href="${ctx}/optimizationTool/keywordpricesearch">
+                                            关键词价格查询
+                                        </a>
+                                    </li>
+                            </ul>
+                        </li>
+                    </#if>
 
 					<li class="" style="border-bottom: 1px solid #3d3d3d;">
 						<a href="javascript:;">

@@ -2613,4 +2613,41 @@
       </if>
     </if>
   </select>
+
+
+  <select id="selectDeclineBillTable"  resultType="java.util.HashMap">
+  SELECT a.*,d.search_support as searchName,e.user_name as userName from t_bill as a,t_bill_cost as b,t_bill_price as c,t_bill_search_support as d ,t_user as e
+  WHERE  a.id=b.t_bill_id and b.t_bill_price_id=c.id and a.id=d.bill_id and c.out_member_id=e.id and
+  c.in_member_id=1 and a.state=2 and b.cost_date=#{yesterday,jdbcType=VARCHAR}
+    <if test="ascriptionId != null">
+      AND a.bill_ascription = #{ascriptionId,jdbcType=BIGINT}
+    </if>
+   AND
+  a.id  not in (
+  SELECT a.id from t_bill as a,t_bill_cost as b,t_bill_price as c
+  WHERE  a.id=b.t_bill_id and b.t_bill_price_id=c.id and
+  c.in_member_id=1 and a.state=2 and a.delete_state=0 and b.cost_date=#{today,jdbcType=VARCHAR}
+  <if test="ascriptionId != null">
+      AND a.bill_ascription = #{ascriptionId,jdbcType=BIGINT}
+  </if>
+  )
+  </select>
+
+  <select id="selectDeclineBillTableCount"  resultType="java.lang.Long">
+    SELECT COUNT(a.id) from t_bill as a,t_bill_cost as b,t_bill_price as c
+    WHERE  a.id=b.t_bill_id and b.t_bill_price_id=c.id and
+    c.in_member_id=1 and a.state=2 and a.delete_state=0 and b.cost_date=#{yesterday,jdbcType=VARCHAR}
+    <if test="ascriptionId != null">
+      AND a.bill_ascription = #{ascriptionId,jdbcType=BIGINT}
+    </if>
+    AND
+    a.id  not in (
+    SELECT a.id from t_bill as a,t_bill_cost as b,t_bill_price as c
+    WHERE  a.id=b.t_bill_id and b.t_bill_price_id=c.id and
+    c.in_member_id=1 and a.state=2 and b.cost_date=#{today,jdbcType=VARCHAR}
+    <if test="ascriptionId != null">
+      AND a.bill_ascription = #{ascriptionId,jdbcType=BIGINT}
+    </if>
+    )
+  </select>
 </mapper>

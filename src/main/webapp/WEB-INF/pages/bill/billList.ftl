@@ -43,9 +43,9 @@
             <div id="applyToOptimization">
                 <span>&nbsp;<i class="fa fa-magic"></i>&nbsp;申请优化</span>
             </div>
-            <div id="billToChange">
+          <#--  <div id="billToChange">
                 <span>&nbsp;<i class="fa fa-random"></i>&nbsp;切换订单</span>
-            </div>
+            </div>-->
         </#if>
         <#if bmsModel.user.hasRole("CUSTOMER")>
             <div id="addBillByKehu">

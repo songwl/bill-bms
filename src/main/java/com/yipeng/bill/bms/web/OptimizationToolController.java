@@ -78,14 +78,23 @@ public class OptimizationToolController extends BaseController {
     @ResponseBody
     public ResultMessage keywordpricesearchClick(HttpServletRequest request, @RequestParam(required = true) String keywords) {
         LoginUser loginUser = this.getCurrentAccount();
-        offerset offerset = offersetMapper.selectByUserId(loginUser.getId());
-        Pattern pattern = Pattern.compile("^(\\d+(\\.\\d{1,2})?)$");
-        if (offerset == null || offerset.getRate() == null || !pattern.matcher(offerset.getRate().toString()).matches()) {
-            return this.ajaxDone(-1, "请去设置正确的两位小数倍率", null);
+        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("COMMISSIONER"))
+        {
+            List<KeywordsPrice> list = optimizationToolService.forbiddenWordsList(keywords, 1);
+            return this.ajaxDone(1, "", list);
         }
-        List<KeywordsPrice> list = optimizationToolService.forbiddenWordsList(keywords, offerset.getRate());
+        else
+        {
 
-        return this.ajaxDone(1, "", list);
+            offerset offerset = offersetMapper.selectByUserId(loginUser.getId());
+            Pattern pattern = Pattern.compile("^(\\d+(\\.\\d{1,2})?)$");
+            if (offerset == null || offerset.getRate() == null || !pattern.matcher(offerset.getRate().toString()).matches()) {
+                return this.ajaxDone(-1, "请去设置正确的两位小数倍率", null);
+            }
+            List<KeywordsPrice> list = optimizationToolService.forbiddenWordsList(keywords, offerset.getRate());
+
+            return this.ajaxDone(1, "", list);
+        }
     }
 
     @RequestMapping(value = "/LoopAllKeywords", method = RequestMethod.POST)

@@ -531,4 +531,45 @@ public class BillManageServiceImpl implements BillManageService {
         return map;
     }
 
+    /**
+     * 下滑排名列表
+     * @param loginUser
+     * @return
+     */
+    @Override
+    public Map<String, Object> getDeclineBillTable(LoginUser loginUser) {
+        List<Map<String, Object>> billList=new ArrayList<>();
+        Map<String,Object> sqlMap=new HashMap<>();
+        SimpleDateFormat sm=new SimpleDateFormat("yyyy-MM-dd");
+        String today=sm.format(new Date());
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(new Date());
+        calendar.add(calendar.DATE,-1);//把日期往后增加一天.整数往后推,负数往前移动
+        String yesterday=sm.format(calendar.getTime());
+        Long total;
+        sqlMap.put("today",today);
+        sqlMap.put("yesterday",yesterday);
+        if(loginUser.hasRole("COMMISSIONER"))
+        {
+            sqlMap.put("ascriptionId",loginUser.getId());
+             billList=billMapper.selectDeclineBillTable(sqlMap);
+             total=billMapper.selectDeclineBillTableCount(sqlMap);
+        }
+        else
+        {
+            billList= billMapper.selectDeclineBillTable(sqlMap);
+            total=billMapper.selectDeclineBillTableCount(sqlMap);
+        }
+            int displayId=0;
+        for (int i=0;i<billList.size();i++)
+        {
+            displayId++;
+            billList.get(i).put("displayId",displayId);
+        }
+        Map<String,Object> viewMap=new HashMap<>();
+        viewMap.put("rows",billList);
+        viewMap.put("total",total);
+        return viewMap;
+    }
+
 }

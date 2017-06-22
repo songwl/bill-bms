@@ -118,4 +118,8 @@ public interface BillMapper {
 
 
     List<String> selectAllKeywords();
+
+    //下滑排名
+    List<Map<String, Object>> selectDeclineBillTable(Map<String, Object> params);
+    Long  selectDeclineBillTableCount(Map<String, Object> params);
 }

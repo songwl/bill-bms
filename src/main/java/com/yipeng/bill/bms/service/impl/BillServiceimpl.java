@@ -2333,7 +2333,6 @@ public class BillServiceimpl implements BillService {
                 String  code=jsonObject.get("code").toString();
                 if("success".equals(code))
                 {
-
                     bill.setDayOptimization(nums);
                     billMapper.updateByPrimaryKeySelective(bill);
                 }
@@ -2506,7 +2505,7 @@ public class BillServiceimpl implements BillService {
                             }
 
                             billMapper.updateByPrimaryKeySelective(bill);
-                            return  1;
+
                         }
                         else
                         {
@@ -2523,7 +2522,7 @@ public class BillServiceimpl implements BillService {
             }
         }
 
-        return 0;
+        return 1;
     }
 
 

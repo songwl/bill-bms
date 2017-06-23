@@ -1,12 +1,10 @@
 package com.yipeng.bill.bms.service.impl;
 
 import com.yipeng.bill.bms.core.model.ResultMessage;
-import com.yipeng.bill.bms.dao.BillMapper;
-import com.yipeng.bill.bms.dao.ForbiddenWordsMapper;
-import com.yipeng.bill.bms.dao.KeywordsPriceMapper;
-import com.yipeng.bill.bms.dao.offersetMapper;
+import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.ForbiddenWords;
 import com.yipeng.bill.bms.domain.KeywordsPrice;
+import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.domain.offerset;
 import com.yipeng.bill.bms.model.Define;
 import com.yipeng.bill.bms.model.KeywordToPrice;
@@ -242,6 +240,87 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
             offerset.setUpdatetime(new Date());
             offerset.setRequestsecond(Integer.parseInt(keywordNum));
             offerset.setSurplussecond(Integer.parseInt(keywordNum));
+            int num = offersetMapper.updateByPrimaryKeySelective(offerset);
+            return num > 0;
+        }
+    }
+
+    @Override
+    public Boolean setWebsitePower(Map<String, Object> map) {
+        String[] arr = (String[]) map.get("arr");
+        int type = Integer.parseInt(map.get("type").toString());
+        for (int i = 0; i < arr.length; i++) {
+            offerset offerset = offersetMapper.selectByUserId(Long.parseLong(arr[i]));
+            if (offerset == null) {
+                int max = 999999;
+                int min = 100000;
+                Random random = new Random();
+                int sui = random.nextInt(max) % (max - min + 1) + min;
+                String keypt = null;
+                try {
+                    keypt = md5_urlEncode.EncoderByMd5(sui + arr[i]);
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                offerset offerset1 = new offerset();
+                offerset1.setUserid(Long.parseLong(arr[i]));
+                offerset1.setUpdatetime(new Date());
+                offerset1.setState(0);
+                offerset1.setTokenid(keypt);
+                offerset1.setSurplussecond(0);
+                offerset1.setRate(1d);
+                offerset1.setCreatetime(new Date());
+                offerset1.setRequestsecond(0);
+                offerset1.setLeasepower(type);
+                int num = offersetMapper.insert(offerset1);
+                if (num == 0) {
+                    return false;
+                }
+            } else {
+                offerset.setLeasepower(type);
+                int num = offersetMapper.updateByPrimaryKeySelective(offerset);
+                if (num == 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean setAgentWebsitePower(Map<String, Object> map) {
+        String userId = map.get("arr").toString();
+        int type = Integer.parseInt(map.get("type").toString());
+        offerset offerset = offersetMapper.selectByUserId(Long.parseLong(userId));
+        if (offerset == null) {
+            int max = 999999;
+            int min = 100000;
+            Random random = new Random();
+            int sui = random.nextInt(max) % (max - min + 1) + min;
+            String keypt = null;
+            try {
+                keypt = md5_urlEncode.EncoderByMd5(sui + userId);
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            offerset offerset1 = new offerset();
+            offerset1.setUserid(Long.parseLong(userId));
+            offerset1.setUpdatetime(new Date());
+            offerset1.setState(0);
+            offerset1.setTokenid(keypt);
+            offerset1.setSurplussecond(0);
+            offerset1.setRate(1d);
+            offerset1.setCreatetime(new Date());
+            offerset1.setRequestsecond(0);
+            offerset1.setLeasepower(type);
+            int num = offersetMapper.insert(offerset1);
+            return num > 0;
+        } else {
+            offerset.setLeasepower(type);
             int num = offersetMapper.updateByPrimaryKeySelective(offerset);
             return num > 0;
         }

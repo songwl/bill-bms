@@ -3,6 +3,7 @@ package com.yipeng.bill.bms.web;
 import com.google.gson.JsonObject;
 import com.mchange.v1.db.sql.ConnectionUtils;
 import com.yipeng.bill.bms.core.model.ResultMessage;
+import com.yipeng.bill.bms.dao.UserMapper;
 import com.yipeng.bill.bms.dao.offersetMapper;
 import com.yipeng.bill.bms.domain.KeywordsPrice;
 import com.yipeng.bill.bms.domain.User;
@@ -29,10 +30,7 @@ import java.net.SocketException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.logging.ErrorManager;
 import java.util.regex.Pattern;
 
@@ -48,6 +46,8 @@ public class OptimizationToolController extends BaseController {
     private offersetMapper offersetMapper;
     @Autowired
     private QueryOfferController queryOfferController;
+    @Autowired
+    private UserMapper userMapper;
 
 
     /**
@@ -61,6 +61,11 @@ public class OptimizationToolController extends BaseController {
         return "/optimizationtool/keywordpricesearch";
     }
 
+    /**
+     *
+     * @param modelMap
+     * @return
+     */
     @RequestMapping(value = "/ParameterSetting")
     public String ParameterSetting(ModelMap modelMap) {
         LoginUser loginUser = this.getCurrentAccount();
@@ -159,4 +164,42 @@ public class OptimizationToolController extends BaseController {
         return this.ajaxDone(1, offerset.getRequestsecond().toString(), null);
     }
 
+    @RequestMapping(value = "/OpenWebsitePower", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage OpenWebsitePower(HttpServletRequest httpServletRequest) {
+        LoginUser loginUser = this.getCurrentAccount();
+        if (!loginUser.hasRole("SUPER_ADMIN")) {
+            return this.ajaxDone(-1, "你没有权限", null);
+        }
+        Map<String, String[]> map = httpServletRequest.getParameterMap();
+        int len = Integer.parseInt(map.get("len")[0]);
+        String[] arr = new String[len];
+        for (int i = 0; i < len; i++) {
+            arr[i] = map.get("data[" + i + "][customerId]")[0].toString();
+        }
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("arr", arr);
+        String type = map.get("type")[0];
+        map1.put("type", type);
+        boolean flag = optimizationToolService.setWebsitePower(map1);
+        return this.ajaxDone(flag ? 1 : 0, "", null);
+    }
+
+    @RequestMapping(value = "/OpenAgentWebsitePower", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage OpenAgentWebsitePower(String data, int type) {
+        LoginUser loginUser = this.getCurrentAccount();
+        if (!loginUser.hasRole("DISTRIBUTOR")) {
+            return this.ajaxDone(-1, "你没有权限", null);
+        }
+        String RoleName = userMapper.selectRoleName(data);
+        if (!RoleName.equals("AGENT")) {
+            return this.ajaxDone(-2, "所选账号不是代理商", null);
+        }
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("arr", data);
+        map1.put("type", type);
+        boolean flag = optimizationToolService.setAgentWebsitePower(map1);
+        return this.ajaxDone(flag ? 1 : 0, "", null);
+    }
 }

@@ -12,22 +12,31 @@
     <div class="nav_L left">
         <i class="fa fa-home">&nbsp;</i><span>网站出租平台</span> > <span>任务大厅</span>
     </div>
-    <div class="nav_R right" id="divQx">
-        <div id="addBillByKehu">
-            <span>&nbsp;<i class="fa fa-arrow-down"></i>&nbsp;导入</span>
-        </div>
-
-        <div class="search">
-            <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
-        </div>
-    </div>
     <div class="cls">
     </div>
 </div>
-<div class="Mission-box">
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-primary" id="list-panel" style="border-color: #eeeeee;">
+            <div class="panel-body">
+                <div class="panel-nav">
+                    <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;大厅任务
+                    </div>
+                    <div class="Nav_Right">
 
-    <table id="myTable" class="table table-striped "></table>
 
+                    </div>
+                    <div class="cls"></div>
+                </div>
+
+                <table id="myTable" class="table table-striped  table-condensed table-responsive"
+                       style="width:100%;font-size: 13px;font-family: " 微软雅黑
+                "></table>
+
+            </div>
+
+        </div>
+    </div>
 </div>
 <script type="text/javascript">
     $(function () {
@@ -131,6 +140,9 @@
                                 if (value == "1") {
                                     return "已分配"
                                 }
+                                else if (value == "2") {
+                                    return "已划分";
+                                }
                                 return value;
                             }
                         },
@@ -161,11 +173,10 @@
             window.operateEvents = {
                 'click #details': function (e, value, row, index) {
                     $.post(CTX + '/SiteLease/GetDetails', {website: row.website}, function (data) {
-                        console.info(data)
                         var str = "<table class=\"table table-hover table-striped table-bordered\">" +
-                                "<thead><tr><th>网址</th><th>关键词</th><th>初排</th><th>新排</th><th>时间</th></thead><tbody>";
+                                "<thead><tr><th>网址</th><th>关键词</th><th>初排</th><th>新排</th><th>百度电脑</th><th>百度手机</th><th>搜狗</th><th>360</th><th>神马</th><th>时间</th></thead><tbody>";
                         $.each(data, function (index, item) {
-                            str += "<tr><td><span>" + item.website + "</span></td><td>" + item.keywords + "</td><td>" + item.firstRanking + "</td><td>" + item.newRanking + "</td><td><span>" + new Date(item.time).toLocaleString() + "</span></td></tr>";
+                            str += "<tr><td><span>" + item.website + "</span></td><td>" + item.keywords + "</td><td>" + item.firstRanking + "</td><td>" + item.newRanking + "</td><td>" + item.PriceBaiduPc + "</td><td>" + item.PriceBaiduWap + "</td><td>" + item.PriceSogouPc + "</td><td>" + item.PriceSoPc + "</td><td>" + item.PriceSm + "</td><td><span>" + new Date(item.time).toLocaleString() + "</span></td></tr>";
                         });
                         str += "</tbody></table>";
                         layer.open({
@@ -173,22 +184,13 @@
                             title: '查看详情',
                             skin: 'layui-layer-molv',
                             shade: 0.6,
-                            /*area: ['30%', '40%'],*/
+                            area: ['70%'],
                             content: str //注意，如果str是object，那么需要字符拼接。
                         });
                     });
                 }
             };
             return oTableInit;
-        },
-
-        //得到查询的参数
-        queryParams: function (params) {
-            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
-                limit: params.limit,   //页面大小
-                offset: params.offset  //页码
-            };
-            return temp;
         }
     };
 </script>

@@ -2,8 +2,8 @@
  * Created by 鱼在我这里。 on 2017/3/16.
  */
 
-var searchUserName=null;
-var searchState=null;
+var searchUserName = null;
+var searchState = null;
 $(document).ready(function () {
 
     $("input[name='isOffer']").click(function () {
@@ -62,42 +62,38 @@ $(document).ready(function () {
     });
 //显示搜索内容
     $(".search").click(function () {
-        if($(".Navs2").css("display")=="block"){
+        if ($(".Navs2").css("display") == "block") {
             $(".Navs2").slideUp();
         }
-        else
-        {
+        else {
             $(".Navs2").slideDown();
         }
     })
     //复选框
     $(".updateDailiRole").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
-        var len =selectContent.length;
-        if(selectContent == "") {
+        var len = selectContent.length;
+        if (selectContent == "") {
             alert('请选择一列数据!');
 
-        }else{
-           if(confirm("是否开通代理权限?"))
-           {
-               $.ajax({
-                   type: "post",
-                   data: {selectContent:selectContent,length:len},
-                   url: CTX + "/customer/updateDailiRole",
-                   dataType: "json",
-                   success: function (result) {
-                       if(result.code==200)
-                       {
-                           alert(result.message);
-                           $('#myTable').bootstrapTable('refresh');
-                       }
-                       else
-                       {
-                           alert(result.message);
-                       }
+        } else {
+            if (confirm("是否开通代理权限?")) {
+                $.ajax({
+                    type: "post",
+                    data: {selectContent: selectContent, length: len},
+                    url: CTX + "/customer/updateDailiRole",
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.code == 200) {
+                            alert(result.message);
+                            $('#myTable').bootstrapTable('refresh');
+                        }
+                        else {
+                            alert(result.message);
+                        }
 
-                   }
-               })
+                    }
+                })
             }
         }
     })
@@ -173,28 +169,27 @@ $(document).ready(function () {
 
     })
 
-    var userName=false;
-    var password=false;
+    var userName = false;
+    var password = false;
 
 //用户名
     $("input[name='userName']").blur(function () {
 
-        if ($("input[name='userName']").val() != "")
-        {
+        if ($("input[name='userName']").val() != "") {
             if (/^[A-Za-z]\w{5,12}$/.test($("input[name='userName']").val())) {
                 $.ajax({
                     type: "get",
-                    data:{userName:$("input[name='userName']").val()},
-                    url:CTX+"/user/register/validUserName",
-                    dataType:"json",
-                    success:function (result) {
-                        if (result.code==200){
+                    data: {userName: $("input[name='userName']").val()},
+                    url: CTX + "/user/register/validUserName",
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.code == 200) {
                             //返回结果code==200代表正确
                             //验证可以使用,
-                            userName=true;
-                        }else{
+                            userName = true;
+                        } else {
                             //验证为已注册,不能使用,
-                            $(".pdlogid").css({ "color": "#ff0000" }).text("用户名已存在！");
+                            $(".pdlogid").css({"color": "#ff0000"}).text("用户名已存在！");
                             userName = false;
                         }
 
@@ -206,7 +201,7 @@ $(document).ready(function () {
             else {
                 //格式不对
                 userName = false;
-                $(".pdlogid").css({ "color": "#ff0000" }).text("用户名格式不正确！");
+                $(".pdlogid").css({"color": "#ff0000"}).text("用户名格式不正确！");
             }
 
         }
@@ -214,8 +209,7 @@ $(document).ready(function () {
 //密码
     $("input[name='password']").blur(function () {
 
-        if ($("input[name='password']").val()!= "")
-        {
+        if ($("input[name='password']").val() != "") {
             if (/^\w{6,12}$/.test($(this).val())) {
                 password = true;
 
@@ -223,34 +217,34 @@ $(document).ready(function () {
             else {
                 //格式不对
                 password = false;
-                $(".pdpwd").css({ "color": "#ff0000" }).text("密码格式不正确！");
+                $(".pdpwd").css({"color": "#ff0000"}).text("密码格式不正确！");
             }
         }
     });
     $("input[name='userName']").focus(function () {
-        $(".pdlogid").css({ "color": "#ff0000" }).text("");
+        $(".pdlogid").css({"color": "#ff0000"}).text("");
         userName = false;
 
     });
     //添加客户
     $(".addOperatorcmt").click(function () {
-        if(userName&&password)
-        {
+        if (userName && password) {
             $.ajax({
                 type: "post",
-                data:{userName: $("input[name='userName']").val(),
-                    password:$("input[name='password']").val(),
-                    addMemberId:  $("#addMemberId").val(),
-                    realName:$("input[name='realName']").val(),
-                    contact:$("input[name='contact']").val(),
-                    phone:$("input[name='phone']").val(),
-                    qq:$("input[name='qq']").val(),
-                    balance:$("#balance").val()},
-                url:CTX+"/customer/customerList",
-                dataType:"json",
-                success:function (result) {
-                    if(result.code==200)
-                    {
+                data: {
+                    userName: $("input[name='userName']").val(),
+                    password: $("input[name='password']").val(),
+                    addMemberId: $("#addMemberId").val(),
+                    realName: $("input[name='realName']").val(),
+                    contact: $("input[name='contact']").val(),
+                    phone: $("input[name='phone']").val(),
+                    qq: $("input[name='qq']").val(),
+                    balance: $("#balance").val()
+                },
+                url: CTX + "/customer/customerList",
+                dataType: "json",
+                success: function (result) {
+                    if (result.code == 200) {
                         $(".modal-backdrop").hide();
                         $(".addMemberDiv").slideUp();
 
@@ -258,8 +252,7 @@ $(document).ready(function () {
 
                         alert(result.message);
                     }
-                    else
-                    {
+                    else {
                         alert(result.message);
                     }
 
@@ -267,111 +260,98 @@ $(document).ready(function () {
 
             })
         }
-        else
-        {
+        else {
             alert("信息填写不正确！");
         }
 
     })
 
-   //充值确认
+    //充值确认
     $(".Rechargecmt").click(function () {
-        var RechargeSum=$("#RechargeSum").val();
-        var customerId= $("#customerId").val();
-        if(!isNaN(RechargeSum)&&RechargeSum>0)
-        {
+        var RechargeSum = $("#RechargeSum").val();
+        var customerId = $("#customerId").val();
+        if (!isNaN(RechargeSum) && RechargeSum > 0) {
             $.ajax({
-                type:"post",
-                url:CTX+"/customer/Recharge",
-                data:{customerId:customerId, RechargeSum:RechargeSum},
-                success:function (result) {
-                      if(result.code==200)
-                      {
-                          alert(result.message);
-                          $(".modal-backdrop").hide();
-                          $(".RechargeDiv").slideUp();
-                          $('#myTable').bootstrapTable('refresh');
-                      }
-                      else
-                      {
-                          alert(result.message);
-                      }
-                }
-
-            })
-        }
-        else
-        {
-         alert("请填入正确的充值金额！");
-        }
-    })
-
-    //退款确认
-    $(".Refoundcmt").click(function () {
-        var RechargeSum=$("#RechargeSum").val();
-        var customerId= $("#customerId").val();
-        if(!isNaN(RechargeSum)&&RechargeSum>0)
-        {
-            $.ajax({
-                type:"post",
-                url:CTX+"/customer/Refound",
-                data:{customerId:customerId, RechargeSum:RechargeSum},
-                success:function (result) {
-                    if(result.code==200)
-                    {
+                type: "post",
+                url: CTX + "/customer/Recharge",
+                data: {customerId: customerId, RechargeSum: RechargeSum},
+                success: function (result) {
+                    if (result.code == 200) {
                         alert(result.message);
                         $(".modal-backdrop").hide();
                         $(".RechargeDiv").slideUp();
                         $('#myTable').bootstrapTable('refresh');
                     }
-                    else
-                    {
+                    else {
                         alert(result.message);
                     }
                 }
 
             })
         }
-        else
-        {
+        else {
+            alert("请填入正确的充值金额！");
+        }
+    })
+
+    //退款确认
+    $(".Refoundcmt").click(function () {
+        var RechargeSum = $("#RechargeSum").val();
+        var customerId = $("#customerId").val();
+        if (!isNaN(RechargeSum) && RechargeSum > 0) {
+            $.ajax({
+                type: "post",
+                url: CTX + "/customer/Refound",
+                data: {customerId: customerId, RechargeSum: RechargeSum},
+                success: function (result) {
+                    if (result.code == 200) {
+                        alert(result.message);
+                        $(".modal-backdrop").hide();
+                        $(".RechargeDiv").slideUp();
+                        $('#myTable').bootstrapTable('refresh');
+                    }
+                    else {
+                        alert(result.message);
+                    }
+                }
+
+            })
+        }
+        else {
             alert("请填入正确的退款金额！");
         }
     })
 
     //更改客户信息
     $(".updateOperatorcmt").click(function () {
-        if(/^[A-Za-z]\w{5,18}$/.test($("input[name='userName1']").val()))
-        {
+        if (/^[A-Za-z]\w{5,18}$/.test($("input[name='userName1']").val())) {
             $.ajax({
-                type:'post',
-                url:CTX+"/operator/updateOperator",
-                data:{
-                    id:$("#customerId").val(),
-                    userName:  $("input[name='userName1']").val(),
-                    realName:$("input[name='realName']").val(),
-                    contact:$("input[name='contact']").val(),
-                    phone:$("input[name='phone']").val(),
-                    qq:$("input[name='qq']").val(),
-                    status:$("#viewstatus option:selected").val()
+                type: 'post',
+                url: CTX + "/operator/updateOperator",
+                data: {
+                    id: $("#customerId").val(),
+                    userName: $("input[name='userName1']").val(),
+                    realName: $("input[name='realName']").val(),
+                    contact: $("input[name='contact']").val(),
+                    phone: $("input[name='phone']").val(),
+                    qq: $("input[name='qq']").val(),
+                    status: $("#viewstatus option:selected").val()
                 },
-                success:function (result) {
-                    if(result.code==200)
-                    {
+                success: function (result) {
+                    if (result.code == 200) {
                         alert(result.message);
                         $(".addOperatorDiv").slideUp();
                         $(".addMemberDiv").slideUp();
                         $(".modal-backdrop").hide();
                         $('#myTable').bootstrapTable('refresh');
                     }
-                    else
-                    {
+                    else {
                         alert(result.Message);
                     }
                 }
             })
         }
-        else
-        {
+        else {
             alert("用户名不能为空或格式错误!");
         }
     })
@@ -385,8 +365,8 @@ $(function () {
     oTable1.Init();
 
     //2.初始化Button的点击事件
-    var oButtonInit = new ButtonInit();
-    oButtonInit.Init();
+    //var oButtonInit = new ButtonInit();
+    //oButtonInit.Init();
 
 
 });
@@ -396,7 +376,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#myTable').bootstrapTable({
-            url: CTX+'/customer/getCustomerList',         //请求后台的URL（*）
+            url: CTX + '/customer/getCustomerList',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
@@ -404,7 +384,7 @@ var TableInit = function () {
             pagination: true,                   //是否显示分页（*）
             pageNumber: 1,                       //初始化加载第一页，默认第一页
             pageSize: 20,                       //每页的记录行数（*）
-            pageList: [100, 500,1000],        //可供选择的每页的行数（*）
+            pageList: [100, 500, 1000],        //可供选择的每页的行数（*）
             sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
             queryParams: oTableInit.queryParams,//传递参数（*）
             queryParamsType: "",
@@ -416,18 +396,18 @@ var TableInit = function () {
             rowStyle: function (row, index) {
                 //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
                 var strclass = "";
-                if ((row.id)%2==0){
+                if ((row.id) % 2 == 0) {
                     strclass = '';
                 }
                 else {
                     strclass = 'active';
                 }
-                return { classes: strclass }
+                return {classes: strclass}
             },
             columns: [
                 {
                     checkbox: true
-                },{
+                }, {
                     field: 'id',
                     sortable: true,
                     align: 'center',
@@ -441,7 +421,7 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '数据库编号',
-                    visible:false
+                    visible: false
 
                 },
                 {
@@ -450,10 +430,10 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '客户',
-                    formatter:function (value,row,index) {
-                        var a="";
+                    formatter: function (value, row, index) {
+                        var a = "";
 
-                        a="<span style='color:#4382CF;cursor:pointer;' id='details'>"+value+"</span>";
+                        a = "<span style='color:#4382CF;cursor:pointer;' id='details'>" + value + "</span>";
 
 
                         return a;
@@ -508,14 +488,12 @@ var TableInit = function () {
                     title: '登录次数',
 
 
-
                 },
                 {
                     field: "missionCount",
                     align: 'center',
                     valign: 'middle',
                     title: '任务数',
-
 
 
                 },
@@ -526,27 +504,23 @@ var TableInit = function () {
                     title: '余额',
 
 
-
                 },
                 {
                     field: "status",
                     align: 'center',
                     valign: 'middle',
                     title: '状态',
-                    formatter:function (value,row,index) {
+                    formatter: function (value, row, index) {
 
-                        var a="";
-                        if(value==true)
-                        {
-                            a="<span style='color:#4382CF;cursor:pointer;' id='details'>正常</span>";
+                        var a = "";
+                        if (value == true) {
+                            a = "<span style='color:#4382CF;cursor:pointer;' id='details'>正常</span>";
                         }
-                        else
-                        {
-                            a="<span>冻结中</span>";
+                        else {
+                            a = "<span>冻结中</span>";
                         }
                         return a;
                     }
-
 
 
                 },
@@ -555,7 +529,7 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '代理权限',
-                    visible:false
+                    visible: false
 
                 },
 
@@ -564,9 +538,9 @@ var TableInit = function () {
                     title: '操作',
                     align: 'center',
                     valign: 'middle',
-                    formatter:function (value,row,index) {
+                    formatter: function (value, row, index) {
 
-                        var a='';
+                        var a = '';
                         if (row.roleName == 'ASSISTANT') {
                             a = "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   ";
@@ -580,6 +554,13 @@ var TableInit = function () {
                                 "<span style='color:#4382CF;cursor:pointer;' id='OfferSetUp' data-user='" + value + "'>报价设置</span>   ";
 
                         }
+                        else if (row.roleName == 'DISTRIBUTOR') {
+                            a = "<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
+                                "<span style='color:#4382CF;cursor:pointer;' id='refund'>退款</span>   " +
+                                "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
+                                "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   " +
+                                "<span style='color:#4382CF;cursor:pointer;' id='websiteLeaseSet'>网租设置</span>";
+                        }
                         else {
                             a = "<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='refund'>退款</span>   " +
@@ -589,7 +570,7 @@ var TableInit = function () {
 
                         return a;
                     },
-                   events:operateEvents
+                    events: operateEvents
 
 
                 },
@@ -607,8 +588,8 @@ var TableInit = function () {
             offset: params.pageNumber,  //页码
             sortOrder: params.sortOrder,
             sortName: params.sortName,
-            searchUserName :searchUserName,
-            searchState:searchState,
+            searchUserName: searchUserName,
+            searchState: searchState,
 
         };
         return temp;
@@ -656,8 +637,7 @@ var TableInit = function () {
             $("input[name='phone']").val(row.phone);
             $("input[name='qq']").val(row.qq);
             $("#viewstatus").empty();
-            if(row.status=="1")
-            {
+            if (row.status == "1") {
                 $("#viewstatus").append("<option value='1'>正常</option>");
                 $("#viewstatus").append("<option value='0'>冻结</option>");
             }
@@ -666,44 +646,36 @@ var TableInit = function () {
                 $("#viewstatus").append("<option value='1'>正常</option>");
             }
         },
-        'click #changepwd': function (e, value, row, index)
-        {
-            if(confirm("是否重置密码？(默认重置密码:123456   重置完毕后请尽快修改默认密码)"))
-            {
+        'click #changepwd': function (e, value, row, index) {
+            if (confirm("是否重置密码？(默认重置密码:123456   重置完毕后请尽快修改默认密码)")) {
                 $.ajax({
-                    type:'post',
-                    url:CTX+ "/operator/updatePwd",
-                    data:{id:row.customerId},
-                    success:function (result) {
-                        if(result.code==200)
-                        {
+                    type: 'post',
+                    url: CTX + "/operator/updatePwd",
+                    data: {id: row.customerId},
+                    success: function (result) {
+                        if (result.code == 200) {
                             alert(result.message);
                             $('#myTable').bootstrapTable('refresh');
                         }
-                        else
-                        {
+                        else {
                             alert(result.Message);
                         }
                     }
                 })
             }
         },
-        'click #delete': function (e, value, row, index)
-        {
-            if(confirm("是否删除当前用户？"))
-            {
+        'click #delete': function (e, value, row, index) {
+            if (confirm("是否删除当前用户？")) {
                 $.ajax({
-                    type:'post',
-                    url:CTX+ "/operator/deleteUser",
-                    data:{id:row.customerId},
-                    success:function (result) {
-                        if(result.code==200)
-                        {
+                    type: 'post',
+                    url: CTX + "/operator/deleteUser",
+                    data: {id: row.customerId},
+                    success: function (result) {
+                        if (result.code == 200) {
                             alert(result.message);
                             $('#myTable').bootstrapTable('refresh');
                         }
-                        else
-                        {
+                        else {
                             alert(result.Message);
                         }
                     }
@@ -740,7 +712,49 @@ var TableInit = function () {
                     $("#offerSetUp").hide();
                 }
             });
-        }
+        },
+        'click #websiteLeaseSet': function (e, value, row, index) {
+            layer.confirm('是否开通已该代理商的网站出租平台权限？', {
+                btn: ['开通', '关闭'] //按钮
+            }, function () {
+                $.post(CTX + '/optimizationTool/OpenAgentWebsitePower', {
+                    data: row.customerId,
+                    type: 1,
+                }, function (data) {
+                    if (data.code == "1") {
+                        layer.msg("成功");
+                        return;
+                    }
+                    else if (data.code == "-1" || data.code == "-2") {
+                        layer.msg(data.message);
+                        return;
+                    }
+                    else {
+                        layer.msg("失败");
+                        return;
+                    }
+                })
+            }, function () {
+                $.post(CTX + '/optimizationTool/OpenAgentWebsitePower', {
+                    data: row.customerId,
+                    type: 0
+                }, function (data) {
+                    if (data.code == "1") {
+                        layer.msg("成功");
+                        return;
+                    }
+                    else if (data.code == "-1" || data.code == "-2") {
+                        layer.msg(data.message);
+                        return;
+                    }
+                    else {
+                        layer.msg("失败");
+                        return;
+                    }
+                })
+            });
+
+        },
     }
 
 
@@ -748,21 +762,17 @@ var TableInit = function () {
 };
 //搜索按钮
 $("#searchButton").click(function () {
-    if($("#searchUserName").val()!="")
-    {
-        searchUserName=$("#searchUserName").val();
+    if ($("#searchUserName").val() != "") {
+        searchUserName = $("#searchUserName").val();
     }
-    else
-    {
-        searchUserName=null;
+    else {
+        searchUserName = null;
     }
-    if($("#searchState option:selected").text()!="--请选择--")
-    {
-        searchState=$("#searchState option:selected").val();
+    if ($("#searchState option:selected").text() != "--请选择--") {
+        searchState = $("#searchState option:selected").val();
     }
-    else
-    {
-        searchState=null;
+    else {
+        searchState = null;
     }
     $('#myTable').bootstrapTable('refresh');
 });
@@ -771,7 +781,47 @@ $(function () {
 
         $('#myTable').bootstrapTable('refresh');
     });
+    $("#websiteLeasePower").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        //console.info(selectContent);
+        if (selectContent.length == 0) {
+            layer.msg("请先选择行");
+            return;
+        }//询问框
+        layer.confirm('是否开通已选择渠道商的网站出租平台权限？', {
+            btn: ['开通', '关闭'] //按钮
+        }, function () {
+            $.post(CTX + '/optimizationTool/OpenWebsitePower', {
+                data: selectContent,
+                type: 1,
+                len: selectContent.length
+            }, function (data) {
+                if (data.code == "1") {
+                    layer.msg("成功");
+                    return;
+                }
+                else {
+                    layer.msg("失败");
+                    return;
+                }
+            })
+        }, function () {
+            $.post(CTX + '/optimizationTool/OpenWebsitePower', {
+                data: selectContent, type: 0,
+                len: selectContent.length
+            }, function (data) {
+                if (data.code == "1") {
+                    layer.msg("成功");
+                    return;
+                }
+                else {
+                    layer.msg("失败");
+                    return;
+                }
+            })
+        });
 
+    });
 });
 
 

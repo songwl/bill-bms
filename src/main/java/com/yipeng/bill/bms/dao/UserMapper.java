@@ -23,11 +23,14 @@ public interface UserMapper {
     User selectByUserName(String userName);
 
     List<User> selectList(int limit, int offset);
+
     Long getUserListCount();
+
     List<User> userCreater(Long createId);
 
     /**
      * 获取角色
+     *
      * @param params
      * @return
      */
@@ -35,20 +38,26 @@ public interface UserMapper {
 
     /**
      * 搜索框的客户
+     *
      * @param userId
      * @return
      */
     List<User> getUserByCreateId(Long userId);
+
     //待审核客户
     List<User> selectByReviewUser(Map<String, Object> params);
-  //待审核客户数量
-    Long  selectByReviewUserCount();
+
+    //待审核客户数量
+    Long selectByReviewUserCount();
+
     //用户权限
     List<User> getUserRoleByCreateId(Map<String, Object> params);
+
     //用户权限个数
     Long getUserRoleByCreateIdCount(Map<String, Object> params);
 
     List<User> getUserBillAscription(Map<String, Object> params);
+
     Long getUserBillAscriptionCount(Map<String, Object> params);
 
     List<User> getSearchUserBillAscription(Map<String, Object> params);
@@ -56,5 +65,10 @@ public interface UserMapper {
     List<User> selectAllUsers(String role);
 
     List<User> selectAddressee(String currentid);
- 
+
+    //获取已开通权限的渠道商
+    List<User> selectDistributor();
+
+    //根据用户id得到角色名称
+    String selectRoleName(String currentId);
 }

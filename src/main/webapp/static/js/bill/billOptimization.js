@@ -21,7 +21,11 @@ $(document).ready(function () {
     $("#OptimizationUpdate").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
         if(selectContent == "") {
-            alert('请选择一列数据!');
+            layer.alert('请选择一列数据', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
 
         }else{
             $(".modal-backdrop").show();
@@ -31,51 +35,69 @@ $(document).ready(function () {
     //优化上线
     $("#OptimizationStart").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var index;
         if(selectContent == "") {
-            alert('请选择一列数据!');
+            layer.alert('请选择一列数据', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
 
         }else{
-            if(confirm("是否上线优化？"))
-            {
-                var len =selectContent.length;
-                var state=1;
-                $.ajax({
-                    type:"post",
-                    url:CTX+"/order/updateYBYstate",
-                    data:{selectContent:selectContent,length:len,state:state},
-                    beforeSend: function () {
-                        $(".pload").show();
-                        $(".modal-backdrop").show();
-                    },
-                    success:function (result) {
-                        if(result.code==200)
-                        {
-                            alert(result.message);
-                            $('#myTable').bootstrapTable('refresh');
-                            $(".pload").hide();
-                            $(".modal-backdrop").hide();
-                        }
-                        else
-                        {
-                            alert(result.message);
-                            $(".pload").hide();
-                            $(".modal-backdrop").hide();
-                        }
 
+            layer.confirm('是否上线优化？', {
+                btn: ['确定', '取消']
+            }, function () {
+                var len = selectContent.length;
+                var state = 1;
+                $.ajax({
+                    type: "post",
+                    url: CTX + "/order/updateYBYstate",
+                    data: {selectContent: selectContent, length: len, state: state},
+                    beforeSend: function () {
+                        index = layer.load(1, {
+                            shade: [0.1, '#fff'] //0.1透明度的白色背景
+                        });
+                    },
+                    success: function (result) {
+                        if (result.code == 200) {
+                            layer.alert(result.message, {
+                                skin: 'layui-layer-molv' //样式类名
+                                , closeBtn: 0
+                            });
+                            $('#myTable').bootstrapTable('refresh');
+
+                        }
+                        else {
+                            layer.alert(result.message, {
+                                skin: 'layui-layer-molv' //样式类名
+                                , closeBtn: 0
+                            });
+
+                        }
+                        layer.close(index);
                     }
                 })
-            }
+
+            })
+
         }
     })
     //优化离线
     $("#OptimizationStop").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var index;
         if(selectContent == "") {
-            alert('请选择一列数据!');
+            layer.alert('请选择一列数据', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
 
         }else{
-          if(confirm("是否离线优化？"))
-          {
+            layer.confirm('是否优化离线？', {
+                btn: ['确定', '取消']
+            }, function () {
               var len =selectContent.length;
               var state=100;
               $.ajax({
@@ -83,27 +105,32 @@ $(document).ready(function () {
                   url:CTX+"/order/updateYBYstate",
                   data:{selectContent:selectContent,length:len,state:state},
                   beforeSend: function () {
-                      $(".pload").show();
-                      $(".modal-backdrop").show();
+                      index = layer.load(1, {
+                          shade: [0.1, '#fff'] //0.1透明度的白色背景
+                      });
                   },
                   success:function (result) {
                       if(result.code==200)
                       {
-                          alert(result.message);
+                          layer.alert(result.message, {
+                              skin: 'layui-layer-molv' //样式类名
+                              , closeBtn: 0
+                          });
                           $('#myTable').bootstrapTable('refresh');
-                          $(".pload").hide();
-                          $(".modal-backdrop").hide();
+
                       }
                       else
                       {
-                          alert(result.message);
-                          $(".pload").hide();
-                          $(".modal-backdrop").hide();
+                          layer.alert(result.message, {
+                              skin: 'layui-layer-molv' //样式类名
+                              , closeBtn: 0
+                          });
                       }
+                      layer.close(index);
 
                   }
               })
-          }
+          })
         }
     })
 

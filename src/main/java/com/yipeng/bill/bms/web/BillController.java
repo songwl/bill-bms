@@ -637,7 +637,15 @@ public class BillController extends BaseController {
         if (user != null) {
 
             int a = billService.optimizationStop(params, user);
-            return this.ajaxDoneSuccess("操作成功");
+            if(a==1)
+            {
+                return this.ajaxDoneSuccess("操作成功");
+            }
+            else
+            {
+                return this.ajaxDoneSuccess("操作失败");
+            }
+
 
         } else {
             return this.ajaxDoneError("未登录");
@@ -659,7 +667,15 @@ public class BillController extends BaseController {
         if (user != null) {
 
             int a = billService.optimizationStart(params, user);
-            return this.ajaxDoneSuccess("操作成功");
+            if(a==0)
+            {
+                return this.ajaxDoneSuccess("操作成功");
+            }
+            else
+            {
+                return this.ajaxDoneError("操作失败");
+            }
+
 
         } else {
             return this.ajaxDoneError("未登录");

@@ -383,6 +383,7 @@ $(document).ready(function () {
     })
     //切换订单确认\]
     $(".billChangeDailiCmt").click(function () {
+        var index;
         var rankend = parseInt(jQuery("input[name='changeDailirankend']").val());
         var price = parseFloat(jQuery("input[name='changeDailiprice']").val());
         var rankend1 = parseInt(jQuery("input[name='changeDailirankend1']").val());
@@ -443,6 +444,8 @@ $(document).ready(function () {
                         });
                     },
                     success:function (result) {
+
+                        layer.close(index);
                             if(result.code==200)
                             {
                                 layer.alert(result.message, {
@@ -450,6 +453,9 @@ $(document).ready(function () {
                                     , anim: 2 //动画类型
                                     , icon: 4   // icon
                                 });
+
+                                $(".billChangeDailiDiv").slideUp();
+                                $('#pricetable').bootstrapTable('refresh');
                             }
                             else
                             {
@@ -460,7 +466,6 @@ $(document).ready(function () {
                                     , icon: 4   // icon
                                 });
                             }
-                        layer.close(index);
                     }
                 })
             }

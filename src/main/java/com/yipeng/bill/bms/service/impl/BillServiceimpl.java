@@ -1115,7 +1115,7 @@ public class BillServiceimpl implements BillService {
                             billPriceNew2.setBillId(billId);
                             billPriceNew2.setInMemberId(Long.parseLong(dailiUserId[0]));
                             billPriceNew2.setOutMemberId(Long.parseLong(kehuUserId[0]));
-                            if(!"".equals(rankend1[0])&&!"".equals(price1[0]))
+                            if(!"NaN".equals(rankend1[0])&&!"NaN".equals(price1[0]))
                             {
                                 billPriceNew2.setBillRankingStandard(new Long(rankend1[0]));
                                 billPriceNew2.setPrice(new BigDecimal(price1[0]));
@@ -1143,7 +1143,7 @@ public class BillServiceimpl implements BillService {
                         billPriceList.get(0).setOutMemberId(Long.parseLong(dailiUserId[0]));
                         billPriceList.get(1).setOutMemberId(Long.parseLong(dailiUserId[0]));
                         billPriceList.get(2).setOutMemberId(Long.parseLong(dailiUserId[0]));
-                        if(!"".equals(rankend[0])&&!"".equals(price[0]))
+                        if(!"NaN".equals(rankend[0])&&!"NaN".equals(price[0]))
                         {
                             billPriceList.get(0).setOutMemberId(Long.parseLong(dailiUserId[0]));
                             BillPrice billPriceNew1=new BillPrice();
@@ -1158,7 +1158,7 @@ public class BillServiceimpl implements BillService {
                             billPriceNew2.setBillId(billId);
                             billPriceNew2.setInMemberId(Long.parseLong(dailiUserId[0]));
                             billPriceNew2.setOutMemberId(Long.parseLong(kehuUserId[0]));
-                            if(!"".equals(rankend1[0])&&!"".equals(price1[0]))
+                            if(!"NaN".equals(rankend1[0])&&!"NaN".equals(price1[0]))
                             {
                                 billPriceNew2.setBillRankingStandard(new Long(rankend1[0]));
                                 billPriceNew2.setPrice(new BigDecimal(price1[0]));
@@ -1174,7 +1174,7 @@ public class BillServiceimpl implements BillService {
                             billPriceNew3.setBillId(billId);
                             billPriceNew3.setInMemberId(Long.parseLong(dailiUserId[0]));
                             billPriceNew3.setOutMemberId(Long.parseLong(kehuUserId[0]));
-                            if(!"".equals(rankend2[0])&&!"".equals(price2[0]))
+                            if(!"NaN".equals(rankend2[0])&&!"NaN".equals(price2[0]))
                             {
                                 billPriceNew3.setBillRankingStandard(new Long(rankend2[0]));
                                 billPriceNew3.setPrice(new BigDecimal(price2[0]));

@@ -63,6 +63,14 @@ public interface BillService {
      * @return
      */
     int updateBillPrice(Map<String, String[]> params, LoginUser user);
+
+    /**
+     * 渠道商切换订单到代理商
+     * @param params
+     * @param user
+     * @return
+     */
+    String billChangeDailiCmt(Map<String, String[]> params, LoginUser loginUser);
     /**
      * 修改订单信息（待审核的订单）
      * @param params

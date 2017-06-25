@@ -50,6 +50,12 @@ public interface UserService {
      * @return
      */
     List<User> userCreater(Map<String, Long> params);
+    /**
+     * 查找当前登录对象对应的代理商
+     * @param params
+     * @return
+     */
+    List<User> getDailiUser(Map<String, Long> params);
 
     List<User> getUserAll(Map<String, Long> params);
 

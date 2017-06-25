@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
         List<User> userList=userMapper.userCreater(createId);
         List<User> userList1=new ArrayList<>() ;
         for (User user:userList
-             ) {
+                ) {
             List<UserRole> userRoles=userRoleService.findUserRolesByUserId(user.getId());
 
             if(!CollectionUtils.isEmpty(userRoles))
@@ -140,6 +140,35 @@ public class UserServiceImpl implements UserService {
 
 
         return userList;
+    }
+    /**
+     * 查找当前登录对象对应的代理商
+     * @param params
+     * @return
+     */
+    @Override
+    public List<User> getDailiUser(Map<String, Long> params) {
+        Long createId=params.get("createId");
+        List<User> userList=userMapper.userCreater(createId);
+        List<User> userList1=new ArrayList<>() ;
+        for (User user:userList
+                ) {
+            List<UserRole> userRoles=userRoleService.findUserRolesByUserId(user.getId());
+
+            if(!CollectionUtils.isEmpty(userRoles))
+            {
+                UserRole userRole= userRoles.get(0);
+                Role role=roleMapper.selectByPrimaryKey(userRole.getRoleId());
+                if(role.getRoleCode().equals("AGENT"))
+                {
+                    User user1=new User();
+                    user1.setId(user.getId());
+                    user1.setUserName(user.getUserName());
+                    userList1.add(user1);
+                }
+            }
+        }
+        return userList1;
     }
 
     /**

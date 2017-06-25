@@ -85,10 +85,40 @@ public class BillController extends BaseController {
         }
 
         List<User> userList = userService.userCreater(params);
+        List<User> dailiList = userService.getDailiUser(params);
+        Map<String, Object> bms = new HashMap<>();
+        bms.put("user", user);
         modelMap.put("userList", userList);
+        modelMap.put("dailiList", dailiList);
+        modelMap.addAttribute("bmsModel", bms);
         return "/bill/billCustomer";
     }
 
+    /**
+     * 切换订单，SELECT获取代理的客户
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/getDailiKehu")
+    @ResponseBody
+    public ResultMessage getDailiKehu(HttpServletRequest request,Long userId) {
+        LoginUser user = this.getCurrentAccount();
+        Map<String, Long> params = new HashMap<>();
+        //查询当前登录对象对应的客户
+        if(user.hasRole("ASSISTANT"))
+        {
+            params.put("createId", user.getCreateUserId());
+        }
+        else
+        {
+            params.put("createId", userId);
+        }
+        List<User> userList = userService.userCreater(params);
+        return this.ajaxDone(1,"返回数据:",userList);
+
+
+    }
     /**
      * 关键词优化
      *
@@ -494,8 +524,29 @@ public class BillController extends BaseController {
         } else {
             return this.ajaxDoneError("未登录");
         }
+    }
 
+    /**
+     * 渠道商切换订单到代理商
+     *
+     * @return
+     */
+    @RequestMapping(value = "/billChangeDailiCmt", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage billChangeDailiCmt(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String[]> params = request.getParameterMap();
+        LoginUser user = this.getCurrentAccount();
+        if (user != null) {
+            String message = billService.billChangeDailiCmt(params, user);
+            if ("".equals(message)) {
+                return this.ajaxDoneSuccess("调整成功!");
+            } else {
+                return this.ajaxDoneError(message);
+            }
 
+        } else {
+            return this.ajaxDoneError("未登录");
+        }
     }
 
     /**

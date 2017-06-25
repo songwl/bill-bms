@@ -64,8 +64,14 @@ $(document).ready(function () {
         var search = $("#searchengineid option:selected").text();
         var keyword = $.trim($("#keyword").val());
         var url = $.trim($("#url").val());
+        var index;
         if (search == "" || keyword == "" || url == "" || search == "--请选择--") {
-            alert("请将信息填写完整！");
+
+            layer.alert('请将信息填写完整', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
         }
         else {
 
@@ -76,7 +82,11 @@ $(document).ready(function () {
             console.info(url_arr.length);
             console.info(keyword_arr.length > 1 && keyword_arr.length != url_arr.length);
             if (keyword_arr.length >= 1 && keyword_arr.length != url_arr.length) {
-                alert("网址行数为1或者与关键词一一对应");
+                layer.alert('网址行数为1或者与关键词一一对应', {
+                    skin: 'layui-layer-molv' //样式类名  自定义样式
+                    , anim: 6 //动画类型
+                    , icon: 4   // icon
+                });
                 return;
             }
             else {
@@ -91,35 +101,48 @@ $(document).ready(function () {
                         url: url,
                     },
                     beforeSend: function () {
-                        $(".pload").show();
-                        $('.addBillByKehuCmt').attr('disabled', "true");
+                        index  = layer.load(1, {
+                            shade: [0.1,'#fff'] //0.1透明度的白色背景
+                        });
                     },
                     success: function (result) {
                         $(".pload").hide();
                         if (result.code == 200) {
 
                             if (result.message == "") {
-                                alert("导入成功!");
+                                layer.alert('导入成功', {
+                                    skin: 'layui-layer-molv' //样式类名  自定义样式
+                                    , anim: 1 //动画类型
+                                    , icon: 4   // icon
+                                });
                                 $(".modal-backdrop").hide();
                                 $(".samepriceDiv").slideUp();
                                 $('#myTable').bootstrapTable('refresh');
                                 $("#keyword").val("");
                                 $("#url").val("");
                                 $("#searchengineid").val("0");
-                                $('.addBillByKehuCmt').removeAttr("disabled");
+
 
                             }
                             else {
+                                layer.alert(result.message , {
+                                    skin: 'layui-layer-molv' //样式类名  自定义样式
+                                    , anim: 1 //动画类型
+                                    , icon: 4   // icon
+                                });
 
-                                alert(result.message + " !");
-                                $('.addBillByKehuCmt').removeAttr("disabled");
                             }
                         }
                         else {
 
-                            alert("系统繁忙，请稍后再试！");
-                            $('.addBillByKehuCmt').removeAttr("disabled");
+                            layer.alert('系统繁忙，请稍后再试！', {
+                                skin: 'layui-layer-molv' //样式类名  自定义样式
+                                , anim: 1 //动画类型
+                                , icon: 4   // icon
+                            });
+
                         }
+                        layer.close(index);
                     }
 
                 })
@@ -146,7 +169,11 @@ $(document).ready(function () {
     $("#btn_update").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
         if (selectContent == "") {
-            alert('请选择一列数据!');
+            layer.alert('请选择一列数据', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
 
         } else {
             $(".modal-backdrop").show();
@@ -239,8 +266,13 @@ $(document).ready(function () {
     $("#optimizationStop").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
         var len = selectContent.length;
+        var index;
         if (selectContent == "") {
-            alert('请选择一列数据!');
+            layer.alert('请选择一列数据', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
 
         } else {
             if (confirm("是否停止优化?")) {
@@ -248,14 +280,26 @@ $(document).ready(function () {
                     type: "post",
                     url: CTX + "/order/billList/optimizationStop",
                     data: {selectContent: selectContent, length: len},
+                    beforeSend: function () {
+                        index  = layer.load(1, {
+                            shade: [0.1,'#fff'] //0.1透明度的白色背景
+                        });
+                    },
                     success: function (result) {
                         if (result.code == 200) {
-                            alert(result.message);
+                            layer.alert(result.message, {
+                                skin: 'layui-layer-molv' //样式类名
+                                , closeBtn: 0
+                            })
                             $('#myTable').bootstrapTable('refresh');
                         }
                         else {
-                            alert(result.message);
+                            layer.alert(result.message, {
+                                skin: 'layui-layer-molv' //样式类名
+                                , closeBtn: 0
+                            })
                         }
+                        layer.close(index);
                     }
 
                 })
@@ -266,7 +310,11 @@ $(document).ready(function () {
     $("#updatePrice").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
         if (selectContent == "") {
-            alert('请选择一列数据!');
+            layer.alert('请选择一列数据', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
 
         } else {
             $(".billExamineDiv").slideDown();

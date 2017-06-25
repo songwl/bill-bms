@@ -1038,6 +1038,175 @@ public class BillServiceimpl implements BillService {
     }
 
     /**
+     * 渠道商切换订单到代理商
+     *
+     * @return
+     */
+    @Override
+    public String billChangeDailiCmt(Map<String, String[]> params, LoginUser loginUser) {
+        //获取参数
+        String[] selectContent = params.get("selectContent[0][userName]");
+        String[] checkboxLength = params.get("checkboxLength");
+        String[] price = params.get("price");
+        String[] price1 = params.get("price1");
+        String[] price2 = params.get("price2");
+        String[] price3 = params.get("price3");
+        String[] rankend = params.get("rankend");
+        String[] rankend1 = params.get("rankend1");
+        String[] rankend2 = params.get("rankend2");
+        String[] rankend3 = params.get("rankend3");
+        String[] dailiUserId = params.get("dailiUserId");
+        String[] kehuUserId = params.get("kehuUserId");
+        String message="";
+        int length = Integer.parseInt(checkboxLength[0]);
+        for (int i = 0; i < length; i++) {
+            //数据库订单ID
+            String[] id = params.get("selectContent[" + i + "][id]");
+            Long billId = Long.parseLong(id[0]);
+            Bill bill=billMapper.selectByPrimaryKey(billId);
+            //查询单价
+            BillPrice billPrice=new BillPrice();
+            billPrice.setInMemberId(loginUser.getId());
+            billPrice.setBillId(billId);
+            List<BillPrice> billPriceList=billPriceMapper.selectByBillPrice(billPrice);
+            if(!CollectionUtils.isEmpty(billPriceList))
+            {
+
+
+                if (billPriceList.size()==1)
+                {
+                    if(!"".equals(rankend[0])&&!"".equals(price[0]))
+                    {
+                        billPriceList.get(0).setOutMemberId(Long.parseLong(dailiUserId[0]));
+                        BillPrice billPriceNew=new BillPrice();
+                        billPriceNew.setBillId(billId);
+                        billPriceNew.setInMemberId(Long.parseLong(dailiUserId[0]));
+                        billPriceNew.setOutMemberId(Long.parseLong(kehuUserId[0]));
+                        billPriceNew.setBillRankingStandard(new Long(rankend[0]));
+                        billPriceNew.setPrice(new BigDecimal(price[0]));
+                        billPriceNew.setCreateTime(new Date());
+                        billPriceMapper.insert(billPriceNew);
+                        billPriceMapper.updateByPrimaryKeySelective(billPriceList.get(0));
+                    }
+                    else
+                    {
+                        message+="订单："+bill.getKeywords()+" , ";
+                        continue;
+                    }
+                }
+                if(billPriceList.size()>1)
+                {
+                    if(billPriceList.size()==2)
+                    {
+                        billPriceList.get(0).setOutMemberId(Long.parseLong(dailiUserId[0]));
+                        billPriceList.get(1).setOutMemberId(Long.parseLong(dailiUserId[0]));
+                        if(!"".equals(rankend[0])&&!"".equals(price[0]))
+                        {
+                            billPriceList.get(0).setOutMemberId(Long.parseLong(dailiUserId[0]));
+                            BillPrice billPriceNew1=new BillPrice();
+                            billPriceNew1.setBillId(billId);
+                            billPriceNew1.setInMemberId(Long.parseLong(dailiUserId[0]));
+                            billPriceNew1.setOutMemberId(Long.parseLong(kehuUserId[0]));
+                            billPriceNew1.setBillRankingStandard(new Long(rankend[0]));
+                            billPriceNew1.setPrice(new BigDecimal(price[0]));
+                            billPriceNew1.setCreateTime(new Date());
+                            billPriceMapper.insert(billPriceNew1);
+                            BillPrice billPriceNew2=new BillPrice();
+                            billPriceNew2.setBillId(billId);
+                            billPriceNew2.setInMemberId(Long.parseLong(dailiUserId[0]));
+                            billPriceNew2.setOutMemberId(Long.parseLong(kehuUserId[0]));
+                            if(!"".equals(rankend1[0])&&!"".equals(price1[0]))
+                            {
+                                billPriceNew2.setBillRankingStandard(new Long(rankend1[0]));
+                                billPriceNew2.setPrice(new BigDecimal(price1[0]));
+                            }
+                            else
+                            {
+                                billPriceNew2.setBillRankingStandard(new Long(20));
+                                billPriceNew2.setPrice(new BigDecimal(0.01));
+                            }
+
+                            billPriceNew2.setCreateTime(new Date());
+                            billPriceMapper.insert(billPriceNew2);
+                            billPriceMapper.updateByPrimaryKeySelective(billPriceList.get(0));
+                            billPriceMapper.updateByPrimaryKeySelective(billPriceList.get(1));
+                        }
+                        else
+                        {
+                            message+="订单："+bill.getKeywords()+" , ";
+                            continue;
+                        }
+
+                    }
+                    if(billPriceList.size()==3)
+                    {
+                        billPriceList.get(0).setOutMemberId(Long.parseLong(dailiUserId[0]));
+                        billPriceList.get(1).setOutMemberId(Long.parseLong(dailiUserId[0]));
+                        billPriceList.get(2).setOutMemberId(Long.parseLong(dailiUserId[0]));
+                        if(!"".equals(rankend[0])&&!"".equals(price[0]))
+                        {
+                            billPriceList.get(0).setOutMemberId(Long.parseLong(dailiUserId[0]));
+                            BillPrice billPriceNew1=new BillPrice();
+                            billPriceNew1.setBillId(billId);
+                            billPriceNew1.setInMemberId(Long.parseLong(dailiUserId[0]));
+                            billPriceNew1.setOutMemberId(Long.parseLong(kehuUserId[0]));
+                            billPriceNew1.setBillRankingStandard(new Long(rankend[0]));
+                            billPriceNew1.setPrice(new BigDecimal(price[0]));
+                            billPriceNew1.setCreateTime(new Date());
+                            billPriceMapper.insert(billPriceNew1);
+                            BillPrice billPriceNew2=new BillPrice();
+                            billPriceNew2.setBillId(billId);
+                            billPriceNew2.setInMemberId(Long.parseLong(dailiUserId[0]));
+                            billPriceNew2.setOutMemberId(Long.parseLong(kehuUserId[0]));
+                            if(!"".equals(rankend1[0])&&!"".equals(price1[0]))
+                            {
+                                billPriceNew2.setBillRankingStandard(new Long(rankend1[0]));
+                                billPriceNew2.setPrice(new BigDecimal(price1[0]));
+                            }
+                            else
+                            {
+                                billPriceNew2.setBillRankingStandard(new Long(20));
+                                billPriceNew2.setPrice(new BigDecimal(0.01));
+                            }
+                            billPriceNew2.setCreateTime(new Date());
+                            billPriceMapper.insert(billPriceNew2);
+                            BillPrice billPriceNew3=new BillPrice();
+                            billPriceNew3.setBillId(billId);
+                            billPriceNew3.setInMemberId(Long.parseLong(dailiUserId[0]));
+                            billPriceNew3.setOutMemberId(Long.parseLong(kehuUserId[0]));
+                            if(!"".equals(rankend2[0])&&!"".equals(price2[0]))
+                            {
+                                billPriceNew3.setBillRankingStandard(new Long(rankend2[0]));
+                                billPriceNew3.setPrice(new BigDecimal(price2[0]));
+                            }
+                            else
+                            {
+                                billPriceNew3.setBillRankingStandard(new Long(20));
+                                billPriceNew3.setPrice(new BigDecimal(0.01));
+                            }
+                            billPriceNew3.setCreateTime(new Date());
+                            billPriceMapper.insert(billPriceNew3);
+                            billPriceMapper.updateByPrimaryKeySelective(billPriceList.get(0));
+                            billPriceMapper.updateByPrimaryKeySelective(billPriceList.get(1));
+                            billPriceMapper.updateByPrimaryKeySelective(billPriceList.get(2));
+
+                        }
+                        else
+                        {
+                            message+="订单："+bill.getKeywords()+" , ";
+                            continue;
+                        }
+
+                    }
+                }
+            }
+
+        }
+
+        return message;
+    }
+
+    /**
      * 修改订单信息（待审核的订单）
      *
      * @param params
@@ -1364,6 +1533,7 @@ public class BillServiceimpl implements BillService {
                 bill.setWebsite(website);
                 bill.setWebAppId(ApiId);
                 bill.setWebAppId1(ApiId1);
+                bill.setState(2);
                 bill.setUpdateTime(new Date());
                 billMapper.updateByPrimaryKeySelective(bill);
                 return 1;
@@ -2465,7 +2635,7 @@ public class BillServiceimpl implements BillService {
                         Boolean bool=false;
                         for (Bill b:billList
                              ) {
-                            if(b.getState()==2&&!b.getId().equals(billId))
+                            if(b.getState()==2&&b.getId().longValue()!=billId.longValue())
                             {
                                 bool=true;
                                 break;
@@ -2498,7 +2668,7 @@ public class BillServiceimpl implements BillService {
             }
         }
         //调用接口删除接口数据
-        if(billIdArr.length>0)
+        if(taskIdArr.length>0&&taskIdArr!=null&&taskIdArr[0]!=null)
         {
             int a = this.deleteYBYState(billIdArr, user, 999);
             Boolean b = this.delSearchTask(taskIdArr);
@@ -2533,7 +2703,7 @@ public class BillServiceimpl implements BillService {
                         Boolean bool=true;
                         for (Bill item : billList
                                 ) {
-                            if (item.getState()==2&&!item.getId().equals(billId)) {
+                            if (item.getState()==2&&item.getId().longValue()!=billId.longValue()) {
                                 bill.setWebAppId(item.getWebAppId());
                                 bill.setWebAppId1(item.getWebAppId1());
                                 bill.setState(2);
@@ -2549,13 +2719,6 @@ public class BillServiceimpl implements BillService {
 
                     } else {
                         int result2 = addSearchTask(billId, bill.getKeywords(), bill.getWebsite());
-                        if(result2!=1)
-                        {
-                            bill.setState(2);
-                            billMapper.updateByPrimaryKeySelective(bill);
-                            return 1;
-                        }
-
                     }
                 }
 
@@ -2772,7 +2935,7 @@ public class BillServiceimpl implements BillService {
     }
 
     /**
-     * 审核通过
+     * 申请停单审核通过
      *
      * @param params
      * @param user
@@ -2782,29 +2945,91 @@ public class BillServiceimpl implements BillService {
     public int applyStopBillPass(Map<String, String[]> params, LoginUser user) {
         String[] checkboxLength = params.get("length");
         int length = Integer.parseInt(checkboxLength[0]);
-
+        Map<String, String[]> map = new HashMap<>(params);
+        String[] taskIdArr = new String[length];
+        String[] state = {"999"};
+        map.put("state", state);
+        Long[] billIdArr = new Long[length];
         for (int i = 0; i < length; i++) {
             String[] id = params.get("selectContent[" + i + "][id]");
             Long billId = Long.parseLong(id[0]);
-            Bill bill = new Bill();
-            bill.setId(billId);
+           Bill bill=billMapper.selectByPrimaryKey(billId);
             if (user.hasRole("SUPER_ADMIN")) {
-                bill.setState(3);
-                bill.setApplyState(0);
-            } else {
+                if (bill != null) {
+                    //通过 Taskid 查询订单
+                    List<Bill> billList = billMapper.selectByBillIdToGetTaskId(bill.getWebAppId());
+                    if (!CollectionUtils.isEmpty(billList)) {
+                        //如果有多个重复订单 只删除当前数据库的数据
+                        if (billList.size() > 1) {
+                            //判断其他重复的订单是否已经停单
+                            Boolean bool=false;
+                            for (Bill b:billList
+                                    ) {
+                                if(b.getState()==2&&b.getId().longValue()!=billId.longValue())
+                                {
+                                    bool=true;
+                                    break;
+                                }
+                            }
+                            if(bool)
+                            {
+                                bill.setState(3);
+                                bill.setApplyState(0);
+                                billMapper.updateByPrimaryKeySelective(bill);
+                            }
+                            else
+                            {
+                                //删除扣费通道
+
+                                bill.setState(3);
+                                bill.setApplyState(0);
+                                billMapper.updateByPrimaryKeySelective(bill);
+                                taskIdArr[i] = billList.get(0).getWebAppId().toString();
+                                billIdArr[i] = billList.get(0).getId();
+                            }
+
+                        }
+                        //调用接口  删除对应的数据
+                        else {
+                            //删除扣费通道
+                            bill.setState(3);
+                            bill.setApplyState(0);
+                            billMapper.updateByPrimaryKeySelective(bill);
+                            taskIdArr[i] = billList.get(0).getWebAppId().toString();
+                            billIdArr[i] = billList.get(0).getId();
+
+
+                        }
+                    }
+
+                }
+
+
+            }
+            else {
                 bill.setApplyState(2);
+                billMapper.updateByPrimaryKeySelective(bill);
             }
 
 
-            billMapper.updateByPrimaryKeySelective(bill);
 
+
+        }
+        if(user.hasRole("SUPER_ADMIN"))
+        {
+            //调用接口删除接口数据
+            if(taskIdArr.length>0&&taskIdArr!=null&&taskIdArr[0]!=null)
+            {
+                int a = this.deleteYBYState(billIdArr, user, 999);
+                Boolean b = this.delSearchTask(taskIdArr);
+            }
         }
 
         return 0;
     }
 
     /**
-     * 挺单申请不通过
+     * 停单申请不通过
      *
      * @param params
      * @param user
@@ -2872,27 +3097,70 @@ public class BillServiceimpl implements BillService {
      */
     @Override
     public int billApplyToOptimizationPass(Map<String, String[]> params, LoginUser loginUser) {
-
-
         String[] checkboxLength = params.get("length");
         int length = Integer.parseInt(checkboxLength[0]);
-
         for (int i = 0; i < length; i++) {
             String[] id = params.get("selectContent[" + i + "][id]");
             Long billId = Long.parseLong(id[0]);
-            Bill bill = new Bill();
-            bill.setId(billId);
+            Bill bill = billMapper.selectByPrimaryKey(billId);
             if (loginUser.hasRole("SUPER_ADMIN")) {
-                bill.setStandardDays(0);
-                bill.setState(2);
-                bill.setCreateTime(new Date());
-                bill.setApplyState(0);
-            } else {
-                bill.setApplyState(-2);
+                if (bill != null) {
+                    //通过 Taskid 查询订单
+                    List<Bill> billList = billMapper.selectByBillIdToGetTaskId(bill.getWebAppId());
+                    if (!CollectionUtils.isEmpty(billList)) {
+                        //如果有多个重复订单
+                        if (billList.size() > 1) {
+                            //更改
+                            Boolean bool=true;
+                            for (Bill item : billList
+                                    ) {
+                                if (item.getState()==2&&item.getId().longValue()!=billId.longValue()) {
+                                    bill.setWebAppId(item.getWebAppId());
+                                    bill.setWebAppId1(item.getWebAppId1());
+                                    bill.setStandardDays(0);
+                                    bill.setCreateTime(new Date());
+                                    bill.setState(2);
+                                    bill.setApplyState(0);
+                                    billMapper.updateByPrimaryKeySelective(bill);
+                                    bool=false;
+                                    break;
+                                }
+                            }
+                            if(bool)
+                            {
+                                int result2 = addSearchTask(billId, bill.getKeywords(), bill.getWebsite());
+                                Bill billNew=billMapper.selectByPrimaryKey(billId);
+                                if(billNew!=null)
+                                {
+                                    billNew.setStandardDays(0);
+                                    billNew.setState(2);
+                                    billNew.setCreateTime(new Date());
+                                    billNew.setApplyState(0);
+                                    billMapper.updateByPrimaryKeySelective(billNew);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            int result2 = addSearchTask(billId, bill.getKeywords(), bill.getWebsite());
+                            Bill billNew=billMapper.selectByPrimaryKey(billId);
+                            if(billNew!=null)
+                            {
+                                billNew.setStandardDays(0);
+                                billNew.setState(2);
+                                billNew.setCreateTime(new Date());
+                                billNew.setApplyState(0);
+                                billMapper.updateByPrimaryKeySelective(billNew);
+                            }
+                        }
+                    }
+                }
             }
-
-
-            billMapper.updateByPrimaryKeySelective(bill);
+            else
+            {
+                bill.setApplyState(-2);
+                billMapper.updateByPrimaryKeySelective(bill);
+            }
 
         }
         return 0;
@@ -2900,7 +3168,6 @@ public class BillServiceimpl implements BillService {
 
     /**
      * 用户结算页面
-     *
      * @param loginUser
      * @return
      */
@@ -3734,7 +4001,6 @@ public class BillServiceimpl implements BillService {
         String md5Key = OpDefine.md5Key;
         //取现在时间
         String dateString = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-
         //组包
         String str = "";
         str = str.concat(JSON.toJSONString(dateString));

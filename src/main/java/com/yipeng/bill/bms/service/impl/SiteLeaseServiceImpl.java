@@ -14,6 +14,7 @@ import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,7 +111,11 @@ public class SiteLeaseServiceImpl implements SiteLeaseService {
         if (loginUser.hasRole("DISTRIBUTOR")) {
             offerset offerset = offersetMapper.selectByUserId(loginUser.getId());
             map.put("rote", offerset.getRate());
-        } else {
+        }/* else if (loginUser.hasRole("AGENT")) {
+            User user = userMapper.selectByPrimaryKey(loginUser.getId());
+            offerset offerset = offersetMapper.selectByUserId(user.getCreateUserId());
+            map.put("rote", offerset.getRate());
+        }*/ else {
             map.put("rote", 1);
         }
         List<Map<String, Object>> leaseList = orderLeaseMapper.selectByWebsite(map);
@@ -126,7 +131,34 @@ public class SiteLeaseServiceImpl implements SiteLeaseService {
     }
 
     @Override
-    public ResultMessage ReserveOrder(Map<String, Object> map) {
+    public ResultMessage ReserveOrder(String website, int type, LoginUser loginUser) {
+        Map<String, Object> map = new HashMap<>();
+        orderLease orderLease = orderLeaseMapper.selectReserveByWebsite(website);
+        String[] arr = {website};
+        map.put("arr", arr);
+        map.put("reservetime", new Date());
+        if (type == 3) {
+            if (orderLease.getReserveid().equals("")) {
+                map.put("reserveid", loginUser.getId() + ",");
+            } else {
+                map.put("reserveid", orderLease.getReserveid() + loginUser.getId() + ",");
+            }
+            map.put("orderstate", type);
+        } else {
+            String reserveId = orderLease.getReserveid();
+            String[] arr1 = reserveId.split(",");
+            String reserve = "";
+            for (int i = 0; i < arr1.length; i++) {
+                if (arr1[i].equals(loginUser.getId().toString())) {
+                    continue;
+                }
+                reserve += arr1[i] + ",";
+            }
+            if (reserve == "") {
+                map.put("orderstate", type);
+            }
+            map.put("reserveid", reserve);
+        }
         int num = orderLeaseMapper.updateByWebsite(map);
         ResultMessage resultMessage = ResultMessage.create();
         resultMessage.setCode(num > 0 ? 1 : 0);

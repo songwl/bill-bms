@@ -12,7 +12,7 @@ public class orderLease implements Serializable {
 
     private Long receiveid;
 
-    private Long reserveid;
+    private String reserveid;
 
     private Integer orderstate;
 
@@ -60,11 +60,11 @@ public class orderLease implements Serializable {
         this.receiveid = receiveid;
     }
 
-    public Long getReserveid() {
+    public String getReserveid() {
         return reserveid;
     }
 
-    public void setReserveid(Long reserveid) {
+    public void setReserveid(String reserveid) {
         this.reserveid = reserveid;
     }
 

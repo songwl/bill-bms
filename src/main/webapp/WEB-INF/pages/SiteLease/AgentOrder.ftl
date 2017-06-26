@@ -90,6 +90,13 @@
 
                                 },
                                 {
+                                    field: 'reserveId',
+                                    title: '预定人',
+                                    align: 'center',
+                                    valign: 'middle',
+                                    visible: false
+                                },
+                                {
                                     field: 'website',
                                     align: 'center',
                                     valign: 'middle',
@@ -124,14 +131,6 @@
                                     }
                                 },
                                 {
-                                    field: 'id',
-                                    title: '编号',
-                                    align: 'center',
-                                    valign: 'middle',
-                                    visible: false
-
-                                },
-                                {
                                     field: 'orderstate',
                                     align: 'center',
                                     valign: 'middle',
@@ -160,7 +159,19 @@
                                         if (row.orderstate != 3) {
                                             a += "<a style='color: #ff0000;' id='reserve'>预定</a>";
                                         } else {
-                                            a += "<a style='color: #aaaaaa;' id='reserveCancel'>取消预定</a>";
+                                            var flag = false;
+                                            var arr = row.reserveId.split(",");
+                                            for (var i = 0; i < arr.length; i++) {
+                                                if (arr[i] ==${userId}) {
+                                                    flag = true;
+                                                    break;
+                                                }
+                                            }
+                                            if (flag) {
+                                                a += "<a style='color: #aaaaaa;' id='reserveCancel'>取消预定</a>";
+                                            } else {
+                                                a += "<a style='color: #ff0000;' id='reserve'>预定</a>";
+                                            }
                                         }
                                         return a;
                                     }

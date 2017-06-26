@@ -90,6 +90,13 @@
 
                         },
                         {
+                            field: 'reserveId',
+                            title: '预定人',
+                            align: 'center',
+                            valign: 'middle',
+                            visible: false
+                        },
+                        {
                             field: 'website',
                             align: 'center',
                             valign: 'middle',
@@ -124,14 +131,6 @@
                             }
                         },
                         {
-                            field: 'id',
-                            title: '编号',
-                            align: 'center',
-                            valign: 'middle',
-                            visible: false
-
-                        },
-                        {
                             field: 'orderstate',
                             align: 'center',
                             valign: 'middle',
@@ -143,7 +142,24 @@
                                 else if (value == "2") {
                                     return "已划分";
                                 }
+                                else if (value == "3") {
+                                    return "已预定";
+                                }
                                 return value;
+                            }
+                        },
+                        {
+                            field: 'ydrs',
+                            title: '预定人数',
+                            align: 'center',
+                            valign: 'middle',
+                            formatter: function (value, row, index) {
+                                if (row.orderstate == 3) {
+                                    console.info(row.reserveId.split(","))
+                                    var len = row.reserveId.split(",").length - 1;
+                                    return len;
+                                }
+                                return "-";
                             }
                         },
                         {

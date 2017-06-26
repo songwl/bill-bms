@@ -9,11 +9,13 @@ import com.yipeng.bill.bms.service.SiteLeaseService;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +65,9 @@ public class SiteLeaseController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/AgentOrder", method = RequestMethod.GET)
-    public String AgentOrder() {
+    public String AgentOrder(ModelMap modelMap) {
+        LoginUser loginUser = this.getCurrentAccount();
+        modelMap.put("userId", loginUser.getId());
         return "/SiteLease/AgentOrder";
     }
 
@@ -189,6 +193,8 @@ public class SiteLeaseController extends BaseController {
         Map<String, Object> map = new HashMap<>();
         map.put("arr", arr);
         map.put("orderstate", 2);
+        map.put("reserveid", "");
+        map.put("allottime", new Date());
         map.put("receiveid", param.get("distributor")[0].toString());
         ResultMessage resultMessage = siteLeaseService.DivideOrder(map);
         return resultMessage;
@@ -206,19 +212,21 @@ public class SiteLeaseController extends BaseController {
         return userList;
     }
 
+    /**
+     * 预定订单
+     *
+     * @param website
+     * @param type
+     * @return
+     */
     @RequestMapping(value = "/ReserveOrder", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMessage ReserveOrder(String website,int type) {
+    public ResultMessage ReserveOrder(String website, int type) {
         LoginUser loginUser = this.getCurrentAccount();
         if (!loginUser.hasRole("AGENT")) {
             return this.ajaxDone(-1, "你没有权限", null);
         }
-        Map<String, Object> map = new HashMap<>();
-        String[] arr = {website};
-        map.put("arr", arr);
-        map.put("reserveid", loginUser.getId());
-        map.put("orderstate", type);
-        ResultMessage resultMessage = siteLeaseService.ReserveOrder(map);
+        ResultMessage resultMessage = siteLeaseService.ReserveOrder(website, type, loginUser);
         return resultMessage;
     }
 }

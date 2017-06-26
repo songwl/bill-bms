@@ -6,7 +6,7 @@
     <result column="orderId" jdbcType="BIGINT" property="orderid" />
     <result column="allotId" jdbcType="BIGINT" property="allotid" />
     <result column="receiveId" jdbcType="BIGINT" property="receiveid" />
-    <result column="reserveId" jdbcType="BIGINT" property="reserveid" />
+    <result column="reserveId" jdbcType="VARCHAR" property="reserveid" />
     <result column="orderState" jdbcType="INTEGER" property="orderstate" />
     <result column="website" jdbcType="VARCHAR" property="website" />
     <result column="keywords" jdbcType="VARCHAR" property="keywords" />
@@ -49,7 +49,7 @@
       website, keywords, createTime, 
       allotTime, reserveTime)
     values (#{id,jdbcType=BIGINT}, #{orderid,jdbcType=BIGINT}, #{allotid,jdbcType=BIGINT}, 
-      #{receiveid,jdbcType=BIGINT}, #{reserveid,jdbcType=BIGINT}, #{orderstate,jdbcType=INTEGER}, 
+      #{receiveid,jdbcType=BIGINT}, #{reserveid,jdbcType=VARCHAR}, #{orderstate,jdbcType=INTEGER},
       #{website,jdbcType=VARCHAR}, #{keywords,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
       #{allottime,jdbcType=TIMESTAMP}, #{reservetime,jdbcType=TIMESTAMP})
   </insert>
@@ -104,7 +104,7 @@
         #{receiveid,jdbcType=BIGINT},
       </if>
       <if test="reserveid != null">
-        #{reserveid,jdbcType=BIGINT},
+        #{reserveid,jdbcType=VARCHAR},
       </if>
       <if test="orderstate != null">
         #{orderstate,jdbcType=INTEGER},
@@ -139,7 +139,7 @@
         receiveId = #{receiveid,jdbcType=BIGINT},
       </if>
       <if test="reserveid != null">
-        reserveId = #{reserveid,jdbcType=BIGINT},
+        reserveId = #{reserveid,jdbcType=VARCHAR},
       </if>
       <if test="orderstate != null">
         orderState = #{orderstate,jdbcType=INTEGER},
@@ -167,7 +167,7 @@
     set orderId = #{orderid,jdbcType=BIGINT},
       allotId = #{allotid,jdbcType=BIGINT},
       receiveId = #{receiveid,jdbcType=BIGINT},
-      reserveId = #{reserveid,jdbcType=BIGINT},
+      reserveId = #{reserveid,jdbcType=VARCHAR},
       orderState = #{orderstate,jdbcType=INTEGER},
       website = #{website,jdbcType=VARCHAR},
       keywords = #{keywords,jdbcType=VARCHAR},
@@ -195,7 +195,7 @@
   </select>
   <select id="selectAll" resultType="java.util.HashMap">
     select
-    id,website,createTime as time,orderstate,receiveId
+    id,website,createTime as time,orderstate,receiveId,reserveId
     from orderlease
     group by website
     order by id DESC
@@ -203,7 +203,7 @@
   </select>
   <select id="selectByAllotId" resultType="java.util.HashMap">
     select
-    id,website,createTime as time,orderstate,receiveId
+    id,website,createTime as time,orderstate,receiveId,reserveId
     from orderlease
     where allotId = #{allotId,jdbcType=BIGINT}
     group by website
@@ -212,7 +212,7 @@
   </select>
   <select id="selectByReceiveId" resultType="java.util.HashMap">
     select
-    id,website,createTime as time,orderstate,receiveId
+    id,website,createTime as time,orderstate,receiveId,reserveId
     from orderlease
     where receiveId = #{receiveId,jdbcType=BIGINT}
     group by website
@@ -246,6 +246,12 @@
     on o.keywords=k.Keywords
     where o.website = #{website,jdbcType=VARCHAR}
   </select>
+  <select id="selectReserveByWebsite" resultMap="BaseResultMap">
+  select *
+  from orderlease
+  where website = #{website,jdbcType=VARCHAR}
+  group by website
+</select>
 
   <update id="updateByWebsite" parameterType="com.yipeng.bill.bms.domain.orderLease">
     update orderlease
@@ -260,7 +266,7 @@
         receiveId = #{receiveid,jdbcType=BIGINT},
       </if>
       <if test="reserveid != null">
-        reserveId = #{reserveid,jdbcType=BIGINT},
+        reserveId = #{reserveid,jdbcType=VARCHAR},
       </if>
       <if test="orderstate != null">
         orderState = #{orderstate,jdbcType=INTEGER},

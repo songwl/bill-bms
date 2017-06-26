@@ -162,8 +162,21 @@ public class OptimizationToolController extends BaseController {
             return this.ajaxDone(0, "", null);
         }
         return this.ajaxDone(1, offerset.getRequestsecond().toString(), null);
-    }
+}
 
+    @RequestMapping(value = "/GetOfferAgent", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage GetOfferAgent(String dataUser) {
+        LoginUser loginUser = this.getCurrentAccount();
+        if (!loginUser.hasRole("DISTRIBUTOR")) {
+            return this.ajaxDone(-1, "你没有权限", null);
+        }
+        offerset offerset = offersetMapper.selectByUserId(Long.parseLong(dataUser));
+        if (offerset == null || offerset.getState() == 0) {
+            return this.ajaxDone(0, "", null);
+        }
+        return this.ajaxDone(1, offerset.getRequestsecond().toString(), null);
+    }
     @RequestMapping(value = "/OpenWebsitePower", method = RequestMethod.POST)
     @ResponseBody
     public ResultMessage OpenWebsitePower(HttpServletRequest httpServletRequest) {

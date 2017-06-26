@@ -39,4 +39,6 @@ public interface orderLeaseMapper {
     Long selectAllCount(Map<String, Object> param);
 
     List<Map<String, Object>> selectAll(Map<String, Object> param);
+
+    orderLease selectReserveByWebsite(String website);
 }

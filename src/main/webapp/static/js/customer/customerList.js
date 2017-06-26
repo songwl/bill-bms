@@ -559,7 +559,8 @@ var TableInit = function () {
                                 "<span style='color:#4382CF;cursor:pointer;' id='refund'>退款</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   " +
-                                "<span style='color:#4382CF;cursor:pointer;' id='websiteLeaseSet'>网租设置</span>";
+                                "<span style='color:#4382CF;cursor:pointer;' id='websiteLeaseSet'>网租设置</span>   " +
+                                "<span style='color:#4382CF;cursor:pointer;' id='OfferSetUpAgent' data-user='" + value + "'>报价设置</span>   ";
                         }
                         else {
                             a = "<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
@@ -686,6 +687,37 @@ var TableInit = function () {
             $("#confim").attr("dataUser", row.customerId);
             $.ajax({
                 url: CTX + "/optimizationTool/GetOffer",
+                type: "post",
+                data: {dataUser: row.customerId},
+                success: function (data) {
+                    if (data.code == 0) {
+                        $("#open").removeAttr("checked");
+                        $("#close").prop("checked", "checked");
+                        $("#keywordNum").val("").hide();
+                    }
+                    else {
+                        $("#open").prop("checked", "checked");
+                        $("#close").removeAttr("checked");
+                        $("#keywordNum").val(data.message).show();
+                    }
+                }
+            })
+            index1 = layer.open({
+                type: 1,
+                title: '报价设置',
+                skin: 'layui-layer-molv',
+                shade: 0.6,
+                area: ['30%', '40%'],
+                content: $('#offerSetUp'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                end: function () {
+                    $("#offerSetUp").hide();
+                }
+            });
+        },
+        'click #OfferSetUpAgent': function (e, value, row, index) {
+            $("#confim").attr("dataUser", row.customerId);
+            $.ajax({
+                url: CTX + "/optimizationTool/GetOfferAgent",
                 type: "post",
                 data: {dataUser: row.customerId},
                 success: function (data) {

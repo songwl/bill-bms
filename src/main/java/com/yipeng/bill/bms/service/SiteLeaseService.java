@@ -21,5 +21,5 @@ public interface SiteLeaseService {
 
     ResultMessage DivideOrder(Map<String, Object> map);
 
-    ResultMessage ReserveOrder(Map<String, Object> map);
+    ResultMessage ReserveOrder(String website,int type,LoginUser loginUser);
 }

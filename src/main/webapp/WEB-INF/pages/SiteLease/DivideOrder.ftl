@@ -166,6 +166,8 @@
                                 }
                                 else if (value == "2") {
                                     return "已划分";
+                                } else if (value == "3") {
+                                    return "已预定";
                                 }
                                 return value;
                             }

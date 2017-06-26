@@ -243,6 +243,13 @@ public class CustomerServiceImpl implements CustomerService {
                      CustomerListDetails customerListDetails=new CustomerListDetails();
                      customerListDetails.setId(i);
                      customerListDetails.setCustomerId(user1.getId());
+                     UserRole userRole=userRoleMapper.selectByUserId(user1.getId());
+                     if(userRole!=null)
+                     {
+                         Role role1=roleMapper.selectByPrimaryKey(userRole.getRoleId());
+                         customerListDetails.setKehuRoleName(role1.getRoleName());
+                     }
+
                      customerListDetails.setUserName(user1.getUserName());
                      customerListDetails.setRealName(user1.getRealName());
                      customerListDetails.setContact(user1.getContact());
@@ -290,6 +297,12 @@ public class CustomerServiceImpl implements CustomerService {
                 CustomerListDetails customerListDetails=new CustomerListDetails();
                 customerListDetails.setId(i);
                 customerListDetails.setCustomerId(user1.getId());
+                UserRole userRole=userRoleMapper.selectByUserId(user1.getId());
+                if(userRole!=null)
+                {
+                    Role role1=roleMapper.selectByPrimaryKey(userRole.getRoleId());
+                    customerListDetails.setKehuRoleName(role1.getRoleName());
+                }
                 customerListDetails.setUserName(user1.getUserName());
                 customerListDetails.setRealName(user1.getRealName());
                 customerListDetails.setContact(user1.getContact());
@@ -341,6 +354,12 @@ public class CustomerServiceImpl implements CustomerService {
                 CustomerListDetails customerListDetails=new CustomerListDetails();
                 customerListDetails.setId(i);
                 customerListDetails.setCustomerId(user1.getId());
+                UserRole userRole=userRoleMapper.selectByUserId(user1.getId());
+                if(userRole!=null)
+                {
+                    Role role1=roleMapper.selectByPrimaryKey(userRole.getRoleId());
+                    customerListDetails.setKehuRoleName(role1.getRoleName());
+                }
                 customerListDetails.setUserName(user1.getUserName());
                 customerListDetails.setRealName(user1.getRealName());
                 customerListDetails.setContact(user1.getContact());

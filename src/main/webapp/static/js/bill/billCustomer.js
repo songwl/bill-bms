@@ -67,6 +67,8 @@ $(document).ready(function () {
         $("#billCostDetail").hide();
         $(".billExamineDiv").slideUp();
         $(".billChangeDailiDiv").slideUp();
+        $(".billChangeToKeHuDiv").slideUp();
+
     })
     $(".cancel").click(function () {
         $(".samepriceDiv").slideUp();
@@ -76,6 +78,7 @@ $(document).ready(function () {
         $("#billCostDetail").hide();
         $(".billExamineDiv").slideUp();
         $(".billChangeDailiDiv").slideUp();
+        $(".billChangeToKeHuDiv").slideUp();
     })
     //显示搜索内容
     $(".search").click(function () {
@@ -330,7 +333,49 @@ $(document).ready(function () {
 
     })
 
+    //订单切换客户
+    $("#billToChange").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var len = selectContent.length;
+        if (selectContent == "") {
+            layer.alert('请选择一列数据', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
+        }
+        else {
 
+            $(".modal-backdrop").show();
+            $(".billChangeToKeHuDiv").slideDown();
+
+        }
+    })
+    $(".billChangeToKeHucmt").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var len = selectContent.length;
+        var kehu = $("#selectKeHulist  option:selected").val();
+
+        $.ajax({
+            type: "post",
+            url: CTX + "/order/billChangeToKeHucmt",
+            data: {selectContent: selectContent, length: len, kehu: kehu},
+            success: function (result) {
+                if (result.code == 200) {
+                    $('#myTable').bootstrapTable('refresh');
+                    $(".billChangeToKeHuDiv").slideUp();
+                    $(".modal-backdrop").hide();
+                }
+                layer.alert(result.message, {
+                    skin: 'layui-layer-molv' //样式类名
+                    , closeBtn: 0
+                });
+
+
+            }
+
+        })
+    })
 
     //订单切换代理商
     $("#billChangeDailiClick").click(function () {
@@ -446,6 +491,7 @@ $(document).ready(function () {
                     success:function (result) {
 
                         layer.close(index);
+                        $(".modal-backdrop").hide();
                             if(result.code==200)
                             {
                                 layer.alert(result.message, {
@@ -455,7 +501,7 @@ $(document).ready(function () {
                                 });
 
                                 $(".billChangeDailiDiv").slideUp();
-                                $('#pricetable').bootstrapTable('refresh');
+                                $('#myTable').bootstrapTable('refresh');
                             }
                             else
                             {

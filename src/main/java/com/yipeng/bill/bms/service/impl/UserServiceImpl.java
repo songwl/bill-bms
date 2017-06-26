@@ -187,7 +187,6 @@ public class UserServiceImpl implements UserService {
         }
         else if(way.equals("2"))
         {
-
             if (loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("ADMIN"))
             {
                 List<User> userList1=new ArrayList<>();

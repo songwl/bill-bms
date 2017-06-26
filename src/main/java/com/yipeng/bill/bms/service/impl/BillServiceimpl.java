@@ -2451,7 +2451,7 @@ public class BillServiceimpl implements BillService {
     }
 
     /**
-     * 切换客户
+     * 切换客户(客户与客户之间切换)
      *
      * @param params
      * @param user

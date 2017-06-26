@@ -441,6 +441,14 @@ var TableInit = function () {
 
                 },
                 {
+                    field: 'kehuRoleName',
+                    sortable: true,
+                    align: 'center',
+                    valign: 'middle',
+                    title: '角色',
+
+                },
+                {
                     field: 'realName',
                     align: 'center',
                     valign: 'middle',

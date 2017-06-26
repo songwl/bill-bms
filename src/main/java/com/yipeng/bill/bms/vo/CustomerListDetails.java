@@ -21,6 +21,7 @@ public class   CustomerListDetails {
     private BigDecimal balance;
     private int dailiRole;
     private  String roleName;
+    private  String kehuRoleName;
 
 
     public  int  getId(){return  id;}
@@ -54,5 +55,13 @@ public class   CustomerListDetails {
 
     public String getRoleName(){return roleName;}
     public  String setRoleName(String roleName){return this.roleName= roleName;}
+
+    public String getKehuRoleName() {
+        return kehuRoleName;
+    }
+
+    public void setKehuRoleName(String kehuRoleName) {
+        this.kehuRoleName = kehuRoleName;
+    }
 
 }

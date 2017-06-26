@@ -575,6 +575,7 @@ var TableInit = function () {
                                 "<span style='color:#4382CF;cursor:pointer;' id='refund'>退款</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   ";
+
                         }
 
                         return a;

@@ -54,6 +54,11 @@ public class BillServiceimpl implements BillService {
     private FundAccountMapper fundAccountMapper;
     @Autowired
     private BillOptimizationMapper billOptimizationMapper;
+    @Autowired
+    private BillGroupMapper billGroupMapper;
+    @Autowired
+    private BillGroupRoleMapper billGroupRoleMapper;
+
     Md5_UrlEncode md5_urlEncode = new Md5_UrlEncode();
 
     /**
@@ -3588,6 +3593,73 @@ public class BillServiceimpl implements BillService {
 
         }
         return 0;
+    }
+
+    /**
+     * 创建分组
+     * @param params
+     * @param user
+     * @return
+     */
+    @Override
+    public String createGroup(Map<String, Object> params, LoginUser loginUser) {
+
+        String groupName=params.get("groupName").toString();
+        if("".equals(groupName))
+        {
+            return "0";
+        }
+        else
+        {
+         //判断分组是否已经存在
+            Map<String,Object> sqlMap=new HashMap<>();
+            sqlMap.put("userId",loginUser.getId());
+            sqlMap.put("groupName",groupName);
+            BillGroup billGroupExsits=billGroupMapper.selectByGroupNameExsits(sqlMap);
+            if(billGroupExsits==null)
+            {
+                BillGroup billGroup=new BillGroup();
+                billGroup.setGroupName(groupName);
+                billGroup.settUserId(loginUser.getId());
+                billGroup.setCreateUserId(loginUser.getId());
+                billGroup.setTaskCount(0);
+                billGroup.setCreateTime(new Date());
+                int a =billGroupMapper.insert(billGroup);
+                if(a==1)
+                {
+                    return  "1";
+                }
+                else
+                {
+                    return "0";
+                }
+            }
+            else
+            {
+                return  "2";
+            }
+
+
+
+        }
+
+    }
+
+    /**
+     * 获取分组列表
+     * @param loginUser
+     * @return
+     */
+    @Override
+    public Map<String, Object> getBillGroupTable( Map<String, Object> params,LoginUser loginUser) {
+         List<Map<String,Object>> mapList=new ArrayList<>();
+        params.put("userId",loginUser.getId());
+        mapList=billGroupMapper.selectBillGroupTable(params);
+        int total=billGroupMapper.selectBillGroupTableCount(params);
+        Map<String,Object> viewMap=new HashMap<>();
+        viewMap.put("rows",mapList);
+        viewMap.put("total",total);
+        return viewMap;
     }
 
     /**

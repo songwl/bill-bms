@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yipeng.bill.bms.dao.BillGroupMapper">
+  <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.BillGroup">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
+    <result column="task_count" jdbcType="INTEGER" property="taskCount" />
+    <result column="t_user_id" jdbcType="BIGINT" property="tUserId" />
+    <result column="create_user_id" jdbcType="BIGINT" property="createUserId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_user_id" jdbcType="BIGINT" property="updateUserId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, group_name, task_count, t_user_id, create_user_id, create_time, update_user_id, 
+    update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_bill_group
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_bill_group
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.BillGroup">
+    insert into t_bill_group (id, group_name, task_count, 
+      t_user_id, create_user_id, create_time, 
+      update_user_id, update_time)
+    values (#{id,jdbcType=BIGINT}, #{groupName,jdbcType=VARCHAR}, #{taskCount,jdbcType=INTEGER}, 
+      #{tUserId,jdbcType=BIGINT}, #{createUserId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateUserId,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.BillGroup">
+    insert into t_bill_group
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="groupName != null">
+        group_name,
+      </if>
+      <if test="taskCount != null">
+        task_count,
+      </if>
+      <if test="tUserId != null">
+        t_user_id,
+      </if>
+      <if test="createUserId != null">
+        create_user_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUserId != null">
+        update_user_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="groupName != null">
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskCount != null">
+        #{taskCount,jdbcType=INTEGER},
+      </if>
+      <if test="tUserId != null">
+        #{tUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        #{updateUserId,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.BillGroup">
+    update t_bill_group
+    <set>
+      <if test="groupName != null">
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="taskCount != null">
+        task_count = #{taskCount,jdbcType=INTEGER},
+      </if>
+      <if test="tUserId != null">
+        t_user_id = #{tUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createUserId != null">
+        create_user_id = #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        update_user_id = #{updateUserId,jdbcType=BIGINT},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.BillGroup">
+    update t_bill_group
+    set group_name = #{groupName,jdbcType=VARCHAR},
+      task_count = #{taskCount,jdbcType=INTEGER},
+      t_user_id = #{tUserId,jdbcType=BIGINT},
+      create_user_id = #{createUserId,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user_id = #{updateUserId,jdbcType=BIGINT},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectBillGroupTable"  resultType="java.util.HashMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_bill_group
+    where t_user_id = #{userId,jdbcType=BIGINT}
+    limit #{offset},#{limit}
+  </select>
+  <select id="selectBillGroupTableCount"  resultType="java.lang.Integer">
+    select
+    COUNT(id)
+    from t_bill_group
+    where t_user_id = #{userId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByGroupNameExsits"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_bill_group
+    where group_name = #{groupName,jdbcType=VARCHAR}
+    AND
+    t_user_id = #{userId,jdbcType=BIGINT}
+  </select>
+</mapper>

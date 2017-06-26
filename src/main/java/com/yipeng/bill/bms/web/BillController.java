@@ -1602,9 +1602,48 @@ public class BillController extends BaseController {
     @ResponseBody
     public Map<String,Object> billClientSideSettlementTable(int limit, int offset, String sortOrder, String sortName) {
         LoginUser loginUser=this.getCurrentAccount();
-
-
         return null;
+    }
+
+    /**
+     * 添加分组
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/createGroup")
+    @ResponseBody
+    public ResultMessage createGroup(String groupName) {
+        LoginUser loginUser=this.getCurrentAccount();
+        Map<String,Object> params=new HashMap<>();
+        params.put("groupName",groupName);
+        String result=billService.createGroup(params,loginUser);
+
+            return  this.ajaxDoneSuccess(result);
+
+
+    }
+
+    /**
+     * 分组列表
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/getBillGroupTable")
+    @ResponseBody
+    public Map<String,Object> getBillGroupTable(int limit, int offset, String sortOrder, String sortName) {
+
+        offset = (offset - 1) * limit;
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        params.put("limit", limit);
+        params.put("offset", offset);
+        params.put("sortOrder",sortOrder);
+        params.put("sortName",sortName);
+        LoginUser loginUser=this.getCurrentAccount();
+        Map<String,Object> viewMap=new HashMap<>();
+        viewMap=billService.getBillGroupTable(params,loginUser);
+        return viewMap;
     }
 
 

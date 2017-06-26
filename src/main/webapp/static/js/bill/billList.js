@@ -323,7 +323,6 @@ $(document).ready(function () {
         }
 
     })
-
     //申请优化
     $("#applyToOptimization").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
@@ -376,7 +375,6 @@ $(document).ready(function () {
 
         }
     })
-
     //调价确认
     $(".updatePricecmt").click(function () {
         var rankend = parseInt(jQuery("input[name='updaterankend']").val());
@@ -480,7 +478,6 @@ $(document).ready(function () {
         }
 
     })
-
     //删除订单
     $("#billDelete").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
@@ -562,7 +559,6 @@ $(document).ready(function () {
             }
         }
     })
-
     //订单切换
     $("#billChangeClick").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
@@ -594,7 +590,7 @@ $(document).ready(function () {
 
         }
     })
-//订单切换确认
+    //订单切换确认
     $(".billChangecmt").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
         var len = selectContent.length;
@@ -618,8 +614,6 @@ $(document).ready(function () {
 
         })
     })
-
-
     //申请停单
     $("#applyStopBill").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
@@ -651,6 +645,126 @@ $(document).ready(function () {
             }
         }
     })
+    //创建分组显示
+    $("#billCreateGroupClick").click(function () {
+            index1 = layer.open({
+                type: 1,
+                title: '创建分组',
+                skin: 'layui-layer-molv',
+                shade: 0.6,
+                area: ['50%', '90%'],
+                content: $('#billCreateGroupDiv'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                end: function (e, u) {
+                    $('#billCreateGroupDiv').hide();
+                }
+            });
+
+    })
+    //批设分组显示
+    $("#billToGroupClick").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var len = selectContent.length;
+        if (selectContent == "") {
+            layer.alert('请选择一列数据', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
+
+        } else {
+
+            index1 = layer.open({
+                type: 1,
+                title: '批设分组',
+                skin: 'layui-layer-molv',
+                shade: 0.6,
+                area: ['50%', '90%'],
+                content: $('#billToGroupDiv'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                end: function (e, u) {
+                    $('#billToGroupDiv').hide();
+                }
+            });
+        }
+
+
+
+    })
+
+    //修改订单
+    $("#confirmUpdateBill").click(function () {
+        if ($("#keywordUpdate").val() != "" && $("#websiteUpdate").val() != "" && $("#billIdInput").val() != "") {
+            $.ajax({
+                type: 'post',
+                url: CTX + '/order/updateBillDetailsYouHua',
+                data: {billId: $("#billIdInput").val(), keyword: $("#keywordUpdate").val(), website: $("#websiteUpdate").val()},
+                success: function (result) {
+                    if (result.code == 200) {
+                        layer.alert(result.message, {
+                            skin: 'layui-layer-molv' //样式类名  自定义样式
+                            , anim: 4 //动画类型
+                            , icon: 1   // icon
+                        });
+                        $('#myTable').bootstrapTable('refresh');
+                    }
+                    else {
+                        layer.alert(result.message, {
+                            skin: 'layui-layer-molv' //样式类名  自定义样式
+                            , anim: 6 //动画类型
+                            , icon: 2   // icon
+                        });
+                        $("#keyword").val("");
+                        $("#websiteNow").val("");
+                    }
+                }
+
+            });
+        }
+        else {
+            layer.alert('填写信息有误,请核对信息！', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 4 //动画类型
+                , icon: 2   // icon
+            });
+        }
+    })
+
+    //创建分组
+    $("#createGroup").click(function () {
+        layer.prompt({title: '请输入分组名称，并确认', formType: 3}, function(pass, index){
+                if(pass!='')
+                {
+                    $.ajax({
+                        type:'post',
+                        url:CTX+'/order/createGroup',
+                        data:{groupName:pass},
+                        beforeSend: function () {
+                            index  = layer.load(1, {
+                                shade: [0.1,'#fff'] //0.1透明度的白色背景
+                            });
+                        },
+                        success:function (result) {
+                            if(result.message=="0")
+                            {
+                                layer.msg("分组创建失败！");
+                                $('#groupTable').bootstrapTable('refresh');
+                            }
+                            else if(result.message=="1")
+                            {
+                                layer.msg("分组创建成功！");
+                                $('#groupTable').bootstrapTable('refresh');
+                            }
+                            else
+                            {
+                                layer.msg("分组名称已经存在！");
+                                $('#groupTable').bootstrapTable('refresh');
+                            }
+
+                        }
+                    })
+                }
+            layer.close(index);
+            })
+        })
 })
 
 
@@ -661,6 +775,10 @@ $(function () {
     oTable.Init();
     var oTable1 = new TableInit1();
     oTable1.Init();
+    var oTable2 = new TableInit2();
+    oTable2.Init();
+    var oTable3= new TableInit3();
+    oTable3.Init();
     //2.初始化Button的点击事件
     /*  var oButtonInit = new ButtonInit();
      oButtonInit.Init();*/
@@ -998,49 +1116,6 @@ var TableInit = function () {
     }*/
 };
 
-
-//修改订单
-$("#confirmUpdateBill").click(function () {
-    if ($("#keywordUpdate").val() != "" && $("#websiteUpdate").val() != "" && $("#billIdInput").val() != "") {
-        $.ajax({
-            type: 'post',
-            url: CTX + '/order/updateBillDetailsYouHua',
-            data: {billId: $("#billIdInput").val(), keyword: $("#keywordUpdate").val(), website: $("#websiteUpdate").val()},
-            success: function (result) {
-                if (result.code == 200) {
-                    layer.alert(result.message, {
-                        skin: 'layui-layer-molv' //样式类名  自定义样式
-                        , anim: 4 //动画类型
-                        , icon: 1   // icon
-                    });
-                    $('#myTable').bootstrapTable('refresh');
-                }
-                else {
-                    layer.alert(result.message, {
-                        skin: 'layui-layer-molv' //样式类名  自定义样式
-                        , anim: 6 //动画类型
-                        , icon: 2   // icon
-                    });
-                    $("#keyword").val("");
-                    $("#websiteNow").val("");
-                }
-            }
-
-        });
-    }
-    else {
-        layer.alert('填写信息有误,请核对信息！', {
-            skin: 'layui-layer-molv' //样式类名  自定义样式
-            , anim: 4 //动画类型
-            , icon: 2   // icon
-        });
-    }
-})
-
-
-
-
-
 var TableInit1 = function () {
     var oTableInit1 = new Object();
     //初始化Table
@@ -1119,6 +1194,184 @@ var TableInit1 = function () {
     }
 
     return oTableInit1;
+};
+var TableInit2 = function () {
+    var oTableInit2 = new Object();
+    //初始化Table
+    oTableInit2.Init = function () {
+        $('#groupTable').bootstrapTable({
+            url: CTX + '/order/getBillGroupTable',         //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，
+            pagination: true,                   //是否显示分页（*）
+            pageNumber: 1,                       //初始化加载第一页，默认第一页
+            pageSize: 15,                       //每页的记录行数（*）
+            pageList: [30, 50, 100],        //可供选择的每页的行数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            queryParams: oTableInit2.queryParams,//传递参数（*）
+            queryParamsType: "",
+            minimumCountColumns: 2,             //最少允许的列数
+            clickToSelect: true,                //是否启用点击选中行
+           /* height: 330,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度*/
+            uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+            singleSelect : true,
+            rowStyle: function (row, index) {
+                //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
+                var strclass = "";
+                if ((row.id) % 2 == 0) {
+                    strclass = '';
+                }
+                else {
+                    strclass = 'active';
+                }
+                return {classes: strclass}
+                 },
+            columns: [
+                {
+                    checkbox: true
+                },
+                {
+                    field: 'id',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '数据库编号',
+
+                },
+                {
+                    field: 'group_name',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '分组名称',
+
+                },
+                {
+                    field: 'task_count',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '任务数',
+
+                }, {
+                    field: 'costDate',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '操作',
+                    formatter: function (value, row, index) {
+                        var a = "<span style='color:#4382CF;cursor:pointer;' id='deleteGroup'>删除</span> ";
+
+                        return a;
+                    },
+                    events: operateEvents
+
+                },
+            ],
+
+        });
+    };
+
+    //得到查询的参数
+    oTableInit2.queryParams = function (params) {
+        var temp2 = {
+            limit: params.pageSize,   //页面大小
+            offset: params.pageNumber,  //页码
+            sortOrder: params.sortOrder,
+            sortName: params.sortName,
+            way: $("#way").val(),
+            website: website,
+            keywords: keywords,
+            searchName: searchName,
+            searchUserName: searchUserName,
+            state: searchState,
+            state2: searchState2,
+            searchStandard: searchStandard,
+            standardDays: standardDays,
+            createTime: createTime
+        };
+        return temp2;
+    }
+    window.operateEvents = {
+        'click #deleteGroup': function (e, value, row, index) {
+
+        },
+
+    }
+    return oTableInit2;
+};
+
+
+var TableInit3 = function () {
+    var oTableInit3 = new Object();
+    //初始化Table
+    oTableInit3.Init = function () {
+        $('#billToGroupTable').bootstrapTable({
+            url: CTX + '/order/getBillGroupTable',         //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，
+            pagination: true,                   //是否显示分页（*）
+            pageNumber: 1,                       //初始化加载第一页，默认第一页
+            pageSize: 15,                       //每页的记录行数（*）
+            pageList: [30, 50, 100],        //可供选择的每页的行数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            queryParams: oTableInit3.queryParams,//传递参数（*）
+            queryParamsType: "",
+            minimumCountColumns: 2,             //最少允许的列数
+            clickToSelect: true,                //是否启用点击选中行
+            /* height: 330,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度*/
+            uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+            singleSelect : true,
+            rowStyle: function (row, index) {
+                //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
+                var strclass = "";
+                if ((row.id) % 2 == 0) {
+                    strclass = '';
+                }
+                else {
+                    strclass = 'active';
+                }
+                return {classes: strclass}
+            },
+            columns: [
+                {
+                    checkbox: true
+                },
+                {
+                    field: 'id',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '数据库编号',
+
+                },
+                {
+                    field: 'group_name',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '分组名称',
+
+                },
+                {
+                    field: 'task_count',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '任务数',
+
+                },
+            ],
+
+        });
+    };
+
+    //得到查询的参数
+    oTableInit3.queryParams = function (params) {
+        var temp3 = {
+            limit: params.pageSize,   //页面大小
+            offset: params.pageNumber,  //页码
+            sortOrder: params.sortOrder,
+            sortName: params.sortName,
+        };
+        return temp3;
+    }
+    return oTableInit3;
 };
 
 

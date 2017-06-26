@@ -241,4 +241,8 @@ public interface BillService {
     Map<String,Object> billClientDayCost(LoginUser loginUser);//今日消费
 
     int pendingAuditView1ListCmt(Map<String, String[]> params, LoginUser user);//客户提交的订单
+
+    //.创建分组
+    String createGroup(Map<String, Object> params, LoginUser loginUser);
+    Map<String,Object> getBillGroupTable( Map<String, Object> params, LoginUser loginUser);
 }

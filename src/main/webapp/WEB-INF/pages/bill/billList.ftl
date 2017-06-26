@@ -15,7 +15,6 @@
         <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>关键词排名</span>
     </div>
     <div class="nav_R right" id="divQx">
-
         <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("COMMISSIONER")> <#--如果是优化方-->
             <div id="optimizationStart">
                 <span>&nbsp;<i class="fa fa-play"></i>&nbsp;优化启动</span>
@@ -52,7 +51,12 @@
                 <span>&nbsp;<i class="fa fa-arrow-down"></i>&nbsp;导入</span>
             </div>
         </#if>
-
+        <div id="billCreateGroupClick">
+            <span>&nbsp;<i class="fa fa-plus"></i>&nbsp;创建分组</span>
+        </div>
+        <div id="billToGroupClick">
+            <span>&nbsp;<i class="fa fa-folder"></i>&nbsp;批设分组</span>
+        </div>
         <div class="search">
             <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
         </div>
@@ -304,7 +308,6 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="dataTables_paginate paging_bootstrap">
-
                                                 </div>
                                             </div>
                                         </div>
@@ -444,8 +447,10 @@
 </div>
 <div class="pload"
      style="position:absolute;top:45%;left: 50%; z-index:2200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none;"></div>
-<div id="offerSetUp" style="display: none;">
 
+
+
+<div id="offerSetUp" style="display: none;">
     <div class="modal-body">
         <div class="form-group">
             <div>
@@ -461,6 +466,38 @@
             <input type="hidden" value="" id="billIdInput"  />
         </div>
         <button id="confirmUpdateBill" class="btn btn-success form-control"><span class="glyphicon glyphicon-send">&nbsp;</span><span>确认</span></button>
+    </div>
+</div>
+
+
+<div id="billCreateGroupDiv" style="display: none;">
+    <div class="modal-body">
+        <div class="form-group">
+        <table id="groupTable" class="table table-striped  table-condensed table-responsive"
+               style="width:100%;font-size: 13px;font-family: " 微软雅黑>
+        </table>
+        </div>
+        <div  style="margin:0 auto;text-align: center">
+            <button id="createGroup" class="btn btn-success form-control " style="width: 30%;">
+                <span class="glyphicon glyphicon-send" >&nbsp;</span><span>添加分组</span></button>
+        </div>
+
+    </div>
+</div>
+
+
+<div id="billToGroupDiv" style="display: none;">
+    <div class="modal-body">
+        <div class="form-group">
+            <table id="billToGroupTable" class="table table-striped  table-condensed table-responsive"
+                   style="width:100%;font-size: 13px;font-family: " 微软雅黑>
+            </table>
+        </div>
+        <div  style="margin:0 auto;text-align: center">
+            <button id="toGroup" class="btn btn-success form-control " style="width: 30%;">
+                <span class="glyphicon glyphicon-send" >&nbsp;</span><span>确定</span></button>
+        </div>
+
     </div>
 </div>
 <#-- <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("COMMISSIONER")>

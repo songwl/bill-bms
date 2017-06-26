@@ -538,6 +538,8 @@ var TableInit = function () {
         });
     };
 
+
+
     //得到查询的参数
     oTableInit.queryParams = function (params) {
         var temp = {

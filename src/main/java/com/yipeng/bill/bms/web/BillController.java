@@ -1,8 +1,11 @@
 package com.yipeng.bill.bms.web;
 
 import com.yipeng.bill.bms.core.model.ResultMessage;
+import com.yipeng.bill.bms.dao.BillGroupMapper;
+import com.yipeng.bill.bms.dao.BillGroupRoleMapper;
 import com.yipeng.bill.bms.dao.RoleMapper;
 import com.yipeng.bill.bms.dao.UserMapper;
+import com.yipeng.bill.bms.domain.BillGroup;
 import com.yipeng.bill.bms.domain.Role;
 import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.service.BillService;
@@ -44,6 +47,8 @@ public class BillController extends BaseController {
     private UserMapper userMapper;
     @Autowired
     private RoleMapper roleMapper;
+    @Autowired
+    private BillGroupMapper billGroupMapper;
     /**
      * 上下层
      *
@@ -61,6 +66,10 @@ public class BillController extends BaseController {
         List<User> userList = userService.getSearchUser(user, way);
         model.put("userList", userList);
         model.addAttribute("bmsModel", bms);
+        Map<String,Object> sqlMap=new HashMap<>();
+        sqlMap.put("userId",user.getId());
+        List<BillGroup> billGroupList=billGroupMapper.selectByUserId(sqlMap);
+        model.put("billGroupList", billGroupList);
         return "/bill/billList";
     }
 
@@ -1620,8 +1629,6 @@ public class BillController extends BaseController {
         String result=billService.createGroup(params,loginUser);
 
             return  this.ajaxDoneSuccess(result);
-
-
     }
 
     /**
@@ -1646,7 +1653,26 @@ public class BillController extends BaseController {
         return viewMap;
     }
 
+    /**
+     * 订单切换客户确认
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/billToGroupCmt")
+    @ResponseBody
+    public ResultMessage billToGroupCmt(HttpServletRequest request) {
+        Map<String, String[]> params = request.getParameterMap();
+        LoginUser loginUser = this.getCurrentAccount();
+        if (loginUser!= null) {
+            int a = billService.billToGroupCmt(params, loginUser);
+            return this.ajaxDoneSuccess("调整成功");
 
+        } else {
+            return this.ajaxDoneError("未登录");
+        }
+
+    }
     //导出excel(实例)
     @RequestMapping(value = "/export.controller")
     public void export(String ids, HttpServletResponse response) throws IOException {

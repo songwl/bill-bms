@@ -3661,6 +3661,29 @@ public class BillServiceimpl implements BillService {
         viewMap.put("total",total);
         return viewMap;
     }
+    /**
+     * 确认分组
+     * @param loginUser
+     * @return
+     */
+    @Override
+    public int billToGroupCmt(Map<String, String[]> params, LoginUser loginUser) {
+        String[] checkboxLength = params.get("lenTable");
+        int length = Integer.parseInt(checkboxLength[0]);//订单个数
+        String[] groupId = params.get("selectContent[0][id]");
+        for(int i=0;i<length;i++)
+        {
+            String[] billId = params.get("selectContentTable["+i+"][id]");
+            BillGroupRole billGroupRole=new BillGroupRole();
+            billGroupRole.settBillGroupId(Long.parseLong(groupId[0]));
+            billGroupRole.settBillId(Long.parseLong(billId[0]));
+            billGroupRole.setCreateTime(new Date());
+            billGroupRole.setCreateUserId(loginUser.getId());
+            billGroupRoleMapper.insert(billGroupRole);
+
+        }
+        return 0;
+    }
 
     /**
      * 批量修改价格

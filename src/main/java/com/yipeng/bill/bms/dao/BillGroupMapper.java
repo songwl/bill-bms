@@ -20,6 +20,7 @@ public interface BillGroupMapper {
 
     List<Map<String, Object>> selectBillGroupTable(Map<String, Object> params);
     int selectBillGroupTableCount(Map<String, Object> params);
-
     BillGroup selectByGroupNameExsits(Map<String, Object> params);
+    //获取分组
+    List<BillGroup> selectByUserId(Map<String, Object> params);
 }

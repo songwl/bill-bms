@@ -149,4 +149,12 @@
     AND
     t_user_id = #{userId,jdbcType=BIGINT}
   </select>
+  <select id="selectByUserId"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_bill_group
+    where 1=1
+    AND
+    t_user_id = #{userId,jdbcType=BIGINT}
+  </select>
 </mapper>

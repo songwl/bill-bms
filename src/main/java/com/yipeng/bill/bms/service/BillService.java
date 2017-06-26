@@ -245,4 +245,5 @@ public interface BillService {
     //.创建分组
     String createGroup(Map<String, Object> params, LoginUser loginUser);
     Map<String,Object> getBillGroupTable( Map<String, Object> params, LoginUser loginUser);
+    int billToGroupCmt(Map<String, String[]> params, LoginUser loginUser);//确认分组
 }

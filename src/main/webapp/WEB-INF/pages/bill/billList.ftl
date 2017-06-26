@@ -114,8 +114,19 @@
 
     </div>
     <div class="nav_R2 right">
+        <div style="width:70px; ">
+            分组：
+        </div>
+        <div style="width:120px;text-align: left;">
+            <select style="height: 35px; border: 1px solid #aaaaaa;" id="xxx">
+                <option value="1">--请选择--</option>
+                <#list billGroupList as item>
+                    <option value="${item.id}">${item.groupName}</option>
+                </#list>
+            </select>
+        </div>
         <div style="width:70px;text-align: left;">
-            达标天数
+            达标天数:
         </div>
         <input id="standardDays" name="standardDays" class="form-control" value="" style="width: 50px;" type="text"
                onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
@@ -494,7 +505,7 @@
             </table>
         </div>
         <div  style="margin:0 auto;text-align: center">
-            <button id="toGroup" class="btn btn-success form-control " style="width: 30%;">
+            <button id="toGroupCmt" class="btn btn-success form-control " style="width: 30%;">
                 <span class="glyphicon glyphicon-send" >&nbsp;</span><span>确定</span></button>
         </div>
 

@@ -645,50 +645,7 @@ $(document).ready(function () {
             }
         }
     })
-    //创建分组显示
-    $("#billCreateGroupClick").click(function () {
-            index1 = layer.open({
-                type: 1,
-                title: '创建分组',
-                skin: 'layui-layer-molv',
-                shade: 0.6,
-                area: ['50%', '90%'],
-                content: $('#billCreateGroupDiv'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-                end: function (e, u) {
-                    $('#billCreateGroupDiv').hide();
-                }
-            });
 
-    })
-    //批设分组显示
-    $("#billToGroupClick").click(function () {
-        var selectContent = $('#myTable').bootstrapTable('getSelections');
-        var len = selectContent.length;
-        if (selectContent == "") {
-            layer.alert('请选择一列数据', {
-                skin: 'layui-layer-molv' //样式类名  自定义样式
-                , anim: 6 //动画类型
-                , icon: 4   // icon
-            });
-
-        } else {
-
-            index1 = layer.open({
-                type: 1,
-                title: '批设分组',
-                skin: 'layui-layer-molv',
-                shade: 0.6,
-                area: ['50%', '90%'],
-                content: $('#billToGroupDiv'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-                end: function (e, u) {
-                    $('#billToGroupDiv').hide();
-                }
-            });
-        }
-
-
-
-    })
 
     //修改订单
     $("#confirmUpdateBill").click(function () {
@@ -728,6 +685,50 @@ $(document).ready(function () {
         }
     })
 
+    //创建分组显示
+    $("#billCreateGroupClick").click(function () {
+        index1 = layer.open({
+            type: 1,
+            title: '创建分组',
+            skin: 'layui-layer-molv',
+            shade: 0.6,
+            area: ['50%', '90%'],
+            content: $('#billCreateGroupDiv'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+            end: function (e, u) {
+                $('#billCreateGroupDiv').hide();
+            }
+        });
+
+    })
+    //批设分组显示
+    $("#billToGroupClick").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var len = selectContent.length;
+        if (selectContent == "") {
+            layer.alert('请选择一列数据', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
+
+        } else {
+
+            index1 = layer.open({
+                type: 1,
+                title: '批设分组',
+                skin: 'layui-layer-molv',
+                shade: 0.6,
+                area: ['50%', '90%'],
+                content: $('#billToGroupDiv'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                end: function (e, u) {
+                    $('#billToGroupDiv').hide();
+                }
+            });
+        }
+
+
+
+    })
     //创建分组
     $("#createGroup").click(function () {
         layer.prompt({title: '请输入分组名称，并确认', formType: 3}, function(pass, index){
@@ -765,6 +766,41 @@ $(document).ready(function () {
             layer.close(index);
             })
         })
+
+    //分组提交
+    $("#toGroupCmt").click(function () {
+        var selectContent = $('#billToGroupTable').bootstrapTable('getSelections');
+        var len = selectContent.length;
+        var selectContentTable = $('#myTable').bootstrapTable('getSelections');
+        var lenTable = selectContentTable.length;
+        var index1;
+        if (selectContent == "") {
+            layer.alert('请选择一个分组', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
+        } else {
+            $.ajax({
+                type:'post',
+                url:CTX+"/order/billToGroupCmt",
+                data:{selectContent:selectContent,selectContentTable:selectContentTable,lenTable:lenTable},
+                beforeSend: function () {
+                    index1 = layer.load(1, {
+                        shade: [0.1, '#fff'] //0.1透明度的白色背景
+                    });
+                },
+                success: function (result) {
+                        layer.alert(result.message, {
+                            skin: 'layui-layer-molv' //样式类名
+                            , closeBtn: 0
+                        });
+                        $('#myTable').bootstrapTable('refresh');
+                    layer.close(index1);
+                }
+            })
+        }
+    })
 })
 
 

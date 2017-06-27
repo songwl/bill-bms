@@ -410,6 +410,10 @@
     INNER JOIN  t_bill_price as b on a.id=b.bill_id
    INNER  JOIN  t_bill_search_support as d ON a.id=d.bill_id
     INNER  JOIN t_user as e ON b.out_member_id=e.id
+    <if test="groupId != null">
+    INNER  JOIN  t_bill_group_role as m on a.id=m.t_bill_id
+    INNER JOIN t_bill_group as n on m.t_bill_group_id=n.id
+    </if>
     <if test="roleId != null">
       INNER  JOIN t_user_role as f ON b.out_member_id=f.user_id
     </if>
@@ -521,6 +525,9 @@
     </if>
     <if test="addTime2 != null">
       AND  DATE_FORMAT(a.create_time,'%Y-%m-%d')  &lt;= DATE_FORMAT( #{addTime2,jdbcType=VARCHAR},'%Y-%m-%d')
+    </if>
+    <if test="groupId != null">
+      AND   n.t_user_id=#{groupUserId,jdbcType=BIGINT} and n.id=#{groupId,jdbcType=BIGINT}
     </if>
     <if test="sortName != null">
       <if test="sortName =='userName'">
@@ -574,6 +581,10 @@
     INNER JOIN  t_bill_price as b on a.id=b.bill_id
     INNER  JOIN  t_bill_search_support as d ON a.id=d.bill_id
     INNER  JOIN t_user as e ON b.out_member_id=e.id
+    <if test="groupId != null">
+    INNER  JOIN  t_bill_group_role as m on a.id=m.t_bill_id
+    INNER JOIN t_bill_group as n on m.t_bill_group_id=n.id
+    </if>
     <if test="roleId != null">
       INNER  JOIN t_user_role as f ON b.out_member_id=f.user_id
     </if>
@@ -686,6 +697,9 @@
     <if test="addTime2 != null">
       AND  DATE_FORMAT(a.create_time,'%Y-%m-%d')  &lt;= DATE_FORMAT( #{addTime2,jdbcType=VARCHAR},'%Y-%m-%d')
     </if>
+    <if test="groupId != null">
+      AND   n.t_user_id=#{groupUserId,jdbcType=BIGINT} and n.id=#{groupId,jdbcType=BIGINT}
+    </if>
     <if test="sortName != null">
       <if test="sortName =='userName'">
         ORDER BY e.user_name ${sortOrder}
@@ -732,7 +746,13 @@
   <select id="selectByOutMemberId"  resultMap="BaseResultMap">
     select  DISTINCT a.*
     from t_bill as a,t_bill_price as b,t_bill_search_support as d,t_user as e
+    <if test="groupId != null">
+    ,t_bill_group_role as f,t_bill_group as g
+    </if>
     where a.id=b.bill_id AND  a.id=d.bill_id and b.out_member_id=e.id
+    <if test="groupId != null">
+    and a.id=f.t_bill_id and f.t_bill_group_id=g.id
+    </if>
     AND b.out_member_id=#{userId,jdbcType=BIGINT}  AND a.delete_state=0
     AND (
     <if test="state != null">
@@ -816,6 +836,9 @@
     </if>
     <if test="searchUserNameId != null">
       AND  b.out_member_id= #{searchUserNameId,jdbcType=VARCHAR}
+    </if>
+    <if test="groupId != null">
+      AND   g.t_user_id=#{groupUserId,jdbcType=BIGINT} and g.id=#{groupId,jdbcType=BIGINT}
     </if>
     <if test="sortName != null">
       <if test="sortName =='userName'">
@@ -854,7 +877,13 @@
   <select id="selectByOutMemberIdCount"  resultType="java.lang.Long">
     select COUNT(DISTINCT a.id)
     from t_bill as a,t_bill_price as b,t_bill_search_support as d,t_user as e
+    <if test="groupId != null">
+    ,t_bill_group_role as f,t_bill_group as g
+    </if>
     where a.id=b.bill_id AND  a.id=d.bill_id and b.out_member_id=e.id
+    <if test="groupId != null">
+    and a.id=f.t_bill_id and f.t_bill_group_id=g.id
+    </if>
     AND b.out_member_id=#{userId,jdbcType=BIGINT}  AND a.delete_state=0
     AND (
     <if test="state != null">
@@ -938,6 +967,9 @@
     </if>
     <if test="searchUserNameId != null">
       AND  b.out_member_id= #{searchUserNameId,jdbcType=VARCHAR}
+    </if>
+    <if test="groupId != null">
+      AND   g.t_user_id=#{groupUserId,jdbcType=BIGINT} and g.id=#{groupId,jdbcType=BIGINT}
     </if>
     <if test="sortName != null">
       <if test="sortName =='userName'">

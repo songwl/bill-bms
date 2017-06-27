@@ -42,9 +42,9 @@
             <div id="applyToOptimization">
                 <span>&nbsp;<i class="fa fa-magic"></i>&nbsp;申请优化</span>
             </div>
-          <#--  <div id="billToChange">
-                <span>&nbsp;<i class="fa fa-random"></i>&nbsp;切换订单</span>
-            </div>-->
+        <#--  <div id="billToChange">
+              <span>&nbsp;<i class="fa fa-random"></i>&nbsp;切换订单</span>
+          </div>-->
         </#if>
         <#if bmsModel.user.hasRole("CUSTOMER")>
             <div id="addBillByKehu">
@@ -114,18 +114,17 @@
 
     </div>
     <div class="nav_R2 right">
-        <div style="width:70px; ">
-            分组：
-        </div>
-        <div style="width:120px;text-align: left;">
-            <select style="height: 35px; border: 1px solid #aaaaaa;" id="xxx">
-                <option value="1">--请选择--</option>
-                <#list billGroupList as item>
-                    <option value="${item.id}">${item.groupName}</option>
-                </#list>
-            </select>
-        </div>
-        <div style="width:70px;text-align: left;">
+        <span style="font-size:13px;text-align:center;cursor:pointer;font-weight:bold;margin-left: 10px;">
+        分组:
+        </span>
+        <select style="height: 35px; border: 1px solid #aaaaaa;" id="selectGroupId">
+            <option value="0">--请选择--</option>
+            <#list billGroupList as item>
+                <option value="${item.id}">${item.groupName}</option>
+            </#list>
+        </select>
+
+        <div style="width:70px;">
             达标天数:
         </div>
         <input id="standardDays" name="standardDays" class="form-control" value="" style="width: 50px;" type="text"
@@ -374,8 +373,6 @@
 </div>
 
 
-
-
 <!--相同价导入-->
 <div class="bootbox modal in samepriceDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
     <div class="dv1">
@@ -460,23 +457,25 @@
      style="position:absolute;top:45%;left: 50%; z-index:2200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none;"></div>
 
 
-
 <div id="offerSetUp" style="display: none;">
     <div class="modal-body">
         <div class="form-group">
             <div>
                 <span>关键词：</span>
-                <input type="text" class="form-control setkeyword" id="keywordUpdate" placeholder="关键词"   onkeyup="this.value=this.value.replace(/\s+/g,'')"/>
+                <input type="text" class="form-control setkeyword" id="keywordUpdate" placeholder="关键词"
+                       onkeyup="this.value=this.value.replace(/\s+/g,'')"/>
             </div>
 
             <br>
             <div>
                 <span>网址：</span>
-                <input type="text" class="form-control setkeyword" id="websiteUpdate" placeholder="网址"   onkeyup="this.value=this.value.replace(/\s+/g,'')"/>
+                <input type="text" class="form-control setkeyword" id="websiteUpdate" placeholder="网址"
+                       onkeyup="this.value=this.value.replace(/\s+/g,'')"/>
             </div>
-            <input type="hidden" value="" id="billIdInput"  />
+            <input type="hidden" value="" id="billIdInput"/>
         </div>
-        <button id="confirmUpdateBill" class="btn btn-success form-control"><span class="glyphicon glyphicon-send">&nbsp;</span><span>确认</span></button>
+        <button id="confirmUpdateBill" class="btn btn-success form-control"><span class="glyphicon glyphicon-send">&nbsp;</span><span>确认</span>
+        </button>
     </div>
 </div>
 
@@ -484,13 +483,13 @@
 <div id="billCreateGroupDiv" style="display: none;">
     <div class="modal-body">
         <div class="form-group">
-        <table id="groupTable" class="table table-striped  table-condensed table-responsive"
-               style="width:100%;font-size: 13px;font-family: " 微软雅黑>
-        </table>
+            <table id="groupTable" class="table table-striped  table-condensed table-responsive"
+                   style="width:100%;font-size: 13px;font-family: " 微软雅黑>
+            </table>
         </div>
-        <div  style="margin:0 auto;text-align: center">
+        <div style="margin:0 auto;text-align: center">
             <button id="createGroup" class="btn btn-success form-control " style="width: 30%;">
-                <span class="glyphicon glyphicon-send" >&nbsp;</span><span>添加分组</span></button>
+                <span class="glyphicon glyphicon-send">&nbsp;</span><span>添加分组</span></button>
         </div>
 
     </div>
@@ -504,11 +503,10 @@
                    style="width:100%;font-size: 13px;font-family: " 微软雅黑>
             </table>
         </div>
-        <div  style="margin:0 auto;text-align: center">
+        <div style="margin:0 auto;text-align: center">
             <button id="toGroupCmt" class="btn btn-success form-control " style="width: 30%;">
-                <span class="glyphicon glyphicon-send" >&nbsp;</span><span>确定</span></button>
+                <span class="glyphicon glyphicon-send">&nbsp;</span><span>确定</span></button>
         </div>
-
     </div>
 </div>
 <#-- <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("COMMISSIONER")>

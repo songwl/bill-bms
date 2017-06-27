@@ -91,8 +91,6 @@ public class LoginController extends BaseController {
 		UserCompany userCompany=userCompanyMapper.selectByWebsite(website);
 		Map<String, Object> bms=new HashMap<>();
 		modelMap.addAttribute("bmsModel", userCompany);
-
-
 		User user = userService.getUserByName(userName);
 		String codeSession = (String) session.getAttribute("code");
 
@@ -126,9 +124,6 @@ public class LoginController extends BaseController {
 					}
 			}
 		}
-
-
-
 			modelMap.addAttribute("loginFailureMessage", "用户名密码错误");
 			return "/user/login";
 

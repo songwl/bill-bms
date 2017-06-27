@@ -22,10 +22,18 @@
             <span>&nbsp;<i class="fa fa-stop"></i>&nbsp;优化离线</span>
         </div>
       </#if>
+
+        <div id="billCreateGroupClick">
+            <span>&nbsp;<i class="fa fa-plus"></i>&nbsp;创建分组</span>
+        </div>
+        <div id="billToGroupClick">
+            <span>&nbsp;<i class="fa fa-folder"></i>&nbsp;批设分组</span>
+        </div>
         <div class="search">
             <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
         </div>
     </div>
+
     <div class="cls">
     </div>
 
@@ -68,6 +76,15 @@
 
     </div>
     <div class="nav_R2 right col-md-11" >
+            <span style="font-size:13px;text-align:center;cursor:pointer;font-weight:bold;margin-left: 10px;">
+        分组:
+        </span>
+        <select style="height: 35px; border: 1px solid #aaaaaa;" id="selectGroupId">
+            <option value="0">--请选择--</option>
+            <#list billGroupList as item>
+                <option value="${item.id}">${item.groupName}</option>
+            </#list>
+        </select>
         <div>
             初排:
         </div>
@@ -156,5 +173,37 @@
 <!--优化调整end-->
 <div class="pload" style="position:absolute;top:45%;left: 50%; z-index:2200;background:url('${ctx}/static/img/load3.gif') top center no-repeat;width:40px;height:40px;margin:auto auto;display: none;"></div>
 <div class="modal-backdrop in" style="display: none">
+</div>
+
+
+<div id="billCreateGroupDiv" style="display: none;">
+    <div class="modal-body">
+        <div class="form-group">
+            <table id="groupTable" class="table table-striped  table-condensed table-responsive"
+                   style="width:100%;font-size: 13px;font-family: " 微软雅黑>
+            </table>
+        </div>
+        <div style="margin:0 auto;text-align: center">
+            <button id="createGroup" class="btn btn-success form-control " style="width: 30%;">
+                <span class="glyphicon glyphicon-send">&nbsp;</span><span>添加分组</span></button>
+        </div>
+
+    </div>
+</div>
+
+
+<div id="billToGroupDiv" style="display: none;">
+    <div class="modal-body">
+        <div class="form-group">
+            <table id="billToGroupTable" class="table table-striped  table-condensed table-responsive"
+                   style="width:100%;font-size: 13px;font-family: " 微软雅黑>
+            </table>
+        </div>
+        <div style="margin:0 auto;text-align: center">
+            <button id="toGroupCmt" class="btn btn-success form-control " style="width: 30%;">
+                <span class="glyphicon glyphicon-send">&nbsp;</span><span>确定</span></button>
+        </div>
+
+    </div>
 </div>
 </@base.html>

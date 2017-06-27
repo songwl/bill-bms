@@ -144,6 +144,10 @@ public class BillController extends BaseController {
             bms.put("user", user);
             model.put("userList", userList);
             model.addAttribute("bmsModel", bms);
+            Map<String,Object> sqlMap=new HashMap<>();
+            sqlMap.put("userId",user.getId());
+            List<BillGroup> billGroupList=billGroupMapper.selectByUserId(sqlMap);
+            model.put("billGroupList", billGroupList);
         }
 
         return "/bill/billOptimization";
@@ -164,8 +168,8 @@ public class BillController extends BaseController {
     public Map<String, Object> getBillOptimization(int limit, int offset, int way, String sortOrder, String sortName,
                                                    String website, String keywords, String searchName, String searchUserName,
                                                    String state, String searchStandard, String firstRanking1, String firstRanking2
-            , String newRanking1, String newRanking2, String newchange1, String newchange2,
-                                                   String addTime1, String addTime2) {
+                                                     , String newRanking1, String newRanking2, String newchange1, String newchange2,
+                                                   String addTime1, String addTime2,String groupId) {
         offset = (offset - 1) * limit;
         Map<String, Object> params = this.getSearchRequest(); //查询参数
         LoginUser loginUser = this.getCurrentAccount();
@@ -228,6 +232,9 @@ public class BillController extends BaseController {
         }
         if (!addTime2.isEmpty()) {
             params.put("addTime2", addTime2);
+        }
+        if (!groupId.isEmpty()) {
+            params.put("groupId", Long.parseLong(groupId));
         }
 
         LoginUser user = this.getCurrentAccount();
@@ -334,7 +341,7 @@ public class BillController extends BaseController {
     @ResponseBody
     public Map<String, Object> getBillDetails(int limit, int offset, int way, String sortOrder, String sortName,
                                               String website, String keywords, String searchName, String searchUserName,
-                                              String state, String state2, String searchStandard,String standardDays,String createTime) throws UnsupportedEncodingException {
+                                              String state, String state2, String searchStandard,String standardDays,String createTime,String groupId) throws UnsupportedEncodingException {
         offset = (offset - 1) * limit;
             Map<String, Object> params = this.getSearchRequest(); //查询参数
         LoginUser loginUser = this.getCurrentAccount();
@@ -377,11 +384,13 @@ public class BillController extends BaseController {
         if (!createTime.isEmpty()) {
             params.put("createTime", createTime);
         }
+        if (!groupId.isEmpty()) {
+            params.put("groupId", Long.parseLong(groupId));
+        }
         if (sortName != null) {
             params.put("sortName", sortName);
             params.put("sortOrder", sortOrder);
         }
-
         LoginUser user = this.getCurrentAccount();
         params.put("limit", limit);
         params.put("offset", offset);
@@ -1627,8 +1636,7 @@ public class BillController extends BaseController {
         Map<String,Object> params=new HashMap<>();
         params.put("groupName",groupName);
         String result=billService.createGroup(params,loginUser);
-
-            return  this.ajaxDoneSuccess(result);
+          return  this.ajaxDoneSuccess(result);
     }
 
     /**
@@ -1670,6 +1678,35 @@ public class BillController extends BaseController {
 
         } else {
             return this.ajaxDoneError("未登录");
+        }
+
+    }
+    /**
+     * 删除分组
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/deleteGroup",method = RequestMethod.POST)
+    @ResponseBody
+    public  ResultMessage deleteGroup(String groupId)
+    {
+        LoginUser loginUser=this.getCurrentAccount();
+        if(!"".equals(groupId))
+        {
+            int a=billService.deleteGroup(groupId,loginUser);
+            if(a==1)
+            {
+                return this.ajaxDoneSuccess("删除成功！");
+            }
+            else
+            {
+                return this.ajaxDoneError("删除失败！");
+            }
+        }
+       else
+        {
+            return this.ajaxDoneError("数据解析失败！！");
         }
 
     }

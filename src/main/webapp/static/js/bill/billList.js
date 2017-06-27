@@ -7,6 +7,7 @@ var searchState2 = null;
 var searchStandard = null;
 var standardDays = null;
 var createTime = null;
+var groupId=null;
 
 var length;
 $(document).ready(function () {
@@ -230,6 +231,13 @@ $(document).ready(function () {
         }
         else {
             createTime = null;
+        }
+
+        if ($("#selectGroupId").val() != "0") {
+            groupId = $("#selectGroupId").val();
+        }
+        else {
+            groupId = null;
         }
         $('#myTable').bootstrapTable('refresh');
     });
@@ -753,6 +761,7 @@ $(document).ready(function () {
                             {
                                 layer.msg("分组创建成功！");
                                 $('#groupTable').bootstrapTable('refresh');
+                                $('#billToGroupTable').bootstrapTable('refresh');
                             }
                             else
                             {
@@ -795,7 +804,7 @@ $(document).ready(function () {
                             skin: 'layui-layer-molv' //样式类名
                             , closeBtn: 0
                         });
-                        $('#myTable').bootstrapTable('refresh');
+                    $('#billToGroupTable').bootstrapTable('refresh');
                     layer.close(index1);
                 }
             })
@@ -1103,7 +1112,8 @@ var TableInit = function () {
             state2: searchState2,
             searchStandard: searchStandard,
             standardDays: standardDays,
-            createTime: createTime
+            createTime: createTime,
+            groupId:groupId
         };
 
         return temp;
@@ -1272,6 +1282,7 @@ var TableInit2 = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '数据库编号',
+                    visible:false
 
                 },
                 {
@@ -1287,7 +1298,21 @@ var TableInit2 = function () {
                     valign: 'middle',
                     title: '任务数',
 
-                }, {
+                },
+                {
+                    field: 'create_time',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '增加时间',
+                    formatter: function (value, row, index) {
+                        var time=new Date(value);
+                        var a = "<span style='color:#4382CF;cursor:pointer;' id='deleteGroup'>"+time.toLocaleDateString()+"</span> ";
+
+                        return a;
+                    },
+
+                }
+                , {
                     field: 'costDate',
                     align: 'center',
                     valign: 'middle',
@@ -1327,14 +1352,30 @@ var TableInit2 = function () {
     }
     window.operateEvents = {
         'click #deleteGroup': function (e, value, row, index) {
+            layer.confirm('是否删除当前分组？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                 $.ajax({
+                     type:'post',
+                     url:CTX+'/order/deleteGroup',
+                     data:{groupId:row.id},
+                     success:function (result) {
+                         layer.alert(result.message, {
+                             skin: 'layui-layer-molv' //样式类名  自定义样式
+                             , anim: 4 //动画类型
+                             , icon: 2   // icon
+                         });
+                         $('#groupTable').bootstrapTable('refresh');
+                         $('#billToGroupTable').bootstrapTable('refresh');
+                     }
 
+                 })
+            })
         },
 
     }
     return oTableInit2;
 };
-
-
 var TableInit3 = function () {
     var oTableInit3 = new Object();
     //初始化Table
@@ -1376,6 +1417,7 @@ var TableInit3 = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '数据库编号',
+                    visible:false
 
                 },
                 {

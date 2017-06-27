@@ -2036,11 +2036,12 @@ public class BillServiceimpl implements BillService {
         //判断查询条件
         //视图模型
         List<BillDetails> billDetailsList = new ArrayList<BillDetails>();
-
         int way = Integer.parseInt(params.get("way").toString());
         int limit = Integer.parseInt(params.get("limit").toString());
         int offset = Integer.parseInt(params.get("offset").toString());
         int i = offset;
+        //分组对应的用户Id
+        params.put("groupUserId",user.getId());
         //上游
         if (way == 1) {
             //先获取对应的订单
@@ -3638,9 +3639,6 @@ public class BillServiceimpl implements BillService {
             {
                 return  "2";
             }
-
-
-
         }
 
     }
@@ -3671,18 +3669,78 @@ public class BillServiceimpl implements BillService {
         String[] checkboxLength = params.get("lenTable");
         int length = Integer.parseInt(checkboxLength[0]);//订单个数
         String[] groupId = params.get("selectContent[0][id]");
+        Long newGroupId=Long.parseLong(groupId[0]);
+        Map<String,Object> sqlMap=new HashMap<>();
+        sqlMap.put("userId",loginUser.getId());
+        sqlMap.put("billGroupId",Long.parseLong(groupId[0]));
         for(int i=0;i<length;i++)
         {
             String[] billId = params.get("selectContentTable["+i+"][id]");
-            BillGroupRole billGroupRole=new BillGroupRole();
-            billGroupRole.settBillGroupId(Long.parseLong(groupId[0]));
-            billGroupRole.settBillId(Long.parseLong(billId[0]));
-            billGroupRole.setCreateTime(new Date());
-            billGroupRole.setCreateUserId(loginUser.getId());
-            billGroupRoleMapper.insert(billGroupRole);
+            Map<String,Object> map=new HashMap<>();
+            map.put("userId",loginUser.getId());
+            map.put("billId",Long.parseLong(billId[0]));
+            BillGroupRole billGroupRoleExsit=billGroupRoleMapper.selectByGroupRoleExsits(map);
+            if(billGroupRoleExsit!=null)
+            {
+                //判断分组ID和当前的存在的分组ID是否一致
+                if(billGroupRoleExsit.gettBillGroupId().longValue()==newGroupId.longValue())
+                {
+                    continue;
+                }
+                else
+                {
+                    BillGroup billGroup=billGroupMapper.selectByPrimaryKey(billGroupRoleExsit.gettBillGroupId());
+                    if(billGroup!=null)
+                    {
+                        billGroup.setTaskCount(billGroup.getTaskCount()-1);
+                        billGroupMapper.updateByPrimaryKeySelective(billGroup);
+                    }
+                    BillGroup billGroupNew=billGroupMapper.selectByPrimaryKey(newGroupId) ;
+                    if(billGroupNew!=null)
+                    {
+                        billGroupNew.setTaskCount(billGroupNew.getTaskCount()+1);
+                        billGroupMapper.updateByPrimaryKeySelective(billGroupNew);
+                    }
+                    billGroupRoleExsit.settBillGroupId(newGroupId);
+                    billGroupRoleMapper.updateByPrimaryKeySelective(billGroupRoleExsit);
+                }
 
+            }
+            else
+            {
+                BillGroupRole billGroupRole=new BillGroupRole();
+                billGroupRole.settBillGroupId(Long.parseLong(groupId[0]));
+                billGroupRole.settBillId(Long.parseLong(billId[0]));
+                billGroupRole.setCreateTime(new Date());
+                billGroupRole.setCreateUserId(loginUser.getId());
+                billGroupRoleMapper.insert(billGroupRole);
+                BillGroup billGroupNew1=billGroupMapper.selectByPrimaryKey(newGroupId) ;
+                billGroupNew1.setTaskCount(billGroupNew1.getTaskCount()+1);
+                billGroupMapper.updateByPrimaryKeySelective(billGroupNew1);
+            }
         }
         return 0;
+    }
+
+    /**
+     * 删除分组
+     * @param groupId
+     * @param loginUser
+     * @return
+     */
+    @Override
+    public int deleteGroup(String groupId, LoginUser loginUser) {
+        int a=billGroupRoleMapper.deleteByGroupId(Long.parseLong(groupId));
+        int b=billGroupMapper.deleteByPrimaryKey(Long.parseLong(groupId));
+        if(b>0)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+
     }
 
     /**

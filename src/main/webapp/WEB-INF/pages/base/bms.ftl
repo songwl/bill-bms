@@ -224,6 +224,11 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="${ctx}/order/billAgentSettlement">
+                                    代理商结算
+                                </a>
+                            </li>
+                            <li>
                                 <a href="${ctx}/order/pendingAudit">
                                     待审核订单
                                 </a>

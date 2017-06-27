@@ -1,10 +1,10 @@
 <#import "/base/base.ftl" as base>
 <#import "/base/dict.ftl" as dict>
 
-<@base.html "系统概况">
+<@base.html "代理商管理">
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <script src="${ctx}/static/js/public/highcharts.js"></script>
-<script src="${ctx}/static/js/My97DatePicker/WdatePicker.js"></script>
+<script src="${ctx}/static/js/bill/billClientSideSettlement.js"></script>
 <style>
     .dashboard-stat {
         border-radius: 5px !important;
@@ -20,61 +20,27 @@
 </style>
 <div class="Navs">
     <div class="nav_L left">
-        <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>优化结算</span>
+        <i class="fa fa-home">&nbsp;</i><span>代理商管理</span> > <span>代理商结算</span>
     </div>
 
 </div>
 <div class="row row-bg">
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="dashboard-stat blue">
-            <div class="visual">
-                <i class="fa fa-home"></i>
-            </div>
-            <div class="details">
-                <div class="number">账户余额</div>
-                <div class="desc" id="userBalance">￥0.00</div>
+
+    <#if bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")||bmsModel.user.hasRole("CUSTOMER")>
+
+        <div class="col-sm-6 col-md-2 hidden-xs">
+            <div class="dashboard-stat blue">
+                <div class="visual">
+
+                    <i class="fa fa-home"></i>
+                </div>
+                <div class="details">
+                    <div class="number">账户余额</div>
+                    <div class="desc" id="balance"></div>
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="dashboard-stat blue">
-            <div class="visual">
-                <i class="fa fa-yahoo"></i>
-            </div>
-            <div class="details">
-                <div class="number">年度结算</div>
-                <div class="desc" id="yearConsumption">￥0.00</div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="dashboard-stat blue">
-            <div class="visual">
-                <i class="fa fa-bitcoin"></i>
-            </div>
-            <div class="details">
-                <div class="number">本月结算</div>
-                <div class="desc" id="">￥${bmsModel.MonthConsumption}</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-md-2 hidden-xs">
-        <div class="dashboard-stat blue">
-            <div class="visual">
-                <i class="fa fa-bitcoin"></i>
-            </div>
-            <div class="details">
-                <div class="number">上月结算</div>
-                <div class="desc" id="lastMonthConsumption">￥0.00</div>
-            </div>
-        </div>
-    </div>
-
-
-
+    </#if>
 
     <div class="col-sm-6 col-md-2 hidden-xs">
         <div class="dashboard-stat blue">
@@ -82,24 +48,79 @@
                 <i class="fa fa-dollar"></i>
             </div>
             <div class="details">
-                <div class="number">今日结算</div>
-                <div class="desc" id="">￥${bmsModel.DayConsumption}</div>
+                <div class="number">客户本月消费</div>
+                <div class="desc" id="MonthConsumption"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-2 hidden-xs">
+        <div class="dashboard-stat green">
+            <div class="visual">
+                <i class="fa fa-dollar"></i>
+            </div>
+            <div class="details">
+                <div class="number">客户今日消费</div>
+                <div class="desc" id="DayConsumption"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-md-2 hidden-xs">
+        <div class="dashboard-stat purple">
+            <div class="visual">
+                <i class="fa fa-tasks"></i>
+            </div>
+            <div class="details">
+                <div class="number">累计任务数</div>
+                <div class="desc" id="AllbillCount"></div>
             </div>
         </div>
     </div>
     <div class="col-sm-6 col-md-2 hidden-xs">
         <div class="dashboard-stat blue">
             <div class="visual">
-                <i class="fa fa-dollar"></i>
+                <i class="fa fa-tasks"></i>
             </div>
             <div class="details">
-                <div class="number">昨日结算</div>
-                <div class="desc" id="">￥${bmsModel.yesterDayConsumption}</div>
+                <div class="number">当前任务数</div>
+                <div class="desc" id="billCount"></div>
             </div>
         </div>
     </div>
 
+    <div class="col-sm-6 col-md-2 hidden-xs">
+        <div class="dashboard-stat yellow">
+            <div class="visual">
+                <i class="fa fa-tasks"></i>
+            </div>
+            <div class="details">
+                <div class="number">今日达标任务</div>
+                <div class="desc" id="standardSum"></div>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
+<#--<div class="row row-bg">
+  &lt;#&ndash;  <div class="col-sm-6 col-md-2 hidden-xs">
+        <div class="dashboard-stat blue">
+            <div class="widget-content">
+                <div class="visual green">
+                    <i class="fa fa-tasks"></i>
+                </div>
+                <div class="title">
+                    搜狗手机完成率
+                </div>
+                <div class="value">
+                ${bmsModel.sougouWapWapCompleteness}%
+                </div>
+            </div>
+        </div>
+    </div>&ndash;&gt;
+
+</div>-->
+
 
 <div class="row">
     <div class="col-md-12">
@@ -116,30 +137,20 @@
                     </div>
                 </div>
             </div>
-            <div id="container" style="width: 100%; height: 400px; float:left;;"></div>
+            <div id="container1" style="width: 100%; height: 400px; float:left;;"></div>
         </div>
     </div>
 </div>
+
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-primary" id="list-panel">
             <div class="panel-body">
-                <div style="margin-bottom: 5px;">
-                    <span>日期：</span>
-                    <input onFocus="WdatePicker({lang:'zh-tw',readOnly:true})" id="createTime"  style="border:1px solid #09c;height:30px;"/>
-
-                    <span class="search" style="cursor: pointer;">&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
-
-                </div>
                 <div class="panel-nav">
+                    <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;今日消费(<span id="length"></span>)</div>
 
-                    <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;客户消费</div>
-                    <div class="Nav_Right">
-
-                    </div>
                     <div class="cls"></div>
                 </div>
-
                 <table id="myTable" class="table table-striped  table-condensed table-responsive" style="width:100%;font-size: 13px;font-family: "微软雅黑">
                 </table>
             </div>
@@ -149,57 +160,116 @@
 </div>
 
 
+<script type="text/javascript">
 
-<script>
+
+    //异步加载首页数据，解决加载慢的问题
+    //1,客户数
+/*    $.ajax({
+        type: 'get',
+        async: true,
+        url: CTX + '/userCount',
+        success: function (result) {
+            $("#UserCount").html(result.UserCount);
+        }
+    });*/
+    //2,余额
     $.ajax({
         type: 'get',
         async: true,
-        url: CTX + '/order/userBalance',
+        url: CTX + '/balance',
         success: function (result) {
-
-            if(result.userBalance==null)
-            {
-                $("#userBalance").html("¥0.00");
-            }
-            else
-            {
-                $("#userBalance").html("¥"+result.userBalance);
-            }
+            $("#balance").html("¥" + result.balance);
         }
     });
+    //3，月总消费
     $.ajax({
         type: 'get',
         async: true,
-        url: CTX + '/order/yearConsumption',
+        url: CTX + '/MonthConsumption',
         success: function (result) {
-            if(result.yearSum==null)
-            {
-                $("#yearConsumption").html("¥0.00");
+            if (result.MonthConsumption == null) {
+                $("#MonthConsumption").html("¥0.00");
             }
-            else
-            {
-                $("#yearConsumption").html("¥"+result.yearSum);
+            else {
+                $("#MonthConsumption").html("¥" + result.MonthConsumption);
             }
         }
     });
+    //4，本日消费
     $.ajax({
         type: 'get',
         async: true,
-        url: CTX + '/order/lastMonthConsumption',
+        url: CTX + '/DayConsumption',
         success: function (result) {
-            if(result.lastMonthSum==null)
-            {
-                $("#lastMonthConsumption").html("¥0.00");
+            if (result.DayConsumption == null) {
+                $("#DayConsumption").html("¥0.00");
             }
-            else
-            {
-                $("#lastMonthConsumption").html("¥"+result.lastMonthSum);
+            else {
+                $("#DayConsumption").html("¥" + result.DayConsumption);
             }
         }
     });
+    //5，当前任务数
+    $.ajax({
+        type: 'get',
+        async: true,
+        url: CTX + '/billCount',
+        success: function (result) {
+            $("#billCount").html(result.billCount);
+        }
+    });
+    //6，累计任务数
+    $.ajax({
+        type: 'get',
+        async: true,
+        url: CTX + '/AllbillCount',
+        success: function (result) {
+            $("#AllbillCount").html(result.AllbillCount);
+        }
+    });
+    //7，达标数
+    $.ajax({
+        type: 'get',
+        async: true,
+        url: CTX + '/standardSum',
+        success: function (result) {
+            $("#standardSum").html(result.standardSum);
 
-  $(function () {
-        var chart1 = new Highcharts.Chart('container', {
+        }
+    });
+
+    $.ajax({
+        type: 'get',
+        async: true,
+        url: CTX + '/homeDetails',
+        success: function (result) {
+            $("#AllCompleteness").html(result.search.allcompleteness + "%");
+            $("#baiduCompleteness ").html(result.search.baiducompleteness + "%");
+            $("#baiduWapCompleteness ").html(result.search.baiduwapcompleteness + "%");
+            $("#sanliulingCompleteness ").html(result.search.sanliulingcompleteness + "%");
+            $("#sougouCompleteness ").html(result.search.sougoucompleteness + "%");
+            $("#shenmaCompleteness").html(result.search.shenmacompleteness + "%");
+            container1(result);
+        }
+    })
+    function container1(result) {
+        var arr = result.yAxisSum.split(',');
+        var arr1 = result.seriesLastMonthSum.split(',');
+        var arr2 = result.seriesNowMonthSum.split(',');
+        var aa = [];
+        var aa1 = [];
+        var aa2 = [];
+        $.each(arr, function (i, item) {
+            aa.push(item - 0);
+        })
+        $.each(arr1, function (i, item) {
+            aa1.push(item - 0);
+        })
+        $.each(arr2, function (i, item) {
+            aa2.push(item - 0);
+        })
+        var chart1 = new Highcharts.Chart('container1', {
             chart: {
                 borderColor: '#D9D9D9',
                 borderWidth: 1,
@@ -214,18 +284,82 @@
                 text: '任务消费走势图 ',
                 x: -20
             },
+
             xAxis: {
-                categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10','11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31']
+                categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30']
 
             },
             yAxis: {
                 floor: 0,
                 gridLineColor: '#197F07',
                 gridLineWidth: 1,
-                tickPositions:[${bmsModel.yAxisSum}],
+                tickPositions: aa,
                 ceiling: 20,
                 title: {
                     text: '单位 (元)'
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            },
+            series: [{
+                name: '上月',
+                data: aa1,
+                color: '#ff0000',
+                marker: {
+                    symbol: 'square'//点形状
+                },
+            }, {
+                name: '本月',
+                data: aa2
+            },]
+        })
+
+        var str1 = result.yAxis.split(',');
+        var str2 = result.seriesLastMonth.split(',');
+        var str3 = result.seriesNowMonth.split(',');
+        var bb1 = [];
+        var bb2 = [];
+        var bb3 = [];
+        $.each(str1, function (i, item) {
+            bb1.push(item - 0);
+        })
+        $.each(str2, function (i, item) {
+            bb2.push(item - 0);
+        })
+        $.each(str3, function (i, item) {
+            bb3.push(item - 0);
+        })
+        var chart = new Highcharts.Chart('container', {
+            chart: {
+                borderColor: '#D9D9D9',
+                borderWidth: 1,
+                type: 'line'
+            },
+            credits: {
+                enabled: false,//不显示highCharts版权信息
+
+            },
+            title: {
+                text: '任务达标数量走势图 ',
+                x: -20
+            },
+
+            xAxis: {
+                categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30',]
+
+            },
+            yAxis: {
+                floor: 0,
+                gridLineColor: '#197F07',
+                gridLineWidth: 1,
+                tickPositions: bb1,
+                ceiling: 20,
+                title: {
+                    text: '单位 (个)'
                 }
             },
             tooltip: {
@@ -239,21 +373,19 @@
             },
             series: [{
                 name: '上月',
-                data: [${bmsModel.seriesLastMonthSum}]
+                color: '#ff0000',
+                data: bb2
             }, {
                 name: '本月',
-                data: [${bmsModel.seriesNowMonthSum}]
-            },  ]
-        })
-    });
 
+                data: bb3
+            },]
+        })
+
+    }
 </script>
+
 <script>
-    var searchTime;
-    $(".search").click(function () {
-        searchTime=$("#createTime").val();
-        $('#myTable').bootstrapTable('refresh');
-    })
     $(function () {
 
         //1.初始化Table
@@ -268,15 +400,15 @@
         //初始化Table
         oTableInit.Init = function () {
             $('#myTable').bootstrapTable({
-                url:CTX+ '/order/billDayCost',         //请求后台的URL（*）
+                url:CTX+ '/order/billClientDayCost',         //请求后台的URL（*）
                 method: 'get',                      //请求方式（*）
                 toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色
                 cache: false,                       //是否使用缓存，默认为true，
                 //pagination: true,                   //是否显示分页（*）
-               // pageNumber: 1,                       //初始化加载第一页，默认第一页
-               // pageSize:20,                       //每页的记录行数（*）
-               // pageList: [50, 500,1000],        //可供选择的每页的行数（*）
+                // pageNumber: 1,                       //初始化加载第一页，默认第一页
+                // pageSize:20,                       //每页的记录行数（*）
+                // pageList: [50, 500,1000],        //可供选择的每页的行数（*）
                 sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
                 queryParams: oTableInit.queryParams,//传递参数（*）
                 queryParamsType: "",
@@ -364,7 +496,6 @@
                 offset: params.pageNumber,  //页码
                 sortOrder: params.sortOrder,
                 sortName: params.sortName,
-                searchTime:searchTime
 
             };
             return temp;

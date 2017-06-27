@@ -1453,7 +1453,21 @@ public class BillController extends BaseController {
 
     }
 
+    /**
+     * 代理商结算
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/billAgentSettlement")
+    public String billAgentSettlement(ModelMap model) {
+/*
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> bms = billService.billOptimizationSettlement(loginUser);
+        model.addAttribute("bmsModel", bms);*/
+        return "/bill/billAgentSettlement";
 
+    }
     /**
      * 今日消费
      *

@@ -77,7 +77,6 @@ public class HomeController extends BaseController {
         bms.put("user", loginUser);
         bms.put("inbox", inbox);
         model.addAttribute("bmsModel", bms);
-
         return "/home/home";
     }
 

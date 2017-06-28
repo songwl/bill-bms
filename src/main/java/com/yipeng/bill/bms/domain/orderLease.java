@@ -14,6 +14,10 @@ public class orderLease implements Serializable {
 
     private String reserveid;
 
+    private String customerid;
+
+    private Integer keywordstate;
+
     private Integer orderstate;
 
     private String website;
@@ -65,7 +69,23 @@ public class orderLease implements Serializable {
     }
 
     public void setReserveid(String reserveid) {
-        this.reserveid = reserveid;
+        this.reserveid = reserveid == null ? null : reserveid.trim();
+    }
+
+    public String getCustomerid() {
+        return customerid;
+    }
+
+    public void setCustomerid(String customerid) {
+        this.customerid = customerid == null ? null : customerid.trim();
+    }
+
+    public Integer getKeywordstate() {
+        return keywordstate;
+    }
+
+    public void setKeywordstate(Integer keywordstate) {
+        this.keywordstate = keywordstate;
     }
 
     public Integer getOrderstate() {

@@ -26,4 +26,8 @@ public interface KeywordsPriceMapper {
     List<KeywordToPrice> selectBywordToPriceHave(Map<String, Object> params2);
 
     KeywordsPrice selectByTaskId(int taskid);
+
+    Long selectAllKeywordsCount(Map<String, Object> map);
+
+    List<Map<String, Object>> selectAllKeywords(Map<String, Object> map);
 }

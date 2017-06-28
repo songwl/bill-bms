@@ -1,7 +1,7 @@
 <#import "/base/base.ftl" as base>
 <#import "/base/dict.ftl" as dict>
 
-<@base.html "写信息">
+<@base.html "客户任务大厅">
 <link href="${ctx}/static/css/Message/font-awesome.min.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/animate.css" rel="stylesheet">
 <link href="${ctx}/static/css/Message/custom.css" rel="stylesheet">
@@ -11,6 +11,15 @@
 <div class="Navs">
     <div class="nav_L left">
         <i class="fa fa-home">&nbsp;</i><span>网站出租平台</span> > <span>任务大厅</span>
+    </div>
+    <div class="nav_R right" id="divQx">
+        <div id="divide">
+            <span>&nbsp;<i class="fa fa-arrow-down"></i>&nbsp;划分</span>
+        </div>
+
+        <div class="search">
+            <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
+        </div>
     </div>
     <div class="cls">
     </div>
@@ -38,27 +47,20 @@
         </div>
     </div>
 </div>
-<div id="reserveDiv" style="display: none">
-    <table class="table table-bordered table-striped" style="text-align: center;vertical-align: middle">
-        <thead>
-        <tr>
-            <th>预定人</th>
-            <th>操作</th>
-        </tr>
-        </thead>
-        <tbody id="tbodyReserve">
-        <tr>
-            <td><span class="">张三</span></td>
-            <td>
-                <button class="btn btn-success form-control">充值</button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+
+<div id="selectDistributor" style="display: none;">
+    <h4 class="modal-header">请选择渠道商</h4>
+    <div class="modal-body">
+        <div class="form-group">
+            <select id="distributor" class="form-control" style="height: initial;">
+            </select>
+        </div>
+        <button id="confirm" class="btn btn-success form-control" style="background-color: #27c24c"><span
+                class="glyphicon glyphicon-send">&nbsp;</span><span>确认</span></button>
+    </div>
 </div>
 <script type="text/javascript">
     var index1;
-    var index2;
     $(function () {
         MissionHall.init();
     });
@@ -67,13 +69,16 @@
             //1.初始化Table
             var oTable = new MissionHall.TableInit();
             oTable.Init();
+            //划分按钮
+            $("#divide").on("click", MissionHall.divideClick);
+            $("#confirm").on("click", MissionHall.confirmDistributor);
         },
         TableInit: function () {
             var oTableInit = new Object();
             //初始化Table
             oTableInit.Init = function () {
                 $('#myTable').bootstrapTable({
-                    url: CTX + '/SiteLease/GetReceiveIdMission',         //请求后台的URL（*）
+                    url: CTX + '/SiteLease/CustomerGetMission',         //请求后台的URL（*）
                     method: 'get',                      //请求方式（*）
                     toolbar: '#toolbar',                //工具按钮用哪个容器
                     striped: true,                      //是否显示行间隔色
@@ -99,19 +104,13 @@
 
                     columns: [
                         {
-                            checkbox: true
+                            field: 'checked',
+                            checkbox: true,
+                            formatter: stateFormatter
                         },
                         {
                             field: 'id',
                             title: '编号',
-                            align: 'center',
-                            valign: 'middle',
-                            visible: false
-
-                        },
-                        {
-                            field: 'reserveId',
-                            title: '预定人',
                             align: 'center',
                             valign: 'middle',
                             visible: false
@@ -151,6 +150,14 @@
                             }
                         },
                         {
+                            field: 'id',
+                            title: '编号',
+                            align: 'center',
+                            valign: 'middle',
+                            visible: false
+
+                        },
+                        {
                             field: 'orderstate',
                             align: 'center',
                             valign: 'middle',
@@ -161,27 +168,12 @@
                                 }
                                 else if (value == "2") {
                                     return "已划分";
-                                }
-                                else if (value == "3") {
+                                } else if (value == "3") {
                                     return "已有预定";
-                                }
-                                else if (value == "4") {
-                                    return "已完成预定";
+                                } else if (value == "4") {
+                                    return "预定完成";
                                 }
                                 return value;
-                            }
-                        },
-                        {
-                            field: 'ydrs',
-                            title: '预定人数',
-                            align: 'center',
-                            valign: 'middle',
-                            formatter: function (value, row, index) {
-                                if (row.orderstate == 3) {
-                                    var len = row.reserveId.split(",").length - 1;
-                                    return len;
-                                }
-                                return "-";
                             }
                         },
                         {
@@ -191,14 +183,7 @@
                             title: '操作',
                             events: operateEvents,
                             formatter: function (value, row, index) {
-                                var a = "<a style='color: #a6cfff;cursor: pointer;' id='details'>详情</a>   ";
-                                if (row.orderstate != 4) {
-                                    a += "<a style='color: #AE5B1E; cursor:pointer;' id='recharge'>充值</a>"
-                                }
-                                if(row.orderstate == 4) {
-                                    a += "<a style='color: #AE5B1E; cursor:pointer;' id='WhoReserve'>预定人</a>"
-                                }
-
+                                var a = "<a style='color: #ff0000;cursor: pointer;' id='details'>详情</a>";
                                 return a;
                             }
 
@@ -206,6 +191,16 @@
                     ]
                 });
             };
+
+            function stateFormatter(value, row, index) {
+                if (row.orderstate == 4)
+                    return {
+                        disabled: true,//设置是否可用
+                        checked: false//设置选中
+                    };
+                return value;
+            }
+
             //得到查询的参数
             //oTableInit.queryParams = MissionHall.queryParams;
             oTableInit.queryParams = function (params) {
@@ -217,102 +212,67 @@
             };
             window.operateEvents = {
                 'click #details': function (e, value, row, index) {
-                    $.post(CTX + '/SiteLease/GetDetails', {website: row.website}, function (data) {
-                        var str = "<table class=\"table table-hover table-striped table-bordered\">" +
-                                "<thead><tr><th>网址</th><th>关键词</th><th>初排</th><th>新排</th><th>百度电脑</th><th>百度手机</th><th>搜狗</th><th>360</th><th>神马</th><th>时间</th></thead><tbody>";
-                        $.each(data, function (index, item) {
-                            str += "<tr><td><span>" + item.website + "</span></td><td>" + item.keywords + "</td><td>" + item.firstRanking + "</td><td>" + item.newRanking + "</td><td>" + item.PriceBaiduPc + "</td><td>" + item.PriceBaiduWap + "</td><td>" + item.PriceSogouPc + "</td><td>" + item.PriceSoPc + "</td><td>" + item.PriceSm + "</td><td><span>" + new Date(item.time).toLocaleString() + "</span></td></tr>";
-                        });
-                        str += "</tbody></table>";
-                        layer.open({
-                            type: 1,
-                            title: '查看详情',
-                            skin: 'layui-layer-molv',
-                            shade: 0.6,
-                            area: ['70%'],
-                            content: str //注意，如果str是object，那么需要字符拼接。
-                        });
-                    });
-                },
-                'click #recharge': function (e, value, row, index) {
-                    $.post(CTX + '/SiteLease/GetReserve', {website: row.website}, function (data) {
-                        var str = "";
-                        $.each(data, function (index, item) {
-                            str += "<tr>" +
-                                    "<td style='vertical-align: middle;'>" + item.userName + "</td>" +
-                                    "<td>" +
-                                    "<button class=\"btn btn-success form-control\" onclick='MissionHall.Recharge(" + item.id + ",\"" + row.website + "\");'>充值</button>" +
-                                    "</td></tr>";
-                        });
-                        $("#tbodyReserve").empty().append(str);
-                        index1 = layer.open({
-                            type: 1,
-                            title: '查看详情',
-                            skin: 'layui-layer-molv',
-                            shade: 0.6,
-                            area: ['20%'],
-                            content: $("#reserveDiv"), //注意，如果str是object，那么需要字符拼接。
-                            end: function () {
-                                $("#reserveDiv").hide();
-                            }
-                        });
-                    });
-                },
-                'click #WhoReserve': function (e, value, row, index) {
-                    $.post(CTX + '/SiteLease/GetReserve', {website: row.website}, function (data) {
-                        var str = "";
-                        $.each(data, function (index, item) {
-                            str += "<tr>" +
-                                    "<td style='vertical-align: middle;'>" + item.userName + "</td>" +
-                                    "<td>" +
-                                    "无" +
-                                    "</td></tr>";
-                        });
-                        $("#tbodyReserve").empty().append(str);
-                        index1 = layer.open({
-                            type: 1,
-                            title: '查看详情',
-                            skin: 'layui-layer-molv',
-                            shade: 0.6,
-                            area: ['20%'],
-                            content: $("#reserveDiv"), //注意，如果str是object，那么需要字符拼接。
-                            end: function () {
-                                $("#reserveDiv").hide();
-                            }
-                        });
+                    layer.open({
+                        type: 2,
+                        title: '请选择要订购的订单',
+                        shadeClose: false,
+                        //shade: [0.4,'#000'], //0.1透明度的白色背景
+                        maxmin: true, //开启最大化最小化按钮
+                        area: ['893px', '600px'],
+                        content: CTX + '/SiteLease/OrderDetails/?website=' + row.website //iframe的url
                     });
                 }
             };
             return oTableInit;
         },
-        Recharge: function (userid, website) {
-            index2 = layer.prompt({title: '充值金额', formType: 3}, function (pass, index) {
-                if (pass == '' || isNaN(pass) || parseFloat(pass) < 1000) {
-                    layer.msg("输入的金额不能小于1000");
+        divideClick: function () {
+            var selectContent = $('#myTable').bootstrapTable('getSelections');
+            //console.info(selectContent);
+            if (selectContent.length == 0) {
+                layer.msg("请先选择行");
+                return;
+            }
+            $.post(CTX + '/SiteLease/GetDistributor', {}, function (data) {
+
+                var str = "<option value=\"0\">--请选择--</option>";
+                $.each(data, function (index, item) {
+                    str += "<option value=" + item.id + ">" + item.userName + "</option>";
+                });
+                $("#distributor").empty().append(str);
+            });
+
+            index1 = layer.open({
+                type: 1,
+                title: '划分订单 已选择行数：' + selectContent.length + '行',
+                skin: 'layui-layer-molv',
+                shade: 0.6,
+                area: ['30%', '31%'],
+                content: $('#selectDistributor'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                end: function () {
+                    $("#selectDistributor").hide();
+                }
+            });
+            return;
+        },
+        confirmDistributor: function () {
+            if ($("#distributor").val() == "0") {
+                layer.msg("请选择渠道商");
+                return;
+            }
+            var selectContent = $('#myTable').bootstrapTable('getSelections');
+            $.post(CTX + '/SiteLease/DivideOrder', {
+                selectContent: selectContent,
+                distributor: $("#distributor").val(),
+                len: selectContent.length
+            }, function (data) {
+                if (data.code == "1") {
+                    layer.msg("成功");
+                    layer.close(index1);
+                    $("#myTable").bootstrapTable("refresh");
                     return;
                 }
-                $.post(CTX + "/SiteLease/Recharge", {
-                    userid: userid,
-                    website: website,
-                    SumMoney: pass
-                }, function (data) {
-                    if (data.code == "1") {
-                        layer.msg("成功");
-                        layer.close(index1);
-                        layer.close(index2);
-                        return;
-                    }
-                    else if (data.code == "-1") {
-                        layer.msg(data.message);
-                        return;
-                    }
-                    else {
-                        layer.msg("失败");
-                        return;
-                    }
-                })
-            })
-
+                layer.msg("失败");
+            });
         }
     };
 </script>

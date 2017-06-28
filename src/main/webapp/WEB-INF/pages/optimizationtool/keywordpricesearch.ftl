@@ -57,11 +57,11 @@
                                     </div>
                                     <div class="price_explanation">
                                         <button class="price_anniu font20">批量查询</button>
-                                        </br></br>
-                                        <#--<input type="text" name="rote" id="rote" placeholder="倍率">
-                                        </br>-->
-                                       <#-- </br>
-                                        <button onclick="loopall();">循环所有关键词</button>-->
+                                    <#--</br></br>
+                                    <input type="text" name="rote" id="rote" placeholder="倍率">-->
+                                        </br>
+                                        </br>
+                                        <button onclick="loopall();">循环所有关键词</button>
                                     </div>
                                     <div class="hg10"></div>
                                     <div class="clear"></div>

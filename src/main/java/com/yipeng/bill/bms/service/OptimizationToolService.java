@@ -27,5 +27,8 @@ public interface OptimizationToolService {
     Boolean setOffer(int type, String keywordNum, String dataUser);
 
     Boolean setWebsitePower(Map<String, Object> map);
+
     Boolean setAgentWebsitePower(Map<String, Object> map);
+
+    Map<String, Object> GetKeywordsList(Map<String, Object> map);
 }

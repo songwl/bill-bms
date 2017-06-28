@@ -62,7 +62,6 @@ public class OptimizationToolController extends BaseController {
     }
 
     /**
-     *
      * @param modelMap
      * @return
      */
@@ -70,7 +69,7 @@ public class OptimizationToolController extends BaseController {
     public String ParameterSetting(ModelMap modelMap) {
         LoginUser loginUser = this.getCurrentAccount();
         offerset offerset = offersetMapper.selectByUserId(loginUser.getId());
-        if (!loginUser.hasRole("DISTRIBUTOR") || offerset == null || offerset.getState() != 1) {
+        if ((!loginUser.hasRole("DISTRIBUTOR") && !loginUser.hasRole("AGENT")) || offerset == null || offerset.getState() != 1) {
             return null;
         }
         modelMap.put("user", loginUser);
@@ -78,18 +77,20 @@ public class OptimizationToolController extends BaseController {
         modelMap.put("rote", offerset.getRate());
         return "/optimizationtool/ParameterSetting";
     }
+    @RequestMapping(value = "/KeywordsList")
+    public String KeywordsList(ModelMap modelMap) {
+        LoginUser loginUser = this.getCurrentAccount();
+        return "/optimizationtool/KeywordsList";
+    }
 
     @RequestMapping(value = "/keywordpricesearchClick", method = RequestMethod.POST)
     @ResponseBody
     public ResultMessage keywordpricesearchClick(HttpServletRequest request, @RequestParam(required = true) String keywords) {
         LoginUser loginUser = this.getCurrentAccount();
-        if(loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("COMMISSIONER"))
-        {
+        if (loginUser.hasRole("SUPER_ADMIN") || loginUser.hasRole("COMMISSIONER")) {
             List<KeywordsPrice> list = optimizationToolService.forbiddenWordsList(keywords, 1);
             return this.ajaxDone(1, "", list);
-        }
-        else
-        {
+        } else {
 
             offerset offerset = offersetMapper.selectByUserId(loginUser.getId());
             Pattern pattern = Pattern.compile("^(\\d+(\\.\\d{1,2})?)$");
@@ -113,7 +114,7 @@ public class OptimizationToolController extends BaseController {
     public String RestKeyt() {
         LoginUser loginUser = this.getCurrentAccount();
         offerset offerset = offersetMapper.selectByUserId(loginUser.getId());
-        if (!loginUser.hasRole("DISTRIBUTOR") || offerset == null || offerset.getState() != 1) {
+        if ((!loginUser.hasRole("DISTRIBUTOR") && !loginUser.hasRole("AGENT")) || offerset == null || offerset.getState() != 1) {
             return null;
         }
         String keypt = optimizationToolService.UpdateToken(loginUser);
@@ -129,7 +130,7 @@ public class OptimizationToolController extends BaseController {
         }
         LoginUser loginUser = this.getCurrentAccount();
         offerset offerset = offersetMapper.selectByUserId(loginUser.getId());
-        if (!loginUser.hasRole("DISTRIBUTOR") || offerset == null || offerset.getState() != 1) {
+        if ((!loginUser.hasRole("DISTRIBUTOR") && !loginUser.hasRole("AGENT")) || offerset == null || offerset.getState() != 1) {
             return "-2";
         }
         boolean flag = optimizationToolService.UpdateRote(loginUser, Double.parseDouble(rote));
@@ -140,8 +141,14 @@ public class OptimizationToolController extends BaseController {
     @ResponseBody
     public ResultMessage SetOffer(int type, String keywordNum, String dataUser) {
         LoginUser loginUser = this.getCurrentAccount();
-        if (!loginUser.hasRole("SUPER_ADMIN")) {
+        if (!loginUser.hasRole("SUPER_ADMIN") && !loginUser.hasRole("DISTRIBUTOR")) {
             return this.ajaxDone(-1, "你没有权限", null);
+        }
+        if (loginUser.hasRole("DISTRIBUTOR")) {
+            String RoleName = userMapper.selectRoleName(dataUser);
+            if (!RoleName.equals("AGENT")) {
+                return this.ajaxDone(-2, "所选账号不是代理商", null);
+            }
         }
         if (type != 0 && type != 1) {
             return this.ajaxDone(-2, "异常错误", null);
@@ -162,7 +169,7 @@ public class OptimizationToolController extends BaseController {
             return this.ajaxDone(0, "", null);
         }
         return this.ajaxDone(1, offerset.getRequestsecond().toString(), null);
-}
+    }
 
     @RequestMapping(value = "/GetOfferAgent", method = RequestMethod.POST)
     @ResponseBody
@@ -177,6 +184,7 @@ public class OptimizationToolController extends BaseController {
         }
         return this.ajaxDone(1, offerset.getRequestsecond().toString(), null);
     }
+
     @RequestMapping(value = "/OpenWebsitePower", method = RequestMethod.POST)
     @ResponseBody
     public ResultMessage OpenWebsitePower(HttpServletRequest httpServletRequest) {
@@ -214,5 +222,19 @@ public class OptimizationToolController extends BaseController {
         map1.put("type", type);
         boolean flag = optimizationToolService.setAgentWebsitePower(map1);
         return this.ajaxDone(flag ? 1 : 0, "", null);
+    }
+
+    @RequestMapping(value = "/GetKeywordsList", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> GetKeywordsList(int limit, int offset) {
+        LoginUser loginUser = this.getCurrentAccount();
+        if (!loginUser.hasRole("SUPER_ADMIN")) {
+            return null;
+        }
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        params.put("limit", limit);
+        params.put("offset", offset);
+        Map<String, Object> modelMap = optimizationToolService.GetKeywordsList(params);
+        return modelMap;
     }
 }

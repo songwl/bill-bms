@@ -1,10 +1,12 @@
 package com.yipeng.bill.bms.service;
 
 import com.yipeng.bill.bms.core.model.ResultMessage;
+import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.domain.orderLease;
 import com.yipeng.bill.bms.model.HallDetails;
 import com.yipeng.bill.bms.vo.LoginUser;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -21,5 +23,15 @@ public interface SiteLeaseService {
 
     ResultMessage DivideOrder(Map<String, Object> map);
 
-    ResultMessage ReserveOrder(String website,int type,LoginUser loginUser);
+    ResultMessage ReserveOrder(String website, int type, LoginUser loginUser);
+
+    List<User> GetReserve(String website, LoginUser loginUser);
+
+    int Recharge(Map<String, Object> map, BigDecimal sumMoney, LoginUser loginUser);
+
+    Map<String, Object> CustomerGetMission(Map<String, Object> params, LoginUser loginUser);
+
+    Map<String, Object> OrderDetails(Map<String, Object> params, LoginUser loginUser);
+
+    int Ordering(Long[] arr,String website, LoginUser loginUser);
 }

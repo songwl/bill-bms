@@ -7,6 +7,8 @@
     <result column="allotId" jdbcType="BIGINT" property="allotid" />
     <result column="receiveId" jdbcType="BIGINT" property="receiveid" />
     <result column="reserveId" jdbcType="VARCHAR" property="reserveid" />
+    <result column="customerId" jdbcType="VARCHAR" property="customerid" />
+    <result column="keywordState" jdbcType="INTEGER" property="keywordstate" />
     <result column="orderState" jdbcType="INTEGER" property="orderstate" />
     <result column="website" jdbcType="VARCHAR" property="website" />
     <result column="keywords" jdbcType="VARCHAR" property="keywords" />
@@ -30,11 +32,11 @@
     <result column="time" jdbcType="TIMESTAMP" property="time"/>
   </resultMap>
   <sql id="Base_Column_List">
-    id, orderId, allotId, receiveId, reserveId, orderState, website, keywords, createTime, 
-    allotTime, reserveTime
+    id, orderId, allotId, receiveId, reserveId, customerId, keywordState, orderState,
+    website, keywords, createTime, allotTime, reserveTime
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from orderlease
     where id = #{id,jdbcType=BIGINT}
@@ -44,14 +46,16 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.yipeng.bill.bms.domain.orderLease">
-    insert into orderlease (id, orderId, allotId, 
-      receiveId, reserveId, orderState, 
-      website, keywords, createTime, 
-      allotTime, reserveTime)
-    values (#{id,jdbcType=BIGINT}, #{orderid,jdbcType=BIGINT}, #{allotid,jdbcType=BIGINT}, 
-      #{receiveid,jdbcType=BIGINT}, #{reserveid,jdbcType=VARCHAR}, #{orderstate,jdbcType=INTEGER},
-      #{website,jdbcType=VARCHAR}, #{keywords,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
-      #{allottime,jdbcType=TIMESTAMP}, #{reservetime,jdbcType=TIMESTAMP})
+    insert into orderlease (id, orderId, allotId,
+    receiveId, reserveId, customerId,
+    keywordState, orderState, website,
+    keywords, createTime, allotTime,
+    reserveTime)
+    values (#{id,jdbcType=BIGINT}, #{orderid,jdbcType=BIGINT}, #{allotid,jdbcType=BIGINT},
+    #{receiveid,jdbcType=BIGINT}, #{reserveid,jdbcType=VARCHAR}, #{customerid,jdbcType=VARCHAR},
+    #{keywordstate,jdbcType=INTEGER}, #{orderstate,jdbcType=INTEGER}, #{website,jdbcType=VARCHAR},
+    #{keywords,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{allottime,jdbcType=TIMESTAMP},
+    #{reservetime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.orderLease">
     insert into orderlease
@@ -70,6 +74,12 @@
       </if>
       <if test="reserveid != null">
         reserveId,
+      </if>
+      <if test="customerid != null">
+        customerId,
+      </if>
+      <if test="keywordstate != null">
+        keywordState,
       </if>
       <if test="orderstate != null">
         orderState,
@@ -106,6 +116,12 @@
       <if test="reserveid != null">
         #{reserveid,jdbcType=VARCHAR},
       </if>
+      <if test="customerid != null">
+        #{customerid,jdbcType=VARCHAR},
+      </if>
+      <if test="keywordstate != null">
+        #{keywordstate,jdbcType=INTEGER},
+      </if>
       <if test="orderstate != null">
         #{orderstate,jdbcType=INTEGER},
       </if>
@@ -141,6 +157,12 @@
       <if test="reserveid != null">
         reserveId = #{reserveid,jdbcType=VARCHAR},
       </if>
+      <if test="customerid != null">
+        customerId = #{customerid,jdbcType=VARCHAR},
+      </if>
+      <if test="keywordstate != null">
+        keywordState = #{keywordstate,jdbcType=INTEGER},
+      </if>
       <if test="orderstate != null">
         orderState = #{orderstate,jdbcType=INTEGER},
       </if>
@@ -165,15 +187,17 @@
   <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.orderLease">
     update orderlease
     set orderId = #{orderid,jdbcType=BIGINT},
-      allotId = #{allotid,jdbcType=BIGINT},
-      receiveId = #{receiveid,jdbcType=BIGINT},
-      reserveId = #{reserveid,jdbcType=VARCHAR},
-      orderState = #{orderstate,jdbcType=INTEGER},
-      website = #{website,jdbcType=VARCHAR},
-      keywords = #{keywords,jdbcType=VARCHAR},
-      createTime = #{createtime,jdbcType=TIMESTAMP},
-      allotTime = #{allottime,jdbcType=TIMESTAMP},
-      reserveTime = #{reservetime,jdbcType=TIMESTAMP}
+    allotId = #{allotid,jdbcType=BIGINT},
+    receiveId = #{receiveid,jdbcType=BIGINT},
+    reserveId = #{reserveid,jdbcType=VARCHAR},
+    customerId = #{customerid,jdbcType=VARCHAR},
+    keywordState = #{keywordstate,jdbcType=INTEGER},
+    orderState = #{orderstate,jdbcType=INTEGER},
+    website = #{website,jdbcType=VARCHAR},
+    keywords = #{keywords,jdbcType=VARCHAR},
+    createTime = #{createtime,jdbcType=TIMESTAMP},
+    allotTime = #{allottime,jdbcType=TIMESTAMP},
+    reserveTime = #{reservetime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="selectAllCount" resultType="java.lang.Long">
@@ -191,6 +215,12 @@
     select COUNT(*) from (
     select website from orderlease
     where receiveId = #{receiveId,jdbcType=BIGINT}
+    group by website) aa
+  </select>
+  <select id="selectByReserveIdCount" resultType="java.lang.Long">
+    select COUNT(*) from (
+    select website from orderlease
+    where reserveId = #{reserveId,jdbcType=BIGINT} and orderstate=4
     group by website) aa
   </select>
   <select id="selectAll" resultType="java.util.HashMap">
@@ -215,6 +245,15 @@
     id,website,createTime as time,orderstate,receiveId,reserveId
     from orderlease
     where receiveId = #{receiveId,jdbcType=BIGINT}
+    group by website
+    order by id DESC
+    LIMIT #{offset},#{limit}
+  </select>
+  <select id="selectByReserveId" resultType="java.util.HashMap">
+    select
+    id,website,createTime as time,orderstate,receiveId,reserveId
+    from orderlease
+    where reserveId = #{reserveId,jdbcType=BIGINT} and orderstate=4
     group by website
     order by id DESC
     LIMIT #{offset},#{limit}
@@ -246,12 +285,35 @@
     on o.keywords=k.Keywords
     where o.website = #{website,jdbcType=VARCHAR}
   </select>
+  <select id="selectOrderDetailsByWebsiteCount" resultType="java.lang.Integer">
+    select COUNT(*)
+    from orderlease as o
+    join t_bill as b
+    on o.orderId=b.id
+    join keywords_price as k
+    on o.keywords=k.Keywords
+    where o.website = #{website,jdbcType=VARCHAR}
+  </select>
+  <select id="selectOrderDetailsByWebsite" resultType="java.util.HashMap">
+    select o.id as id,o.orderId as orderId,o.keywordState as keywordState,o.website as website,o.keywords as  keywords,b.first_ranking as firstRanking,b.new_ranking as
+    newRanking,o.createTime as time, #{rote,jdbcType=INTEGER}*k.PriceBaiduPc as PriceBaiduPc,#{rote,jdbcType=INTEGER}
+    *k.PriceBaiduWap as PriceBaiduWap,
+    #{rote,jdbcType=INTEGER}*k.PriceSogouPc as PriceSogouPc, #{rote,jdbcType=INTEGER}*k.PriceSoPc as PriceSoPc,
+    #{rote,jdbcType=INTEGER}*k.PriceSm as PriceSm
+    from orderlease as o
+    join t_bill as b
+    on o.orderId=b.id
+    join keywords_price as k
+    on o.keywords=k.Keywords
+    where o.website = #{website,jdbcType=VARCHAR}
+    LIMIT #{offset},#{limit}
+  </select>
   <select id="selectReserveByWebsite" resultMap="BaseResultMap">
-  select *
-  from orderlease
-  where website = #{website,jdbcType=VARCHAR}
-  group by website
-</select>
+    select *
+    from orderlease
+    where website = #{website,jdbcType=VARCHAR}
+    group by website
+  </select>
 
   <update id="updateByWebsite" parameterType="com.yipeng.bill.bms.domain.orderLease">
     update orderlease
@@ -267,6 +329,12 @@
       </if>
       <if test="reserveid != null">
         reserveId = #{reserveid,jdbcType=VARCHAR},
+      </if>
+      <if test="customerid != null">
+        customerId = #{customerid,jdbcType=VARCHAR},
+      </if>
+      <if test="keywordstate != null">
+        keywordState = #{keywordstate,jdbcType=INTEGER},
       </if>
       <if test="orderstate != null">
         orderState = #{orderstate,jdbcType=INTEGER},
@@ -291,5 +359,50 @@
     <foreach item="item" index="index" collection="arr" open="(" separator="," close=")">
       #{item}
     </foreach>
+  </update>
+  <update id="updateByWebsiteNoReserve" parameterType="com.yipeng.bill.bms.domain.orderLease">
+    update orderlease
+    <set>
+      <if test="orderid != null">
+        orderId = #{orderid,jdbcType=BIGINT},
+      </if>
+      <if test="allotid != null">
+        allotId = #{allotid,jdbcType=BIGINT},
+      </if>
+      <if test="receiveid != null">
+        receiveId = #{receiveid,jdbcType=BIGINT},
+      </if>
+      <if test="reserveid != null">
+        reserveId = #{reserveid,jdbcType=VARCHAR},
+      </if>
+      <if test="customerid != null">
+        customerId = #{customerid,jdbcType=VARCHAR},
+      </if>
+      <if test="keywordstate != null">
+        keywordState = #{keywordstate,jdbcType=INTEGER},
+      </if>
+      <if test="orderstate != null">
+        orderState = #{orderstate,jdbcType=INTEGER},
+      </if>
+      <if test="website != null">
+        website = #{website,jdbcType=VARCHAR},
+      </if>
+      <if test="keywords != null">
+        keywords = #{keywords,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="allottime != null">
+        allotTime = #{allottime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reservetime != null">
+        reserveTime = #{reservetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where website in
+    <foreach item="item" index="index" collection="arr" open="(" separator="," close=")">
+      #{item}
+    </foreach> and orderState !=4
   </update>
 </mapper>

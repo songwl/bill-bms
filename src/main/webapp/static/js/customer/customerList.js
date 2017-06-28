@@ -566,9 +566,11 @@ var TableInit = function () {
                             a = "<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='refund'>退款</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
-                                "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   " ;
-                                /*"<span style='color:#4382CF;cursor:pointer;' id='websiteLeaseSet'>网租设置</span>   " +
-                                "<span style='color:#4382CF;cursor:pointer;' id='OfferSetUpAgent' data-user='" + value + "'>报价设置</span>  "*/
+                                "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   " +
+                                "<span style='color:#4382CF;cursor:pointer;' id='websiteLeaseSet'>网租设置</span>   ";
+                            if (row.kehuRoleName == "代理商") {
+                                a += "<span style='color:#4382CF;cursor:pointer;' id='OfferSetUpAgent' data-user='" + value + "'>报价设置</span>   "
+                            }
                         }
                         else {
                             a = "<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
@@ -755,7 +757,7 @@ var TableInit = function () {
             });
         },
         'click #websiteLeaseSet': function (e, value, row, index) {
-            layer.confirm('是否开通已该代理商的网站出租平台权限？', {
+            layer.confirm('是否开通该代理商的网站出租平台权限？', {
                 btn: ['开通', '关闭'] //按钮
             }, function () {
                 $.post(CTX + '/optimizationTool/OpenAgentWebsitePower', {

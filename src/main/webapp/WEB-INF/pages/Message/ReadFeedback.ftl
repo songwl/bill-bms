@@ -93,7 +93,7 @@
                         <div class="mail-body">
                             <div class="user_left">
                                 <img src="${ctx}/static/img/timg.jpg" width="50" height="50" alt=""><br>对方<br><span
-                                    class="tw_time">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span>z
+                                    class="tw_time">${item.replytime?string("yyyy-MM-dd HH:mm:ss")}</span>
                             </div>
                             <div style="max-width: 80%" class="replyleft">
                                 <span style="">${item.replycontent}</span>
@@ -146,6 +146,14 @@
         <i class="glyphicon glyphicon-repeat"></i></a>
 </div>
 <style type="text/css">
+    .mail-box .mail-body {
+        height: 140px;
+    }
+
+    .mail-box  .tooltip-demo {
+        height: auto;
+    }
+
     .replyleft {
         max-width: 80%;
         display: inline-block;
@@ -207,6 +215,7 @@
             }
         })
     }
+
     //setInterval('MailNum()', 500);
     function ReMailNum() {
         $.ajax({
@@ -216,6 +225,7 @@
             }
         })
     }
+
     //setInterval('ReMailNum()', 500);
 
     $(function () {

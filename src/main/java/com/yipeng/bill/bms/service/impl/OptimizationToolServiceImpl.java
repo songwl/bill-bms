@@ -133,6 +133,12 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
             if (CollectionUtils.isEmpty(keywords)) {
                 break;
             }
+            try {
+                Thread thread = Thread.currentThread();
+                thread.sleep(30000);//暂停30秒
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
             //调用接口
             long time = (long) (System.currentTimeMillis() / 1000);
             String action = "AddSearchTask";
@@ -324,6 +330,16 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
             int num = offersetMapper.updateByPrimaryKeySelective(offerset);
             return num > 0;
         }
+    }
+
+    @Override
+    public Map<String, Object> GetKeywordsList(Map<String, Object> map) {
+        long total = keywordsPriceMapper.selectAllKeywordsCount(map);
+        List<Map<String, Object>> mapList = keywordsPriceMapper.selectAllKeywords(map);
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("total", total);
+        map1.put("rows", mapList);
+        return map1;
     }
 
 

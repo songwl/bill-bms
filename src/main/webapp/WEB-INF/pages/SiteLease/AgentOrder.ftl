@@ -144,6 +144,12 @@
                                         }
                                         else if (value == "3") {
                                             return "已预定";
+                                        } else if (value == "4") {
+                                            if(row.reserveId==#{userId})
+                                            {
+                                                return "已由我预定";
+                                            }
+                                            return "已完成预定";
                                         }
                                         return value;
                                     }
@@ -156,9 +162,7 @@
                                     events: operateEvents,
                                     formatter: function (value, row, index) {
                                         var a = "<a style='color: #ff0000;' id='details'>详情</a>&nbsp;&nbsp;";
-                                        if (row.orderstate != 3) {
-                                            a += "<a style='color: #ff0000;' id='reserve'>预定</a>";
-                                        } else {
+                                        if (row.orderstate == 3) {
                                             var flag = false;
                                             var arr = row.reserveId.split(",");
                                             for (var i = 0; i < arr.length; i++) {
@@ -172,6 +176,8 @@
                                             } else {
                                                 a += "<a style='color: #ff0000;' id='reserve'>预定</a>";
                                             }
+                                        } else if (row.orderstate == 2) {
+                                            a += "<a style='color: #ff0000;' id='reserve'>预定</a>";
                                         }
                                         return a;
                                     }

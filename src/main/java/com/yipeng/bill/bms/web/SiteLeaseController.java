@@ -1,7 +1,9 @@
 package com.yipeng.bill.bms.web;
 
+import com.sun.org.apache.regexp.internal.RE;
 import com.yipeng.bill.bms.core.model.ResultMessage;
 import com.yipeng.bill.bms.dao.UserMapper;
+import com.yipeng.bill.bms.dao.orderLeaseMapper;
 import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.domain.orderLease;
 import com.yipeng.bill.bms.model.HallDetails;
@@ -15,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/SiteLease")
@@ -27,6 +27,8 @@ public class SiteLeaseController extends BaseController {
     private SiteLeaseService siteLeaseService;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private orderLeaseMapper orderLeaseMapper;
 
 
     /**
@@ -69,6 +71,44 @@ public class SiteLeaseController extends BaseController {
         LoginUser loginUser = this.getCurrentAccount();
         modelMap.put("userId", loginUser.getId());
         return "/SiteLease/AgentOrder";
+    }
+
+    /**
+     * 客户任务大厅
+     *
+     * @param modelMap
+     * @return
+     */
+    @RequestMapping(value = "/CustomerOrder", method = RequestMethod.GET)
+    public String CustomerOrder(ModelMap modelMap) {
+        LoginUser loginUser = this.getCurrentAccount();
+        modelMap.put("userId", loginUser.getId());
+        return "/SiteLease/CustomerOrder";
+    }
+
+    @RequestMapping(value = "/OrderDetails", method = RequestMethod.GET)
+    public String OrderDetails(HttpServletRequest httpServletRequest, ModelMap modelMap) {
+        Map<String, String[]> param = httpServletRequest.getParameterMap();
+        LoginUser loginUser = this.getCurrentAccount();
+        modelMap.put("userId", loginUser.getId());
+        modelMap.put("website", param.get("website")[0].toString());
+        return "/SiteLease/OrderDetails";
+    }
+
+    /**
+     * 专员分配订单
+     *
+     * @return
+     */
+    @RequestMapping(value = "/AllotOrder", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage AllotOrder(HttpServletRequest httpServletRequest) {
+        LoginUser loginUser = this.getCurrentAccount();
+        if (!loginUser.hasRole("COMMISSIONER")) {
+            return this.ajaxDone(-1, "你没有权限", null);
+        }
+        //boolean flag=siteLeaseService.GetMission()
+        return this.ajaxDone(1, "", null);
     }
 
     /**
@@ -228,5 +268,106 @@ public class SiteLeaseController extends BaseController {
         }
         ResultMessage resultMessage = siteLeaseService.ReserveOrder(website, type, loginUser);
         return resultMessage;
+    }
+
+    /**
+     * 获取预定人数
+     *
+     * @param website
+     * @return
+     */
+    @RequestMapping(value = "/GetReserve", method = RequestMethod.POST)
+    @ResponseBody
+    public List<User> GetReserve(String website) {
+        LoginUser loginUser = this.getCurrentAccount();
+        if (!loginUser.hasRole("DISTRIBUTOR")) {
+            return null;
+        }
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        params.put("website", website);
+        List<User> modelMap = siteLeaseService.GetReserve(website, loginUser);
+        return modelMap;
+    }
+
+    @RequestMapping(value = "/Recharge", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage Recharge(String userid, String website, String SumMoney) {
+        LoginUser loginUser = this.getCurrentAccount();
+        if (!loginUser.hasRole("DISTRIBUTOR")) {
+            return this.ajaxDone(-1, "你没有权限", null);
+        }
+        orderLease orderLease = orderLeaseMapper.selectReserveByWebsite(website);
+        if (orderLease == null || orderLease.getOrderstate() != 3) {
+            return this.ajaxDone(-3, "该订单状态不允许充值", null);
+        }
+        BigDecimal sumMoney = new BigDecimal("0");
+        try {
+            BigDecimal bd = new BigDecimal(SumMoney);
+            sumMoney = bd.setScale(2);
+        } catch (Exception ex) {
+            return this.ajaxDone(-4, "金额输入错误", null);
+        }
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        String[] arr = {website};
+        params.put("arr", arr);
+        params.put("reserveid", userid);
+        params.put("orderstate", 4);
+        int a = siteLeaseService.Recharge(params, sumMoney, loginUser);
+        return this.ajaxDone(a, "", null);
+    }
+
+    @RequestMapping(value = "/CustomerGetMission", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> CustomerGetMission(int limit, int offset) {
+        LoginUser loginUser = this.getCurrentAccount();
+        if (!loginUser.hasRole("CUSTOMER")) {
+            return null;
+        }
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        params.put("limit", limit);
+        params.put("offset", offset);
+        Map<String, Object> modelMap = siteLeaseService.CustomerGetMission(params, loginUser);
+        return modelMap;
+    }
+
+    @RequestMapping(value = "/GetOrderDetails", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> GetOrderDetails(int limit, int offset, String website) {
+        LoginUser loginUser = this.getCurrentAccount();
+        if (!loginUser.hasRole("CUSTOMER")) {
+            return null;
+        }
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        params.put("limit", limit);
+        params.put("offset", offset);
+        params.put("website", website);
+        Map<String, Object> modelMap = siteLeaseService.OrderDetails(params, loginUser);
+        return modelMap;
+    }
+
+    @RequestMapping(value = "/order", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> order(HttpServletRequest httpServletRequest) {
+        LoginUser loginUser = this.getCurrentAccount();
+        if (!loginUser.hasRole("CUSTOMER")) {
+            return null;
+        }
+        Map<String, String[]> map = httpServletRequest.getParameterMap();
+        int len = Integer.parseInt(map.get("len")[0].toString());
+        Long[] arr = new Long[len];
+        //List<orderLease> leaseList = new ArrayList<>();
+        for (int i = 0; i < len; i++) {
+            /*orderLease orderLease = new orderLease();
+            orderLease.setId(Long.parseLong(map.get("data[" + i + "][id]")[0].toString()));
+            orderLease.setKeywords(map.get("data[" + i + "][keywords]")[0].toString());
+            orderLease.setWebsite(map.get("data[" + i + "][website]")[0].toString());
+            orderLease.setOrderid(Long.parseLong(map.get("data[" + i + "][orderId]")[0].toString()));
+            orderLease.setKeywordstate(Integer.parseInt(map.get("data[" + i + "][keywordState]")[0].toString()));
+            leaseList.add(orderLease);*/
+            arr[i] = Long.parseLong(map.get("data[" + i + "][orderId]")[0].toString());
+        }
+        String website = map.get("data[0][website]")[0].toString();
+        int result = siteLeaseService.Ordering(arr, website,loginUser);
+        return null;
     }
 }

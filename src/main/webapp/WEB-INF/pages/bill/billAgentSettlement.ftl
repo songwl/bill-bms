@@ -25,9 +25,6 @@
 
 </div>
 <div class="row row-bg">
-
-    <#if bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")||bmsModel.user.hasRole("CUSTOMER")>
-
         <div class="col-sm-6 col-md-2 hidden-xs">
             <div class="dashboard-stat blue">
                 <div class="visual">
@@ -40,7 +37,7 @@
                 </div>
             </div>
         </div>
-    </#if>
+
 
     <div class="col-sm-6 col-md-2 hidden-xs">
         <div class="dashboard-stat blue">
@@ -400,7 +397,7 @@
         //初始化Table
         oTableInit.Init = function () {
             $('#myTable').bootstrapTable({
-                url:CTX+ '/order/billClientDayCost',         //请求后台的URL（*）
+                url:CTX+ '/order/billAgentDayCost',         //请求后台的URL（*）
                 method: 'get',                      //请求方式（*）
                 toolbar: '#toolbar',                //工具按钮用哪个容器
                 striped: true,                      //是否显示行间隔色

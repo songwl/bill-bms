@@ -16,6 +16,7 @@ var newchange2=null;
 var addTime1=null;
 var addTime2=null;
 var groupId=null;
+var standardDays = null;
 $(document).ready(function () {
 
     //优化调整（显示）
@@ -232,6 +233,13 @@ $(document).ready(function () {
         else
         {
             searchStandard=null;
+        }
+        if ($("#standardDays").val() != "")//关键词
+        {
+            standardDays = $.trim($("#standardDays").val())
+        }
+        else {
+            standardDays = null;
         }
         if($("#firstRanking1").val()!="")//初排1
         {
@@ -687,7 +695,8 @@ var TableInit = function () {
             newchange2:newchange2,
             addTime1:addTime1,
             addTime2:addTime2,
-            groupId:groupId
+            groupId:groupId,
+            standardDays: standardDays
         };
         return temp;
     }

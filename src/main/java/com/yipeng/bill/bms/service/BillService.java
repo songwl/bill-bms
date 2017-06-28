@@ -238,8 +238,9 @@ public interface BillService {
 
     Map<String,Object> billDayCost(LoginUser loginUser, String searchTime);
 
-    Map<String,Object> billClientDayCost(LoginUser loginUser);//今日消费
+    Map<String,Object> billClientDayCost(LoginUser loginUser);//客户今日消费
 
+    Map<String,Object> billAgentDayCost(LoginUser loginUser);//代理商今日消费
     int pendingAuditView1ListCmt(Map<String, String[]> params, LoginUser user);//客户提交的订单
 
     //.创建分组

@@ -566,9 +566,9 @@ var TableInit = function () {
                             a = "<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='refund'>退款</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
-                                "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   " +
-                                "<span style='color:#4382CF;cursor:pointer;' id='websiteLeaseSet'>网租设置</span>   " +
-                                "<span style='color:#4382CF;cursor:pointer;' id='OfferSetUpAgent' data-user='" + value + "'>报价设置</span>   ";
+                                "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   " ;
+                                /*"<span style='color:#4382CF;cursor:pointer;' id='websiteLeaseSet'>网租设置</span>   " +
+                                "<span style='color:#4382CF;cursor:pointer;' id='OfferSetUpAgent' data-user='" + value + "'>报价设置</span>  "*/
                         }
                         else {
                             a = "<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +

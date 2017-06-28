@@ -277,6 +277,11 @@
                                     </a>
                                 </li>
                                 <li>
+                                    <a href="${ctx}/order/billOptimizationSettlement">
+                                        渠道商结算
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="${ctx}/order/billApplyStop">
                                         停单待审核
                                     </a>
@@ -287,12 +292,17 @@
 					<#if bmsModel.user.hasRole("AGENT")>
                         <li class="" style="border-bottom: 1px solid #3d3d3d;">
                             <a href="javascript:;">
-                                <i class="fa fa-star-o"></i><span class="title"> 客户管理 </span><span class="arrow "></span>
+                                <i class="fa fa-star-o"></i><span class="title"> 客户方管理 </span><span class="arrow "></span>
                             </a>
                             <ul class="sub-menu" style="background: #293038;">
                                 <li>
                                     <a href="${ctx}/order/billCustomer">
                                         关键词排名
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="${ctx}/order/billClientSideSettlement">
+                                        客户方结算
                                     </a>
                                 </li>
                                 <li>

@@ -169,7 +169,7 @@ public class BillController extends BaseController {
                                                    String website, String keywords, String searchName, String searchUserName,
                                                    String state, String searchStandard, String firstRanking1, String firstRanking2
                                                      , String newRanking1, String newRanking2, String newchange1, String newchange2,
-                                                   String addTime1, String addTime2,String groupId) {
+                                                   String addTime1, String addTime2,String groupId,String standardDays) {
         offset = (offset - 1) * limit;
         Map<String, Object> params = this.getSearchRequest(); //查询参数
         LoginUser loginUser = this.getCurrentAccount();
@@ -223,6 +223,9 @@ public class BillController extends BaseController {
         }
         if (!newchange1.isEmpty() && Integer.parseInt(newchange1) > 0) {
             params.put("newchange1", newchange1);
+        }
+        if (!standardDays.isEmpty()) {
+            params.put("standardDays", standardDays);
         }
         if (!newchange2.isEmpty() && Integer.parseInt(newchange2) > 0) {
             params.put("newchange2", newchange2);
@@ -1488,7 +1491,7 @@ public class BillController extends BaseController {
     }
 
     /**
-     * 今日消费
+     * 客户今日消费
      *
      * @param
      * @param
@@ -1500,11 +1503,28 @@ public class BillController extends BaseController {
 
         Map<String, Object> params = this.getSearchRequest(); //查询参数
         LoginUser loginUser = this.getCurrentAccount();
-
         Map<String, Object> modelMap = billService.billClientDayCost(loginUser);
         return modelMap;
 
     }
+    /**
+     * 今日消费
+     *
+     * @param
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/billAgentDayCost")
+    @ResponseBody
+    public Map<String, Object> billAgentDayCost( String sortOrder, String sortName) {
+
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> modelMap = billService.billAgentDayCost(loginUser);
+        return modelMap;
+
+    }
+
     /**
      * 优化结算(用户余额)     *
      * @param

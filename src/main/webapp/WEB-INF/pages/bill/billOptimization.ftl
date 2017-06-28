@@ -73,7 +73,12 @@
             <option value="1">是</option>
             <option value="0">否</option>
         </select>
-
+        <div style="width:70px;">
+            达标天数:
+        </div>
+        <input id="standardDays" name="standardDays" class="form-control" value="" style="width: 50px;" type="text"
+               onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+               onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
     </div>
     <div class="nav_R2 right col-md-11" >
             <span style="font-size:13px;text-align:center;cursor:pointer;font-weight:bold;margin-left: 10px;">
@@ -109,6 +114,7 @@
         <input id="addTime1" name="addTime1" class="form-control" value="" style="width: 150px;padding: 0 10px;" type="text" placeholder="格式：2017-1-1">
         <div style="width: 15px;">-</div>
         <input id="addTime2" name="addTime2" class="form-control" value="" style="width: 150px;padding: 0 10px;" type="text" placeholder="格式：2017-1-1">
+
         <span id="searchButton">查询</span>
     </div>
     <div class="cls">

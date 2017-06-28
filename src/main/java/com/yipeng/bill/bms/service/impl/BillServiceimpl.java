@@ -3486,6 +3486,53 @@ public class BillServiceimpl implements BillService {
         return map;
     }
 
+    @Override
+    public Map<String, Object> billAgentDayCost(LoginUser loginUser) {
+        //获取渠道商的客户和代理商
+        List<User> userList = new ArrayList<>();
+        Map<String, Object> params = new HashMap<>();
+        if (loginUser.hasRole("ASSISTANT")) {
+            params.put("InUserId", loginUser.getCreateUserId());
+            userList = userMapper.getUserByCreateId(loginUser.getCreateUserId());
+        } else {
+            params.put("InUserId", loginUser.getId());
+            userList = userMapper.getUserByCreateId(loginUser.getId());
+        }
+
+        List<FundItemSum> fundItemSumList = new ArrayList<>();
+        Long i = new Long(0);
+        for (User item : userList
+                ) {
+            //判断角色
+            UserRole userRole = userRoleMapper.selectByUserId(item.getId());
+            Role role = roleMapper.selectByPrimaryKey(userRole.getRoleId());
+            if (role.getRoleCode().equals("AGENT")) {
+                i++;
+                params.put("OutUserId", userRole.getUserId());
+                Double sumDay = billCostMapper.selectByBillClientDayCost(params);
+                Double sumMonth = billCostMapper.selectByBillClientMonthCost(params);
+                FundItemSum fundItemSum = new FundItemSum();
+                fundItemSum.setId(i);
+                fundItemSum.setUserName(item.getUserName());
+                FundAccount fundAccount = fundAccountMapper.selectByUserId(item.getId());
+                if (fundAccount != null) {
+                    fundItemSum.setBalance(fundAccount.getBalance());
+                } else {
+                    fundItemSum.setBalance(new BigDecimal(0));
+                }
+                SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
+                fundItemSum.setChangeTime(sm.format(new Date()));
+                fundItemSum.setChangeAmount(new BigDecimal(sumMonth));
+                fundItemSum.setdayAccountSum(new BigDecimal(sumDay));
+                fundItemSumList.add(fundItemSum);
+
+            }
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("rows", fundItemSumList);
+        return map;
+    }
+
     /**
      * 客户提交的订单
      *

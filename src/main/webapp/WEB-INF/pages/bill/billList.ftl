@@ -509,7 +509,7 @@
         </div>
     </div>
 </div>
-<#-- <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("COMMISSIONER")>
+ <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("COMMISSIONER")>
 <form id= "uploadForm" enctype="multipart/form-data">
    <p >上传文件： <input type="file" name="file"/></p>
    <input type="button" value="上传" onclick="doUpload()" />
@@ -539,6 +539,6 @@
        });
    }
 </script>
-</#if>-->
+</#if>
 <!--详情end-->
 </@base.html>

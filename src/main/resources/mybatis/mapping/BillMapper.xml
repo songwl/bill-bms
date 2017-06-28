@@ -563,10 +563,10 @@
       <if test="sortName =='opstate'">
         ORDER BY a.opstate ${sortOrder}
       </if>
-      <if test="sortName =='allOptimization'">
+      <if test="sortName =='dayOptimization'">
         ORDER BY a.day_optimization ${sortOrder}
       </if>
-      <if test="sortName =='dayOptimization'">
+      <if test="sortName =='allOptimization'">
         ORDER BY a.all_optimization ${sortOrder}
       </if>
     </if>

@@ -11,20 +11,34 @@
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <div class="Navs">
     <div class="nav_L left">
-        <i class="fa fa-home">&nbsp;</i><span>网站出租平台</span> > <span>任务大厅</span>
+        <i class="fa fa-home">&nbsp;</i><span>优化工具</span> > <span>关键词指数查询</span>
     </div>
     <div class="nav_R right" id="divQx">
-
+        <div class="search">
+            <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
+        </div>
     </div>
     <div class="cls">
     </div>
 </div>
+<div class="Navs2">
+    <div class="nav_R2 right" >
+        <div>
+            关键词:
+        </div>
+        <input id="keywords" name="keywords" class="form-control" value="" style="width: 150px;" type="text">
+        <span id="searchButton">查询</span>
+    </div>
+    <div class="cls">
+    </div>
+</div>
+
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-primary" id="list-panel" style="border-color: #eeeeee;">
             <div class="panel-body">
                 <div class="panel-nav">
-                    <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;大厅任务
+                    <div class="Nav_Left">&nbsp;<i class="fa fa-paper-plane"></i>&nbsp;关键词指数查询
                     </div>
                     <div class="Nav_Right">
 
@@ -44,6 +58,28 @@
 </div>
 
 <script type="text/javascript">
+    //显示搜索内容
+    $(".search").click(function () {
+        if ($(".Navs2").css("display") == "block") {
+            $(".Navs2").slideUp();
+        }
+        else {
+            $(".Navs2").slideDown();
+
+        }
+    })
+    var keywords=null;
+    $("#searchButton").click(function () {
+        if($("#keywords").val()!="")
+        {
+            keywords=$("#keywords").val();
+        }
+        else
+        {
+            keywords=null;
+        }
+        $('#myTable').bootstrapTable('refresh');
+    })
     var index1;
     $(function () {
         MissionHall.init();
@@ -202,7 +238,8 @@
             oTableInit.queryParams = function (params) {
                 var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
                     limit: params.limit,   //页面大小
-                    offset: params.offset  //页码
+                    offset: params.offset,  //页码
+                    keywords:keywords
                 };
                 return temp;
             };
@@ -210,11 +247,4 @@
         }
     };
 </script>
-
-
-
-
-
-
-
 </@base.html>

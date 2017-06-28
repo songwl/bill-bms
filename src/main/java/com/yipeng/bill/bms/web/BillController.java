@@ -167,9 +167,9 @@ public class BillController extends BaseController {
     @ResponseBody
     public Map<String, Object> getBillOptimization(int limit, int offset, int way, String sortOrder, String sortName,
                                                    String website, String keywords, String searchName, String searchUserName,
-                                                   String state, String searchStandard, String firstRanking1, String firstRanking2
+                                                   String state,  String firstRanking1, String firstRanking2
                                                      , String newRanking1, String newRanking2, String newchange1, String newchange2,
-                                                   String addTime1, String addTime2,String groupId,String standardDays) {
+                                                   String addTime1, String addTime2,String groupId,String standardDays1,String standardDays2) {
         offset = (offset - 1) * limit;
         Map<String, Object> params = this.getSearchRequest(); //查询参数
         LoginUser loginUser = this.getCurrentAccount();
@@ -201,9 +201,6 @@ public class BillController extends BaseController {
             params.put("state", state);
         }
 
-        if (!searchStandard.isEmpty()) {
-            params.put("searchStandard", searchStandard);
-        }
         if (sortName != null) {
             params.put("sortName", sortName);
             params.put("sortOrder", sortOrder);
@@ -224,8 +221,11 @@ public class BillController extends BaseController {
         if (!newchange1.isEmpty() && Integer.parseInt(newchange1) > 0) {
             params.put("newchange1", newchange1);
         }
-        if (!standardDays.isEmpty()) {
-            params.put("standardDays", standardDays);
+        if (!standardDays1.isEmpty()) {
+            params.put("standardDays1", standardDays1);
+        }
+        if (!standardDays2.isEmpty()) {
+            params.put("standardDays2", standardDays2);
         }
         if (!newchange2.isEmpty() && Integer.parseInt(newchange2) > 0) {
             params.put("newchange2", newchange2);

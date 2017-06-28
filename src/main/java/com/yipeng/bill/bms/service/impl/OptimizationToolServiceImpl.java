@@ -135,7 +135,7 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
             }
             try {
                 Thread thread = Thread.currentThread();
-                thread.sleep(30000);//暂停30秒
+                thread.sleep(15000);//暂停30秒
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }

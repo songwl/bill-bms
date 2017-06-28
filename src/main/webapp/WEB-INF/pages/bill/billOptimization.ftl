@@ -65,20 +65,17 @@
                     <option value="${user.id}">${user.userName}</option>
                 </#list>
             </select>
-        <span style="font-size:13px;text-align:center;cursor:pointer;font-weight:bold;margin-left: 10px;">
-            今日达标:
-        </span>
-        <select style="height: 35px;border: 1px solid #aaaaaa;" id="searchStandard">
-            <option>--请选择--</option>
-            <option value="1">是</option>
-            <option value="0">否</option>
-        </select>
+
         <div style="width:70px;">
             达标天数:
         </div>
-        <input id="standardDays" name="standardDays" class="form-control" value="" style="width: 50px;" type="text"
-               onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
-               onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
+        <input id="standardDays1" name="standardDays1" class="form-control" value="" style="width: 50px;" type="text"
+               onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+               onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
+        <div style="width: 15px;">-</div>
+        <input id="standardDays2" name="standardDays2" class="form-control" value="" style="width: 50px;" type="text"
+               onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+               onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
     </div>
     <div class="nav_R2 right col-md-11" >
             <span style="font-size:13px;text-align:center;cursor:pointer;font-weight:bold;margin-left: 10px;">

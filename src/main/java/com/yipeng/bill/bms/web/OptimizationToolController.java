@@ -226,7 +226,7 @@ public class OptimizationToolController extends BaseController {
 
     @RequestMapping(value = "/GetKeywordsList", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String, Object> GetKeywordsList(int limit, int offset) {
+    public Map<String, Object> GetKeywordsList(int limit, int offset,String keywords) {
         LoginUser loginUser = this.getCurrentAccount();
         if (!loginUser.hasRole("SUPER_ADMIN")) {
             return null;
@@ -234,6 +234,15 @@ public class OptimizationToolController extends BaseController {
         Map<String, Object> params = this.getSearchRequest(); //查询参数
         params.put("limit", limit);
         params.put("offset", offset);
+
+        if (!keywords.isEmpty()) {
+            try {
+                keywords = new String(keywords.getBytes("ISO-8859-1"), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            params.put("keywords", keywords);
+        }
         Map<String, Object> modelMap = optimizationToolService.GetKeywordsList(params);
         return modelMap;
     }

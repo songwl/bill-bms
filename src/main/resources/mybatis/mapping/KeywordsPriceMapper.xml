@@ -280,11 +280,19 @@
     select
     COUNT(*)
     from keywords_price
+    WHERE  1=1
+    <if test="keywords != null">
+      AND Keywords = #{keywords,jdbcType=VARCHAR}
+    </if>
   </select>
   <select id="selectAllKeywords"  resultType="java.util.HashMap">
     select
     *
     from keywords_price
+    WHERE  1=1
+    <if test="keywords != null">
+     AND Keywords = #{keywords,jdbcType=VARCHAR}
+    </if>
     LIMIT #{offset},#{limit}
   </select>
 </mapper>

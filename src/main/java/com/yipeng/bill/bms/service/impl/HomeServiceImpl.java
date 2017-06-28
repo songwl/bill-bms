@@ -41,6 +41,8 @@ public class HomeServiceImpl implements HomeService {
      */
     @Override
     public Map<String, Object> homeDetails(LoginUser loginUser) {
+
+
         //转换时间
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM");
@@ -133,9 +135,6 @@ public class HomeServiceImpl implements HomeService {
             }
         }
 
-
-
-
         Map<String, Object> params=new HashMap<>();
         params.put("userId",loginUser.getId());
         if(loginUser.hasRole("SUPER_ADMIN"))
@@ -161,6 +160,9 @@ public class HomeServiceImpl implements HomeService {
             int MaxYbylast=0;
             //判断Y轴消费的显示
             double MaxYbylastCost=0;
+            List<BillCost> billCostList=billCostMapper.selectByBillId(new Long(1));
+
+            String[] lastArr=new String[monthPreCount];
             for(int i=0;i<monthPreCount;i++)
             {
                 calendar.setTime(fistDate);
@@ -168,6 +170,10 @@ public class HomeServiceImpl implements HomeService {
                 Date tomorrow = calendar.getTime();
                 String str=formatter.format(tomorrow);
                 dateMap.put("date",str);
+
+
+
+
                 int keywordsCount=billCostMapper.selectByBillCostOfDay(dateMap);
                 Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
 
@@ -183,7 +189,6 @@ public class HomeServiceImpl implements HomeService {
                 }
                 seriesLastMonth+=keywordsCount+",";
                 seriesLastMonthSum+=keywordsSum+",";
-
             }
             //上个月的达标数
             map.put("seriesLastMonth",seriesLastMonth);
@@ -398,7 +403,7 @@ public class HomeServiceImpl implements HomeService {
                 Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
                 if(MaxYbyNewCost<=keywordsSum)
                 {
-                     MaxYbyNewCost=keywordsSum;
+                    MaxYbyNewCost=keywordsSum;
                 }
                 seriesNowMonthSum+=keywordsSum+",";
             }
@@ -628,7 +633,7 @@ public class HomeServiceImpl implements HomeService {
             Double sum=billCostMapper.MonthConsumptionCustomer(params);
             map.put("MonthConsumption",sum);
         }
-            return map;
+        return map;
     }
     //本日消费
     @Override
@@ -674,7 +679,7 @@ public class HomeServiceImpl implements HomeService {
         }
 
 
-            return map;
+        return map;
     }
     //任务数
     @Override
@@ -941,7 +946,7 @@ public class HomeServiceImpl implements HomeService {
         }
         return map;
     }
-   //搜狗
+    //搜狗
     @Override
     public Map<String, Object> sougouCompleteness(LoginUser loginUser) {
         Map<String, Object> map=new HashMap<>();
@@ -968,7 +973,7 @@ public class HomeServiceImpl implements HomeService {
         }
         return map;
     }
-//神马
+    //神马
     @Override
     public Map<String, Object> shenmaCompleteness(LoginUser loginUser) {
         Map<String, Object> map=new HashMap<>();

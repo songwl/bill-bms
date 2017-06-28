@@ -52,8 +52,6 @@ $(document).ready(function () {
             $(".Navs2").slideDown();
 
         }
-
-
     })
     //客户导入订单显示
     $("#addBillByKehu").click(function () {

@@ -526,6 +526,12 @@
     <if test="addTime2 != null">
       AND  DATE_FORMAT(a.create_time,'%Y-%m-%d')  &lt;= DATE_FORMAT( #{addTime2,jdbcType=VARCHAR},'%Y-%m-%d')
     </if>
+    <if test="standardDays1 != null">
+      AND  a.standard_days &gt;= #{standardDays1,jdbcType=INTEGER}
+    </if>
+    <if test="standardDays2 != null">
+      AND  a.standard_days &lt;= #{standardDays2,jdbcType=INTEGER}
+    </if>
     <if test="groupId != null">
       AND   n.t_user_id=#{groupUserId,jdbcType=BIGINT} and n.id=#{groupId,jdbcType=BIGINT}
     </if>
@@ -696,6 +702,12 @@
     </if>
     <if test="addTime2 != null">
       AND  DATE_FORMAT(a.create_time,'%Y-%m-%d')  &lt;= DATE_FORMAT( #{addTime2,jdbcType=VARCHAR},'%Y-%m-%d')
+    </if>
+    <if test="standardDays1 != null">
+      AND  a.standard_days &gt;= #{standardDays1,jdbcType=INTEGER}
+    </if>
+    <if test="standardDays2 != null">
+      AND  a.standard_days &lt;= #{standardDays2,jdbcType=INTEGER}
     </if>
     <if test="groupId != null">
       AND   n.t_user_id=#{groupUserId,jdbcType=BIGINT} and n.id=#{groupId,jdbcType=BIGINT}
@@ -2685,6 +2697,6 @@
   <select id="selectAllKeywords" resultType="java.lang.String">
     SELECT DISTINCT keywords FROM t_bill
     WHERE keywords NOT IN (
-    SELECT keywords FROM keywords_price) LIMIT 20
+    SELECT keywords FROM keywords_price) LIMIT 100
   </select>
 </mapper>

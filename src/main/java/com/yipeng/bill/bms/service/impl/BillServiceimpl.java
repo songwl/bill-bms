@@ -3506,7 +3506,7 @@ public class BillServiceimpl implements BillService {
             //判断角色
             UserRole userRole = userRoleMapper.selectByUserId(item.getId());
             Role role = roleMapper.selectByPrimaryKey(userRole.getRoleId());
-            if (role.getRoleCode().equals("AGENT")) {
+            if (role.getRoleCode().equals("Age")) {
                 i++;
                 params.put("OutUserId", userRole.getUserId());
                 Double sumDay = billCostMapper.selectByBillClientDayCost(params);

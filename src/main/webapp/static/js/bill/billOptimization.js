@@ -6,7 +6,6 @@ var keywords=null;
 var searchName=null;
 var searchUserName=null;
 var searchState=2;
-var searchStandard=null;
 var firstRanking1=null;
 var firstRanking2=null;
 var newRanking1=null;
@@ -16,7 +15,8 @@ var newchange2=null;
 var addTime1=null;
 var addTime2=null;
 var groupId=null;
-var standardDays = null;
+var standardDays1 = null;
+var standardDays2 = null;
 $(document).ready(function () {
 
     //优化调整（显示）
@@ -226,20 +226,20 @@ $(document).ready(function () {
         {
             searchUserName=null;
         }
-        if($("#searchStandard option:selected").val()!="--请选择--"&&$("#searchStandard option:selected").val()!="0")//是否达标
+
+        if ($("#standardDays1").val() != "")//关键词
         {
-            searchStandard=  $("#searchStandard").val();
-        }
-        else
-        {
-            searchStandard=null;
-        }
-        if ($("#standardDays").val() != "")//关键词
-        {
-            standardDays = $.trim($("#standardDays").val())
+            standardDays1 = $.trim($("#standardDays1").val())
         }
         else {
-            standardDays = null;
+            standardDays1 = null;
+        }
+        if ($("#standardDays2").val() != "")//关键词
+        {
+            standardDays2 = $.trim($("#standardDays2").val())
+        }
+        else {
+            standardDays2 = null;
         }
         if($("#firstRanking1").val()!="")//初排1
         {
@@ -686,7 +686,6 @@ var TableInit = function () {
             searchName:searchName,
             searchUserName:searchUserName,
             state:searchState,
-            searchStandard:searchStandard,
             firstRanking1:firstRanking1,
             firstRanking2:firstRanking2,
             newRanking1:newRanking1,
@@ -696,7 +695,8 @@ var TableInit = function () {
             addTime1:addTime1,
             addTime2:addTime2,
             groupId:groupId,
-            standardDays: standardDays
+            standardDays1: standardDays1,
+            standardDays2: standardDays2
         };
         return temp;
     }

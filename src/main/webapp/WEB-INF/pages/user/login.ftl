@@ -43,7 +43,8 @@
         </ul>
     </div>
 </div>
-<div class="content" style="width:70%;margin:0 auto;margin-top:80px;">
+<div style="padding-top:80px;background: #eee;">
+<div class="content" style="width:70%;margin:0 auto;">
     <div id="slideBox">
         <ul id="show_pic" style="left: 0px;">
 
@@ -139,7 +140,7 @@
         </div>
     </div>
 </div>
-
+</div>
 
 <div class="pro-jionus page-bg-primary">
     <div id="jionbg"></div>

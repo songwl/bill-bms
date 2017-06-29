@@ -253,7 +253,7 @@
     select
     id,website,createTime as time,orderstate,receiveId,reserveId
     from orderlease
-    where reserveId = #{reserveId,jdbcType=BIGINT} and orderstate=4
+    where reserveId = #{reserveId,jdbcType=BIGINT} and (orderstate=4 or orderstate=5)
     group by website
     order by id DESC
     LIMIT #{offset},#{limit}
@@ -295,7 +295,7 @@
     where o.website = #{website,jdbcType=VARCHAR}
   </select>
   <select id="selectOrderDetailsByWebsite" resultType="java.util.HashMap">
-    select o.id as id,o.orderId as orderId,o.keywordState as keywordState,o.website as website,o.keywords as  keywords,b.first_ranking as firstRanking,b.new_ranking as
+    select o.id as id,o.orderId as orderId,o.customerId as customerId,o.orderState as orderState,o.keywordState as keywordState,o.website as website,o.keywords as  keywords,b.first_ranking as firstRanking,b.new_ranking as
     newRanking,o.createTime as time, #{rote,jdbcType=INTEGER}*k.PriceBaiduPc as PriceBaiduPc,#{rote,jdbcType=INTEGER}
     *k.PriceBaiduWap as PriceBaiduWap,
     #{rote,jdbcType=INTEGER}*k.PriceSogouPc as PriceSogouPc, #{rote,jdbcType=INTEGER}*k.PriceSoPc as PriceSoPc,
@@ -361,6 +361,51 @@
     </foreach>
   </update>
   <update id="updateByWebsiteNoReserve" parameterType="com.yipeng.bill.bms.domain.orderLease">
+    update orderlease
+    <set>
+      <if test="orderid != null">
+        orderId = #{orderid,jdbcType=BIGINT},
+      </if>
+      <if test="allotid != null">
+        allotId = #{allotid,jdbcType=BIGINT},
+      </if>
+      <if test="receiveid != null">
+        receiveId = #{receiveid,jdbcType=BIGINT},
+      </if>
+      <if test="reserveid != null">
+        reserveId = #{reserveid,jdbcType=VARCHAR},
+      </if>
+      <if test="customerid != null">
+        customerId = #{customerid,jdbcType=VARCHAR},
+      </if>
+      <if test="keywordstate != null">
+        keywordState = #{keywordstate,jdbcType=INTEGER},
+      </if>
+      <if test="orderstate != null">
+        orderState = #{orderstate,jdbcType=INTEGER},
+      </if>
+      <if test="website != null">
+        website = #{website,jdbcType=VARCHAR},
+      </if>
+      <if test="keywords != null">
+        keywords = #{keywords,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="allottime != null">
+        allotTime = #{allottime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reservetime != null">
+        reserveTime = #{reservetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where website in
+    <foreach item="item" index="index" collection="arr" open="(" separator="," close=")">
+      #{item}
+    </foreach> and orderState !=4
+  </update>
+  <update id="updateCustomerIdByWebsite" parameterType="com.yipeng.bill.bms.domain.orderLease">
     update orderlease
     <set>
       <if test="orderid != null">

@@ -182,6 +182,33 @@
                                 var times = new Date(value);
                                 return times.toLocaleString();
                             }
+                        },
+                        {
+                            field: 'state',
+                            align: 'center',
+                            valign: 'middle',
+                            title: '状态',
+                            formatter: function (value, row, index) {
+                                var a = "";
+                                if (row.orderState == 5) {
+                                    var flag = false;
+                                    var arr = row.customerId.split(",");
+                                    for (var i = 0; i < arr.length; i++) {
+                                        if (arr[i] ==${userId}) {
+                                            flag = true;
+                                            break;
+                                        }
+                                    }
+                                    if (flag) {
+                                        a += "<a style='color: #aaaaaa;' id='reserveCancel'>已预定</a>";
+                                    } else {
+                                        a += "<a style='color: #ff0000;' id='reserve'>未预定</a>";
+                                    }
+                                } else{
+                                    a += "<a style='color: #ff0000;' id='reserve'>未预定</a>";
+                                }
+                                return a;
+                            }
                         }
                     ]
                 });
@@ -219,11 +246,19 @@
             if (!window.confirm("你确定要订购这些订单吗？已选择行数：" + selectContent.length + "行")) {
                 return;
             }
-            $.post(CTX + '/SiteLease/order',{
+            $.post(CTX + '/SiteLease/order', {
                 data: selectContent,
                 len: selectContent.length
             }, function (data) {
-
+                if (data == -1) {
+                    layer.msg("你没有权限");
+                } else if (data == 0) {
+                    layer.msg("成功");
+                    $("#myTable").bootstrapTable("refresh");
+                }
+                else {
+                    layer.msg("失败");
+                }
             });
             return;
         }

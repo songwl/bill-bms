@@ -266,8 +266,8 @@
     from keywords_price
     where 1=2 or keywords in
     <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
-      (#{item})
-    </foreach>
+    (#{item})
+  </foreach>
       and PriceBaiduPc is not NULL and PriceSogouPc is not NULL and PriceSoPC is not NULL and PriceBaiduWap is not NULL and PriceSm is not NULL
   </select>
   <select id="selectByTaskId" parameterType="java.lang.Integer" resultMap="BaseResultMap">

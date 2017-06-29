@@ -218,7 +218,7 @@
                         shadeClose: false,
                         //shade: [0.4,'#000'], //0.1透明度的白色背景
                         maxmin: true, //开启最大化最小化按钮
-                        area: ['893px', '600px'],
+                        area: ['950px', '600px'],
                         content: CTX + '/SiteLease/OrderDetails/?website=' + row.website //iframe的url
                     });
                 }

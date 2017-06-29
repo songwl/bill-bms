@@ -347,10 +347,10 @@ public class SiteLeaseController extends BaseController {
 
     @RequestMapping(value = "/order", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> order(HttpServletRequest httpServletRequest) {
+    public int order(HttpServletRequest httpServletRequest) {
         LoginUser loginUser = this.getCurrentAccount();
         if (!loginUser.hasRole("CUSTOMER")) {
-            return null;
+            return -1;
         }
         Map<String, String[]> map = httpServletRequest.getParameterMap();
         int len = Integer.parseInt(map.get("len")[0].toString());
@@ -364,10 +364,10 @@ public class SiteLeaseController extends BaseController {
             orderLease.setOrderid(Long.parseLong(map.get("data[" + i + "][orderId]")[0].toString()));
             orderLease.setKeywordstate(Integer.parseInt(map.get("data[" + i + "][keywordState]")[0].toString()));
             leaseList.add(orderLease);*/
-            arr[i] = Long.parseLong(map.get("data[" + i + "][orderId]")[0].toString());
+            arr[i] = Long.parseLong(map.get("data[" + i + "][id]")[0].toString());
         }
         String website = map.get("data[0][website]")[0].toString();
         int result = siteLeaseService.Ordering(arr, website,loginUser);
-        return null;
+        return result;
     }
 }

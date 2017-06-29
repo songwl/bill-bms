@@ -253,21 +253,24 @@ public class SiteLeaseServiceImpl implements SiteLeaseService {
         map.put("orderstate", 5);
         int num = orderLeaseMapper.updateByWebsite(map);
         if (num == 0) {
-            return -1;
+            return -2;
         }
         long userId = loginUser.getId();
         String creatUserId = loginUser.getCreateUserId().toString();
         for (long item : arr
                 ) {
             orderLease orderLease = orderLeaseMapper.selectByPrimaryKey(item);
-            if (orderLease == null || orderLease.getOrderstate() != 4 || !orderLease.getReserveid().equals(creatUserId)) {
+            if (orderLease == null || orderLease.getOrderstate() != 5 || !orderLease.getReserveid().equals(creatUserId)) {
                 continue;
             }
-            String[] ar = orderLease.getCustomerid().split(",");
-            if (ar == null || !Arrays.asList(arr).contains(userId)) {//用户列表里面不包含当前登录人
+            if (orderLease.getCustomerid() == null) {
                 orderLease.setCustomerid(userId + ",");
+            } else {
+                String[] ar = orderLease.getCustomerid().split(",");
+                if (ar == null || !Arrays.asList(ar).contains(userId + "")) {//用户列表里面不包含当前登录人
+                    orderLease.setCustomerid(orderLease.getCustomerid() + userId + ",");
+                }
             }
-            orderLease.setOrderstate(5);
             int num1 = orderLeaseMapper.updateByPrimaryKeySelective(orderLease);
         }
         return 0;

@@ -668,6 +668,40 @@
                         </ul>
                     </li>
                     </#if>
+                    <li class="" style="border-bottom: 1px solid #3d3d3d;">
+                        <a href="javascript:;">
+                            <i class="fa fa-comments-o"></i><span class="title"> 网站出租平台 </span>
+                            <span class="arrow "></span>
+                        </a>
+                        <ul class="sub-menu" style="background: #293038;">
+                            <li class="">
+                                <a href="${ctx}/SiteLease/DivideOrder">
+                                    管理员任务大厅
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="${ctx}/SiteLease/MissionHall">
+                                    专员任务大厅
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="${ctx}/SiteLease/DistributorOrder">
+                                    渠道商任务大厅
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="${ctx}/SiteLease/AgentOrder">
+                                    代理商任务大厅
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="${ctx}/SiteLease/CustomerOrder">
+                                    客户任务大厅
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
 				</ul>
 			</div>
 		</div>

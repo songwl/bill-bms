@@ -399,4 +399,8 @@
             #{item}
         </foreach>
     </select>
+    <select id="selectCustomer" resultType="java.util.HashMap">
+        select id,user_name from t_user
+        where create_user_id=#{userId,jdbcType=BIGINT}
+    </select>
 </mapper>

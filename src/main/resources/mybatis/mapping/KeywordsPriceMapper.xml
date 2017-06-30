@@ -295,4 +295,10 @@
     </if>
     LIMIT #{offset},#{limit}
   </select>
+  <select id="selectOneBykeyword"  resultMap="BaseResultMap">
+    select
+    *
+    from keywords_price
+    WHERE Keywords=#{keywords,jdbcType=VARCHAR}
+  </select>
 </mapper>

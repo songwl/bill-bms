@@ -33,5 +33,9 @@ public interface SiteLeaseService {
 
     Map<String, Object> OrderDetails(Map<String, Object> params, LoginUser loginUser);
 
-    int Ordering(Long[] arr,String website, LoginUser loginUser);
+    int Ordering(Long[] arr, String website, LoginUser loginUser);
+
+    List<Map<String, Object>> GetCustomer(LoginUser loginUser);
+
+    int ConfirmCustomer(String website, LoginUser loginUser,String customer);
 }

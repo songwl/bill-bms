@@ -86,6 +86,12 @@ public class SiteLeaseController extends BaseController {
         return "/SiteLease/CustomerOrder";
     }
 
+    /**
+     * 客户任务大厅订单详情页面
+     * @param httpServletRequest
+     * @param modelMap
+     * @return
+     */
     @RequestMapping(value = "/OrderDetails", method = RequestMethod.GET)
     public String OrderDetails(HttpServletRequest httpServletRequest, ModelMap modelMap) {
         Map<String, String[]> param = httpServletRequest.getParameterMap();
@@ -230,6 +236,18 @@ public class SiteLeaseController extends BaseController {
         for (int i = 0; i < len; i++) {
             arr[i] = param.get("selectContent[" + i + "][website]")[0].toString();
         }
+        boolean flag = true;
+        for (String item : arr
+                ) {
+            orderLease orderLeaseList = orderLeaseMapper.selectReserveByWebsite(item);
+            if (orderLeaseList.getOrderstate() > 3) {
+                flag = false;
+                break;
+            }
+        }
+        if (!flag) {
+            return this.ajaxDone(-3, "所选订单某些订单已不能划分，请重新选择", null);
+        }
         Map<String, Object> map = new HashMap<>();
         map.put("arr", arr);
         map.put("orderstate", 2);
@@ -289,6 +307,14 @@ public class SiteLeaseController extends BaseController {
         return modelMap;
     }
 
+    /**
+     * 渠道商给代理商充值（保证金）
+     *
+     * @param userid
+     * @param website
+     * @param SumMoney
+     * @return
+     */
     @RequestMapping(value = "/Recharge", method = RequestMethod.POST)
     @ResponseBody
     public ResultMessage Recharge(String userid, String website, String SumMoney) {
@@ -307,15 +333,27 @@ public class SiteLeaseController extends BaseController {
         } catch (Exception ex) {
             return this.ajaxDone(-4, "金额输入错误", null);
         }
+        BigDecimal bd = new BigDecimal(0);
+        if (sumMoney.compareTo(bd) == -1) {
+            return this.ajaxDone(-4, "金额输入错误", null);
+        }
         Map<String, Object> params = this.getSearchRequest(); //查询参数
         String[] arr = {website};
         params.put("arr", arr);
         params.put("reserveid", userid);
         params.put("orderstate", 4);
+        params.put("reservetime", new Date());
         int a = siteLeaseService.Recharge(params, sumMoney, loginUser);
         return this.ajaxDone(a, "", null);
     }
 
+    /**
+     * 客户任务大厅页面列表
+     *
+     * @param limit
+     * @param offset
+     * @return
+     */
     @RequestMapping(value = "/CustomerGetMission", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, Object> CustomerGetMission(int limit, int offset) {
@@ -330,6 +368,14 @@ public class SiteLeaseController extends BaseController {
         return modelMap;
     }
 
+    /**
+     * 客户任务大厅页面点击详情
+     *
+     * @param limit
+     * @param offset
+     * @param website
+     * @return
+     */
     @RequestMapping(value = "/GetOrderDetails", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, Object> GetOrderDetails(int limit, int offset, String website) {
@@ -345,6 +391,12 @@ public class SiteLeaseController extends BaseController {
         return modelMap;
     }
 
+    /**
+     * 客户订购订单
+     *
+     * @param httpServletRequest
+     * @return
+     */
     @RequestMapping(value = "/order", method = RequestMethod.POST)
     @ResponseBody
     public int order(HttpServletRequest httpServletRequest) {
@@ -367,7 +419,41 @@ public class SiteLeaseController extends BaseController {
             arr[i] = Long.parseLong(map.get("data[" + i + "][id]")[0].toString());
         }
         String website = map.get("data[0][website]")[0].toString();
-        int result = siteLeaseService.Ordering(arr, website,loginUser);
+        int result = siteLeaseService.Ordering(arr, website, loginUser);
         return result;
+    }
+
+    /**
+     * 获取当前代理商下面的所有客户
+     *
+     * @return
+     */
+    @RequestMapping(value = "/GetCustomer", method = RequestMethod.POST)
+    @ResponseBody
+    public List<Map<String, Object>> GetCustomer() {
+        LoginUser loginUser = this.getCurrentAccount();
+        if (!loginUser.hasRole("AGENT")) {
+            return null;
+        }
+        List<Map<String, Object>> result = siteLeaseService.GetCustomer(loginUser);
+        return result;
+    }
+
+    /**
+     * 代理商确定客户
+     *
+     * @param website
+     * @param customer
+     * @return
+     */
+    @RequestMapping(value = "/ConfirmCustomer", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage ConfirmCustomer(String website, String customer) {
+        LoginUser loginUser = this.getCurrentAccount();
+        if (!loginUser.hasRole("AGENT")) {
+            return this.ajaxDone(-1, "", null);
+        }
+        int result = siteLeaseService.ConfirmCustomer(website, loginUser, customer);
+        return this.ajaxDone(result, "", null);
     }
 }

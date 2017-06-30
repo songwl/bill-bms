@@ -167,6 +167,10 @@
                                 }
                                 else if (value == "4") {
                                     return "已完成预定";
+                                } else if (value == "5") {
+                                    return "等待客户订购";
+                                } else if (value == "6") {
+                                    return "客户已订购";
                                 }
                                 return value;
                             }
@@ -192,10 +196,10 @@
                             events: operateEvents,
                             formatter: function (value, row, index) {
                                 var a = "<a style='color: #a6cfff;cursor: pointer;' id='details'>详情</a>   ";
-                                if (row.orderstate != 4) {
+                                if (row.orderstate < 4) {
                                     a += "<a style='color: #AE5B1E; cursor:pointer;' id='recharge'>充值</a>"
                                 }
-                                if(row.orderstate == 4) {
+                                if(row.orderstate >= 4) {
                                     a += "<a style='color: #AE5B1E; cursor:pointer;' id='WhoReserve'>预定人</a>"
                                 }
 
@@ -219,9 +223,25 @@
                 'click #details': function (e, value, row, index) {
                     $.post(CTX + '/SiteLease/GetDetails', {website: row.website}, function (data) {
                         var str = "<table class=\"table table-hover table-striped table-bordered\">" +
-                                "<thead><tr><th>网址</th><th>关键词</th><th>初排</th><th>新排</th><th>百度电脑</th><th>百度手机</th><th>搜狗</th><th>360</th><th>神马</th><th>时间</th></thead><tbody>";
+                                "<thead><tr><th>网址</th><th>关键词</th><th>初排</th><th>新排</th><th>搜索引擎</th><th>价格</th><th>时间</th></thead><tbody>";
                         $.each(data, function (index, item) {
-                            str += "<tr><td><span>" + item.website + "</span></td><td>" + item.keywords + "</td><td>" + item.firstRanking + "</td><td>" + item.newRanking + "</td><td>" + item.PriceBaiduPc + "</td><td>" + item.PriceBaiduWap + "</td><td>" + item.PriceSogouPc + "</td><td>" + item.PriceSoPc + "</td><td>" + item.PriceSm + "</td><td><span>" + new Date(item.time).toLocaleString() + "</span></td></tr>";
+                            switch (item.search_support) {
+                                case "百度":
+                                    str += "<tr><td><span>" + item.website + "</span></td><td>" + item.keywords + "</td><td>" + item.firstRanking + "</td><td>" + item.newRanking + "</td><td>" + item.search_support + "</td><td>" + item.PriceBaiduPc + "</td><td><span>" + new Date(item.time).toLocaleString() + "</span></td></tr>";
+                                    break;
+                                case "手机百度":
+                                    str += "<tr><td><span>" + item.website + "</span></td><td>" + item.keywords + "</td><td>" + item.firstRanking + "</td><td>" + item.newRanking + "</td><td>" + item.search_support + "</td><td>" + item.PriceBaiduWap + "</td><td><span>" + new Date(item.time).toLocaleString() + "</span></td></tr>";
+                                    break;
+                                case "搜狗":
+                                    str += "<tr><td><span>" + item.website + "</span></td><td>" + item.keywords + "</td><td>" + item.firstRanking + "</td><td>" + item.newRanking + "</td><td>" + item.search_support + "</td><td>" + item.PriceSogouPc + "</td><td><span>" + new Date(item.time).toLocaleString() + "</span></td></tr>";
+                                    break;
+                                case "360":
+                                    str += "<tr><td><span>" + item.website + "</span></td><td>" + item.keywords + "</td><td>" + item.firstRanking + "</td><td>" + item.newRanking + "</td><td>" + item.search_support + "</td><td>" + item.PriceSoPc + "</td><td><span>" + new Date(item.time).toLocaleString() + "</span></td></tr>";
+                                    break;
+                                case "神马":
+                                    str += "<tr><td><span>" + item.website + "</span></td><td>" + item.keywords + "</td><td>" + item.firstRanking + "</td><td>" + item.newRanking + "</td><td>" + item.search_support + "</td><td>" + item.PriceSm + "</td><td><span>" + new Date(item.time).toLocaleString() + "</span></td></tr>";
+                                    break;
+                            }
                         });
                         str += "</tbody></table>";
                         layer.open({
@@ -300,9 +320,10 @@
                         layer.msg("成功");
                         layer.close(index1);
                         layer.close(index2);
+                        $("#myTable").bootstrapTable("refresh");
                         return;
                     }
-                    else if (data.code == "-1") {
+                    else if (data.code == "-1"||data.code == "-3"||data.code == "-4") {
                         layer.msg(data.message);
                         return;
                     }

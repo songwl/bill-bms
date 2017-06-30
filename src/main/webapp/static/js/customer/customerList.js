@@ -545,6 +545,7 @@ var TableInit = function () {
                     field: 'operate',
                     title: '操作',
                     align: 'center',
+                    width: '230',
                     valign: 'middle',
                     formatter: function (value, row, index) {
 
@@ -559,17 +560,20 @@ var TableInit = function () {
                                 "<span style='color:#4382CF;cursor:pointer;' id='refund'>退款</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   " +
-                                "<span style='color:#4382CF;cursor:pointer;' id='OfferSetUp' data-user='" + value + "'>报价设置</span>   ";
+                                "<span style='color:#4382CF;cursor:pointer;' id='OfferSetUp' data-user='" + value + "'>报价设置</span>   " +
+                                "<span style='color:#4382CF;cursor:pointer;' id='AdminwebsiteLeaseSet'>网租设置</span>   ";
 
                         }
                         else if (row.roleName == 'DISTRIBUTOR') {
                             a = "<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='refund'>退款</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
-                                "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   " +
-                                "<span style='color:#4382CF;cursor:pointer;' id='websiteLeaseSet'>网租设置</span>   ";
+                                "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   ";
                             if (row.kehuRoleName == "代理商") {
-                                a += "<span style='color:#4382CF;cursor:pointer;' id='OfferSetUpAgent' data-user='" + value + "'>报价设置</span>   "
+                                a += "<span style='color:#4382CF;cursor:pointer;' id='OfferSetUpAgent' data-user='" + value + "'>报价设置</span>   ";
+                                if ($("#leasepower").val() == 1) {
+                                    a += "<span style='color:#4382CF;cursor:pointer;' id='websiteLeaseSet'>网租设置</span>   ";
+                                }
                             }
                         }
                         else {
@@ -757,7 +761,7 @@ var TableInit = function () {
             });
         },
         'click #websiteLeaseSet': function (e, value, row, index) {
-            layer.confirm('是否开通该代理商的网站出租平台权限？', {
+            layer.confirm('请选择该代理商的网站出租平台权限设置', {
                 btn: ['开通', '关闭'] //按钮
             }, function () {
                 $.post(CTX + '/optimizationTool/OpenAgentWebsitePower', {
@@ -798,6 +802,48 @@ var TableInit = function () {
             });
 
         },
+        'click #AdminwebsiteLeaseSet': function (e, value, row, index) {
+            layer.confirm('请选择该渠道商的网站出租平台权限设置', {
+                btn: ['开通', '关闭'] //按钮
+            }, function () {
+                $.post(CTX + '/optimizationTool/OpenDistributorWebsitePower', {
+                    data: row.customerId,
+                    type: 1,
+                }, function (data) {
+                    if (data.code == "1") {
+                        layer.msg("成功");
+                        return;
+                    }
+                    else if (data.code == "-1" || data.code == "-2") {
+                        layer.msg(data.message);
+                        return;
+                    }
+                    else {
+                        layer.msg("失败");
+                        return;
+                    }
+                })
+            }, function () {
+                $.post(CTX + '/optimizationTool/OpenDistributorWebsitePower', {
+                    data: row.customerId,
+                    type: 0
+                }, function (data) {
+                    if (data.code == "1") {
+                        layer.msg("成功");
+                        return;
+                    }
+                    else if (data.code == "-1" || data.code == "-2") {
+                        layer.msg(data.message);
+                        return;
+                    }
+                    else {
+                        layer.msg("失败");
+                        return;
+                    }
+                })
+            });
+
+        }
     }
 
 

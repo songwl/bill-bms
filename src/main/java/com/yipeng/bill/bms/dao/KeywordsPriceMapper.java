@@ -30,4 +30,6 @@ public interface KeywordsPriceMapper {
     Long selectAllKeywordsCount(Map<String, Object> map);
 
     List<Map<String, Object>> selectAllKeywords(Map<String, Object> map);
+
+    KeywordsPrice selectOneBykeyword(String keywords);
 }

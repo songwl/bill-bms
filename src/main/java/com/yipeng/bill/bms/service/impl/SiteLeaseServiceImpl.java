@@ -3,13 +3,10 @@ package com.yipeng.bill.bms.service.impl;
 import com.yipeng.bill.bms.core.model.ResultMessage;
 import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
-import com.yipeng.bill.bms.model.HallDetails;
-import com.yipeng.bill.bms.model.LeaseHall;
 import com.yipeng.bill.bms.service.SiteLeaseService;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.rmi.runtime.Log;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -26,6 +23,15 @@ public class SiteLeaseServiceImpl implements SiteLeaseService {
     private FundItemMapper fundItemMapper;
     @Autowired
     private FundAccountMapper fundAccountMapper;
+    @Autowired
+    private penaltyRecordMapper penaltyRecordMapper;
+    @Autowired
+    private BillPriceMapper billPriceMapper;
+    @Autowired
+    private KeywordsPriceMapper keywordsPriceMapper;
+    @Autowired
+    private BillSearchSupportMapper billSearchSupportMapper;
+
 
     @Override
     public Map<String, Object> AdminGetMission(Map<String, Object> params, LoginUser loginUser) {
@@ -86,6 +92,7 @@ public class SiteLeaseServiceImpl implements SiteLeaseService {
     @Override
     public Map<String, Object> GetAgentIdMission(Map<String, Object> params, LoginUser loginUser) {
         params.put("receiveId", loginUser.getCreateUserId());
+        params.put("reserveId", loginUser.getId());
         Long total = orderLeaseMapper.selectByReceiveIdCount(params);
         List<Map<String, Object>> leaseHallList = orderLeaseMapper.selectByReceiveId(params);
         for (int i = 0; i < leaseHallList.size(); i++) {
@@ -188,26 +195,35 @@ public class SiteLeaseServiceImpl implements SiteLeaseService {
         if (fundAccount == null) {
             return 0;
         }
-        fundAccount.setBalance(fundAccount.getBalance().subtract(sumMoney));
+        fundAccount.setBalance(fundAccount.getBalance().add(sumMoney));
         fundAccount.setUpdateTime(new Date());
         fundAccount.setUpdateUserId(loginUser.getId());
         int num = fundAccountMapper.updateByPrimaryKeySelective(fundAccount);
-        FundItem fundItem = new FundItem();
+        penaltyRecord penaltyRecord = new penaltyRecord();
+        penaltyRecord.setFundaccountid(fundAccount.getId());
+        penaltyRecord.setInitialmoney(Double.parseDouble(fundAccount.getBalance().subtract(sumMoney).toString()));
+        penaltyRecord.setHappenmoney(Double.parseDouble(sumMoney.toString()));
+        penaltyRecord.setBalancemoney(Double.parseDouble(fundAccount.getBalance().toString()));
+        penaltyRecord.setUpdatetime(new Date());
+        penaltyRecord.setItemtype(1);
+        int num1 = penaltyRecordMapper.insert(penaltyRecord);
+        /*FundItem fundItem = new FundItem();
         fundItem.setFundAccountId(fundAccount.getId());
         fundItem.setChangeAmount(sumMoney);
         fundItem.setBalance(fundAccount.getBalance());
         fundItem.setChangeTime(new Date());
         fundItem.setItemType("penalty");
-        int num1 = fundItemMapper.insert(fundItem);
+        int num1 = fundItemMapper.insert(fundItem);*/
         int num2 = orderLeaseMapper.updateByWebsite(map);
-        return (num2 > 0) ? 1 : 0;
+        return (num > 0 && num1 > 0 && num2 > 0) ? 1 : 0;
     }
 
     @Override
     public Map<String, Object> CustomerGetMission(Map<String, Object> params, LoginUser loginUser) {
         params.put("reserveId", loginUser.getCreateUserId());
-        Long total = orderLeaseMapper.selectByReserveIdCount(params);
-        List<Map<String, Object>> leaseHallList = orderLeaseMapper.selectByReserveId(params);
+        params.put("customerId", loginUser.getId());
+        Long total = orderLeaseMapper.selectByCustomerCount(params);
+        List<Map<String, Object>> leaseHallList = orderLeaseMapper.selectByCustomer(params);
         for (int i = 0; i < leaseHallList.size(); i++) {
             params.put("website", leaseHallList.get(i).get("website"));
             if (leaseHallList.get(i).get("receiveId") != null) {
@@ -231,7 +247,14 @@ public class SiteLeaseServiceImpl implements SiteLeaseService {
         } else if (loginUser.hasRole("AGENT")) {//代理商
             offerset offerset = offersetMapper.selectByUserId(loginUser.getId());
             offerset offerset1 = offersetMapper.selectByUserId(loginUser.getCreateUserId());
-            double rote = /*offerset.getRate() * offerset1.getRate()*/2;
+            double rote = offerset.getRate() * offerset1.getRate();
+            rote = Double.parseDouble(new java.text.DecimalFormat("#.00").format(rote));
+            map.put("rote", rote);
+        } else if (loginUser.hasRole("CUSTOMER")) {//客户
+            offerset offerset = offersetMapper.selectByUserId(loginUser.getCreateUserId());
+            User user = userMapper.selectByPrimaryKey(loginUser.getCreateUserId());
+            offerset offerset1 = offersetMapper.selectByUserId(user.getCreateUserId());
+            double rote = offerset.getRate() * offerset1.getRate();
             rote = Double.parseDouble(new java.text.DecimalFormat("#.00").format(rote));
             map.put("rote", rote);
         } else {
@@ -247,32 +270,149 @@ public class SiteLeaseServiceImpl implements SiteLeaseService {
 
     @Override
     public int Ordering(Long[] arr, String website, LoginUser loginUser) {
-        Map<String, Object> map = new HashMap<>();
-        String[] arr1 = {website};
-        map.put("arr", arr1);
-        map.put("orderstate", 5);
-        int num = orderLeaseMapper.updateByWebsite(map);
-        if (num == 0) {
-            return -2;
-        }
-        long userId = loginUser.getId();
+        String userId = loginUser.getId().toString();
         String creatUserId = loginUser.getCreateUserId().toString();
+        List<orderLease> leaseList = orderLeaseMapper.selectAllByWebsite(website);
+        for (orderLease item : leaseList
+                ) {
+            if (item.getKeywordstate() == 0) {//是必选词
+                if (item.getCustomerid() == null || !item.getCustomerid().equals(userId)|| item.getOrderstate() != 5) {
+                    continue;
+                } else {
+                    List<BillPrice> billPriceList = billPriceMapper.selectByBillId(item.getOrderid());
+                    offerset offerset = offersetMapper.selectByUserId(item.getReceiveid());
+                    double DRate = offerset.getRate();//渠道商倍率
+                    offerset offerset1 = offersetMapper.selectByUserId(Long.parseLong(item.getReserveid()));
+                    double ARate = offerset1.getRate();//代理商倍率
+                    BillSearchSupport billSearchSupport = billSearchSupportMapper.selectByBillId(item.getOrderid());
+                    KeywordsPrice keywordsPrice = keywordsPriceMapper.selectOneBykeyword(item.getKeywords());
+                    double price = 0d;
+                    switch (billSearchSupport.getSearchSupport()) {
+                        case "百度":
+                            price = keywordsPrice.getPricebaidupc();
+                            break;
+                        case "百度手机":
+                            price = keywordsPrice.getPricebaiduwap();
+                            break;
+                        case "360":
+                            price = keywordsPrice.getPricesopc();
+                            break;
+                        case "搜狗":
+                            price = keywordsPrice.getPricesogoupc();
+                            break;
+                        case "神马":
+                            price = keywordsPrice.getPricesm();
+                            break;
+                    }
+                    BigDecimal bd1 = new BigDecimal(price);//优化方与渠道商价格
+                    BigDecimal bd2 = new BigDecimal(price * DRate);//渠道商与代理商价格
+                    BigDecimal bd3 = new BigDecimal(price * ARate * DRate);//代理商与客户价格
+                    for (BillPrice itm : billPriceList
+                            ) {
+                        if (itm.getInMemberId() == 1) {
+                            itm.setOutMemberId(item.getReceiveid());
+                            itm.setPrice(bd1);
+                            billPriceMapper.updateByPrimaryKeySelective(itm);
+                        } else {
+                            itm.setOutMemberId(Long.parseLong(item.getReserveid()));
+                            itm.setInMemberId(item.getReceiveid());
+                            itm.setPrice(bd2);
+                            billPriceMapper.updateByPrimaryKeySelective(itm);
+                        }
+                    }
+                    BillPrice billPrice = new BillPrice();
+                    billPrice.setPrice(bd3);
+                    billPrice.setInMemberId(Long.parseLong(item.getReserveid()));
+                    billPrice.setOutMemberId(Long.parseLong(item.getCustomerid()));
+                    billPrice.setBillRankingStandard(10l);
+                    billPrice.setBillId(item.getOrderid());
+                    billPrice.setCreateTime(new Date());
+                    billPriceMapper.insert(billPrice);
+                    item.setOrderstate(6);
+                    orderLeaseMapper.updateByPrimaryKeySelective(item);
+                }
+            }
+        }
         for (long item : arr
                 ) {
             orderLease orderLease = orderLeaseMapper.selectByPrimaryKey(item);
-            if (orderLease == null || orderLease.getOrderstate() != 5 || !orderLease.getReserveid().equals(creatUserId)) {
+            if (orderLease == null || orderLease.getOrderstate() != 5 || !orderLease.getReserveid().equals(creatUserId) || !orderLease.getCustomerid().equals(userId) || orderLease.getKeywordstate() == 0) {
                 continue;
-            }
-            if (orderLease.getCustomerid() == null) {
-                orderLease.setCustomerid(userId + ",");
             } else {
-                String[] ar = orderLease.getCustomerid().split(",");
-                if (ar == null || !Arrays.asList(ar).contains(userId + "")) {//用户列表里面不包含当前登录人
-                    orderLease.setCustomerid(orderLease.getCustomerid() + userId + ",");
+                List<BillPrice> billPriceList = billPriceMapper.selectByBillId(orderLease.getOrderid());
+                offerset offerset = offersetMapper.selectByUserId(orderLease.getReceiveid());
+                double DRate = offerset.getRate();//渠道商倍率
+                offerset offerset1 = offersetMapper.selectByUserId(Long.parseLong(orderLease.getReserveid()));
+                double ARate = offerset1.getRate();//代理商倍率
+                BillSearchSupport billSearchSupport = billSearchSupportMapper.selectByBillId(orderLease.getOrderid());
+                KeywordsPrice keywordsPrice = keywordsPriceMapper.selectOneBykeyword(orderLease.getKeywords());
+                double price = 0d;
+                switch (billSearchSupport.getSearchSupport()) {
+                    case "百度":
+                        price = keywordsPrice.getPricebaidupc();
+                        break;
+                    case "百度手机":
+                        price = keywordsPrice.getPricebaiduwap();
+                        break;
+                    case "360":
+                        price = keywordsPrice.getPricesopc();
+                        break;
+                    case "搜狗":
+                        price = keywordsPrice.getPricesogoupc();
+                        break;
+                    case "神马":
+                        price = keywordsPrice.getPricesm();
+                        break;
                 }
+                BigDecimal bd1 = new BigDecimal(price);//优化方与渠道商价格
+                BigDecimal bd2 = new BigDecimal(price * DRate);//渠道商与代理商价格
+                BigDecimal bd3 = new BigDecimal(price * ARate * DRate);//代理商与客户价格
+                for (BillPrice itm : billPriceList
+                        ) {
+                    if (itm.getInMemberId() == 1) {
+                        itm.setOutMemberId(orderLease.getReceiveid());
+                        itm.setPrice(bd1);
+                        billPriceMapper.updateByPrimaryKeySelective(itm);
+                    } else {
+                        itm.setOutMemberId(Long.parseLong(orderLease.getReserveid()));
+                        itm.setInMemberId(orderLease.getReceiveid());
+                        itm.setPrice(bd2);
+                        billPriceMapper.updateByPrimaryKeySelective(itm);
+                    }
+                }
+                BillPrice billPrice = new BillPrice();
+                billPrice.setPrice(bd3);
+                billPrice.setInMemberId(Long.parseLong(orderLease.getReserveid()));
+                billPrice.setOutMemberId(Long.parseLong(orderLease.getCustomerid()));
+                billPrice.setBillRankingStandard(10l);
+                billPrice.setBillId(orderLease.getOrderid());
+                billPrice.setCreateTime(new Date());
+                billPriceMapper.insert(billPrice);
+                orderLease.setOrderstate(6);
+                int num1 = orderLeaseMapper.updateByPrimaryKeySelective(orderLease);
             }
-            int num1 = orderLeaseMapper.updateByPrimaryKeySelective(orderLease);
         }
         return 0;
+    }
+
+    @Override
+    public List<Map<String, Object>> GetCustomer(LoginUser loginUser) {
+        List<Map<String, Object>> mapList = userMapper.selectCustomer(loginUser.getId());
+        return mapList;
+    }
+
+    @Override
+    public int ConfirmCustomer(String website, LoginUser loginUser, String customer) {
+        orderLease orderLease = orderLeaseMapper.selectReserveByWebsite(website);
+        if (orderLease == null || !orderLease.getReserveid().equals(loginUser.getId() + "") || orderLease.getOrderstate() != 4) {
+            return -2;
+        }
+        String[] arr = {website};
+        Map<String, Object> map = new HashMap<>();
+        map.put("customerid", customer);
+        map.put("orderstate", 5);
+        map.put("arr", arr);
+        int num = orderLeaseMapper.updateByWebsite(map);
+        return num > 0 ? 1 : 0;
     }
 }

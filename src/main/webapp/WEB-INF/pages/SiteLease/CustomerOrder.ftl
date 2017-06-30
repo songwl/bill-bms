@@ -13,13 +13,6 @@
         <i class="fa fa-home">&nbsp;</i><span>网站出租平台</span> > <span>任务大厅</span>
     </div>
     <div class="nav_R right" id="divQx">
-        <div id="divide">
-            <span>&nbsp;<i class="fa fa-arrow-down"></i>&nbsp;划分</span>
-        </div>
-
-        <div class="search">
-            <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
-        </div>
     </div>
     <div class="cls">
     </div>
@@ -48,17 +41,6 @@
     </div>
 </div>
 
-<div id="selectDistributor" style="display: none;">
-    <h4 class="modal-header">请选择渠道商</h4>
-    <div class="modal-body">
-        <div class="form-group">
-            <select id="distributor" class="form-control" style="height: initial;">
-            </select>
-        </div>
-        <button id="confirm" class="btn btn-success form-control" style="background-color: #27c24c"><span
-                class="glyphicon glyphicon-send">&nbsp;</span><span>确认</span></button>
-    </div>
-</div>
 <script type="text/javascript">
     var index1;
     $(function () {
@@ -69,9 +51,6 @@
             //1.初始化Table
             var oTable = new MissionHall.TableInit();
             oTable.Init();
-            //划分按钮
-            $("#divide").on("click", MissionHall.divideClick);
-            $("#confirm").on("click", MissionHall.confirmDistributor);
         },
         TableInit: function () {
             var oTableInit = new Object();
@@ -172,6 +151,10 @@
                                     return "已有预定";
                                 } else if (value == "4") {
                                     return "预定完成";
+                                } else if (value == "5") {
+                                    return "未订购";
+                                }else if (value == "6") {
+                                    return "已订购";
                                 }
                                 return value;
                             }
@@ -219,61 +202,16 @@
                         //shade: [0.4,'#000'], //0.1透明度的白色背景
                         maxmin: true, //开启最大化最小化按钮
                         area: ['950px', '600px'],
-                        content: CTX + '/SiteLease/OrderDetails/?website=' + row.website //iframe的url
+                        content: CTX + '/SiteLease/OrderDetails/?website=' + row.website, //iframe的url
+                        end:function () {
+                            $("#myTable").bootstrapTable("refresh");
+                        }
                     });
                 }
             };
             return oTableInit;
-        },
-        divideClick: function () {
-            var selectContent = $('#myTable').bootstrapTable('getSelections');
-            //console.info(selectContent);
-            if (selectContent.length == 0) {
-                layer.msg("请先选择行");
-                return;
-            }
-            $.post(CTX + '/SiteLease/GetDistributor', {}, function (data) {
-
-                var str = "<option value=\"0\">--请选择--</option>";
-                $.each(data, function (index, item) {
-                    str += "<option value=" + item.id + ">" + item.userName + "</option>";
-                });
-                $("#distributor").empty().append(str);
-            });
-
-            index1 = layer.open({
-                type: 1,
-                title: '划分订单 已选择行数：' + selectContent.length + '行',
-                skin: 'layui-layer-molv',
-                shade: 0.6,
-                area: ['30%', '31%'],
-                content: $('#selectDistributor'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-                end: function () {
-                    $("#selectDistributor").hide();
-                }
-            });
-            return;
-        },
-        confirmDistributor: function () {
-            if ($("#distributor").val() == "0") {
-                layer.msg("请选择渠道商");
-                return;
-            }
-            var selectContent = $('#myTable').bootstrapTable('getSelections');
-            $.post(CTX + '/SiteLease/DivideOrder', {
-                selectContent: selectContent,
-                distributor: $("#distributor").val(),
-                len: selectContent.length
-            }, function (data) {
-                if (data.code == "1") {
-                    layer.msg("成功");
-                    layer.close(index1);
-                    $("#myTable").bootstrapTable("refresh");
-                    return;
-                }
-                layer.msg("失败");
-            });
         }
+
     };
 </script>
 

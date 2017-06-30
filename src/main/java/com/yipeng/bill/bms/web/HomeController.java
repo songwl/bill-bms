@@ -51,8 +51,18 @@ public class HomeController extends BaseController {
         offerset offerset = offersetMapper.selectByUserId(user.getId());
         if (offerset != null) {
             bms.put("offerstate", offerset.getState());
+            bms.put("leasepower", offerset.getLeasepower());
         } else {
             bms.put("offerstate", 0);
+            bms.put("leasepower", 0);
+        }
+        if (user.hasRole("CUSTOMER")) {
+            offerset offerset1 = offersetMapper.selectByUserId(user.getCreateUserId());
+            if (offerset1 != null) {
+                bms.put("leasepowercustomer", offerset1.getLeasepower());
+            } else {
+                bms.put("leasepowercustomer", 0);
+            }
         }
         bms.put("UnReadNum", UnReadNum);
         bms.put("SendUnReadNum", SendUnReadNum);
@@ -81,21 +91,21 @@ public class HomeController extends BaseController {
     }
 
 
-
     @RequestMapping(value = "/homeDetails")
     @ResponseBody
     public Map<String, Object> homeDetails(ModelMap model) throws Exception {
-        LoginUser loginUser=this.getCurrentAccount();
-        Map<String, Object> bms=homeService.homeDetails(loginUser);
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> bms = homeService.homeDetails(loginUser);
         model.addAttribute("bmsModel", bms);
         return bms;
     }
+
     //客户数
     @RequestMapping(value = "/userCount")
     @ResponseBody
     public Map<String, Object> userCount(ModelMap model) throws Exception {
-        LoginUser loginUser=this.getCurrentAccount();
-        Map<String, Object> bms=homeService.userCount(loginUser);
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> bms = homeService.userCount(loginUser);
         model.addAttribute("bmsModel", bms);
         return bms;
     }
@@ -104,8 +114,8 @@ public class HomeController extends BaseController {
     @RequestMapping(value = "/balance")
     @ResponseBody
     public Map<String, Object> balance(ModelMap model) throws Exception {
-        LoginUser loginUser=this.getCurrentAccount();
-        Map<String, Object> bms=homeService.balance(loginUser);
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> bms = homeService.balance(loginUser);
         model.addAttribute("bmsModel", bms);
         return bms;
     }
@@ -114,62 +124,68 @@ public class HomeController extends BaseController {
     @RequestMapping(value = "/MonthConsumption")
     @ResponseBody
     public Map<String, Object> MonthConsumption(ModelMap model) throws Exception {
-        LoginUser loginUser=this.getCurrentAccount();
-        Map<String, Object> bms=homeService.MonthConsumption(loginUser);
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> bms = homeService.MonthConsumption(loginUser);
         model.addAttribute("bmsModel", bms);
         return bms;
     }
+
     //本日消费
     @RequestMapping(value = "/DayConsumption")
     @ResponseBody
     public Map<String, Object> DayConsumption(ModelMap model) throws Exception {
-        LoginUser loginUser=this.getCurrentAccount();
-        Map<String, Object> bms=homeService.DayConsumption(loginUser);
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> bms = homeService.DayConsumption(loginUser);
         model.addAttribute("bmsModel", bms);
         return bms;
     }
+
     //当前任务数
     @RequestMapping(value = "/billCount")
     @ResponseBody
     public Map<String, Object> billCount(ModelMap model) throws Exception {
-        LoginUser loginUser=this.getCurrentAccount();
-        Map<String, Object> bms=homeService.billCount(loginUser);
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> bms = homeService.billCount(loginUser);
         model.addAttribute("bmsModel", bms);
         return bms;
     }
+
     //累计任务数
     @RequestMapping(value = "/AllbillCount")
     @ResponseBody
     public Map<String, Object> AllbillCount(ModelMap model) throws Exception {
-        LoginUser loginUser=this.getCurrentAccount();
-        Map<String, Object> bms=homeService.AllbillCount(loginUser);
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> bms = homeService.AllbillCount(loginUser);
         model.addAttribute("bmsModel", bms);
         return bms;
     }
+
     //达标数
     @RequestMapping(value = "/standardSum")
     @ResponseBody
     public Map<String, Object> standardSum(ModelMap model) throws Exception {
-        LoginUser loginUser=this.getCurrentAccount();
-        Map<String, Object> bms=homeService.standardSum(loginUser);
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> bms = homeService.standardSum(loginUser);
         model.addAttribute("bmsModel", bms);
         return bms;
     }
+
     //百度
     @RequestMapping(value = "/baiduCompleteness")
     @ResponseBody
     public Map<String, Object> baiduCompleteness(ModelMap model) throws Exception {
-        LoginUser loginUser=this.getCurrentAccount();
-        Map<String, Object> bms=homeService.baiduCompleteness(loginUser);
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> bms = homeService.baiduCompleteness(loginUser);
         model.addAttribute("bmsModel", bms);
         return bms;
     }
+
     //手机百度
     @RequestMapping(value = "/baiduWapCompleteness")
     @ResponseBody
     public Map<String, Object> baiduWapCompleteness(ModelMap model) throws Exception {
-        LoginUser loginUser=this.getCurrentAccount();
-        Map<String, Object> bms=homeService.baiduWapCompleteness(loginUser);
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> bms = homeService.baiduWapCompleteness(loginUser);
         model.addAttribute("bmsModel", bms);
         return bms;
     }
@@ -178,25 +194,27 @@ public class HomeController extends BaseController {
     @RequestMapping(value = "/sanliulingCompleteness")
     @ResponseBody
     public Map<String, Object> sanliulingCompleteness(ModelMap model) throws Exception {
-        LoginUser loginUser=this.getCurrentAccount();
-        Map<String, Object> bms=homeService.sanliulingCompleteness(loginUser);
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> bms = homeService.sanliulingCompleteness(loginUser);
 
         return bms;
     }
+
     //搜狗
     @RequestMapping(value = "/sougouCompleteness")
     @ResponseBody
     public Map<String, Object> sougouCompleteness(ModelMap model) throws Exception {
-        LoginUser loginUser=this.getCurrentAccount();
-        Map<String, Object> bms=homeService.sougouCompleteness(loginUser);
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> bms = homeService.sougouCompleteness(loginUser);
         return bms;
     }
+
     //神马
     @RequestMapping(value = "/shenmaCompleteness")
     @ResponseBody
     public Map<String, Object> shenmaCompleteness(ModelMap model) throws Exception {
-        LoginUser loginUser=this.getCurrentAccount();
-        Map<String, Object> bms=homeService.shenmaCompleteness(loginUser);
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> bms = homeService.shenmaCompleteness(loginUser);
 
         return bms;
     }

@@ -71,5 +71,8 @@ public interface UserMapper {
 
     //根据用户id得到角色名称
     String selectRoleName(String currentId);
+
     List<User> selectUserNameById(Map<String, Object> map);
+
+    List<Map<String, Object>> selectCustomer(Long userId);
 }

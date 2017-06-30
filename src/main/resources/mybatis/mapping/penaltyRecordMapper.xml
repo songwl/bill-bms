@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yipeng.bill.bms.dao.penaltyRecordMapper">
+  <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.penaltyRecord">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="fundAccountId" jdbcType="BIGINT" property="fundaccountid" />
+    <result column="initialMoney" jdbcType="DOUBLE" property="initialmoney" />
+    <result column="happenMoney" jdbcType="DOUBLE" property="happenmoney" />
+    <result column="balanceMoney" jdbcType="DOUBLE" property="balancemoney" />
+    <result column="itemType" jdbcType="INTEGER" property="itemtype" />
+    <result column="updateTime" jdbcType="TIMESTAMP" property="updatetime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, fundAccountId, initialMoney, happenMoney, balanceMoney, itemType, updateTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from penaltyrecord
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from penaltyrecord
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.penaltyRecord">
+    insert into penaltyrecord (id, fundAccountId, initialMoney, 
+      happenMoney, balanceMoney, itemType, 
+      updateTime)
+    values (#{id,jdbcType=BIGINT}, #{fundaccountid,jdbcType=BIGINT}, #{initialmoney,jdbcType=DOUBLE}, 
+      #{happenmoney,jdbcType=DOUBLE}, #{balancemoney,jdbcType=DOUBLE}, #{itemtype,jdbcType=INTEGER}, 
+      #{updatetime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.penaltyRecord">
+    insert into penaltyrecord
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="fundaccountid != null">
+        fundAccountId,
+      </if>
+      <if test="initialmoney != null">
+        initialMoney,
+      </if>
+      <if test="happenmoney != null">
+        happenMoney,
+      </if>
+      <if test="balancemoney != null">
+        balanceMoney,
+      </if>
+      <if test="itemtype != null">
+        itemType,
+      </if>
+      <if test="updatetime != null">
+        updateTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="fundaccountid != null">
+        #{fundaccountid,jdbcType=BIGINT},
+      </if>
+      <if test="initialmoney != null">
+        #{initialmoney,jdbcType=DOUBLE},
+      </if>
+      <if test="happenmoney != null">
+        #{happenmoney,jdbcType=DOUBLE},
+      </if>
+      <if test="balancemoney != null">
+        #{balancemoney,jdbcType=DOUBLE},
+      </if>
+      <if test="itemtype != null">
+        #{itemtype,jdbcType=INTEGER},
+      </if>
+      <if test="updatetime != null">
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.penaltyRecord">
+    update penaltyrecord
+    <set>
+      <if test="fundaccountid != null">
+        fundAccountId = #{fundaccountid,jdbcType=BIGINT},
+      </if>
+      <if test="initialmoney != null">
+        initialMoney = #{initialmoney,jdbcType=DOUBLE},
+      </if>
+      <if test="happenmoney != null">
+        happenMoney = #{happenmoney,jdbcType=DOUBLE},
+      </if>
+      <if test="balancemoney != null">
+        balanceMoney = #{balancemoney,jdbcType=DOUBLE},
+      </if>
+      <if test="itemtype != null">
+        itemType = #{itemtype,jdbcType=INTEGER},
+      </if>
+      <if test="updatetime != null">
+        updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.penaltyRecord">
+    update penaltyrecord
+    set fundAccountId = #{fundaccountid,jdbcType=BIGINT},
+      initialMoney = #{initialmoney,jdbcType=DOUBLE},
+      happenMoney = #{happenmoney,jdbcType=DOUBLE},
+      balanceMoney = #{balancemoney,jdbcType=DOUBLE},
+      itemType = #{itemtype,jdbcType=INTEGER},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

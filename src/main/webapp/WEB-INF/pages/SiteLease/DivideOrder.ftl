@@ -59,6 +59,11 @@
                 class="glyphicon glyphicon-send">&nbsp;</span><span>确认</span></button>
     </div>
 </div>
+<style type="text/css">
+    td{
+        text-align: center;
+    }
+</style>
 <script type="text/javascript">
     var index1;
     $(function () {
@@ -104,9 +109,9 @@
 
                     columns: [
                         {
-                            field : 'checked',
+                            field: 'checked',
                             checkbox: true,
-                            formatter : stateFormatter
+                            formatter: stateFormatter
                         },
                         {
                             field: 'id',
@@ -172,6 +177,10 @@
                                     return "已有预定";
                                 } else if (value == "4") {
                                     return "预定完成";
+                                } else if (value == "5") {
+                                    return "等待客户订购";
+                                } else if (value == "6") {
+                                    return "订购完成";
                                 }
                                 return value;
                             }
@@ -199,14 +208,17 @@
                         }
                     ]
                 });
-            };function stateFormatter(value, row, index) {
-                if (row.orderstate == 4)
+            };
+
+            function stateFormatter(value, row, index) {
+                if (row.orderstate > 3)
                     return {
                         disabled: true,//设置是否可用
                         checked: false//设置选中
                     };
                 return value;
             }
+
             //得到查询的参数
             //oTableInit.queryParams = MissionHall.queryParams;
             oTableInit.queryParams = function (params) {
@@ -220,9 +232,25 @@
                 'click #details': function (e, value, row, index) {
                     $.post(CTX + '/SiteLease/GetDetails', {website: row.website}, function (data) {
                         var str = "<table class=\"table table-hover table-striped table-bordered\">" +
-                                "<thead><tr><th>网址</th><th>关键词</th><th>初排</th><th>新排</th><th>百度电脑</th><th>百度手机</th><th>搜狗</th><th>360</th><th>神马</th><th>时间</th></thead><tbody>";
+                                "<thead><tr><th>网址</th><th>关键词</th><th>初排</th><th>新排</th><th>搜索引擎</th><th>价格</th><th>时间</th></thead><tbody>";
                         $.each(data, function (index, item) {
-                            str += "<tr><td><span>" + item.website + "</span></td><td>" + item.keywords + "</td><td>" + item.firstRanking + "</td><td>" + item.newRanking + "</td><td>" + item.PriceBaiduPc + "</td><td>" + item.PriceBaiduWap + "</td><td>" + item.PriceSogouPc + "</td><td>" + item.PriceSoPc + "</td><td>" + item.PriceSm + "</td><td><span>" + new Date(item.time).toLocaleString() + "</span></td></tr>";
+                            switch (item.search_support) {
+                                case "百度":
+                                    str += "<tr><td><span>" + item.website + "</span></td><td>" + item.keywords + "</td><td>" + item.firstRanking + "</td><td>" + item.newRanking + "</td><td>" + item.search_support + "</td><td>" + item.PriceBaiduPc + "</td><td><span>" + new Date(item.time).toLocaleString() + "</span></td></tr>";
+                                    break;
+                                case "手机百度":
+                                    str += "<tr><td><span>" + item.website + "</span></td><td>" + item.keywords + "</td><td>" + item.firstRanking + "</td><td>" + item.newRanking + "</td><td>" + item.search_support + "</td><td>" + item.PriceBaiduWap + "</td><td><span>" + new Date(item.time).toLocaleString() + "</span></td></tr>";
+                                    break;
+                                case "搜狗":
+                                    str += "<tr><td><span>" + item.website + "</span></td><td>" + item.keywords + "</td><td>" + item.firstRanking + "</td><td>" + item.newRanking + "</td><td>" + item.search_support + "</td><td>" + item.PriceSogouPc + "</td><td><span>" + new Date(item.time).toLocaleString() + "</span></td></tr>";
+                                    break;
+                                case "360":
+                                    str += "<tr><td><span>" + item.website + "</span></td><td>" + item.keywords + "</td><td>" + item.firstRanking + "</td><td>" + item.newRanking + "</td><td>" + item.search_support + "</td><td>" + item.PriceSoPc + "</td><td><span>" + new Date(item.time).toLocaleString() + "</span></td></tr>";
+                                    break;
+                                case "神马":
+                                    str += "<tr><td><span>" + item.website + "</span></td><td>" + item.keywords + "</td><td>" + item.firstRanking + "</td><td>" + item.newRanking + "</td><td>" + item.search_support + "</td><td>" + item.PriceSm + "</td><td><span>" + new Date(item.time).toLocaleString() + "</span></td></tr>";
+                                    break;
+                            }
                         });
                         str += "</tbody></table>";
                         layer.open({
@@ -282,6 +310,10 @@
                     layer.msg("成功");
                     layer.close(index1);
                     $("#myTable").bootstrapTable("refresh");
+                    return;
+                }
+                else if (data.code == "-1" || data.code == "-3") {
+                    layer.msg(data.message);
                     return;
                 }
                 layer.msg("失败");

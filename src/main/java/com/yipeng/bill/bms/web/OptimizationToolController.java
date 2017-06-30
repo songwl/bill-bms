@@ -77,6 +77,7 @@ public class OptimizationToolController extends BaseController {
         modelMap.put("rote", offerset.getRate());
         return "/optimizationtool/ParameterSetting";
     }
+
     @RequestMapping(value = "/KeywordsList")
     public String KeywordsList(ModelMap modelMap) {
         LoginUser loginUser = this.getCurrentAccount();
@@ -213,6 +214,14 @@ public class OptimizationToolController extends BaseController {
         if (!loginUser.hasRole("DISTRIBUTOR")) {
             return this.ajaxDone(-1, "你没有权限", null);
         }
+        offerset offerset1 = offersetMapper.selectByUserId(loginUser.getId());
+        if (offerset1.getState()==0) {
+            return this.ajaxDone(-2, "你没有权限", null);
+        }
+        offerset offerset = offersetMapper.selectByUserId(Long.parseLong(data));
+        if (offerset.getState()==0) {
+            return this.ajaxDone(-2, "请先开通该代理商报价权限", null);
+        }
         String RoleName = userMapper.selectRoleName(data);
         if (!RoleName.equals("AGENT")) {
             return this.ajaxDone(-2, "所选账号不是代理商", null);
@@ -224,9 +233,27 @@ public class OptimizationToolController extends BaseController {
         return this.ajaxDone(flag ? 1 : 0, "", null);
     }
 
+    @RequestMapping(value = "/OpenDistributorWebsitePower", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage OpenDistributorWebsitePower(String data, int type) {
+        LoginUser loginUser = this.getCurrentAccount();
+        if (!loginUser.hasRole("SUPER_ADMIN")) {
+            return this.ajaxDone(-1, "你没有权限", null);
+        }
+        offerset offerset = offersetMapper.selectByUserId(Long.parseLong(data));
+        if (offerset.getState()==0) {
+            return this.ajaxDone(-2, "请先开通该渠道商报价权限", null);
+        }
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("arr", data);
+        map1.put("type", type);
+        boolean flag = optimizationToolService.setAgentWebsitePower(map1);
+        return this.ajaxDone(flag ? 1 : 0, "", null);
+    }
+
     @RequestMapping(value = "/GetKeywordsList", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String, Object> GetKeywordsList(int limit, int offset,String keywords) {
+    public Map<String, Object> GetKeywordsList(int limit, int offset, String keywords) {
         LoginUser loginUser = this.getCurrentAccount();
         if (!loginUser.hasRole("SUPER_ADMIN")) {
             return null;

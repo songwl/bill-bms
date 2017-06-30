@@ -260,5 +260,6 @@
                 class="glyphicon glyphicon-send">&nbsp;</span><span>确认</span></button>
     </div>
 </div>
+<input type="hidden" value="${bmsModel.leasePower}" id="leasepower">
 <!--报价设置end-->
 </@base.html>

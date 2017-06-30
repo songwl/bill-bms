@@ -33,7 +33,6 @@ public interface orderLeaseMapper {
     int updateByWebsite(Map<String, Object> map);
 
     int updateByWebsiteNoReserve(Map<String, Object> map);//不修改已完成预定
-    int updateCustomerIdByWebsite(Map<String, Object> map);//不修改已完成预定
 
     Long selectByReceiveIdCount(Map<String, Object> param);
 
@@ -52,5 +51,11 @@ public interface orderLeaseMapper {
     int selectOrderDetailsByWebsiteCount(Map<String, Object> map);
 
     List<Map<String, Object>> selectOrderDetailsByWebsite(Map<String, Object> map);
+
+    List<orderLease> selectAllByWebsite(String website);
+
+    Long selectByCustomerCount(Map<String, Object> param);
+
+    List<Map<String, Object>> selectByCustomer(Map<String, Object> param);
 }
 

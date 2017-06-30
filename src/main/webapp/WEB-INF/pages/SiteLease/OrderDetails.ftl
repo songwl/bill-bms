@@ -134,43 +134,35 @@
                             valign: 'middle'
                         },
                         {
-                            field: 'PriceBaiduPc',
-                            title: '百度电脑',
+                            field: 'search_support',
+                            title: '搜索引擎',
                             align: 'center',
                             valign: 'middle'
 
                         },
                         {
-                            field: 'PriceBaiduWap',
+                            field: 'price',
                             align: 'center',
                             valign: 'middle',
-                            title: '百度手机',
-                        },
-                        {
-                            field: 'PriceSogouPc',
-                            align: 'center',
-                            valign: 'middle',
-                            title: '搜狗',
+                            title: '价格',
                             formatter: function (value, row, index) {
-                                return value;
-                            }
-                        },
-                        {
-                            field: 'PriceSoPc',
-                            align: 'center',
-                            valign: 'middle',
-                            title: '360',
-                            formatter: function (value, row, index) {
-                                return value;
-                            }
-                        },
-                        {
-                            field: 'PriceSm',
-                            align: 'center',
-                            valign: 'middle',
-                            title: '神马',
-                            formatter: function (value, row, index) {
-                                return value;
+                                switch (row.search_support) {
+                                    case "百度":
+                                        return row.PriceBaiduPc;
+                                        break;
+                                    case "手机百度":
+                                        return row.PriceBaiduWap;
+                                        break;
+                                    case "搜狗":
+                                        return row.PriceSogouPc;
+                                        break;
+                                    case "360":
+                                        return row.PriceSoPc;
+                                        break;
+                                    case "神马":
+                                        return row.PriceSm;
+                                        break;
+                                }
                             }
                         },
                         {
@@ -190,22 +182,14 @@
                             title: '状态',
                             formatter: function (value, row, index) {
                                 var a = "";
-                                if (row.orderState == 5) {
-                                    var flag = false;
-                                    var arr = row.customerId.split(",");
-                                    for (var i = 0; i < arr.length; i++) {
-                                        if (arr[i] ==${userId}) {
-                                            flag = true;
-                                            break;
-                                        }
-                                    }
-                                    if (flag) {
-                                        a += "<a style='color: #aaaaaa;' id='reserveCancel'>已预定</a>";
+                                if (row.orderState == 6) {
+                                    if (row.customerId ==${userId}) {
+                                        a += "<a style='color: #aaaaaa;' id='reserveCancel'>已订购</a>";
                                     } else {
-                                        a += "<a style='color: #ff0000;' id='reserve'>未预定</a>";
+                                        a += "<a style='color: #ff0000;' id='reserve'>未订购</a>";
                                     }
-                                } else{
-                                    a += "<a style='color: #ff0000;' id='reserve'>未预定</a>";
+                                } else {
+                                    a += "<a style='color: #ff0000;' id='reserve'>未订购</a>";
                                 }
                                 return a;
                             }

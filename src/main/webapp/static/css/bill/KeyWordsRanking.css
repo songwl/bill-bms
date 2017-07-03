@@ -15,6 +15,25 @@ ul{
     display :none;
 }
 
+.ImportPriceKuaipai
+{
+    position: absolute;
+    z-index: 999;
+    background: #fff;
+    border: 1px solid #eee;
+    width: 90px;
+    display :none;
+}
+.ImportPriceChuzu
+{
+    position: absolute;
+    z-index: 999;
+    background: #fff;
+    border: 1px solid #eee;
+    width: 90px;
+    display :none;
+}
+
 #Sameprice
 {
     border-bottom: 1px solid #eee;

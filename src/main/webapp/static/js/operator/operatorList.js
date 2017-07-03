@@ -15,7 +15,51 @@ $(".search").click(function () {
     }
 
 
+
 })
+$(".openLeaseRole").click(function () {
+    var selectContent = $('#myTable').bootstrapTable('getSelections');
+    //console.info(selectContent);
+    if (selectContent.length == 0) {
+        layer.msg("请先选择一列数据！");
+        return;
+    }//询问框
+    layer.confirm('是否 开通/关闭 已选择渠道商的网站出租平台权限？', {
+        btn: ['开通', '关闭'] //按钮
+    }, function () {
+        $.post(CTX + '/optimizationTool/OpenWebsitePower', {
+            data: selectContent,
+            type: 1,
+            len: selectContent.length
+        }, function (data) {
+            if (data.code == "1") {
+                layer.msg("开通成功");
+                return;
+            }
+            else {
+                layer.msg("开通失败");
+                return;
+            }
+        })
+        $('#myTable').bootstrapTable('refresh');
+    }, function () {
+        $.post(CTX + '/optimizationTool/OpenWebsitePower', {
+            data: selectContent, type: 0,
+            len: selectContent.length
+        }, function (data) {
+            if (data.code == "1") {
+                layer.msg("关闭成功");
+                return;
+            }
+            else {
+                layer.msg("关闭失败");
+                return;
+            }
+        })
+        $('#myTable').bootstrapTable('refresh');
+    });
+
+});
 
 var userName=false;
 var password=false;
@@ -342,6 +386,27 @@ var TableInit = function () {
                         else
                         {
                             a="<span>冻结中</span>";
+                        }
+                        return a;
+                    }
+
+
+
+                },
+                {
+                    field: "leaseRole",
+                    align: 'center',
+                    valign: 'middle',
+                    title: '租站',
+                    formatter:function (value,row,index) {
+                        var a="";
+                        if(value==1)
+                        {
+                            a="<span style='color:#4382CF;cursor:pointer;' id='details'>有</span>";
+                        }
+                        else
+                        {
+                            a="<span style='color:#4382CF;'>-</span>";
                         }
                         return a;
                     }

@@ -2,13 +2,11 @@ package com.yipeng.bill.bms.service.impl;
 
 import com.yipeng.bill.bms.core.crypto.CryptoUtils;
 import com.yipeng.bill.bms.core.utils.DateUtils;
-import com.yipeng.bill.bms.dao.FundAccountMapper;
-import com.yipeng.bill.bms.dao.RoleMapper;
-import com.yipeng.bill.bms.dao.UserMapper;
-import com.yipeng.bill.bms.dao.UserRoleMapper;
+import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.Role;
 import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.domain.UserRole;
+import com.yipeng.bill.bms.domain.offerset;
 import com.yipeng.bill.bms.service.OperatorService;
 import com.yipeng.bill.bms.service.RoleService;
 import com.yipeng.bill.bms.service.UserRoleService;
@@ -38,6 +36,9 @@ public class OperatorServiceImpl implements OperatorService {
     private UserRoleService userRoleService;
     @Autowired
     private FundAccountMapper fundAccountMapper;
+    @Autowired
+    private offersetMapper offersetMapper;
+
 
     @Override
     public int saveOperator(User user, LoginUser users,String roleName) {
@@ -116,6 +117,23 @@ public class OperatorServiceImpl implements OperatorService {
             if(user.getLoginCount()!=null)
             {
                 customerListDetails.setLoginCount(user.getLoginCount());
+            }
+            //查询是否拥有出租平台权限
+            offerset offerset=offersetMapper.selectByUserId(user.getId());
+            if(offerset==null)
+            {
+                customerListDetails.setLeaseRole(0);
+            }
+            else
+            {
+                if(offerset.getLeasepower()==1)
+                {
+                    customerListDetails.setLeaseRole(1);
+                }
+                else
+                {
+                    customerListDetails.setLeaseRole(0);
+                }
             }
 
             customerListDetailsList.add(customerListDetails);

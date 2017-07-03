@@ -13,7 +13,8 @@ $(".dfpricecmt").click(function () {
     var keywordarr = keyword.split('\n');
     var urlarr = url.split('\n');
     var pricearr = price.split('\n');
-var  index;
+    var billType=$("#billType").val();
+    var  index;
     var bool = false;
     if (keywordarr.length >= 1 && urlarr.length >= 1 && pricearr.length >= 1
         && keywordarr.length == urlarr.length && keywordarr.length == pricearr.length
@@ -40,7 +41,8 @@ var  index;
                 dfrankend: rankend,
                 dfkeyword: keyword,
                 dfurl: url,
-                dfprice: price
+                dfprice: price,
+                billType:billType
             },
             beforeSend: function () {
                 index  = layer.load(1, {

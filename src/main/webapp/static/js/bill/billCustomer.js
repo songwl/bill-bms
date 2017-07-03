@@ -11,7 +11,7 @@ var searchStandard=null;
 var standardDays=null;
 var addTime=null;
 $(document).ready(function () {
-    //显示导入价格内容
+    //显示导入价格内容（正常单）
     $(".Import").click(function (e) {
         if($(".ImportPrice").css("display")=="block") {
             $(".ImportPrice").slideUp();
@@ -20,6 +20,41 @@ $(document).ready(function () {
         else
         {
             $(".ImportPrice").slideDown();
+            $(".ImportPriceKuaipai").slideUp();
+            $(".ImportPriceChuzu").slideUp();
+            $(".samepriceDiv").slideUp();
+            $(".differentpriceDiv").slideUp();
+            $(".Navs2").slideUp();
+        }
+    })
+    //显示导入价格内容（快拍单）
+    $(".ImportKuaipai").click(function (e) {
+        if($(".ImportPriceKuaipai").css("display")=="block") {
+            $(".ImportPriceKuaipai").slideUp();
+
+        }
+        else
+        {
+            $(".ImportPriceKuaipai").slideDown();
+            $(".ImportPrice").slideUp();
+            $(".ImportPriceChuzu").slideUp();
+            $(".samepriceDiv").slideUp();
+            $(".differentpriceDiv").slideUp();
+            $(".Navs2").slideUp();
+        }
+    })
+
+    //显示导入价格内容（出租单）
+    $(".ImportChuzu").click(function (e) {
+        if($(".ImportPriceChuzu").css("display")=="block") {
+            $(".ImportPriceChuzu").slideUp();
+
+        }
+        else
+        {
+            $(".ImportPriceChuzu").slideDown();
+            $(".ImportPrice").slideUp();
+            $(".ImportPriceKuaipai").slideUp();
             $(".samepriceDiv").slideUp();
             $(".differentpriceDiv").slideUp();
             $(".Navs2").slideUp();
@@ -27,38 +62,66 @@ $(document).ready(function () {
     })
 
 
-    //相同价导入
+    //相同价导入（正常单）
     $("#Sameprice").click(function () {
-
-        if($(".samepriceDiv").css("display")=="block") {
-            $(".samepriceDiv").slideUp();
-            $(".modal-backdrop").hide();
-
-        }
-        else {
             $(".modal-backdrop").show();
             $(".samepriceDiv").slideDown();
             $(".differentpriceDiv").slideUp();
             $(".Navs2").slideUp();
-        }
+             $("#billType").val("1");
 
     })
 
-    //不同价导入
+    //不同价导入（正常单）
     $("#Differentprice").click(function () {
-        if($(".differentpriceDiv").css("display")=="block") {
-            $(".differentpriceDiv").slideUp();
-
-        }
-        else {
             $(".modal-backdrop").show();
             $(".differentpriceDiv").slideDown();
             $(".samepriceDiv").slideUp();
             $(".Navs2").slideUp();
-        }
+             $("#billType").val("1");
+    })
 
+    //相同价导入（快排单）
+    $("#SamepriceKuaipai").click(function () {
+        $(".modal-backdrop").show();
+        $(".samepriceDiv").slideDown();
+        $(".differentpriceDiv").slideUp();
+        $(".Navs2").slideUp();
+        $("#billType").val("2");
 
     })
+
+    //不同价导入（快排单）
+    $("#DifferentpriceKuaiPai").click(function () {
+        $(".modal-backdrop").show();
+        $(".differentpriceDiv").slideDown();
+        $(".samepriceDiv").slideUp();
+        $(".Navs2").slideUp();
+        $("#billType").val("2");
+    })
+
+    //相同价导入（出租单）
+    $("#SamepriceChuzu").click(function () {
+        $(".modal-backdrop").show();
+        $(".samepriceDiv").slideDown();
+        $(".differentpriceDiv").slideUp();
+        $(".Navs2").slideUp();
+        $("#billType").val("4");
+
+    })
+
+    //不同价导入（出租单）
+    $("#DifferentpriceChuzu").click(function () {
+        $(".modal-backdrop").show();
+        $(".differentpriceDiv").slideDown();
+        $(".samepriceDiv").slideUp();
+        $(".Navs2").slideUp();
+        $("#billType").val("4");
+    })
+
+
+
+
     $(".close").click(function () {
         $(".samepriceDiv").slideUp();
         $(".differentpriceDiv").slideUp();

@@ -248,4 +248,6 @@ public interface BillService {
     Map<String,Object> getBillGroupTable( Map<String, Object> params, LoginUser loginUser);
     int billToGroupCmt(Map<String, String[]> params, LoginUser loginUser);//确认分组
     int deleteGroup(String groupId,LoginUser loginUser);
+    //分配出租订单
+    int leaseBill( Map<String, String[]> params, LoginUser loginUser);
 }

@@ -825,7 +825,7 @@ public class BillController extends BaseController {
         }
 
         Map<String, Object> modelMap = billService.pendingAuditList(params, user);
-        return modelMap;
+            return modelMap;
     }
 
     /**
@@ -1716,6 +1716,23 @@ public class BillController extends BaseController {
 
     }
     /**
+     * 出租订单分配
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/leaseBill",method = RequestMethod.POST)
+    @ResponseBody
+    public  ResultMessage leaseBill(HttpServletRequest request)
+    {
+        Map<String,String[]> map=request.getParameterMap();
+        LoginUser loginUser=this.getCurrentAccount();
+        int a=billService.leaseBill(map,loginUser);
+        return  null;
+
+    }
+
+    /**
      * 删除分组
      *
      * @param request
@@ -1738,7 +1755,7 @@ public class BillController extends BaseController {
                 return this.ajaxDoneError("删除失败！");
             }
         }
-       else
+        else
         {
             return this.ajaxDoneError("数据解析失败！！");
         }

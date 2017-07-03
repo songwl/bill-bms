@@ -13,14 +13,31 @@
 <div class="Navs">
     <div class="nav_L left">
         <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>关键词排名</span>
+        <input type="hidden" value="1" id="billType">
     </div>
     <div class="nav_R right" id="divQx">
-
         <div class="Import">
-            <span id="Import">&nbsp;<i class="fa fa-arrow-down"></i>&nbsp;导入</span>
+            <span id="Import">&nbsp;<i class="fa fa-tags"></i>&nbsp;正常单</span>
             <ul class="ImportPrice" style="border: #d9d9d9 solid 1px;">
                 <li id="Sameprice" style="border-bottom: #d9d9d9 solid 1px;">相同价导入</li>
                 <li id="Differentprice">不同价导入</li>
+            </ul>
+        </div>
+        <div class="ImportKuaipai">
+            <span id="ImportKuaipai">&nbsp;<i class="fa fa-tags"></i>&nbsp;快排单</span>
+            <ul class="ImportPriceKuaipai" style="border: #d9d9d9 solid 1px;">
+                <li id="SamepriceKuaipai" style="border-bottom: #d9d9d9 solid 1px;">相同价导入</li>
+                <li id="DifferentpriceKuaiPai">不同价导入</li>
+            </ul>
+        </div>
+        <div class="ImportBaonian">
+            <span id="xxx">&nbsp;<i class="fa fa-tags"></i>&nbsp;包年单</span>
+        </div>
+        <div class="ImportChuzu">
+            <span id="ImportChuzu">&nbsp;<i class="fa fa-tags"></i>&nbsp;出租单</span>
+            <ul class="ImportPriceChuzu" style="border: #d9d9d9 solid 1px;">
+                <li id="SamepriceChuzu" style="border-bottom: #d9d9d9 solid 1px;">相同价导入</li>
+                <li id="DifferentpriceChuzu">不同价导入</li>
             </ul>
         </div>
         <div id="billToChange" style="width:100px;">

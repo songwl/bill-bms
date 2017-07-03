@@ -870,6 +870,7 @@ $(function () {
 
         $('#myTable').bootstrapTable('refresh');
     });
+
     $("#websiteLeasePower").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
         //console.info(selectContent);

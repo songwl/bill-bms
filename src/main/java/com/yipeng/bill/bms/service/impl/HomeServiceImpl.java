@@ -171,9 +171,6 @@ public class HomeServiceImpl implements HomeService {
                 String str=formatter.format(tomorrow);
                 dateMap.put("date",str);
 
-
-
-
                 int keywordsCount=billCostMapper.selectByBillCostOfDay(dateMap);
                 Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
 

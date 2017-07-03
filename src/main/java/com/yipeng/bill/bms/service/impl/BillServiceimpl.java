@@ -58,6 +58,10 @@ public class BillServiceimpl implements BillService {
     private BillGroupMapper billGroupMapper;
     @Autowired
     private BillGroupRoleMapper billGroupRoleMapper;
+    @Autowired
+    private KeywordsPriceMapper keywordsPriceMapper;
+    @Autowired
+    private orderLeaseMapper orderLeaseMapper;
 
     Md5_UrlEncode md5_urlEncode = new Md5_UrlEncode();
 
@@ -88,6 +92,7 @@ public class BillServiceimpl implements BillService {
         String[] keywords = keywordsArr[0].split("\n");
         String[] search = params.get("search");
         String[] customerId = params.get("customerId");
+        String[] billType = params.get("billType");
         String errorDetails = "";
         //判断是否为网址
         Pattern pattern = Pattern
@@ -156,6 +161,7 @@ public class BillServiceimpl implements BillService {
                     map.put("rankend2", rankend2[0]);
                     map.put("price3", price3[0]);
                     map.put("rankend3", rankend3[0]);
+                    map.put("billType", billType[0]);
                     map.put("state", state);
                     //存在 判断搜索引擎是否一致
                     if (billList.size() > 0) {
@@ -229,6 +235,7 @@ public class BillServiceimpl implements BillService {
         String[] dfsearch = params.get("dfsearch");
         String[] dfrankend = params.get("dfrankend");
         String[] customerId = params.get("customerIds");
+        String[] billType = params.get("billType");
         String errorDetails = "";
         //判断是否为网址
         Pattern pattern = Pattern
@@ -317,8 +324,8 @@ public class BillServiceimpl implements BillService {
                             bill.setState(state);
                             //删除状态（0未删除，1已删除）
                             bill.setDeleteState(0);
-                            //正常单
-                            bill.setBillType(1);
+                            //订单属性
+                            bill.setBillType(Integer.parseInt(billType[0]));
                             //优化状态（未优化）（调点击）
                             bill.setOpstate(0);
                             Long billId = billMapper.insert(bill);
@@ -369,8 +376,8 @@ public class BillServiceimpl implements BillService {
                         bill.setState(state);
                         //删除状态（0未删除，1已删除）
                         bill.setDeleteState(0);
-                        //正常单
-                        bill.setBillType(1);
+                        //订单属性
+                        bill.setBillType(Integer.parseInt(billType[0]));
                         Long billId = billMapper.insert(bill);
                         //订单引擎表
                         BillSearchSupport billSearchSupport = new BillSearchSupport();
@@ -559,6 +566,7 @@ public class BillServiceimpl implements BillService {
     public void insertPirce(Map<String, Object> params) {
         Long customerId = Long.valueOf(params.get("customerId").toString());
         Long CreateUserId = Long.valueOf(params.get("CreateUserId").toString());
+        int billType = Integer.parseInt(params.get("billType").toString());
         Bill bill = new Bill();
         bill.setWebsite(params.get("url").toString());
         bill.setKeywords(params.get("keywords").toString());
@@ -572,8 +580,8 @@ public class BillServiceimpl implements BillService {
         bill.setDayOptimization(0);
         bill.setAllOptimization(0);
         bill.setState(Integer.parseInt(params.get("state").toString()));
-        //正常单
-        bill.setBillType(1);
+        //订单属性
+        bill.setBillType(billType);
         //优化状态（未优化）（调点击）
         bill.setOpstate(0);
         //删除状态（0未删除，1已删除）
@@ -713,6 +721,7 @@ public class BillServiceimpl implements BillService {
                 billDetails.setStandardDays(bill.getStandardDays());
                 billDetails.setState(bill.getState());
                 billDetails.setLength(total);
+                billDetails.setBillType(bill.getBillType());
                 billDetailsList.add(billDetails);
             }
 
@@ -1062,28 +1071,25 @@ public class BillServiceimpl implements BillService {
         String[] rankend3 = params.get("rankend3");
         String[] dailiUserId = params.get("dailiUserId");
         String[] kehuUserId = params.get("kehuUserId");
-        String message="";
+        String message = "";
         int length = Integer.parseInt(checkboxLength[0]);
         for (int i = 0; i < length; i++) {
             //数据库订单ID
             String[] id = params.get("selectContent[" + i + "][id]");
             Long billId = Long.parseLong(id[0]);
-            Bill bill=billMapper.selectByPrimaryKey(billId);
+            Bill bill = billMapper.selectByPrimaryKey(billId);
             //查询单价
-            BillPrice billPrice=new BillPrice();
+            BillPrice billPrice = new BillPrice();
             billPrice.setInMemberId(loginUser.getId());
             billPrice.setBillId(billId);
-            List<BillPrice> billPriceList=billPriceMapper.selectByBillPrice(billPrice);
-            if(!CollectionUtils.isEmpty(billPriceList))
-            {
+            List<BillPrice> billPriceList = billPriceMapper.selectByBillPrice(billPrice);
+            if (!CollectionUtils.isEmpty(billPriceList)) {
 
 
-                if (billPriceList.size()==1)
-                {
-                    if(!"".equals(rankend[0])&&!"".equals(price[0]))
-                    {
+                if (billPriceList.size() == 1) {
+                    if (!"".equals(rankend[0]) && !"".equals(price[0])) {
                         billPriceList.get(0).setOutMemberId(Long.parseLong(dailiUserId[0]));
-                        BillPrice billPriceNew=new BillPrice();
+                        BillPrice billPriceNew = new BillPrice();
                         billPriceNew.setBillId(billId);
                         billPriceNew.setInMemberId(Long.parseLong(dailiUserId[0]));
                         billPriceNew.setOutMemberId(Long.parseLong(kehuUserId[0]));
@@ -1092,23 +1098,18 @@ public class BillServiceimpl implements BillService {
                         billPriceNew.setCreateTime(new Date());
                         billPriceMapper.insert(billPriceNew);
                         billPriceMapper.updateByPrimaryKeySelective(billPriceList.get(0));
-                    }
-                    else
-                    {
-                        message+="订单："+bill.getKeywords()+" , ";
+                    } else {
+                        message += "订单：" + bill.getKeywords() + " , ";
                         continue;
                     }
                 }
-                if(billPriceList.size()>1)
-                {
-                    if(billPriceList.size()==2)
-                    {
+                if (billPriceList.size() > 1) {
+                    if (billPriceList.size() == 2) {
                         billPriceList.get(0).setOutMemberId(Long.parseLong(dailiUserId[0]));
                         billPriceList.get(1).setOutMemberId(Long.parseLong(dailiUserId[0]));
-                        if(!"".equals(rankend[0])&&!"".equals(price[0]))
-                        {
+                        if (!"".equals(rankend[0]) && !"".equals(price[0])) {
                             billPriceList.get(0).setOutMemberId(Long.parseLong(dailiUserId[0]));
-                            BillPrice billPriceNew1=new BillPrice();
+                            BillPrice billPriceNew1 = new BillPrice();
                             billPriceNew1.setBillId(billId);
                             billPriceNew1.setInMemberId(Long.parseLong(dailiUserId[0]));
                             billPriceNew1.setOutMemberId(Long.parseLong(kehuUserId[0]));
@@ -1116,17 +1117,14 @@ public class BillServiceimpl implements BillService {
                             billPriceNew1.setPrice(new BigDecimal(price[0]));
                             billPriceNew1.setCreateTime(new Date());
                             billPriceMapper.insert(billPriceNew1);
-                            BillPrice billPriceNew2=new BillPrice();
+                            BillPrice billPriceNew2 = new BillPrice();
                             billPriceNew2.setBillId(billId);
                             billPriceNew2.setInMemberId(Long.parseLong(dailiUserId[0]));
                             billPriceNew2.setOutMemberId(Long.parseLong(kehuUserId[0]));
-                            if(!"NaN".equals(rankend1[0])&&!"NaN".equals(price1[0]))
-                            {
+                            if (!"NaN".equals(rankend1[0]) && !"NaN".equals(price1[0])) {
                                 billPriceNew2.setBillRankingStandard(new Long(rankend1[0]));
                                 billPriceNew2.setPrice(new BigDecimal(price1[0]));
-                            }
-                            else
-                            {
+                            } else {
                                 billPriceNew2.setBillRankingStandard(new Long(20));
                                 billPriceNew2.setPrice(new BigDecimal(0.01));
                             }
@@ -1135,23 +1133,19 @@ public class BillServiceimpl implements BillService {
                             billPriceMapper.insert(billPriceNew2);
                             billPriceMapper.updateByPrimaryKeySelective(billPriceList.get(0));
                             billPriceMapper.updateByPrimaryKeySelective(billPriceList.get(1));
-                        }
-                        else
-                        {
-                            message+="订单："+bill.getKeywords()+" , ";
+                        } else {
+                            message += "订单：" + bill.getKeywords() + " , ";
                             continue;
                         }
 
                     }
-                    if(billPriceList.size()==3)
-                    {
+                    if (billPriceList.size() == 3) {
                         billPriceList.get(0).setOutMemberId(Long.parseLong(dailiUserId[0]));
                         billPriceList.get(1).setOutMemberId(Long.parseLong(dailiUserId[0]));
                         billPriceList.get(2).setOutMemberId(Long.parseLong(dailiUserId[0]));
-                        if(!"NaN".equals(rankend[0])&&!"NaN".equals(price[0]))
-                        {
+                        if (!"NaN".equals(rankend[0]) && !"NaN".equals(price[0])) {
                             billPriceList.get(0).setOutMemberId(Long.parseLong(dailiUserId[0]));
-                            BillPrice billPriceNew1=new BillPrice();
+                            BillPrice billPriceNew1 = new BillPrice();
                             billPriceNew1.setBillId(billId);
                             billPriceNew1.setInMemberId(Long.parseLong(dailiUserId[0]));
                             billPriceNew1.setOutMemberId(Long.parseLong(kehuUserId[0]));
@@ -1159,33 +1153,27 @@ public class BillServiceimpl implements BillService {
                             billPriceNew1.setPrice(new BigDecimal(price[0]));
                             billPriceNew1.setCreateTime(new Date());
                             billPriceMapper.insert(billPriceNew1);
-                            BillPrice billPriceNew2=new BillPrice();
+                            BillPrice billPriceNew2 = new BillPrice();
                             billPriceNew2.setBillId(billId);
                             billPriceNew2.setInMemberId(Long.parseLong(dailiUserId[0]));
                             billPriceNew2.setOutMemberId(Long.parseLong(kehuUserId[0]));
-                            if(!"NaN".equals(rankend1[0])&&!"NaN".equals(price1[0]))
-                            {
+                            if (!"NaN".equals(rankend1[0]) && !"NaN".equals(price1[0])) {
                                 billPriceNew2.setBillRankingStandard(new Long(rankend1[0]));
                                 billPriceNew2.setPrice(new BigDecimal(price1[0]));
-                            }
-                            else
-                            {
+                            } else {
                                 billPriceNew2.setBillRankingStandard(new Long(20));
                                 billPriceNew2.setPrice(new BigDecimal(0.01));
                             }
                             billPriceNew2.setCreateTime(new Date());
                             billPriceMapper.insert(billPriceNew2);
-                            BillPrice billPriceNew3=new BillPrice();
+                            BillPrice billPriceNew3 = new BillPrice();
                             billPriceNew3.setBillId(billId);
                             billPriceNew3.setInMemberId(Long.parseLong(dailiUserId[0]));
                             billPriceNew3.setOutMemberId(Long.parseLong(kehuUserId[0]));
-                            if(!"NaN".equals(rankend2[0])&&!"NaN".equals(price2[0]))
-                            {
+                            if (!"NaN".equals(rankend2[0]) && !"NaN".equals(price2[0])) {
                                 billPriceNew3.setBillRankingStandard(new Long(rankend2[0]));
                                 billPriceNew3.setPrice(new BigDecimal(price2[0]));
-                            }
-                            else
-                            {
+                            } else {
                                 billPriceNew3.setBillRankingStandard(new Long(20));
                                 billPriceNew3.setPrice(new BigDecimal(0.01));
                             }
@@ -1195,10 +1183,8 @@ public class BillServiceimpl implements BillService {
                             billPriceMapper.updateByPrimaryKeySelective(billPriceList.get(1));
                             billPriceMapper.updateByPrimaryKeySelective(billPriceList.get(2));
 
-                        }
-                        else
-                        {
-                            message+="订单："+bill.getKeywords()+" , ";
+                        } else {
+                            message += "订单：" + bill.getKeywords() + " , ";
                             continue;
                         }
 
@@ -1700,6 +1686,7 @@ public class BillServiceimpl implements BillService {
             String[] price = params.get("price");
             String[] rankend = params.get("rankend");
             Long billId = Long.parseLong(id[0]);
+            Bill billNew = billMapper.selectByPrimaryKey(billId);//判断属性
             //判断渠道商订单价格是否已经存在(有BUG 如果管理员录入价格 bool会变成true)
             List<BillPrice> billPriceList = billPriceMapper.selectByBillId(billId);
             Boolean bool = true;
@@ -1721,17 +1708,29 @@ public class BillServiceimpl implements BillService {
                 String keyword = billA.getKeywords();
                 keyword = keyword.replaceAll("[\\u00A0]+", "");
                 String[] qkeyword = {keyword};
-
                 String[] qurl = {billA.getWebsite()};
+
+                //查询报价
+                addKeywordsPriceTask(keyword);
+
                 //组合参数
-                int[] timeSet = {8, 15};
+
                 JSONObject jsonObj = new JSONObject();
                 jsonObj.put("keyword", qkeyword);
                 jsonObj.put("url", qurl);
                 jsonObj.put("time", System.currentTimeMillis());
-                jsonObj.put("timeSet", timeSet);
+                if (billNew != null) {
+                    if (billNew.getBillType() == 1 || billNew.getBillType() == 2) {
+                        int[] timeSet = {8, 15};
+                        jsonObj.put("timeSet", timeSet);
+                        jsonObj.put("searchOnce", true);
+                        jsonObj.put("businessType", 2006);
+                    } else if (billNew.getBillType() == 4) {
+                        jsonObj.put("businessType", 1006);
+                    }
+                }
                 jsonObj.put("userId", Define.userId);
-                jsonObj.put("businessType", 2006);
+
                 //判断搜索引擎
                 switch (billSearchSupport.getSearchSupport()) {
                     case "百度":
@@ -1756,8 +1755,6 @@ public class BillServiceimpl implements BillService {
                         jsonObj.put("searchType", 7070);
                         break;
                 }
-
-                jsonObj.put("searchOnce", true);
                 String wParam = jsonObj.toString();
                 String wSign = null;
                 try {
@@ -2041,7 +2038,7 @@ public class BillServiceimpl implements BillService {
         int offset = Integer.parseInt(params.get("offset").toString());
         int i = offset;
         //分组对应的用户Id
-        params.put("groupUserId",user.getId());
+        params.put("groupUserId", user.getId());
         //上游
         if (way == 1) {
             //先获取对应的订单
@@ -2638,22 +2635,18 @@ public class BillServiceimpl implements BillService {
                     //如果有多个重复订单 只删除当前数据库的数据
                     if (billList.size() > 1) {
                         //判断其他重复的订单是否已经停单
-                        Boolean bool=false;
-                        for (Bill b:billList
-                             ) {
-                            if(b.getState()==2&&b.getId().longValue()!=billId.longValue())
-                            {
-                                bool=true;
+                        Boolean bool = false;
+                        for (Bill b : billList
+                                ) {
+                            if (b.getState() == 2 && b.getId().longValue() != billId.longValue()) {
+                                bool = true;
                                 break;
                             }
                         }
-                        if(bool)
-                        {
+                        if (bool) {
                             bill.setState(3);
                             billMapper.updateByPrimaryKeySelective(bill);
-                        }
-                        else
-                        {
+                        } else {
                             //删除扣费通道
                             bill.setState(3);
                             billMapper.updateByPrimaryKeySelective(bill);
@@ -2674,8 +2667,7 @@ public class BillServiceimpl implements BillService {
             }
         }
         //调用接口删除接口数据
-        if(taskIdArr.length>0&&taskIdArr!=null&&taskIdArr[0]!=null)
-        {
+        if (taskIdArr.length > 0 && taskIdArr != null && taskIdArr[0] != null) {
             int a = this.deleteYBYState(billIdArr, user, 999);
             Boolean b = this.delSearchTask(taskIdArr);
         }
@@ -2706,20 +2698,19 @@ public class BillServiceimpl implements BillService {
                     //如果有多个重复订单
                     if (billList.size() > 1) {
                         //更改
-                        Boolean bool=true;
+                        Boolean bool = true;
                         for (Bill item : billList
                                 ) {
-                            if (item.getState()==2&&item.getId().longValue()!=billId.longValue()) {
+                            if (item.getState() == 2 && item.getId().longValue() != billId.longValue()) {
                                 bill.setWebAppId(item.getWebAppId());
                                 bill.setWebAppId1(item.getWebAppId1());
                                 bill.setState(2);
                                 billMapper.updateByPrimaryKeySelective(bill);
-                               bool=false;
-                               break;
+                                bool = false;
+                                break;
                             }
                         }
-                        if(bool)
-                        {
+                        if (bool) {
                             int result2 = addSearchTask(billId, bill.getKeywords(), bill.getWebsite());
                         }
 
@@ -2959,7 +2950,7 @@ public class BillServiceimpl implements BillService {
         for (int i = 0; i < length; i++) {
             String[] id = params.get("selectContent[" + i + "][id]");
             Long billId = Long.parseLong(id[0]);
-           Bill bill=billMapper.selectByPrimaryKey(billId);
+            Bill bill = billMapper.selectByPrimaryKey(billId);
             if (user.hasRole("SUPER_ADMIN")) {
                 if (bill != null) {
                     //通过 Taskid 查询订单
@@ -2968,23 +2959,19 @@ public class BillServiceimpl implements BillService {
                         //如果有多个重复订单 只删除当前数据库的数据
                         if (billList.size() > 1) {
                             //判断其他重复的订单是否已经停单
-                            Boolean bool=false;
-                            for (Bill b:billList
+                            Boolean bool = false;
+                            for (Bill b : billList
                                     ) {
-                                if(b.getState()==2&&b.getId().longValue()!=billId.longValue())
-                                {
-                                    bool=true;
+                                if (b.getState() == 2 && b.getId().longValue() != billId.longValue()) {
+                                    bool = true;
                                     break;
                                 }
                             }
-                            if(bool)
-                            {
+                            if (bool) {
                                 bill.setState(3);
                                 bill.setApplyState(0);
                                 billMapper.updateByPrimaryKeySelective(bill);
-                            }
-                            else
-                            {
+                            } else {
                                 //删除扣费通道
 
                                 bill.setState(3);
@@ -3011,21 +2998,16 @@ public class BillServiceimpl implements BillService {
                 }
 
 
-            }
-            else {
+            } else {
                 bill.setApplyState(2);
                 billMapper.updateByPrimaryKeySelective(bill);
             }
 
 
-
-
         }
-        if(user.hasRole("SUPER_ADMIN"))
-        {
+        if (user.hasRole("SUPER_ADMIN")) {
             //调用接口删除接口数据
-            if(taskIdArr.length>0&&taskIdArr!=null&&taskIdArr[0]!=null)
-            {
+            if (taskIdArr.length > 0 && taskIdArr != null && taskIdArr[0] != null) {
                 int a = this.deleteYBYState(billIdArr, user, 999);
                 Boolean b = this.delSearchTask(taskIdArr);
             }
@@ -3117,10 +3099,10 @@ public class BillServiceimpl implements BillService {
                         //如果有多个重复订单
                         if (billList.size() > 1) {
                             //更改
-                            Boolean bool=true;
+                            Boolean bool = true;
                             for (Bill item : billList
                                     ) {
-                                if (item.getState()==2&&item.getId().longValue()!=billId.longValue()) {
+                                if (item.getState() == 2 && item.getId().longValue() != billId.longValue()) {
                                     bill.setWebAppId(item.getWebAppId());
                                     bill.setWebAppId1(item.getWebAppId1());
                                     bill.setStandardDays(0);
@@ -3128,16 +3110,14 @@ public class BillServiceimpl implements BillService {
                                     bill.setState(2);
                                     bill.setApplyState(0);
                                     billMapper.updateByPrimaryKeySelective(bill);
-                                    bool=false;
+                                    bool = false;
                                     break;
                                 }
                             }
-                            if(bool)
-                            {
+                            if (bool) {
                                 int result2 = addSearchTask(billId, bill.getKeywords(), bill.getWebsite());
-                                Bill billNew=billMapper.selectByPrimaryKey(billId);
-                                if(billNew!=null)
-                                {
+                                Bill billNew = billMapper.selectByPrimaryKey(billId);
+                                if (billNew != null) {
                                     billNew.setStandardDays(0);
                                     billNew.setState(2);
                                     billNew.setCreateTime(new Date());
@@ -3145,13 +3125,10 @@ public class BillServiceimpl implements BillService {
                                     billMapper.updateByPrimaryKeySelective(billNew);
                                 }
                             }
-                        }
-                        else
-                        {
+                        } else {
                             int result2 = addSearchTask(billId, bill.getKeywords(), bill.getWebsite());
-                            Bill billNew=billMapper.selectByPrimaryKey(billId);
-                            if(billNew!=null)
-                            {
+                            Bill billNew = billMapper.selectByPrimaryKey(billId);
+                            if (billNew != null) {
                                 billNew.setStandardDays(0);
                                 billNew.setState(2);
                                 billNew.setCreateTime(new Date());
@@ -3161,9 +3138,7 @@ public class BillServiceimpl implements BillService {
                         }
                     }
                 }
-            }
-            else
-            {
+            } else {
                 bill.setApplyState(-2);
                 billMapper.updateByPrimaryKeySelective(bill);
             }
@@ -3174,6 +3149,7 @@ public class BillServiceimpl implements BillService {
 
     /**
      * 用户结算页面
+     *
      * @param loginUser
      * @return
      */
@@ -3645,6 +3621,7 @@ public class BillServiceimpl implements BillService {
 
     /**
      * 创建分组
+     *
      * @param params
      * @param user
      * @return
@@ -3652,39 +3629,30 @@ public class BillServiceimpl implements BillService {
     @Override
     public String createGroup(Map<String, Object> params, LoginUser loginUser) {
 
-        String groupName=params.get("groupName").toString();
-        if("".equals(groupName))
-        {
+        String groupName = params.get("groupName").toString();
+        if ("".equals(groupName)) {
             return "0";
-        }
-        else
-        {
-         //判断分组是否已经存在
-            Map<String,Object> sqlMap=new HashMap<>();
-            sqlMap.put("userId",loginUser.getId());
-            sqlMap.put("groupName",groupName);
-            BillGroup billGroupExsits=billGroupMapper.selectByGroupNameExsits(sqlMap);
-            if(billGroupExsits==null)
-            {
-                BillGroup billGroup=new BillGroup();
+        } else {
+            //判断分组是否已经存在
+            Map<String, Object> sqlMap = new HashMap<>();
+            sqlMap.put("userId", loginUser.getId());
+            sqlMap.put("groupName", groupName);
+            BillGroup billGroupExsits = billGroupMapper.selectByGroupNameExsits(sqlMap);
+            if (billGroupExsits == null) {
+                BillGroup billGroup = new BillGroup();
                 billGroup.setGroupName(groupName);
                 billGroup.settUserId(loginUser.getId());
                 billGroup.setCreateUserId(loginUser.getId());
                 billGroup.setTaskCount(0);
                 billGroup.setCreateTime(new Date());
-                int a =billGroupMapper.insert(billGroup);
-                if(a==1)
-                {
-                    return  "1";
-                }
-                else
-                {
+                int a = billGroupMapper.insert(billGroup);
+                if (a == 1) {
+                    return "1";
+                } else {
                     return "0";
                 }
-            }
-            else
-            {
-                return  "2";
+            } else {
+                return "2";
             }
         }
 
@@ -3692,22 +3660,25 @@ public class BillServiceimpl implements BillService {
 
     /**
      * 获取分组列表
+     *
      * @param loginUser
      * @return
      */
     @Override
-    public Map<String, Object> getBillGroupTable( Map<String, Object> params,LoginUser loginUser) {
-         List<Map<String,Object>> mapList=new ArrayList<>();
-        params.put("userId",loginUser.getId());
-        mapList=billGroupMapper.selectBillGroupTable(params);
-        int total=billGroupMapper.selectBillGroupTableCount(params);
-        Map<String,Object> viewMap=new HashMap<>();
-        viewMap.put("rows",mapList);
-        viewMap.put("total",total);
+    public Map<String, Object> getBillGroupTable(Map<String, Object> params, LoginUser loginUser) {
+        List<Map<String, Object>> mapList = new ArrayList<>();
+        params.put("userId", loginUser.getId());
+        mapList = billGroupMapper.selectBillGroupTable(params);
+        int total = billGroupMapper.selectBillGroupTableCount(params);
+        Map<String, Object> viewMap = new HashMap<>();
+        viewMap.put("rows", mapList);
+        viewMap.put("total", total);
         return viewMap;
     }
+
     /**
      * 确认分组
+     *
      * @param loginUser
      * @return
      */
@@ -3716,53 +3687,44 @@ public class BillServiceimpl implements BillService {
         String[] checkboxLength = params.get("lenTable");
         int length = Integer.parseInt(checkboxLength[0]);//订单个数
         String[] groupId = params.get("selectContent[0][id]");
-        Long newGroupId=Long.parseLong(groupId[0]);
-        Map<String,Object> sqlMap=new HashMap<>();
-        sqlMap.put("userId",loginUser.getId());
-        sqlMap.put("billGroupId",Long.parseLong(groupId[0]));
-        for(int i=0;i<length;i++)
-        {
-            String[] billId = params.get("selectContentTable["+i+"][id]");
-            Map<String,Object> map=new HashMap<>();
-            map.put("userId",loginUser.getId());
-            map.put("billId",Long.parseLong(billId[0]));
-            BillGroupRole billGroupRoleExsit=billGroupRoleMapper.selectByGroupRoleExsits(map);
-            if(billGroupRoleExsit!=null)
-            {
+        Long newGroupId = Long.parseLong(groupId[0]);
+        Map<String, Object> sqlMap = new HashMap<>();
+        sqlMap.put("userId", loginUser.getId());
+        sqlMap.put("billGroupId", Long.parseLong(groupId[0]));
+        for (int i = 0; i < length; i++) {
+            String[] billId = params.get("selectContentTable[" + i + "][id]");
+            Map<String, Object> map = new HashMap<>();
+            map.put("userId", loginUser.getId());
+            map.put("billId", Long.parseLong(billId[0]));
+            BillGroupRole billGroupRoleExsit = billGroupRoleMapper.selectByGroupRoleExsits(map);
+            if (billGroupRoleExsit != null) {
                 //判断分组ID和当前的存在的分组ID是否一致
-                if(billGroupRoleExsit.gettBillGroupId().longValue()==newGroupId.longValue())
-                {
+                if (billGroupRoleExsit.gettBillGroupId().longValue() == newGroupId.longValue()) {
                     continue;
-                }
-                else
-                {
-                    BillGroup billGroup=billGroupMapper.selectByPrimaryKey(billGroupRoleExsit.gettBillGroupId());
-                    if(billGroup!=null)
-                    {
-                        billGroup.setTaskCount(billGroup.getTaskCount()-1);
+                } else {
+                    BillGroup billGroup = billGroupMapper.selectByPrimaryKey(billGroupRoleExsit.gettBillGroupId());
+                    if (billGroup != null) {
+                        billGroup.setTaskCount(billGroup.getTaskCount() - 1);
                         billGroupMapper.updateByPrimaryKeySelective(billGroup);
                     }
-                    BillGroup billGroupNew=billGroupMapper.selectByPrimaryKey(newGroupId) ;
-                    if(billGroupNew!=null)
-                    {
-                        billGroupNew.setTaskCount(billGroupNew.getTaskCount()+1);
+                    BillGroup billGroupNew = billGroupMapper.selectByPrimaryKey(newGroupId);
+                    if (billGroupNew != null) {
+                        billGroupNew.setTaskCount(billGroupNew.getTaskCount() + 1);
                         billGroupMapper.updateByPrimaryKeySelective(billGroupNew);
                     }
                     billGroupRoleExsit.settBillGroupId(newGroupId);
                     billGroupRoleMapper.updateByPrimaryKeySelective(billGroupRoleExsit);
                 }
 
-            }
-            else
-            {
-                BillGroupRole billGroupRole=new BillGroupRole();
+            } else {
+                BillGroupRole billGroupRole = new BillGroupRole();
                 billGroupRole.settBillGroupId(Long.parseLong(groupId[0]));
                 billGroupRole.settBillId(Long.parseLong(billId[0]));
                 billGroupRole.setCreateTime(new Date());
                 billGroupRole.setCreateUserId(loginUser.getId());
                 billGroupRoleMapper.insert(billGroupRole);
-                BillGroup billGroupNew1=billGroupMapper.selectByPrimaryKey(newGroupId) ;
-                billGroupNew1.setTaskCount(billGroupNew1.getTaskCount()+1);
+                BillGroup billGroupNew1 = billGroupMapper.selectByPrimaryKey(newGroupId);
+                billGroupNew1.setTaskCount(billGroupNew1.getTaskCount() + 1);
                 billGroupMapper.updateByPrimaryKeySelective(billGroupNew1);
             }
         }
@@ -3771,23 +3733,71 @@ public class BillServiceimpl implements BillService {
 
     /**
      * 删除分组
+     *
      * @param groupId
      * @param loginUser
      * @return
      */
     @Override
     public int deleteGroup(String groupId, LoginUser loginUser) {
-        int a=billGroupRoleMapper.deleteByGroupId(Long.parseLong(groupId));
-        int b=billGroupMapper.deleteByPrimaryKey(Long.parseLong(groupId));
-        if(b>0)
-        {
+        int a = billGroupRoleMapper.deleteByGroupId(Long.parseLong(groupId));
+        int b = billGroupMapper.deleteByPrimaryKey(Long.parseLong(groupId));
+        if (b > 0) {
             return 1;
-        }
-        else
-        {
+        } else {
             return 0;
         }
 
+    }
+
+    /**
+     * 分配出租订单
+     *
+     * @param params
+     * @param loginUser
+     * @return
+     */
+    @Override
+    public int leaseBill(Map<String, String[]> params, LoginUser loginUser) {
+        String[] website=params.get("website");
+        String[][] arr=new String[params.size()-1][];
+        for (int i=0;i<params.size()-1;i++)
+        {
+            arr[i]=params.get("billarr["+i+"][]");
+        }
+        orderLease orderLease=orderLeaseMapper.selectReserveByWebsite(website[0]);
+        if(orderLease!=null)
+        {
+            if(orderLease.getOrderstate()!=1)
+            {
+                return 1;//订单状态部位1，无法分配
+            }
+            List<String> stringList=new ArrayList<>();
+
+        /* List<orderLease> orderLeases=orderLeaseMapper.selectBybillIdList();*/
+
+
+        }
+        else//不存在 直接录入
+        {
+            for(int i=0;i<params.size()-1;i++)
+            {
+                orderLease orderLease1=new orderLease();
+                orderLease1.setOrderid(Long.parseLong(arr[i][0].toString()));
+                orderLease1.setKeywordstate(Integer.parseInt(arr[i][1].toString()));
+                orderLease1.setKeywords(arr[i][2].toString());
+                orderLease1.setWebsite(arr[i][3].toString());
+                orderLease1.setOrderstate(1);
+                orderLease1.setAllotid(loginUser.getId());
+                orderLease1.setCreatetime(new Date());
+                orderLeaseMapper.insert(orderLease1);
+
+
+            }
+
+        }
+
+        return 0;
     }
 
     /**
@@ -4259,4 +4269,73 @@ public class BillServiceimpl implements BillService {
     }
 
 
+    public Boolean addKeywordsPriceTask(String keywords) {
+        if (keywords == "") {
+            return null;
+        }
+        //获取所输入的关键字
+        String[] arr = keywords.split("\n");
+        //String where = "";
+        List<String> list = new ArrayList<String>();
+        for (int i = 0; i < arr.length; i++) {
+            //清除空格
+            arr[i] = arr[i].replace("\t", "").replace(" ", "");
+            String aa = arr[i];
+            //where += " or words LIKE '" + arr[i] + "'";
+            list.add(arr[i]);
+        }
+        //去除重复关键词
+        HashSet h = new HashSet(list);
+        list.clear();
+        list.addAll(h);
+        Map<String, Object> params2 = new HashMap<>();
+        params2.put("list", list);
+        params2.put("rote", 1);
+        List<KeywordsPrice> keywordsprices = keywordsPriceMapper.selectByword(params2);//查询本地数据
+        if (!CollectionUtils.isEmpty(keywordsprices)) {
+            return false;
+        }
+
+        //是否还存在可调用接口集合
+        if (!org.apache.commons.collections.CollectionUtils.isEmpty(list)) {
+            //调用接口
+            long time = (long) (System.currentTimeMillis() / 1000);
+            String action = "AddSearchTask";
+            String keyword = "";
+            for (String item : list
+                    ) {
+                keyword += "\"" + item + "\",";
+            }
+            //去掉最后面的逗号
+            keyword = keyword.substring(0, keyword.length() - 1);
+            String data = "{\"userId\":" + Define.userId + ",\"time\":" + time + ",\"businessType\":1008,\"keyword\":[" + keyword + "]}";
+            String sign = "";
+            try {
+                //sign验证加密
+                sign = md5_urlEncode.EncoderByMd5(action + Define.token + data).toUpperCase();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            //调用接口的参数
+            Map<String, String> priceMap = new HashMap<>();
+            priceMap.put("wAction", action);
+            priceMap.put("wSign", sign);
+            priceMap.put("wParam", data);
+            //调用接口方法
+            String result = remoteService.getPriceApiId(priceMap);
+            JSONObject myJsonObject = new JSONObject(result);
+            JSONArray array = myJsonObject.getJSONArray("xValue");
+            for (int i = 0; i < array.length(); i++) {
+                KeywordsPrice keywordsPrice = new KeywordsPrice();
+                keywordsPrice.setTaskid(Integer.parseInt(array.getJSONArray(i).get(0).toString()));
+                keywordsPrice.setKeywords(list.get(i));
+                keywordsprices.add(keywordsPrice);
+                keywordsPriceMapper.insert(keywordsPrice);
+            }
+
+        }
+        return true;
+    }
 }

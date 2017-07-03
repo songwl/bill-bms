@@ -15,18 +15,22 @@
         <i class="fa fa-home">&nbsp;</i><span>优化管理</span> > <span>关键词排名</span>
     </div>
     <div class="nav_R right" id="divQx">
+
         <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("COMMISSIONER")> <#--如果是优化方-->
             <div id="optimizationStart">
-                <span>&nbsp;<i class="fa fa-play"></i>&nbsp;优化启动</span>
+                <span>&nbsp;<i class="fa fa-cloud-upload"></i>&nbsp;优化启动</span>
             </div>
             <div id="optimizationStop">
-                <span>&nbsp;<i class="fa fa-stop"></i>&nbsp;合作停止</span>
+                <span>&nbsp;<i class="fa fa-cloud-download"></i>&nbsp;合作停止</span>
             </div>
             <div id="billDelete">
                 <span>&nbsp;<i class="fa fa-trash"></i>&nbsp;删除</span>
             </div>
             <div id="updatePrice">
                 <span>&nbsp;<i class="fa fa-cny"></i>&nbsp;调价</span>
+            </div>
+            <div id="leaseBill">
+                <span>&nbsp;<i class="fa fa-pencil-square"></i>&nbsp;租站分配</span>
             </div>
 
         </#if>
@@ -509,7 +513,31 @@
         </div>
     </div>
 </div>
- <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("COMMISSIONER")>
+
+<div id="leaseBillDiv" style="display: none;">
+    <div class="modal-body">
+        <div class="form-group">
+            <table id="leaseBillTable" class="table table-striped  table-condensed table-responsive" style="width:100%;font-size: 13px;font-family: " 微软雅黑>
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>关键词</th>
+                <th>网址</th>
+                <th>必选</th>
+                <th>推荐</th>
+            </tr>
+            </thead>
+               <tbody id="leaseTbody"></tbody>
+
+            </table>
+        </div>
+        <div style="margin:0 auto;text-align: center">
+            <button id="leaseBillCmt" class="btn btn-success form-control " style="width: 30%;">
+                <span class="glyphicon glyphicon-send">&nbsp;</span><span>确定</span></button>
+        </div>
+    </div>
+</div>
+<#-- <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("COMMISSIONER")>
 <form id= "uploadForm" enctype="multipart/form-data">
    <p >上传文件： <input type="file" name="file"/></p>
    <input type="button" value="上传" onclick="doUpload()" />
@@ -539,6 +567,6 @@
        });
    }
 </script>
-</#if>
+</#if>-->
 <!--详情end-->
 </@base.html>

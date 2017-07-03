@@ -22,6 +22,7 @@ public class   CustomerListDetails {
     private int dailiRole;
     private  String roleName;
     private  String kehuRoleName;
+    private  int	leaseRole;
 
 
     public  int  getId(){return  id;}
@@ -59,9 +60,11 @@ public class   CustomerListDetails {
     public String getKehuRoleName() {
         return kehuRoleName;
     }
-
     public void setKehuRoleName(String kehuRoleName) {
         this.kehuRoleName = kehuRoleName;
     }
+
+    public  int  getLeaseRole(){return  leaseRole;}
+    public int setLeaseRole(int leaseRole){return  this.leaseRole=leaseRole;}
 
 }

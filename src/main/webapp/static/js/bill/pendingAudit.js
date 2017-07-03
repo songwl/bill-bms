@@ -216,6 +216,34 @@ var TableInit = function () {
                     visible:false
                 },
                 {
+                    field: 'billType',
+                    align: 'center',
+                    valign: 'middle',
+                    sortable: true,
+                    title: '属性',
+                    formatter:function (value,row,index) {
+                        var  a="";
+                       if(value==1)
+                       {
+                           a= "<span style='color:#09C;'>正常</span>";
+                       }
+                       else if(value==2)
+                       {
+                           a= "<span style='color:#09C;'>快排</span>";
+                       }
+                       else if(value==3)
+                       {
+                           a= "<span style='color:#09C;'>包年</span>";
+                       }
+                       else if(value==4)
+                        {
+                            a= "<span style='color:#09C;'>出租</span>";
+                        }
+                        return a;
+                    }
+                },
+
+                {
                     field: "state",
                     align: 'center',
                     valign: 'middle',

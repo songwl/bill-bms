@@ -1,13 +1,10 @@
 //提交相同价订单
 $(".samepricecmt").click(function () {
 
-
     var search= $("#searchengineid option:selected").text();
-
     var keyword= $.trim($("#keyword").val());
     var url=$.trim($("#url").val());
     var index;
-
     var rankend = parseInt($.trim(jQuery("input[name='samePricerankend']").val()));
     var price = parseFloat($.trim(jQuery("input[name='samePriceprice']").val()));
     var rankend1 = parseInt($.trim(jQuery("input[name='samePricerankend1']").val()));
@@ -17,6 +14,7 @@ $(".samepricecmt").click(function () {
     var rankend3 = parseInt($.trim(jQuery("input[name='samePricerankend3']").val()));
     var price3 = parseFloat($.trim(jQuery("input[name='samePriceprice3']").val()));
     var customerIds=$("#sameSelect  option:selected").val();
+    var billType=$("#billType").val();
 
     if (!isNaN(rankend) && !isNaN(rankend1) && !isNaN(rankend2) && !isNaN(rankend3)
         && !isNaN(price) && !isNaN(price1) && !isNaN(price2) && !isNaN(price3)
@@ -87,8 +85,8 @@ $(".samepricecmt").click(function () {
                         price2:Aprice2,
                         rankend3:Arankend3,
                         price3:Aprice3,
-                        customerId:customerId
-
+                        customerId:customerId,
+                        billType:billType
                     },
                     beforeSend: function () {
                         index  = layer.load(1, {
@@ -154,7 +152,7 @@ $(".samepricecmt").click(function () {
     }
     else
     {
-        layer.alert("系统繁忙，请稍后再试！", {
+        layer.alert("填写信息不完整或信息有误，请检查订单信息！", {
             skin: 'layui-layer-molv' //样式类名
             ,closeBtn: 0
         });

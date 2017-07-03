@@ -186,6 +186,7 @@ public class OptimizationToolController extends BaseController {
         return this.ajaxDone(1, offerset.getRequestsecond().toString(), null);
     }
 
+
     @RequestMapping(value = "/OpenWebsitePower", method = RequestMethod.POST)
     @ResponseBody
     public ResultMessage OpenWebsitePower(HttpServletRequest httpServletRequest) {

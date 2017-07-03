@@ -7,7 +7,7 @@ var searchState2 = null;
 var searchStandard = null;
 var standardDays = null;
 var createTime = null;
-var groupId=null;
+var groupId = null;
 
 var length;
 $(document).ready(function () {
@@ -76,7 +76,6 @@ $(document).ready(function () {
 
             var keyword_arr = $.trim(keyword).split('\n');
             var url_arr = $.trim(url).split('\n');
-
             console.info(keyword_arr.length);
             console.info(url_arr.length);
             console.info(keyword_arr.length > 1 && keyword_arr.length != url_arr.length);
@@ -100,8 +99,8 @@ $(document).ready(function () {
                         url: url,
                     },
                     beforeSend: function () {
-                        index  = layer.load(1, {
-                            shade: [0.1,'#fff'] //0.1透明度的白色背景
+                        index = layer.load(1, {
+                            shade: [0.1, '#fff'] //0.1透明度的白色背景
                         });
                     },
                     success: function (result) {
@@ -124,7 +123,7 @@ $(document).ready(function () {
 
                             }
                             else {
-                                layer.alert(result.message , {
+                                layer.alert(result.message, {
                                     skin: 'layui-layer-molv' //样式类名  自定义样式
                                     , anim: 1 //动画类型
                                     , icon: 4   // icon
@@ -287,8 +286,8 @@ $(document).ready(function () {
                     url: CTX + "/order/billList/optimizationStop",
                     data: {selectContent: selectContent, length: len},
                     beforeSend: function () {
-                        index  = layer.load(1, {
-                            shade: [0.1,'#fff'] //0.1透明度的白色背景
+                        index = layer.load(1, {
+                            shade: [0.1, '#fff'] //0.1透明度的白色背景
                         });
                     },
                     success: function (result) {
@@ -659,7 +658,11 @@ $(document).ready(function () {
             $.ajax({
                 type: 'post',
                 url: CTX + '/order/updateBillDetailsYouHua',
-                data: {billId: $("#billIdInput").val(), keyword: $("#keywordUpdate").val(), website: $("#websiteUpdate").val()},
+                data: {
+                    billId: $("#billIdInput").val(),
+                    keyword: $("#keywordUpdate").val(),
+                    website: $("#websiteUpdate").val()
+                },
                 success: function (result) {
                     if (result.code == 200) {
                         layer.alert(result.message, {
@@ -710,6 +713,7 @@ $(document).ready(function () {
     $("#billToGroupClick").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
         var len = selectContent.length;
+        var index1;
         if (selectContent == "") {
             layer.alert('请选择一列数据', {
                 skin: 'layui-layer-molv' //样式类名  自定义样式
@@ -733,47 +737,41 @@ $(document).ready(function () {
         }
 
 
-
     })
     //创建分组
     $("#createGroup").click(function () {
-        layer.prompt({title: '请输入分组名称，并确认', formType: 3}, function(pass, index){
-                if(pass!='')
-                {
-                    $.ajax({
-                        type:'post',
-                        url:CTX+'/order/createGroup',
-                        data:{groupName:pass},
-                        beforeSend: function () {
-                            index  = layer.load(1, {
-                                shade: [0.1,'#fff'] //0.1透明度的白色背景
-                            });
-                        },
-                        success:function (result) {
-                            if(result.message=="0")
-                            {
-                                layer.msg("分组创建失败！");
-                                $('#groupTable').bootstrapTable('refresh');
-                            }
-                            else if(result.message=="1")
-                            {
-                                layer.msg("分组创建成功！");
-                                $('#groupTable').bootstrapTable('refresh');
-                                $('#billToGroupTable').bootstrapTable('refresh');
-                            }
-                            else
-                            {
-                                layer.msg("分组名称已经存在！");
-                                $('#groupTable').bootstrapTable('refresh');
-                            }
-
+        layer.prompt({title: '请输入分组名称，并确认', formType: 3}, function (pass, index) {
+            if (pass != '') {
+                $.ajax({
+                    type: 'post',
+                    url: CTX + '/order/createGroup',
+                    data: {groupName: pass},
+                    beforeSend: function () {
+                        index = layer.load(1, {
+                            shade: [0.1, '#fff'] //0.1透明度的白色背景
+                        });
+                    },
+                    success: function (result) {
+                        if (result.message == "0") {
+                            layer.msg("分组创建失败！");
+                            $('#groupTable').bootstrapTable('refresh');
                         }
-                    })
-                }
-            layer.close(index);
-            })
-        })
+                        else if (result.message == "1") {
+                            layer.msg("分组创建成功！");
+                            $('#groupTable').bootstrapTable('refresh');
+                            $('#billToGroupTable').bootstrapTable('refresh');
+                        }
+                        else {
+                            layer.msg("分组名称已经存在！");
+                            $('#groupTable').bootstrapTable('refresh');
+                        }
 
+                    }
+                })
+            }
+            layer.close(index);
+        })
+    })
     //分组提交
     $("#toGroupCmt").click(function () {
         var selectContent = $('#billToGroupTable').bootstrapTable('getSelections');
@@ -789,25 +787,112 @@ $(document).ready(function () {
             });
         } else {
             $.ajax({
-                type:'post',
-                url:CTX+"/order/billToGroupCmt",
-                data:{selectContent:selectContent,selectContentTable:selectContentTable,lenTable:lenTable},
+                type: 'post',
+                url: CTX + "/order/billToGroupCmt",
+                data: {selectContent: selectContent, selectContentTable: selectContentTable, lenTable: lenTable},
                 beforeSend: function () {
                     index1 = layer.load(1, {
                         shade: [0.1, '#fff'] //0.1透明度的白色背景
                     });
                 },
                 success: function (result) {
-                        layer.alert(result.message, {
-                            skin: 'layui-layer-molv' //样式类名
-                            , closeBtn: 0
-                        });
+                    layer.alert(result.message, {
+                        skin: 'layui-layer-molv' //样式类名
+                        , closeBtn: 0
+                    });
                     $('#billToGroupTable').bootstrapTable('refresh');
                     layer.close(index1);
                 }
             })
         }
     })
+    //分配出租订单
+    $("#leaseBill").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var len = selectContent.length;
+        var index1;
+        if (selectContent == "") {
+            layer.alert('请选择一列数据', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
+        }
+        else {
+            var flag = true;
+            var firstWebsite = selectContent[0]["website"];
+
+            $.each(selectContent, function (index, item) {
+                if (item["website"] != firstWebsite) {
+                    flag = false;
+                    return;
+                }
+
+            })
+            if (!flag) {
+                layer.alert('请选择相同的网址', {
+                    skin: 'layui-layer-molv' //样式类名  自定义样式
+                    , anim: 6 //动画类型
+                    , icon: 4   // icon
+                });
+                return;
+            }
+            $("#leaseTbody").empty();
+            var str = "";
+            $.each(selectContent, function (index, item) {
+                str += "<tr>" +
+                    "<th>" + item['id'] + "</th>" +
+                    "<th>" + item['keywords'] + "</th> " +
+                    "<th>" + item['website'] + "</th>" +
+                    "<th><input type='radio' name='radio" + index + "' value='1'></th>" +
+                    "<th><input type='radio' name='radio" + index + "' value='0'></th>" +
+                    "</tr>"
+
+            })
+            $("#leaseTbody").append(str);
+
+            index1 = layer.open({
+                type: 1,
+                title: '租站分配',
+                skin: 'layui-layer-molv',
+                shade: 0.6,
+                area: ['50%', '90%'],
+                content: $('#leaseBillDiv'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                end: function (e, u) {
+                    $('#leaseBillDiv').hide();
+                }
+            });
+        }
+    })
+    //出租订单分配确认
+    $("#leaseBillCmt").click(function () {
+        var arr = new Array();
+        $("#leaseTbody tr").each(function (index, item) {
+            var val = $("input:radio[name='radio" + index + "']:checked").val();
+            if (val != null) {
+                arr[index] = new Array();
+                arr[index][0] = $(this).children().eq(0).text();
+                arr[index][1] = val;
+                arr[index][2] =  $(this).children().eq(1).text();
+                arr[index][3] =  $(this).children().eq(2).text();
+            }
+            /* alert($(this).children().eq(0).text());*/
+        })
+      $.ajax({
+          type:'post',
+          url:CTX+'/order/leaseBill',
+          data:{billarr:arr,website: $("#leaseTbody tr").children().eq(2).text()},
+          success:function (result) {
+
+          }
+
+      })
+
+
+
+
+    })
+
 })
 
 
@@ -820,7 +905,7 @@ $(function () {
     oTable1.Init();
     var oTable2 = new TableInit2();
     oTable2.Init();
-    var oTable3= new TableInit3();
+    var oTable3 = new TableInit3();
     oTable3.Init();
     //2.初始化Button的点击事件
     /*  var oButtonInit = new ButtonInit();
@@ -1039,12 +1124,12 @@ var TableInit = function () {
                     title: '达标天',
 
                 },
-                   {
+                {
                     field: "roleName",
                     align: 'center',
                     valign: 'middle',
                     title: '角色',
-                    visible:false
+                    visible: false
 
                 },
                 {
@@ -1063,8 +1148,6 @@ var TableInit = function () {
                         }
                         return a;
                     }
-
-
                 },
                 {
                     field: 'operate',
@@ -1073,8 +1156,7 @@ var TableInit = function () {
                     valign: 'middle',
                     formatter: function (value, row, index) {
                         var a = "<span style='color:#4382CF;cursor:pointer;' id='details'>详情</span> ";
-                        if(row.roleName=='SUPER_ADMIN'||row.roleName=='ADMIN'||row.roleName=='COMMISSIONER')
-                        {
+                        if (row.roleName == 'SUPER_ADMIN' || row.roleName == 'ADMIN' || row.roleName == 'COMMISSIONER') {
                             a += " <span style='color:#4382CF;cursor:pointer;' id='updateBill'>修改</span> ";
                         }
 
@@ -1111,7 +1193,7 @@ var TableInit = function () {
             searchStandard: searchStandard,
             standardDays: standardDays,
             createTime: createTime,
-            groupId:groupId
+            groupId: groupId
         };
 
         return temp;
@@ -1130,34 +1212,34 @@ var TableInit = function () {
 
             $('#pricetable').bootstrapTable('refresh');
         },
-            'click #updateBill': function (e, value, row, index) {
-                $("#keywordUpdate").val(row.keywords);
-                $("#websiteUpdate").val(row.website);
-                $("#billIdInput").val(row.id);
-                index1 = layer.open({
-                    type: 1,
-                    title: '修改订单',
-                    skin: 'layui-layer-molv',
-                    shade: 0.6,
-                    area: ['30%', '40%'],
-                    content: $('#offerSetUp'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-                    end: function (e, u) {
-                        $('#offerSetUp').hide();
-                    }
-                });
+        'click #updateBill': function (e, value, row, index) {
+            $("#keywordUpdate").val(row.keywords);
+            $("#websiteUpdate").val(row.website);
+            $("#billIdInput").val(row.id);
+            index1 = layer.open({
+                type: 1,
+                title: '修改订单',
+                skin: 'layui-layer-molv',
+                shade: 0.6,
+                area: ['30%', '40%'],
+                content: $('#offerSetUp'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                end: function (e, u) {
+                    $('#offerSetUp').hide();
+                }
+            });
 
-            }
         }
+    }
 
 
     return oTableInit;
-  /*  e.preventDefault();
-    var url = this.href;
-    if (url != null && url != 'javascript:;') {
-        $.get(url, function (data) {
-            $('.page-content').html(data);
-        });
-    }*/
+    /*  e.preventDefault();
+     var url = this.href;
+     if (url != null && url != 'javascript:;') {
+     $.get(url, function (data) {
+     $('.page-content').html(data);
+     });
+     }*/
 };
 
 var TableInit1 = function () {
@@ -1257,9 +1339,9 @@ var TableInit2 = function () {
             queryParamsType: "",
             minimumCountColumns: 2,             //最少允许的列数
             clickToSelect: true,                //是否启用点击选中行
-           /* height: 330,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度*/
+            /* height: 330,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度*/
             uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
-            singleSelect : true,
+            singleSelect: true,
             rowStyle: function (row, index) {
                 //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
                 var strclass = "";
@@ -1270,7 +1352,7 @@ var TableInit2 = function () {
                     strclass = 'active';
                 }
                 return {classes: strclass}
-                 },
+            },
             columns: [
                 {
                     checkbox: true
@@ -1280,7 +1362,7 @@ var TableInit2 = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '数据库编号',
-                    visible:false
+                    visible: false
 
                 },
                 {
@@ -1303,8 +1385,8 @@ var TableInit2 = function () {
                     valign: 'middle',
                     title: '增加时间',
                     formatter: function (value, row, index) {
-                        var time=new Date(value);
-                        var a = "<span style='color:#4382CF;cursor:pointer;' id='deleteGroup'>"+time.toLocaleDateString()+"</span> ";
+                        var time = new Date(value);
+                        var a = "<span style='color:#4382CF;cursor:pointer;' id='deleteGroup'>" + time.toLocaleDateString() + "</span> ";
 
                         return a;
                     },
@@ -1353,21 +1435,21 @@ var TableInit2 = function () {
             layer.confirm('是否删除当前分组？', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
-                 $.ajax({
-                     type:'post',
-                     url:CTX+'/order/deleteGroup',
-                     data:{groupId:row.id},
-                     success:function (result) {
-                         layer.alert(result.message, {
-                             skin: 'layui-layer-molv' //样式类名  自定义样式
-                             , anim: 4 //动画类型
-                             , icon: 2   // icon
-                         });
-                         $('#groupTable').bootstrapTable('refresh');
-                         $('#billToGroupTable').bootstrapTable('refresh');
-                     }
+                $.ajax({
+                    type: 'post',
+                    url: CTX + '/order/deleteGroup',
+                    data: {groupId: row.id},
+                    success: function (result) {
+                        layer.alert(result.message, {
+                            skin: 'layui-layer-molv' //样式类名  自定义样式
+                            , anim: 4 //动画类型
+                            , icon: 2   // icon
+                        });
+                        $('#groupTable').bootstrapTable('refresh');
+                        $('#billToGroupTable').bootstrapTable('refresh');
+                    }
 
-                 })
+                })
             })
         },
 
@@ -1394,7 +1476,7 @@ var TableInit3 = function () {
             clickToSelect: true,                //是否启用点击选中行
             /* height: 330,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度*/
             uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
-            singleSelect : true,
+            singleSelect: true,
             rowStyle: function (row, index) {
                 //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
                 var strclass = "";
@@ -1415,7 +1497,7 @@ var TableInit3 = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '数据库编号',
-                    visible:false
+                    visible: false
 
                 },
                 {

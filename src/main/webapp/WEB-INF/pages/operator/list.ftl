@@ -12,7 +12,9 @@
 
         <div class="Import">
             <span id="addOperator">&nbsp;<i class="fa fa-plus"></i>&nbsp;添加操作员</span>
-
+        </div>
+        <div class="openLeaseRole" style="width: 150px;">
+            <span id="openLeaseRole">&nbsp;<i class="fa fa-map-signs"></i>&nbsp;开通租站平台权限</span>
         </div>
         <div class="search">
             <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>

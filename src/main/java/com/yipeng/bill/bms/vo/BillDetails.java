@@ -34,6 +34,7 @@ public class BillDetails {
     private  Long length;
     private String billAscriptionName;
     private  String roleName;
+    private  int billType;
 
     public  int  getdisplayId(){return  displayId;}
     public int setdisplayId(int displayId){return  this.displayId=displayId;}
@@ -130,5 +131,12 @@ public class BillDetails {
 
     public void setApplyState(Integer applyState) {
         this.applyState = applyState;
+    }
+    public int getBillType() {
+        return billType;
+    }
+
+    public void setBillType(int billType) {
+        this.billType = billType;
     }
 }

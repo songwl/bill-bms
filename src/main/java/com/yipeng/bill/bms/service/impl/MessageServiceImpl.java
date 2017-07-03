@@ -21,7 +21,7 @@ import java.util.Map;
 public class MessageServiceImpl implements MessageService {
 
     @Autowired
-     private   RoleMapper roleMapper;
+    private RoleMapper roleMapper;
     @Autowired
     private UserMapper userMapper;
     @Autowired
@@ -29,7 +29,7 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private inBoxMapper inBoxMapper;
     @Autowired
-    private   noticepublishMapper noticepublishMapper;
+    private noticepublishMapper noticepublishMapper;
     @Autowired
     private messageReplyMapper messageReplyMapper;
 
@@ -235,7 +235,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public int SendNotice(Map<String, String[]> data, LoginUser loginUser) {
-        if (!loginUser.hasRole("SUPER_ADMIN") && !loginUser.hasRole("DISTRIBUTOR") && !loginUser.hasRole("AGENT")&& !loginUser.hasRole("ADMIN")) {
+        if (!loginUser.hasRole("SUPER_ADMIN") && !loginUser.hasRole("DISTRIBUTOR") && !loginUser.hasRole("AGENT") && !loginUser.hasRole("ADMIN")) {
             return 2;
         }
         Long SendUserId = loginUser.getId();
@@ -656,5 +656,15 @@ public class MessageServiceImpl implements MessageService {
         sendBox.setDealtstate(4);
         int num = sendBoxMapper.updateByPrimaryKeySelective(sendBox);
         return num > 0;
+    }
+
+    @Override
+    public Boolean DeleteNotice(Long[] arr, LoginUser loginUser) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("arr", arr);
+        map.put("dealtstate", -1);
+        map.put("userId", loginUser.getId().toString());
+        int num = noticepublishMapper.updateByIdsSelective(map);
+        return num == arr.length ? true : false;
     }
 }

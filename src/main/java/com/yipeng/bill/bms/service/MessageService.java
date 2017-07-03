@@ -42,6 +42,7 @@ public interface MessageService {
     Boolean updateRead(String[] idarr, int type);
 
     Boolean DeleteDraft(String[] idarr);
+
     Boolean DeleteGarbage(String[] idarr, int type);
 
     Boolean updateInRead(String[] idarr, int type);
@@ -65,5 +66,8 @@ public interface MessageService {
     Map<String, Object> GetSendOrReciveNotice(Map<String, Object> params, LoginUser loginUser, String SearchContent, int type);
 
     Map<String, Object> GetSendOrReciveFeedback(Map<String, Object> params, LoginUser loginUser, String SearchContent, int type);
+
     Boolean FinishFeedback(Long id);
+
+    Boolean DeleteNotice(Long[] arr,LoginUser loginUser);
 }

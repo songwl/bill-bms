@@ -20,10 +20,10 @@
         <div class="col-sm-12 animated fadeInRight">
             <div class="col-sm-12" style="padding-left: 0px;padding-right: 0px;">
                 <div style="float: left">
-                    <img src="${ctx}/static/img/bg_p4.gif" class="usertx">
+                    <img src="${ctx}/static/img/bg_p4.gif"  class="usertx">
                 </div>
                 <div style="float: right">
-                    <img src="${ctx}/static/img/bg_p3.gif" class="usertx">
+                    <img src="${ctx}/static/img/bg_p3.gif"  class="usertx">
                 </div>
                 <div style="clear: both;"></div>
             </div>
@@ -40,22 +40,19 @@
                     </div>
                 </div>
                 <h2>
-                    公告查询（已发送公告） <span id="MailAllNum"></span>
+                    公告查询（已接收公告） <span id="MailAllNum"></span>
                 </h2>
                 <div class="mail-tools tooltip-demo m-t-md">
                     <div class="btn-group pull-right">
-                        <button class="btn btn-white btn-sm jsgg" data-toggle="1" onclick="loadSendOrReceive(1)">
-                            <i class="fa fa-arrow-down">已接收公告</i>
-                        </button>
+                        <#if loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ADMIN")>
+                            <button class="btn btn-white btn-sm fsgg" data-toggle="0" onclick="loadSendOrReceive(0)">
+                                <i class="fa fa-arrow-up">已发送公告</i>
+                            </button>
+                        </#if>
 
                     </div>
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" id="refresh"
                             title="刷新公告列表"><i class="fa fa-refresh"></i> 刷新
-                    </button>
-                    <#if loginUser.hasRole("SUPER_ADMIN")>
-                    </#if>
-                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" id="DeleteMail"
-                            title="删除选中的公告"><i class="fa fa-trash-o"></i> 删除
                     </button>
                 </div>
             </div>
@@ -74,39 +71,32 @@
 <script type="text/javascript">
     function MailNum() {
         $.ajax({
-            url: CTX + "/Message/MailNum",
+            url: CTX+"/Message/MailNum",
             success: function (data) {
                 $("#MailNum").text(data);
             }
         })
     }
-
     //setInterval('MailNum()', 500);
     function ReMailNum() {
         $.ajax({
-            url: CTX + "/Message/ReMailNum",
+            url: CTX+"/Message/ReMailNum",
             success: function (data) {
                 $("#MailAllNum").text(data.message);
             }
         })
     }
-
     //setInterval('ReMailNum()', 500);
     function MailAllNum() {
         $.ajax({
-            url: CTX + "/Message/SendMailAllNum",
+            url: CTX+"/Message/SendMailAllNum",
             success: function (data) {
                 $("#ReMailNum").text(data.message);
             }
         })
     }
-
     //setInterval('MailAllNum()', 500);
 
-    var num = 1;
-        <#if loginUser.hasRole("SUPER_ADMIN")||loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ADMIN")>
-        num = 0;
-        </#if>
     var SearchContent = "";
     $(function () {
         /*MailNum();
@@ -131,32 +121,11 @@
         oButtonInit.Init();
 
     });
-
     //0是发送 1是接收
     function loadSendOrReceive(nn) {
-        $(".page-content").empty().load(CTX + "/Message/NoticeReceiveSearch").fadeIn(1000);
-        return;
+        $(".page-content").empty().load(CTX+"/Message/NoticeSearch").fadeIn(1000);
     }
 
-    $("#DeleteMail").click(function () {
-        var allTableData = $('#myTable').bootstrapTable('getSelections');//获取表格的所有内容行
-        if (allTableData.length == 0) {
-            layer.msg("请先选择行");
-            return;
-        }
-        $.ajax({
-            url: CTX + '/Message/deleteNotice',
-            data: {selectContent: allTableData, len: allTableData.length},
-            success: function (data) {
-                if (data.message == 1) {
-                    //alert("删除成功！");
-                    $('.page-content').empty().load(CTX + '/Message/NoticeSearch');
-                } else {
-                    layer.msg("删除失败");
-                }
-            }
-        });
-    })
     var TableInit = function () {
         var oTableInit = new Object();
         //初始化Table
@@ -234,14 +203,14 @@
             var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
                 limit: params.limit,   //页面大小
                 offset: params.offset,  //页码
-                type: 0,
+                type: 1,
                 SearchContent: SearchContent
             };
             return temp;
         }
         window.ReadMailEvents = {
             'click .title': function (e, value, row, index) {
-                $(".page-content").empty().load(CTX + "/Message/ReadNoticeContent?NoticeId=" + row.id).fadeIn(1000);
+                $(".page-content").empty().load(CTX+"/Message/ReadNoticeReceiveContent?NoticeId=" + row.id).fadeIn(1000);
                 //window.location.href = "/Message/ReadMail?MailId=" + row.id + "&StateId=" + StateId;
 
             }
@@ -262,7 +231,6 @@
 
         return oInit;
     };
-
     function operation(types) {
         var allTableData = $('#myTable').bootstrapTable('getSelections');//获取表格的所有内容行
         console.info(allTableData);

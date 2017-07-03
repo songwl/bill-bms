@@ -126,30 +126,63 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
     <select id="selectByInUser" resultMap="BaseResultMap">
-      select * from noticepublish where 0=0
+        select * from noticepublish where 0=0
         <if test="type == 1">
-           and InRole =(select create_user_id
+            and InRole =(select create_user_id
             from t_user where id=#{currentid,jdbcType=VARCHAR})
         </if>
         <if test="type == 0">
             and sendid=#{currentid,jdbcType=VARCHAR}
         </if>
         <if test="SearchContent != null">
-            and (Title like CONCAT('%',#{SearchContent,jdbcType=VARCHAR},'%') or Content like CONCAT('%',#{SearchContent,jdbcType=VARCHAR},'%'))
-        </if>
-    order by SendTime desc LIMIT #{offset},#{limit}
-  </select>
+            and (Title like CONCAT('%',#{SearchContent,jdbcType=VARCHAR},'%') or Content like
+            CONCAT('%',#{SearchContent,jdbcType=VARCHAR},'%'))
+        </if> and dealtState=0
+        order by SendTime desc LIMIT #{offset},#{limit}
+    </select>
     <select id="getCount" resultType="java.lang.Long">
         select COUNT(id) from noticepublish where 0=0
         <if test="type == 1">
-         and InRole =(select create_user_id
-        from t_user where id=#{currentid,jdbcType=VARCHAR})
+            and InRole =(select create_user_id
+            from t_user where id=#{currentid,jdbcType=VARCHAR})
         </if>
         <if test="type == 0">
-         and sendid=#{currentid,jdbcType=VARCHAR}
+            and sendid=#{currentid,jdbcType=VARCHAR}
         </if>
         <if test="SearchContent != null">
-            and (Title like CONCAT('%',#{SearchContent,jdbcType=VARCHAR},'%') or Content like CONCAT('%',#{SearchContent,jdbcType=VARCHAR},'%'))
-        </if>
+            and (Title like CONCAT('%',#{SearchContent,jdbcType=VARCHAR},'%') or Content like
+            CONCAT('%',#{SearchContent,jdbcType=VARCHAR},'%'))
+        </if> and dealtState=0
     </select>
+    <update id="updateByIdsSelective" parameterType="com.yipeng.bill.bms.domain.noticepublish">
+        update noticepublish
+        <set>
+            <if test="sendid != null">
+                SendId = #{sendid,jdbcType=VARCHAR},
+            </if>
+            <if test="inrole != null">
+                InRole = #{inrole,jdbcType=VARCHAR},
+            </if>
+            <if test="mailtype != null">
+                MailType = #{mailtype,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                Title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                Content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="dealtstate != null">
+                dealtState = #{dealtstate,jdbcType=INTEGER},
+            </if>
+            <if test="sendtime != null">
+                SendTime = #{sendtime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id in
+        <foreach item="item" index="index" collection="arr" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and SendId=#{userId,jdbcType=VARCHAR}
+    </update>
 </mapper>

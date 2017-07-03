@@ -123,6 +123,13 @@ public class MessageController extends BaseController {
         return "/Message/NoticeSearch";
     }
 
+    @RequestMapping(value = "/NoticeReceiveSearch")
+    public String NoticeReceiveSearch(ModelMap modelMap) {
+        LoginUser loginUser = this.getCurrentAccount();
+        modelMap.put("loginUser", loginUser);
+        return "/Message/NoticeReceiveSearch";
+    }
+
     @RequestMapping(value = "/ReadNoticeContent")
     public String ReadNotice(ModelMap modelMap, Long NoticeId) {
         noticepublish noticepublish = messageService.getNoticeContent(NoticeId);
@@ -131,6 +138,16 @@ public class MessageController extends BaseController {
             modelMap.put("noticepublish", noticepublish);
         }
         return "/Message/ReadNoticeContent";
+    }
+
+    @RequestMapping(value = "/ReadNoticeReceiveContent")
+    public String ReadNoticeReceiveContent(ModelMap modelMap, Long NoticeId) {
+        noticepublish noticepublish = messageService.getNoticeContent(NoticeId);
+        LoginUser CurrentId = this.getCurrentAccount();
+        if (noticepublish.getSendid().equals(CurrentId.getId().toString()) || noticepublish.getInrole().equals(CurrentId.getCreateUserId().toString())) {
+            modelMap.put("noticepublish", noticepublish);
+        }
+        return "/Message/ReadNoticeReceiveContent";
     }
 
     @RequestMapping(value = "/SendNotice")
@@ -712,6 +729,26 @@ public class MessageController extends BaseController {
     @ResponseBody
     public ResultMessage FinishFeedback(Long id) {
         Boolean flag = messageService.FinishFeedback(id);
+        return this.ajaxDoneSuccess(flag ? "1" : "0");
+    }
+
+    /**
+     * 删除选中的公告
+     *
+     * @param httpServletRequest
+     * @return
+     */
+    @RequestMapping(value = "/deleteNotice")
+    @ResponseBody
+    public ResultMessage deleteNotice(HttpServletRequest httpServletRequest) {
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, String[]> map = httpServletRequest.getParameterMap();
+        int len = Integer.parseInt(map.get("len")[0].toString());
+        Long[] arr = new Long[len];
+        for (int i = 0; i < len; i++) {
+            arr[i] = Long.parseLong(map.get("selectContent[" + i + "][id]")[0]);
+        }
+        Boolean flag = messageService.DeleteNotice(arr,loginUser);
         return this.ajaxDoneSuccess(flag ? "1" : "0");
     }
 }

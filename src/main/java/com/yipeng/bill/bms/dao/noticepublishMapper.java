@@ -18,7 +18,9 @@ public interface noticepublishMapper {
 
     int updateByPrimaryKey(noticepublish record);
 
-    Long getCount(Map<String,Object> params);
+    Long getCount(Map<String, Object> params);
 
-    List<noticepublish> selectByInUser(Map<String,Object> params);
+    List<noticepublish> selectByInUser(Map<String, Object> params);
+
+    int updateByIdsSelective(Map<String, Object> map);
 }

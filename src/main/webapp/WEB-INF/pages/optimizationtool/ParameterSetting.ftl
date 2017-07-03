@@ -64,7 +64,7 @@
                         请求地址：
                     </div>
                     <div class="col-xs-10 sq-form-control validate-control">
-                        tj.yousouyun.com/bill/QueryOffer/GetPrice
+                        http://tj.yousouyun.com/QueryOffer/GetPrice
                     </div>
                 </div>
             </div>

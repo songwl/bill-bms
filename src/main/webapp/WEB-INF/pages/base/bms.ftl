@@ -630,7 +630,7 @@
                                 </li>
                             </#if>
                             <li class="">
-                                <a href="${ctx}/Message/NoticeSearch">
+                                <a href="${ctx}/Message/NoticeReceiveSearch">
                                     公告查询
                                 </a>
                             </li>

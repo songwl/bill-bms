@@ -34,7 +34,83 @@ $(document).ready(function () {
             $(".OptimizationUpdateDiv").slideDown();
         }
     })
-    //优化上线
+    //优化启动
+    $("#youhuaqidong").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var len = selectContent.length;
+        if (selectContent == "") {
+            layer.alert('请选择一列数据', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
+
+        } else {
+            if (confirm("是否启动优化?")) {
+                $.ajax({
+                    type: "post",
+                    url: CTX + "/order/billList/optimizationStart",
+                    data: {selectContent: selectContent, length: len},
+                    success: function (result) {
+                        if (result.code == 200) {
+                            alert(result.message);
+                            $('#myTable').bootstrapTable('refresh');
+                        }
+                        else {
+                            alert(result.message);
+                        }
+                    }
+
+                })
+            }
+        }
+    })
+    //优化停止(合作停)
+    $("#hezuotingzhi").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        var len = selectContent.length;
+        var index;
+        if (selectContent == "") {
+            layer.alert('请选择一列数据', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
+
+        } else {
+            if (confirm("是否停止优化?")) {
+                $.ajax({
+                    type: "post",
+                    url: CTX + "/order/billList/optimizationStop",
+                    data: {selectContent: selectContent, length: len},
+                    beforeSend: function () {
+                        index  = layer.load(1, {
+                            shade: [0.1,'#fff'] //0.1透明度的白色背景
+                        });
+                    },
+                    success: function (result) {
+                        if (result.code == 200) {
+                            layer.alert(result.message, {
+                                skin: 'layui-layer-molv' //样式类名
+                                , closeBtn: 0
+                            })
+                            $('#myTable').bootstrapTable('refresh');
+                        }
+                        else {
+                            layer.alert(result.message, {
+                                skin: 'layui-layer-molv' //样式类名
+                                , closeBtn: 0
+                            })
+                        }
+                        layer.close(index);
+                    }
+
+                })
+            }
+        }
+    })
+
+    //点击上线
     $("#OptimizationStart").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
         var index;
@@ -85,7 +161,7 @@ $(document).ready(function () {
 
         }
     })
-    //优化离线
+    //点击离线
     $("#OptimizationStop").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
         var index;
@@ -100,39 +176,39 @@ $(document).ready(function () {
             layer.confirm('是否优化离线？', {
                 btn: ['确定', '取消']
             }, function () {
-              var len =selectContent.length;
-              var state=100;
-              $.ajax({
-                  type:"post",
-                  url:CTX+"/order/updateYBYstate",
-                  data:{selectContent:selectContent,length:len,state:state},
-                  beforeSend: function () {
-                      index = layer.load(1, {
-                          shade: [0.1, '#fff'] //0.1透明度的白色背景
-                      });
-                  },
-                  success:function (result) {
-                      if(result.code==200)
-                      {
-                          layer.alert(result.message, {
-                              skin: 'layui-layer-molv' //样式类名
-                              , closeBtn: 0
-                          });
-                          $('#myTable').bootstrapTable('refresh');
+                var len =selectContent.length;
+                var state=100;
+                $.ajax({
+                    type:"post",
+                    url:CTX+"/order/updateYBYstate",
+                    data:{selectContent:selectContent,length:len,state:state},
+                    beforeSend: function () {
+                        index = layer.load(1, {
+                            shade: [0.1, '#fff'] //0.1透明度的白色背景
+                        });
+                    },
+                    success:function (result) {
+                        if(result.code==200)
+                        {
+                            layer.alert(result.message, {
+                                skin: 'layui-layer-molv' //样式类名
+                                , closeBtn: 0
+                            });
+                            $('#myTable').bootstrapTable('refresh');
 
-                      }
-                      else
-                      {
-                          layer.alert(result.message, {
-                              skin: 'layui-layer-molv' //样式类名
-                              , closeBtn: 0
-                          });
-                      }
-                      layer.close(index);
+                        }
+                        else
+                        {
+                            layer.alert(result.message, {
+                                skin: 'layui-layer-molv' //样式类名
+                                , closeBtn: 0
+                            });
+                        }
+                        layer.close(index);
 
-                  }
-              })
-          })
+                    }
+                })
+            })
         }
     })
 
@@ -148,34 +224,34 @@ $(document).ready(function () {
     $(".OptimizationUpdatecmt").click(function () {
         var selectContent = $('#myTable').bootstrapTable('getSelections');
         var len =selectContent.length;
-            if(!isNaN($("#OptimizationUpdateNum").val())&&$("#OptimizationUpdateNum").val()>0)
-            {
-               var num= $("#OptimizationUpdateNum").val();
-                $.ajax({
-                    type:"post",
-                    url:CTX+"/order/OptimizationUpdate",
-                    data:{selectContent:selectContent,length:len,num:num},
-                    beforeSend: function () {
-                        $(".pload").show();
+        if(!isNaN($("#OptimizationUpdateNum").val())&&$("#OptimizationUpdateNum").val()>0)
+        {
+            var num= $("#OptimizationUpdateNum").val();
+            $.ajax({
+                type:"post",
+                url:CTX+"/order/OptimizationUpdate",
+                data:{selectContent:selectContent,length:len,num:num},
+                beforeSend: function () {
+                    $(".pload").show();
 
-                    },
-                    success:function (result) {
-                          if(result.code==200)
-                          {
-                              alert(result.message);
-                              $('#myTable').bootstrapTable('refresh');
-                              $(".modal-backdrop").hide();
-                              $(".pload").hide();
-                              $(".OptimizationUpdateDiv").slideUp();
+                },
+                success:function (result) {
+                    if(result.code==200)
+                    {
+                        alert(result.message);
+                        $('#myTable').bootstrapTable('refresh');
+                        $(".modal-backdrop").hide();
+                        $(".pload").hide();
+                        $(".OptimizationUpdateDiv").slideUp();
 
-                          }
                     }
-                })
-            }
-            else
-            {
-                alert("请填写正确的优化指数");
-            }
+                }
+            })
+        }
+        else
+        {
+            alert("请填写正确的优化指数");
+        }
 
     })
 
@@ -551,7 +627,7 @@ var TableInit = function () {
                         var a="";
 
 
-                            a="<span>"+value+"</span>";
+                        a="<span>"+value+"</span>";
 
                         return a;
                     }
@@ -637,7 +713,7 @@ var TableInit = function () {
                         var a="";
                         if(value==1)
                         {
-                            a="<span style='color:#94b86e;'>优化中</span>";
+                            a="<span style='color:#09c;'>优化中</span>";
                         }
                         else
                         {
@@ -649,20 +725,22 @@ var TableInit = function () {
                     },
                     sortable: true
 
-                },
-               /* {
-                    field: 'operate',
-                    title: '操作',
-                    align: 'center',
-                    valign: 'middle',
-                    formatter:function (value,row,index) {
-                        var a="<span style='color:#4382CF;cursor:pointer;' id='details'>详情</span>";
+                } ,
 
-                        return a;
-                    },
-                    events:operateEvents
 
-                },*/
+                /* {
+                 field: 'operate',
+                 title: '操作',
+                 align: 'center',
+                 valign: 'middle',
+                 formatter:function (value,row,index) {
+                 var a="<span style='color:#4382CF;cursor:pointer;' id='details'>详情</span>";
+
+                 return a;
+                 },
+                 events:operateEvents
+
+                 },*/
 
 
             ],
@@ -700,14 +778,14 @@ var TableInit = function () {
         };
         return temp;
     }
-   /* window.operateEvents = {
-        'click #details': function (e, value, row, index) {
-            $("#billCostDetail").show();
-            $(".modal-backdrop").show();
+    /* window.operateEvents = {
+     'click #details': function (e, value, row, index) {
+     $("#billCostDetail").show();
+     $(".modal-backdrop").show();
 
-        }
+     }
 
-    }*/
+     }*/
 
 
     return oTableInit;

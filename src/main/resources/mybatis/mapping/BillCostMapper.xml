@@ -276,6 +276,46 @@
     AND a.cost_date=#{date,jdbcType=VARCHAR}
   </select>
 
+  <!--每个月每天的消费数据-->
+  <select id="selectByBillCostOfDaySumGroupBy"    resultType="java.util.HashMap">
+    select
+    IFNULL(SUM(a.cost_amount),0) as costSum,a.cost_date
+    from t_bill_cost as a ,t_bill_price as b, t_bill as d
+    where   a.t_bill_price_id=b.id
+    AND  b.bill_id=d.id
+    <if test="userId != null">
+      AND b.in_member_id=#{userId,jdbcType=BIGINT}
+    </if>
+    <if test="outMemberId != null">
+      AND b.out_member_id=#{outMemberId,jdbcType=BIGINT}
+    </if>
+    <if test="billAscription != null">
+      AND  d.bill_ascription=#{billAscription,jdbcType=BIGINT}
+    </if>
+    AND date_format(a.cost_date,'%Y-%m')=#{dateArr,jdbcType=VARCHAR}
+    GROUP BY a.cost_date
+  </select>
+
+  <!--每个月每天的达标词数数据-->
+  <select id="selectByBillCostOfDayGroupBy"    resultType="java.util.HashMap">
+    select
+    IFNULL(COUNT(a.id),0)  as costCount,a.cost_date
+    from t_bill_cost as a ,t_bill_price as b, t_bill as c
+    where   a.t_bill_price_id=b.id
+    AND  b.bill_id=c.id
+    <if test="userId != null">
+      AND b.in_member_id=#{userId,jdbcType=BIGINT}
+    </if>
+    <if test="outMemberId != null">
+      AND b.out_member_id=#{outMemberId,jdbcType=BIGINT}
+    </if>
+    <if test="billAscription != null">
+      AND  c.bill_ascription=#{billAscription,jdbcType=BIGINT}
+    </if>
+    AND date_format(a.cost_date,'%Y-%m')=#{dateArr,jdbcType=VARCHAR}
+    GROUP BY a.cost_date
+  </select>
+
 
   <select id="selectByDayCost"  resultMap="BaseResultMap">
     SELECT b.* from t_bill_price as a,t_bill_cost as b

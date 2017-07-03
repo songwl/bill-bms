@@ -57,5 +57,7 @@ public interface orderLeaseMapper {
     Long selectByCustomerCount(Map<String, Object> param);
 
     List<Map<String, Object>> selectByCustomer(Map<String, Object> param);
+
+    orderLease selectAllByOrderId(String OrderId);
 }
 

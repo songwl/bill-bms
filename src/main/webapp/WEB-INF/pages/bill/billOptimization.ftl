@@ -12,16 +12,22 @@
 
     <div class="nav_R right" id="divQx">
         <#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("COMMISSIONER")>
-        <div id="OptimizationUpdate">
-            <span>&nbsp;<i class="fa fa-exchange"></i>&nbsp;优化调整</span>
-        </div>
-        <div id="OptimizationStart">
-            <span>&nbsp;<i class="fa fa-play"></i>&nbsp;优化上线</span>
-        </div>
-        <div id="OptimizationStop">
-            <span>&nbsp;<i class="fa fa-stop"></i>&nbsp;优化离线</span>
-        </div>
-      </#if>
+            <div id="youhuaqidong">
+                <span>&nbsp;<i class="fa fa-cloud-upload"></i>&nbsp;优化启动</span>
+            </div>
+            <div id="hezuotingzhi">
+                <span>&nbsp;<i class="fa fa-cloud-download"></i>&nbsp;合作停止</span>
+            </div>
+            <div id="OptimizationStart">
+                <span>&nbsp;<i class="fa fa-play"></i>&nbsp;点击上线</span>
+            </div>
+            <div id="OptimizationStop">
+                <span>&nbsp;<i class="fa fa-stop"></i>&nbsp;点击离线</span>
+            </div>
+            <div id="OptimizationUpdate">
+                <span>&nbsp;<i class="fa fa-paint-brush"></i>&nbsp;点击调整</span>
+            </div>
+        </#if>
 
         <div id="billCreateGroupClick">
             <span>&nbsp;<i class="fa fa-plus"></i>&nbsp;创建分组</span>
@@ -37,7 +43,7 @@
     <div class="cls">
     </div>
 
-        </div>
+</div>
 <div class="Navs2" style="width: 100%; height: 100px; line-height: 50px;border-left: 1px solid #d9d9d9;background: #eee;z-index: 99;display: none;">
     <div class="nav_R2 right col-md-11" >
         <input type="hidden" name="type" value="${way}" id="way">
@@ -56,15 +62,15 @@
             <@dict.showOptions dictKey="search" dictType="DICT" haveBlank="Y" />
         </select>
 
-            <span style="font-size:13px;text-align:center;cursor:pointer;font-weight:bold;margin-left: 10px;">
+        <span style="font-size:13px;text-align:center;cursor:pointer;font-weight:bold;margin-left: 10px;">
         客户:
         </span>
-            <select style="height: 35px;border: 1px solid #aaaaaa;" id="searchUserName">
-                <option>--请选择--</option>
-                <#list userList as user>
-                    <option value="${user.id}">${user.userName}</option>
-                </#list>
-            </select>
+        <select style="height: 35px;border: 1px solid #aaaaaa;" id="searchUserName">
+            <option>--请选择--</option>
+            <#list userList as user>
+                <option value="${user.id}">${user.userName}</option>
+            </#list>
+        </select>
 
         <div style="width:70px;">
             达标天数:
@@ -158,7 +164,7 @@
                         <div class="form-group">
                             <div style="margin-left:15px;">优化指数：</div>
                             <div style="margin-left:10px;margin-top: 10px;">
-                            <input  type="text" value="" id="OptimizationUpdateNum">
+                                <input  type="text" value="" id="OptimizationUpdateNum">
                             </div>
                         </div>
 

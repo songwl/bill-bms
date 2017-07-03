@@ -883,7 +883,11 @@ $(document).ready(function () {
           url:CTX+'/order/leaseBill',
           data:{billarr:arr,website: $("#leaseTbody tr").children().eq(2).text()},
           success:function (result) {
-
+              layer.alert(result.message, {
+                  skin: 'layui-layer-molv' //样式类名  自定义样式
+                  , anim: 2 //动画类型
+                  , icon: 4   // icon
+              });
           }
 
       })

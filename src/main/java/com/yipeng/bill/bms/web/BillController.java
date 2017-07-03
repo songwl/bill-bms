@@ -1728,7 +1728,18 @@ public class BillController extends BaseController {
         Map<String,String[]> map=request.getParameterMap();
         LoginUser loginUser=this.getCurrentAccount();
         int a=billService.leaseBill(map,loginUser);
-        return  null;
+        if(a<1)
+        {
+            return  this.ajaxDoneError("订单分配出错！");
+        }
+        else if(a==1)
+        {
+            return  this.ajaxDoneSuccess("订单分配成功！");
+        }
+        else
+        {
+            return  this.ajaxDoneSuccess("订单已经存在！");
+        }
 
     }
 

@@ -160,32 +160,47 @@ public class HomeServiceImpl implements HomeService {
             int MaxYbylast=0;
             //判断Y轴消费的显示
             double MaxYbylastCost=0;
-            List<BillCost> billCostList=billCostMapper.selectByBillId(new Long(1));
-
-            String[] lastArr=new String[monthPreCount];
-            for(int i=0;i<monthPreCount;i++)
+            Map<String,Object> sqlMap=new HashMap<>();
+            sqlMap.put("dateArr",formatter1.format(preMonth));
+            sqlMap.put("userId",loginUser.getId());
+            List<Map<String,Object>> lastSum=billCostMapper.selectByBillCostOfDaySumGroupBy(sqlMap);
+            List<Map<String,Object>> lastCount=billCostMapper.selectByBillCostOfDayGroupBy(sqlMap);
+            if(lastSum.size()>0)
             {
-                calendar.setTime(fistDate);
-                calendar.add(Calendar.DAY_OF_MONTH, i);
-                Date tomorrow = calendar.getTime();
-                String str=formatter.format(tomorrow);
-                dateMap.put("date",str);
-
-                int keywordsCount=billCostMapper.selectByBillCostOfDay(dateMap);
-                Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
-
-                //比较达标最大数
-                if(MaxYbylast<=keywordsCount)
+                int jianfaDate=monthPreCount-lastSum.size();
+                if(jianfaDate>0)
                 {
-                    MaxYbylast=keywordsCount;
+                    for(int i=0;i<jianfaDate;i++)
+                    {
+                        seriesLastMonthSum+=0+",";
+                        seriesLastMonth+=0+",";
+                    }
                 }
-                //比较消费最大数
-                if(MaxYbylastCost<=keywordsSum)
+                for(int i=0;i<lastSum.size();i++)
                 {
-                    MaxYbylastCost=keywordsSum;
+                    String sqlLastSum=lastSum.get(i).get("costSum").toString();
+                    String sqlLastCount=lastCount.get(i).get("costCount").toString();
+                    //比较达标最大数
+                    if(MaxYbylast<=Integer.parseInt(sqlLastCount))
+                    {
+                        MaxYbylast=Integer.parseInt(sqlLastCount);
+                    }
+                    //比较消费最大数
+                    if(MaxYbylastCost<=Double.parseDouble(sqlLastSum))
+                    {
+                        MaxYbylastCost=Double.parseDouble(sqlLastSum);
+                    }
+                    seriesLastMonth+=sqlLastCount+",";
+                    seriesLastMonthSum+=sqlLastSum+",";
                 }
-                seriesLastMonth+=keywordsCount+",";
-                seriesLastMonthSum+=keywordsSum+",";
+            }
+            else
+            {
+                for(int i=0;i<monthPreCount;i++)
+                {
+                    seriesLastMonth+=0.0+",";
+                    seriesLastMonthSum+=0.0+",";
+                }
             }
             //上个月的达标数
             map.put("seriesLastMonth",seriesLastMonth);
@@ -194,28 +209,53 @@ public class HomeServiceImpl implements HomeService {
             int MaxYbyNew=0;
             double MaxYbyNewCost=0;
             String seriesNowMonthSum="";
-            for(int i=0;i<monthNowCount;i++)
-            {
-                calendar.setTime(fistDateNow);
-                calendar.add(Calendar.DAY_OF_MONTH, i);
-                Date tomorrow = calendar.getTime();
-                String str1=formatter.format(tomorrow);
-                dateMap.put("date",str1);
-                int keywordsCount=billCostMapper.selectByBillCostOfDay(dateMap);
-                Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
-                //比较达标最大数
-                if(MaxYbyNew<=keywordsCount)
-                {
-                    MaxYbyNew=keywordsCount;
-                }
-                if(MaxYbyNewCost<=keywordsSum)
-                {
-                    MaxYbyNewCost=keywordsSum;
-                }
-                seriesNowMonth+=keywordsCount+",";
-                seriesNowMonthSum+=keywordsSum+",";
+            Map<String,Object> sqlMapNew=new HashMap<>();
+            sqlMapNew.put("dateArr",formatter1.format(new Date()));
+            sqlMapNew.put("userId",loginUser.getId());
+            List<Map<String,Object>> newSum=billCostMapper.selectByBillCostOfDaySumGroupBy(sqlMapNew);
+            List<Map<String,Object>> newCount=billCostMapper.selectByBillCostOfDayGroupBy(sqlMapNew);
 
+            if(newCount.size()<monthNowCount)
+            {
+                for(int i=0;i<monthNowCount-1;i++)
+                {
+                    String sqlNewSum=newSum.get(i).get("costSum").toString();
+                    String sqlNewCount=newCount.get(i).get("costCount").toString();
+                    //比较达标最大数
+                    if(MaxYbyNewCost<=Double.parseDouble(sqlNewSum))
+                    {
+                        MaxYbyNewCost=Double.parseDouble(sqlNewSum);
+                    }
+                    if(MaxYbyNew<=Integer.parseInt(sqlNewCount))
+                    {
+                        MaxYbyNew=Integer.parseInt(sqlNewCount);
+                    }
+                    seriesNowMonth+=sqlNewCount+",";
+                    seriesNowMonthSum+=sqlNewSum+",";
+                }
             }
+            else
+            {
+                for(int i=0;i<monthNowCount;i++)
+                {
+                    String sqlNewSum=newSum.get(i).get("costSum").toString();
+                    String sqlNewCount=newCount.get(i).get("costCount").toString();
+                    //比较达标最大数
+                    if(MaxYbyNewCost<=Double.parseDouble(sqlNewSum))
+                    {
+                        MaxYbyNewCost=Double.parseDouble(sqlNewSum);
+                    }
+                    if(MaxYbyNew<=Integer.parseInt(sqlNewCount))
+                    {
+                        MaxYbyNew=Integer.parseInt(sqlNewCount);
+                    }
+                    seriesNowMonth+=sqlNewCount+",";
+                    seriesNowMonthSum+=sqlNewSum+",";
+
+                }
+            }
+            map.put("seriesNowMonth",seriesNowMonth);
+            map.put("seriesNowMonthSum",seriesNowMonthSum);
             String yAxis="";
             if(MaxYbyNew!=0)
             {
@@ -237,8 +277,6 @@ public class HomeServiceImpl implements HomeService {
             map.put("yAxis",yAxis);
             map.put("yAxisSum",yAxisSum);
 
-            map.put("seriesNowMonth",seriesNowMonth);
-            map.put("seriesNowMonthSum",seriesNowMonthSum);
             return map;
         }
         //渠道商和代理商
@@ -259,62 +297,96 @@ public class HomeServiceImpl implements HomeService {
             String seriesLastMonth="";
             //上个月消费
             String seriesLastMonthSum="";
-            //循环获取上个月每天的达标数
-            Map<String,Object> dateMap=new  HashMap<>();
-            if(loginUser.hasRole("ASSISTANT"))
-            {
-                dateMap.put("userId",loginUser.getCreateUserId());
-            }
-            else
-            {
-                dateMap.put("userId",loginUser.getId());
-            }
-
             //判断Y轴的显示
             int MaxYbylast=0;
             //判断Y轴消费的显示
             double MaxYbylastCost=0;
-            for(int i=0;i<monthPreCount;i++)
+            Map<String,Object> sqlMap=new HashMap<>();
+            sqlMap.put("dateArr",formatter1.format(preMonth));
+            if(loginUser.hasRole("ASSISTANT"))
             {
-                calendar.setTime(fistDate);
-                calendar.add(Calendar.DAY_OF_MONTH, i);
-                Date tomorrow = calendar.getTime();
-                String str=formatter.format(tomorrow);
-                dateMap.put("date",str);
+                sqlMap.put("userId",loginUser.getCreateUserId());
+            }
+            else
+            {
+                sqlMap.put("userId",loginUser.getId());
+            }
 
-                Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
-
-                //比较消费最大数
-                if(MaxYbylastCost<=keywordsSum)
+            List<Map<String,Object>> lastSum=billCostMapper.selectByBillCostOfDaySumGroupBy(sqlMap);
+            if(lastSum.size()>0)
+            {
+                int jianfaDate=monthPreCount-lastSum.size();
+                if(jianfaDate>0)
                 {
-                    MaxYbylastCost=keywordsSum;
+                    for(int i=0;i<jianfaDate;i++)
+                    {
+                        seriesLastMonthSum+=0+",";
+                    }
                 }
+                for(int i=0;i<lastSum.size();i++)
+                {
+                    String sqlLastSum=lastSum.get(i).get("costSum").toString();
+                    //比较消费最大数
+                    if(MaxYbylastCost<=Double.parseDouble(sqlLastSum))
+                    {
+                        MaxYbylastCost=Double.parseDouble(sqlLastSum);
+                    }
 
-                seriesLastMonthSum+=keywordsSum+",";
+                    seriesLastMonthSum+=sqlLastSum+",";
+                }
+            }
+            else
+            {
+                for(int i=0;i<monthPreCount;i++)
+                {
+                    seriesLastMonthSum+=0+",";
+                }
             }
             //上个月的达标数
-
             map.put("seriesLastMonthSum",seriesLastMonthSum);
             //判断Y轴的显示
             int MaxYbyNew=0;
             double MaxYbyNewCost=0;
             String seriesNowMonthSum="";
-            for(int i=0;i<monthNowCount;i++)
+            Map<String,Object> sqlMapNew=new HashMap<>();
+            sqlMapNew.put("dateArr",formatter1.format(new Date()));
+            if(loginUser.hasRole("ASSISTANT"))
             {
-                calendar.setTime(fistDateNow);
-                calendar.add(Calendar.DAY_OF_MONTH, i);
-                Date tomorrow = calendar.getTime();
-                String str1=formatter.format(tomorrow);
-                dateMap.put("date",str1);
-
-                Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
-
-                if(MaxYbyNewCost<=keywordsSum)
+                sqlMapNew.put("userId",loginUser.getCreateUserId());
+            }
+            else
+            {
+                sqlMapNew.put("userId",loginUser.getId());
+            }
+            List<Map<String,Object>> newSum=billCostMapper.selectByBillCostOfDaySumGroupBy(sqlMapNew);
+            if(newSum.size()<monthNowCount)
+            {
+                for(int i=0;i<monthNowCount-1;i++)
                 {
-                    MaxYbyNewCost=keywordsSum;
-                }
+                    String sqlNewSum=newSum.get(i).get("costSum").toString();
+                    //比较达标最大数
+                    if(MaxYbyNewCost<=Double.parseDouble(sqlNewSum))
+                    {
+                        MaxYbyNewCost=Double.parseDouble(sqlNewSum);
+                    }
 
-                seriesNowMonthSum+=keywordsSum+",";
+                    seriesNowMonthSum+=sqlNewSum+",";
+                }
+            }
+            else
+            {
+                for(int i=0;i<monthNowCount;i++)
+                {
+                    String sqlNewSum=newSum.get(i).get("costSum").toString();
+                    //比较达标最大数
+                    if(MaxYbyNewCost<=Double.parseDouble(sqlNewSum))
+                    {
+                        MaxYbyNewCost=Double.parseDouble(sqlNewSum);
+                    }
+
+                    seriesNowMonthSum+=sqlNewSum+",";
+
+                }
             }
             String yAxis="";
             if(MaxYbyNew!=0)
@@ -355,32 +427,43 @@ public class HomeServiceImpl implements HomeService {
             String seriesLastMonth="";
             //上个月消费
             String seriesLastMonthSum="";
-            //循环获取上个月每天的达标数
-            Map<String,Object> dateMap=new  HashMap<>();
-            dateMap.put("userId",loginUser.getCreateUserId());
-            dateMap.put("billAscription",loginUser.getId());
             //判断Y轴的显示
             int MaxYbylast=0;
             //判断Y轴消费的显示
             double MaxYbylastCost=0;
-            for(int i=0;i<monthPreCount;i++)
+            Map<String,Object> sqlMap=new HashMap<>();
+            sqlMap.put("dateArr",formatter1.format(preMonth));
+            sqlMap.put("userId",loginUser.getCreateUserId());
+            sqlMap.put("billAscription",loginUser.getId());
+            List<Map<String,Object>> lastSum=billCostMapper.selectByBillCostOfDaySumGroupBy(sqlMap);
+            if(lastSum.size()>0)
             {
-                calendar.setTime(fistDate);
-                calendar.add(Calendar.DAY_OF_MONTH, i);
-                Date tomorrow = calendar.getTime();
-                String str=formatter.format(tomorrow);
-                dateMap.put("date",str);
-
-                Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
-
-                //比较消费最大数
-                if(MaxYbylastCost<=keywordsSum)
+                int jianfaDate=monthPreCount-lastSum.size();
+                if(jianfaDate>0)
                 {
-                    MaxYbylastCost=keywordsSum;
+                    for(int i=0;i<jianfaDate;i++)
+                    {
+                        seriesLastMonthSum+=0+",";
+                    }
                 }
+                for(int i=0;i<lastSum.size();i++)
+                {
+                    String sqlLastSum=lastSum.get(i).get("costSum").toString();
+                    //比较消费最大数
+                    if(MaxYbylastCost<=Double.parseDouble(sqlLastSum))
+                    {
+                        MaxYbylastCost=Double.parseDouble(sqlLastSum);
+                    }
 
-                seriesLastMonthSum+=keywordsSum+",";
-
+                    seriesLastMonthSum+=sqlLastSum+",";
+                }
+            }
+            else
+            {
+                for(int i=0;i<monthPreCount;i++)
+                {
+                    seriesLastMonthSum+=0+",";
+                }
             }
 
             map.put("seriesLastMonthSum",seriesLastMonthSum);
@@ -389,20 +472,39 @@ public class HomeServiceImpl implements HomeService {
             int MaxYbyNew=0;
             double MaxYbyNewCost=0;
             String seriesNowMonthSum="";
-            for(int i=0;i<=monthNowCount-1;i++)
+            Map<String,Object> sqlMapNew=new HashMap<>();
+            sqlMapNew.put("dateArr",formatter1.format(new Date()));
+            sqlMapNew.put("userId",loginUser.getCreateUserId());
+            sqlMapNew.put("billAscription",loginUser.getId());
+            List<Map<String,Object>> newSum=billCostMapper.selectByBillCostOfDaySumGroupBy(sqlMapNew);
+            if(newSum.size()<monthNowCount)
             {
-                calendar.setTime(fistDateNow);
-                calendar.add(Calendar.DAY_OF_MONTH, i);
-                Date tomorrow = calendar.getTime();
-                String str1=formatter.format(tomorrow);
-                dateMap.put("date",str1);
-
-                Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
-                if(MaxYbyNewCost<=keywordsSum)
+                for(int i=0;i<monthNowCount-1;i++)
                 {
-                    MaxYbyNewCost=keywordsSum;
+                    String sqlNewSum=newSum.get(i).get("costSum").toString();
+                    //比较达标最大数
+                    if(MaxYbyNewCost<=Double.parseDouble(sqlNewSum))
+                    {
+                        MaxYbyNewCost=Double.parseDouble(sqlNewSum);
+                    }
+
+                    seriesNowMonthSum+=sqlNewSum+",";
                 }
-                seriesNowMonthSum+=keywordsSum+",";
+            }
+            else
+            {
+                for(int i=0;i<monthNowCount;i++)
+                {
+                    String sqlNewSum=newSum.get(i).get("costSum").toString();
+                    //比较达标最大数
+                    if(MaxYbyNewCost<=Double.parseDouble(sqlNewSum))
+                    {
+                        MaxYbyNewCost=Double.parseDouble(sqlNewSum);
+                    }
+
+                    seriesNowMonthSum+=sqlNewSum+",";
+
+                }
             }
             String yAxis="";
             if(MaxYbyNew!=0)
@@ -443,65 +545,82 @@ public class HomeServiceImpl implements HomeService {
             String seriesLastMonth="";
             //上个月消费
             String seriesLastMonthSum="";
-            //循环获取上个月每天的达标数
-            Map<String,Object> dateMap=new  HashMap<>();
-            dateMap.put("outMemberId",loginUser.getId());
             //判断Y轴的显示
             int MaxYbylast=0;
             //判断Y轴消费的显示
             double MaxYbylastCost=0;
-            for(int i=0;i<monthPreCount;i++)
+            Map<String,Object> sqlMap=new HashMap<>();
+            sqlMap.put("dateArr",formatter1.format(preMonth));
+            sqlMap.put("outMemberId",loginUser.getId());
+            List<Map<String,Object>> lastSum=billCostMapper.selectByBillCostOfDaySumGroupBy(sqlMap);
+            if(lastSum.size()>0)
             {
-                calendar.setTime(fistDate);
-                calendar.add(Calendar.DAY_OF_MONTH, i);
-                Date tomorrow = calendar.getTime();
-                String str=formatter.format(tomorrow);
-                dateMap.put("date",str);
-                int keywordsCount=billCostMapper.selectByBillCostOfDay(dateMap);
-                Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
-                //比较达标最大数
-                if(MaxYbylast<=keywordsCount)
+                int jianfaDate=monthPreCount-lastSum.size();
+                if(jianfaDate>0)
                 {
-                    MaxYbylast=keywordsCount;
+                    for(int i=0;i<jianfaDate;i++)
+                    {
+                        seriesLastMonthSum+=0+",";
+                    }
                 }
-                seriesLastMonth+=keywordsCount+",";
-                //比较消费最大数
-                if(MaxYbylastCost<=keywordsSum)
+                for(int i=0;i<lastSum.size();i++)
                 {
-                    MaxYbylastCost=keywordsSum;
-                }
-                seriesLastMonth+=keywordsCount+",";
-                seriesLastMonthSum+=keywordsSum+",";
+                    String sqlLastSum=lastSum.get(i).get("costSum").toString();
+                    //比较消费最大数
+                    if(MaxYbylastCost<=Double.parseDouble(sqlLastSum))
+                    {
+                        MaxYbylastCost=Double.parseDouble(sqlLastSum);
+                    }
 
+                    seriesLastMonthSum+=sqlLastSum+",";
+                }
+            }
+            else
+            {
+                for(int i=0;i<monthPreCount;i++)
+                {
+                    seriesLastMonthSum+=0+",";
+                }
             }
             //上个月的达标数
-            map.put("seriesLastMonth",seriesLastMonth);
             map.put("seriesLastMonthSum",seriesLastMonthSum);
             //判断Y轴的显示
             //判断Y轴的显示
             int MaxYbyNew=0;
             double MaxYbyNewCost=0;
             String seriesNowMonthSum="";
-            for(int i=0;i<monthNowCount;i++)
+            Map<String,Object> sqlMapNew=new HashMap<>();
+            sqlMapNew.put("dateArr",formatter1.format(new Date())); ;
+            sqlMapNew.put("outMemberId",loginUser.getId());
+            List<Map<String,Object>> newSum=billCostMapper.selectByBillCostOfDaySumGroupBy(sqlMapNew);
+            if(newSum.size()<monthNowCount)
             {
-                calendar.setTime(fistDateNow);
-                calendar.add(Calendar.DAY_OF_MONTH, i);
-                Date tomorrow = calendar.getTime();
-                String str1=formatter.format(tomorrow);
-                dateMap.put("date",str1);
-                int keywordsCount=billCostMapper.selectByBillCostOfDay(dateMap);
-                Double keywordsSum=billCostMapper.selectByBillCostOfDaySum(dateMap);
-                //比较达标最大数
-                if(MaxYbyNew<=keywordsCount)
+                for(int i=0;i<monthNowCount-1;i++)
                 {
-                    MaxYbyNew=keywordsCount;
+                    String sqlNewSum=newSum.get(i).get("costSum").toString();
+                    //比较达标最大数
+                    if(MaxYbyNewCost<=Double.parseDouble(sqlNewSum))
+                    {
+                        MaxYbyNewCost=Double.parseDouble(sqlNewSum);
+                    }
+
+                    seriesNowMonthSum+=sqlNewSum+",";
                 }
-                if(MaxYbyNewCost<=keywordsCount)
+            }
+            else
+            {
+                for(int i=0;i<monthNowCount;i++)
                 {
-                    MaxYbyNewCost=keywordsSum;
+                    String sqlNewSum=newSum.get(i).get("costSum").toString();
+                    //比较达标最大数
+                    if(MaxYbyNewCost<=Double.parseDouble(sqlNewSum))
+                    {
+                        MaxYbyNewCost=Double.parseDouble(sqlNewSum);
+                    }
+
+                    seriesNowMonthSum+=sqlNewSum+",";
+
                 }
-                seriesNowMonth+=keywordsCount+",";
-                seriesNowMonthSum+=keywordsSum+",";
             }
             String yAxis="";
             if(MaxYbyNew!=0)
@@ -525,7 +644,6 @@ public class HomeServiceImpl implements HomeService {
 
             map.put("yAxis",yAxis);
             map.put("yAxisSum",yAxisSum);
-            map.put("seriesNowMonth",seriesNowMonth);
             map.put("seriesNowMonthSum",seriesNowMonthSum);
             return map;
         }

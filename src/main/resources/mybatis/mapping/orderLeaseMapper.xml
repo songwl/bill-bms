@@ -332,6 +332,11 @@
     from orderlease
     where website = #{website,jdbcType=VARCHAR}
   </select>
+    <select id="selectAllByOrderId" resultMap="BaseResultMap">
+        select *
+        from orderlease
+        where orderId = #{OrderId,jdbcType=VARCHAR}
+    </select>
 
     <select id="selectByCustomerCount" resultType="java.lang.Long">
         select COUNT(*) from (

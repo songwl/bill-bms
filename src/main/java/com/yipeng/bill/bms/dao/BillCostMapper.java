@@ -125,4 +125,7 @@ public interface BillCostMapper {
     List<BillCost>  selectByGetBillToOne();
     List<BillCost> selectByCaoZuoyuanGetBillToOne(Map<String, Object> params);
     List<BillCost> selectByQuDaoGetBillToOne(Map<String, Object> params);
+
+    List<Map<String,Object>> selectByBillCostOfDaySumGroupBy(Map<String, Object> params);
+    List<Map<String,Object>> selectByBillCostOfDayGroupBy(Map<String, Object> params);
 }

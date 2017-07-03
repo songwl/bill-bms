@@ -3761,6 +3761,7 @@ public class BillServiceimpl implements BillService {
     public int leaseBill(Map<String, String[]> params, LoginUser loginUser) {
         String[] website=params.get("website");
         String[][] arr=new String[params.size()-1][];
+        int a=0;
         for (int i=0;i<params.size()-1;i++)
         {
             arr[i]=params.get("billarr["+i+"][]");
@@ -3770,12 +3771,36 @@ public class BillServiceimpl implements BillService {
         {
             if(orderLease.getOrderstate()!=1)
             {
-                return 1;//订单状态部位1，无法分配
+                return 2;//订单状态部位1，无法分配
             }
-            List<String> stringList=new ArrayList<>();
+            for(int i=0;i<params.size()-1;i++)
+            {
+                orderLease orderLeaseExsits=orderLeaseMapper.selectAllByOrderId(arr[i][0].toString());
+                if (orderLeaseExsits!=null)
+                {
 
-        /* List<orderLease> orderLeases=orderLeaseMapper.selectBybillIdList();*/
-
+                    orderLeaseExsits.setOrderid(Long.parseLong(arr[i][0].toString()));
+                    orderLeaseExsits.setKeywordstate(Integer.parseInt(arr[i][1].toString()));
+                    orderLeaseExsits.setKeywords(arr[i][2].toString());
+                    orderLeaseExsits.setWebsite(arr[i][3].toString());
+                    orderLeaseExsits.setOrderstate(1);
+                    orderLeaseExsits.setAllotid(loginUser.getId());
+                    orderLeaseExsits.setCreatetime(new Date());
+                  a=  orderLeaseMapper.updateByPrimaryKey(orderLeaseExsits);
+                }
+                else
+                {
+                    orderLease orderLease1=new orderLease();
+                    orderLease1.setOrderid(Long.parseLong(arr[i][0].toString()));
+                    orderLease1.setKeywordstate(Integer.parseInt(arr[i][1].toString()));
+                    orderLease1.setKeywords(arr[i][2].toString());
+                    orderLease1.setWebsite(arr[i][3].toString());
+                    orderLease1.setOrderstate(1);
+                    orderLease1.setAllotid(loginUser.getId());
+                    orderLease1.setCreatetime(new Date());
+                  a=  orderLeaseMapper.insert(orderLease1);
+                }
+            }
 
         }
         else//不存在 直接录入
@@ -3790,14 +3815,13 @@ public class BillServiceimpl implements BillService {
                 orderLease1.setOrderstate(1);
                 orderLease1.setAllotid(loginUser.getId());
                 orderLease1.setCreatetime(new Date());
-                orderLeaseMapper.insert(orderLease1);
-
+               a=  orderLeaseMapper.insert(orderLease1);
 
             }
 
         }
 
-        return 0;
+        return a;
     }
 
     /**

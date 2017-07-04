@@ -161,25 +161,26 @@
             $("#saveNotify").on("click", ParameterSet.saveNotify);
         },
         RestKeyt: function () {
-      /*      var apiSign = "784675967BFC5B150DAECFD5F8F5B642";
+            var apiSign = "784675967BFC5B150DAECFD5F8F5B642";
             var xAction = "selectPrice";
-            var xParam = "{'UserId':'yunkewang','Value':{'keyword':'淫,赌,A2级防火复合板,mpp电力管,pp风阀厂家,ipn8710防腐钢管'}}";
+            var xParam = "{'UserId':'yunkewang','Value':{'keyword':'A2级防火复合板'}}";
             $.ajax({
                 type: "post",
-                url: "http://localhost:8080/bill//QueryOffer/GetPrice",
+                url: "http://tj.yousouyun.com/QueryOffer/GetPrice",
+                dataType: "jsonp",
                 data: {xAction: xAction, xParam: xParam, apiSign: apiSign},
                 success: function (data) {
                     console.info(data);
                 }
-            });*/
+            });
 
-            $.ajax({
+            /* $.ajax({
                 type: "post",
                 url: CTX + "/optimizationTool/RestKeyt",
                 success: function (data) {
                     $("#keypt").text("").text(data);
                 }
-            });
+            });*/
         },
         saveNotify: function () {
             var patt = /^(\d+(\.\d{1,2})?)$/g;

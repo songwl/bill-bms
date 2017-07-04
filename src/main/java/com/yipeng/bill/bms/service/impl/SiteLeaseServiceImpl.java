@@ -276,7 +276,7 @@ public class SiteLeaseServiceImpl implements SiteLeaseService {
         for (orderLease item : leaseList
                 ) {
             if (item.getKeywordstate() == 0) {//是必选词
-                if (item.getCustomerid() == null || !item.getCustomerid().equals(userId)|| item.getOrderstate() != 5) {
+                if (item.getCustomerid() == null || !item.getCustomerid().equals(userId) || item.getOrderstate() != 5) {
                     continue;
                 } else {
                     List<BillPrice> billPriceList = billPriceMapper.selectByBillId(item.getOrderid());
@@ -414,5 +414,17 @@ public class SiteLeaseServiceImpl implements SiteLeaseService {
         map.put("arr", arr);
         int num = orderLeaseMapper.updateByWebsite(map);
         return num > 0 ? 1 : 0;
+    }
+
+    @Override
+    public void websiteLeaseOverdue() {
+        List<orderLease> orderLeaseList = orderLeaseMapper.selectOverdue();
+        for (orderLease item : orderLeaseList
+                ) {
+            int num = orderLeaseMapper.selectHaveOrderCount(item.getWebsite());
+            if (num == 0) {
+                
+            }
+        }
     }
 }

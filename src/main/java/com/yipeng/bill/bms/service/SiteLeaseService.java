@@ -37,5 +37,7 @@ public interface SiteLeaseService {
 
     List<Map<String, Object>> GetCustomer(LoginUser loginUser);
 
-    int ConfirmCustomer(String website, LoginUser loginUser,String customer);
+    int ConfirmCustomer(String website, LoginUser loginUser, String customer);
+
+    void websiteLeaseOverdue();
 }

@@ -59,5 +59,9 @@ public interface orderLeaseMapper {
     List<Map<String, Object>> selectByCustomer(Map<String, Object> param);
 
     orderLease selectAllByOrderId(String OrderId);
+
+    List<orderLease> selectOverdue();
+
+    int selectHaveOrderCount(String website);
 }
 

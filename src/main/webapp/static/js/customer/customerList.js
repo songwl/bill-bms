@@ -355,6 +355,53 @@ $(document).ready(function () {
             alert("用户名不能为空或格式错误!");
         }
     })
+    //分配订单确认
+    $("#billTypeCmt").click(function () {
+            var userId=$("#getUserId").val();
+            var  kuaipai=null;
+            var  baonian=null;
+            var chuzu=null;
+            if($("#kuaipai").is(':checked'))
+            {
+                kuaipai=1;
+            }
+            if($("#baonian").is(':checked'))
+            {
+                baonian=2;
+            }
+            if($("#chuzu").is(':checked'))
+            {
+                chuzu=3;
+            }
+            $.ajax({
+                type:'post',
+                url:CTX+"/customer/billTypeCmt",
+                data:{kuaipai:kuaipai,baonian:baonian,chuzu:chuzu,userId:userId},
+                success:function (result) {
+                    if(result==200)
+                    {
+                        layer.alert(result.message, {
+                            skin: 'layui-layer-molv' //样式类名  自定义样式
+                            , anim: 1 //动画类型
+                            , icon: 4   // icon
+                        });
+                    }
+                    else
+                    {
+                        layer.alert(result.message, {
+                            skin: 'layui-layer-molv' //样式类名  自定义样式
+                            , anim: 6 //动画类型
+                            , icon: 4   // icon
+                        });
+                    }
+                    $('#myTable').bootstrapTable('refresh');
+                }
+            })
+
+
+
+    })
+
 })
 $(function () {
 
@@ -384,7 +431,7 @@ var TableInit = function () {
             pagination: true,                   //是否显示分页（*）
             pageNumber: 1,                       //初始化加载第一页，默认第一页
             pageSize: 20,                       //每页的记录行数（*）
-            pageList: [100, 500, 1000],        //可供选择的每页的行数（*）
+            pageList: [100, 200, 300, 500, 1000],        //可供选择的每页的行数（*）
             sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
             queryParams: oTableInit.queryParams,//传递参数（*）
             queryParamsType: "",
@@ -434,8 +481,6 @@ var TableInit = function () {
                         var a = "";
 
                         a = "<span style='color:#4382CF;cursor:pointer;' id='details'>" + value + "</span>";
-
-
                         return a;
                     }
 
@@ -560,8 +605,9 @@ var TableInit = function () {
                                 "<span style='color:#4382CF;cursor:pointer;' id='refund'>退款</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   " +
-                                "<span style='color:#4382CF;cursor:pointer;' id='OfferSetUp' data-user='" + value + "'>报价设置</span>   " +
-                                "<span style='color:#4382CF;cursor:pointer;' id='AdminwebsiteLeaseSet'>网租设置</span>   ";
+                                "<span style='color:#4382CF;cursor:pointer;' id='OfferSetUp' data-user='" + value + "'>报价</span>   " +
+                                "<span style='color:#4382CF;cursor:pointer;' id='AdminwebsiteLeaseSet'>网租</span>  " +
+                                " <span style='color:#4382CF;cursor:pointer;' id='billType'> 订单属性</span> ";
 
                         }
                         else if (row.roleName == 'DISTRIBUTOR') {
@@ -570,9 +616,9 @@ var TableInit = function () {
                                 "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   ";
                             if (row.kehuRoleName == "代理商") {
-                                a += "<span style='color:#4382CF;cursor:pointer;' id='OfferSetUpAgent' data-user='" + value + "'>报价设置</span>   ";
+                                a += "<span style='color:#4382CF;cursor:pointer;' id='OfferSetUpAgent' data-user='" + value + "'>报价</span>   ";
                                 if ($("#leasepower").val() == 1) {
-                                    a += "<span style='color:#4382CF;cursor:pointer;' id='websiteLeaseSet'>网租设置</span>   ";
+                                    a += "<span style='color:#4382CF;cursor:pointer;' id='websiteLeaseSet'>网租</span>   ";
                                 }
                             }
                         }
@@ -606,7 +652,6 @@ var TableInit = function () {
             sortName: params.sortName,
             searchUserName: searchUserName,
             searchState: searchState,
-
         };
         return temp;
     }
@@ -842,7 +887,54 @@ var TableInit = function () {
                     }
                 })
             });
+        },
+        'click #billType': function (e, value, row, index) {
+            $("#getUserId").val(row.customerId);
 
+            $.ajax({
+                type:'get',
+                url:CTX+'/customer/getUserBillType',
+                data:{userId:row.customerId},
+                success:function (result) {
+                    console.log(result);
+                    if(result!=null)
+                    {
+                        for(var i=0;i<result.length;i++)
+                        {
+                            if(result[i]["billType"]==1)
+                            {
+                                $("#zhengchang").attr('checked', true);
+                            }
+                            if(result[i]["billType"]==2)
+                            {
+                                $("#kuaipai").attr('checked', true);
+                            }
+                            if(result[i]["billType"]==3)
+                            {
+                                $("#baonian").attr('checked', true);
+                            }
+                            if(result[i]["billType"]==4)
+                            {
+                                $("#chuzu").attr('checked', true);
+                            }
+
+                        }
+                    }
+                }
+            })
+            
+
+            layer.open({
+                type: 1,
+                title: '订单属性分配',
+                skin: 'layui-layer-molv',
+                shade: 0.6,
+                area: ['20%', '30%'],
+                content: $('#billTypeDiv'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                end: function () {
+                    $("#billTypeDiv").hide();
+                }
+            });
         }
     }
 

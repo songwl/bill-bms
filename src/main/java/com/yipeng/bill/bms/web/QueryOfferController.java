@@ -13,6 +13,7 @@ import com.yipeng.bill.bms.model.GetAddressIP;
 import com.yipeng.bill.bms.model.KeywordToPrice;
 import com.yipeng.bill.bms.model.Md5_UrlEncode;
 import com.yipeng.bill.bms.service.OptimizationToolService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.yipeng.bill.bms.vo.LoginUser;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.security.NoSuchAlgorithmException;
@@ -44,12 +46,15 @@ public class QueryOfferController extends BaseController {
     @Autowired
     private UserMapper userMapper;
 
-    @RequestMapping(value = "/GetPrice", method = RequestMethod.POST)
+    @RequestMapping(value = "/GetPrice", method = RequestMethod.GET)
     @ResponseBody
-    public ResultMessage GetPrice(String xAction, String xParam, String apiSign) throws SocketException {
+    public String  GetPrice(String xAction, String xParam, String apiSign, HttpServletRequest request) throws SocketException {
 
         GetAddressIP getAddressIP = new GetAddressIP();
         String ip = getAddressIP.getAllNetInterfaces();
+        String callback = request.getParameter("callback");
+
+
         /*Md5_UrlEncode md5_urlEncode = new Md5_UrlEncode();
         String wSign = null;
         //加密
@@ -69,7 +74,8 @@ public class QueryOfferController extends BaseController {
             json = (JsonObject) parser.parse(xParam);//json解析参数xParam
         }catch (Exception e)
         {
-            return this.ajaxDone(-5, "JSon格式解析失败", null);
+            String str=callback+"(JSon格式解析失败)";
+            return str;
         }
         String UserId = json.get("UserId").getAsString();//任务类型
         UserId = userMapper.selectByUserName(UserId).getId().toString();
@@ -83,7 +89,8 @@ public class QueryOfferController extends BaseController {
             logs.setOpobj("2");
             logs.setOpremake("xAction数据:" + xAction + ",xParam数据:" + xParam + ",apiSign数据:" + apiSign + ",ip地址：" + ip + "，结果：apiSign验证失败");
             logsMapper.insert(logs);
-            return this.ajaxDone(-2, "apiSign验证失败", null);
+            String str=callback+"(apiSign验证失败)";
+            return  str;
         }
         if (offerset == null || offerset.getState() != 1) {
             Logs logs = new Logs();
@@ -93,7 +100,8 @@ public class QueryOfferController extends BaseController {
             logs.setOpobj("2");
             logs.setOpremake("xAction数据:" + xAction + ",xParam数据:" + xParam + ",apiSign数据:" + apiSign + ",ip地址：" + ip + "，结果：没有查询报价的权限");
             logsMapper.insert(logs);
-            return this.ajaxDone(-4, "没有查询报价的权限", null);
+            String str=callback+"(没有查询报价的权限)";
+            return str;
         }
         JsonObject json1 = (JsonObject) parser.parse(json.get("Value").toString());//获取参数关键词
         String KeyWords = json1.get("keyword").getAsString();
@@ -129,7 +137,8 @@ public class QueryOfferController extends BaseController {
             logs.setOpobj("2");
             logs.setOpremake("xAction数据:" + xAction + ",xParam数据:" + xParam + ",apiSign数据:" + apiSign + ",ip地址：" + ip + "，结果：请求的关键词数量超过总数，剩余关键词数量：" + offerset1.getSurplussecond());
             logsMapper.insert(logs);
-            return this.ajaxDone(-3, "请求的关键词数量超过总数，剩余关键词数量：" + offerset1.getSurplussecond(), null);
+            String str=callback+"("+offerset1.getSurplussecond()+")";
+            return str;
         }
         List<KeywordToPrice> keywordsPriceList = optimizationToolService.GetPriceList(stringList, offerset1.getRate());
 
@@ -159,7 +168,10 @@ public class QueryOfferController extends BaseController {
         logs.setOpobj("2");
         logs.setOpremake("xAction数据:" + xAction + ",xParam数据:" + xParam + ",apiSign数据:" + apiSign + ",ip地址：" + ip + "，结果：成功，剩余关键词数量：" + offerset1.getSurplussecond());
         logsMapper.insert(logs);
-        return this.ajaxDone(1, "成功，剩余关键词数" + offerset1.getSurplussecond(), keywordsPriceList);
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("keywordsPrice",keywordsPriceList);
+        String str=callback+"("+jsonObject.toString()+")";
+        return str;
     }
 
 }

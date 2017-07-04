@@ -34,6 +34,7 @@
                 <span>&nbsp;<i class="fa fa-gavel"></i>&nbsp;开通网站出租权限</span>
             </div>
         </#if>
+
         <div class="search">
             <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
         </div>
@@ -262,4 +263,20 @@
 </div>
 <input type="hidden" value="${bmsModel.leasePower}" id="leasepower">
 <!--报价设置end-->
+
+<!--订单属性分配-->
+<div id="billTypeDiv" style="display: none;">
+    <div class="modal-body">
+        <input type="hidden" value="" id="getUserId">
+        <div class="form-group">
+            <ul>
+                <li><span>快排：</span><input type="checkbox" value="1" id="kuaipai"></li>
+                <li><span>包年：</span><input type="checkbox" value="2" id="baonian"></li>
+                <li><span>出租：</span><input type="checkbox" value="3" id="chuzu"></li>
+            </ul>
+        </div>
+        <button id="billTypeCmt" class="btn btn-success form-control"><span
+                class="glyphicon glyphicon-send">&nbsp;</span><span>确认</span></button>
+    </div>
+</div>
 </@base.html>

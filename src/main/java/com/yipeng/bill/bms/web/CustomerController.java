@@ -1,8 +1,10 @@
 package com.yipeng.bill.bms.web;
 
 import com.yipeng.bill.bms.core.model.ResultMessage;
+import com.yipeng.bill.bms.dao.UserBillTypeMapper;
 import com.yipeng.bill.bms.dao.offersetMapper;
 import com.yipeng.bill.bms.domain.User;
+import com.yipeng.bill.bms.domain.UserBillType;
 import com.yipeng.bill.bms.domain.offerset;
 import com.yipeng.bill.bms.service.CustomerService;
 import com.yipeng.bill.bms.vo.LoginUser;
@@ -17,7 +19,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,7 +35,8 @@ public class CustomerController extends BaseController {
     private CustomerService customerService;
     @Autowired
     private offersetMapper offersetMapper;
-
+    @Autowired
+    private UserBillTypeMapper userBillTypeMapper;
     /**
      * 客户列表
      *
@@ -298,4 +303,107 @@ public class CustomerController extends BaseController {
         }
         return this.ajaxDoneError("您还未登录，请先登录!");
     }
+
+    /**
+     * 获取用户订单属性
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/getUserBillType")
+    @ResponseBody
+    public List<UserBillType> getAllUsers(String userId) {
+        if(!"".equals(userId))
+        {
+            List<UserBillType> userBillTypeList=userBillTypeMapper.selectByUserId(Long.parseLong(userId));
+            return userBillTypeList;
+        }
+         return  null;
+    }
+
+    /**
+     * 分配订单属性
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/billTypeCmt")
+    @ResponseBody
+    public ResultMessage billTypeCmt(String kuaipai,String baonian,String chuzu,String userId) {
+        if(!"".equals(userId))
+        {
+            try
+            {
+
+                Map<String,Object> sqlMap=new HashMap<>();
+
+                if(!"".equals(kuaipai))//快排
+                {
+                    sqlMap.put("billType",Integer.parseInt(kuaipai));
+                    sqlMap.put("userId",Long.parseLong(userId));
+                    UserBillType userBillType=userBillTypeMapper.selectByUserIdAndTypeId(sqlMap);
+                    if(userBillType==null)
+                    {
+                        UserBillType userBillTypeNew=new UserBillType();
+                        userBillTypeNew.setUserId(Long.parseLong(userId));
+                        userBillTypeNew.setBillType(Integer.parseInt(kuaipai));
+                        userBillTypeNew.setCreateTime(new Date());
+                        int a=userBillTypeMapper.insert(userBillTypeNew);
+                    }
+                }
+                else
+                {
+                    sqlMap.put("billType",1);
+                    sqlMap.put("userId",Long.parseLong(userId));
+                    int a=userBillTypeMapper.deleteByUserIdAndTypeId(sqlMap);
+                }
+                if(!"".equals(baonian))//包年
+                {
+                    sqlMap.put("billType",Integer.parseInt(baonian));
+                    sqlMap.put("userId",Long.parseLong(userId));
+                    UserBillType userBillType=userBillTypeMapper.selectByUserIdAndTypeId(sqlMap);
+                    if(userBillType==null)
+                    {
+                        UserBillType userBillTypeNew=new UserBillType();
+                        userBillTypeNew.setUserId(Long.parseLong(userId));
+                        userBillTypeNew.setBillType(Integer.parseInt(baonian));
+                        userBillTypeNew.setCreateTime(new Date());
+                        int a=userBillTypeMapper.insert(userBillTypeNew);
+                    }
+                }
+                else
+                {
+                    sqlMap.put("billType",2);
+                    sqlMap.put("userId",Long.parseLong(userId));
+                    int a=userBillTypeMapper.deleteByUserIdAndTypeId(sqlMap);
+                }
+                if(!"".equals(chuzu))//出租
+                {
+                    sqlMap.put("billType",Integer.parseInt(chuzu));
+                    sqlMap.put("userId",Long.parseLong(userId));
+                    UserBillType userBillType=userBillTypeMapper.selectByUserIdAndTypeId(sqlMap);
+                    if(userBillType==null)
+                    {
+                        UserBillType userBillTypeNew=new UserBillType();
+                        userBillTypeNew.setUserId(Long.parseLong(userId));
+                        userBillTypeNew.setBillType(Integer.parseInt(chuzu));
+                        userBillTypeNew.setCreateTime(new Date());
+                        int a=userBillTypeMapper.insert(userBillTypeNew);
+                    }
+                }
+                else
+                {
+                    sqlMap.put("billType",3);
+                    sqlMap.put("userId",Long.parseLong(userId));
+                    int a=userBillTypeMapper.deleteByUserIdAndTypeId(sqlMap);
+                }
+                return  this.ajaxDoneSuccess("分配成功!");
+            }
+            catch (Exception e)
+            {
+                return this.ajaxDoneError("分配出错。错误原因："+e.getMessage()) ;
+            }
+
+        }
+        return  null;
+    }
+
 }

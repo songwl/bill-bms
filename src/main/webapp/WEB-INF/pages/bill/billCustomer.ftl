@@ -23,23 +23,31 @@
                 <li id="Differentprice">不同价导入</li>
             </ul>
         </div>
-        <div class="ImportKuaipai">
-            <span id="ImportKuaipai">&nbsp;<i class="fa fa-tags"></i>&nbsp;快排单</span>
-            <ul class="ImportPriceKuaipai" style="border: #d9d9d9 solid 1px;">
-                <li id="SamepriceKuaipai" style="border-bottom: #d9d9d9 solid 1px;">相同价导入</li>
-                <li id="DifferentpriceKuaiPai">不同价导入</li>
-            </ul>
-        </div>
-        <div class="ImportBaonian">
-            <span id="xxx">&nbsp;<i class="fa fa-tags"></i>&nbsp;包年单</span>
-        </div>
-        <div class="ImportChuzu">
-            <span id="ImportChuzu">&nbsp;<i class="fa fa-tags"></i>&nbsp;出租单</span>
-            <ul class="ImportPriceChuzu" style="border: #d9d9d9 solid 1px;">
-                <li id="SamepriceChuzu" style="border-bottom: #d9d9d9 solid 1px;">相同价导入</li>
-                <li id="DifferentpriceChuzu">不同价导入</li>
-            </ul>
-        </div>
+    <#list userBillTypeList as userBillType>
+        <#if userBillType.billType==1>
+            <div class="ImportKuaipai">
+                <span id="ImportKuaipai">&nbsp;<i class="fa fa-tags"></i>&nbsp;快排单</span>
+                <ul class="ImportPriceKuaipai" style="border: #d9d9d9 solid 1px;">
+                    <li id="SamepriceKuaipai" style="border-bottom: #d9d9d9 solid 1px;">相同价导入</li>
+                    <li id="DifferentpriceKuaiPai">不同价导入</li>
+                </ul>
+            </div>
+        </#if>
+        <#if userBillType.billType==2>
+            <div class="ImportBaonian">
+                <span id="xxx">&nbsp;<i class="fa fa-tags"></i>&nbsp;包年单</span>
+            </div>
+        </#if>
+        <#if userBillType.billType==3>
+            <div class="ImportChuzu">
+                <span id="ImportChuzu">&nbsp;<i class="fa fa-tags"></i>&nbsp;出租单</span>
+                <ul class="ImportPriceChuzu" style="border: #d9d9d9 solid 1px;">
+                    <li id="SamepriceChuzu" style="border-bottom: #d9d9d9 solid 1px;">相同价导入</li>
+                    <li id="DifferentpriceChuzu">不同价导入</li>
+                </ul>
+            </div>
+        </#if>
+    </#list>
         <div id="billToChange" style="width:100px;">
             <span>&nbsp;<i class="fa fa-recycle"></i>&nbsp;客与客切换</span>
         </div>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yipeng.bill.bms.dao.UserBillTypeMapper">
+  <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.UserBillType">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_Id" jdbcType="BIGINT" property="userId" />
+    <result column="bill_Type" jdbcType="INTEGER" property="billType" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_Id, bill_Type, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_user_billtype
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_user_billtype
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.UserBillType">
+    insert into t_user_billtype (id, user_Id, bill_Type, 
+      create_time)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{billType,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.UserBillType">
+    insert into t_user_billtype
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_Id,
+      </if>
+      <if test="billType != null">
+        bill_Type,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="billType != null">
+        #{billType,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.UserBillType">
+    update t_user_billtype
+    <set>
+      <if test="userId != null">
+        user_Id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="billType != null">
+        bill_Type = #{billType,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.UserBillType">
+    update t_user_billtype
+    set user_Id = #{userId,jdbcType=BIGINT},
+      bill_Type = #{billType,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user_billtype
+    where user_Id = #{userId,jdbcType=BIGINT}
+  </select>
+  <select id="selectByUserIdAndTypeId"   resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user_billtype
+    where user_Id = #{userId,jdbcType=BIGINT}
+    AND   bill_Type = #{billType,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByUserIdAndTypeId" >
+    delete from t_user_billtype
+     where user_Id = #{userId,jdbcType=BIGINT}
+    AND   bill_Type = #{billType,jdbcType=INTEGER}
+  </delete>
+</mapper>

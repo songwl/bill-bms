@@ -1721,7 +1721,7 @@ public class BillServiceimpl implements BillService {
                 jsonObj.put("time", System.currentTimeMillis());
                 if (billNew != null) {
                     if (billNew.getBillType() == 1 || billNew.getBillType() == 2) {
-                        int[] timeSet = {8, 15};
+                        int[] timeSet = {9,15};
                         jsonObj.put("timeSet", timeSet);
                         jsonObj.put("searchOnce", true);
                         jsonObj.put("businessType", 2006);

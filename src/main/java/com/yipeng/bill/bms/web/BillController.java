@@ -1,13 +1,11 @@
 package com.yipeng.bill.bms.web;
 
 import com.yipeng.bill.bms.core.model.ResultMessage;
-import com.yipeng.bill.bms.dao.BillGroupMapper;
-import com.yipeng.bill.bms.dao.BillGroupRoleMapper;
-import com.yipeng.bill.bms.dao.RoleMapper;
-import com.yipeng.bill.bms.dao.UserMapper;
+import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.BillGroup;
 import com.yipeng.bill.bms.domain.Role;
 import com.yipeng.bill.bms.domain.User;
+import com.yipeng.bill.bms.domain.UserBillType;
 import com.yipeng.bill.bms.service.BillService;
 import com.yipeng.bill.bms.service.UserService;
 import com.yipeng.bill.bms.vo.LoginUser;
@@ -49,6 +47,8 @@ public class BillController extends BaseController {
     private RoleMapper roleMapper;
     @Autowired
     private BillGroupMapper billGroupMapper;
+    @Autowired
+    private UserBillTypeMapper userBillTypeMapper;
     /**
      * 上下层
      *
@@ -83,14 +83,17 @@ public class BillController extends BaseController {
     public String billCustomer(HttpServletRequest request, ModelMap modelMap) {
         LoginUser user = this.getCurrentAccount();
         Map<String, Long> params = new HashMap<>();
+        List<UserBillType> userBillTypeList=new ArrayList<>();
         //查询当前登录对象对应的客户
         if(user.hasRole("ASSISTANT"))
         {
             params.put("createId", user.getCreateUserId());
+            userBillTypeList=userBillTypeMapper.selectByUserId(user.getCreateUserId());
         }
         else
         {
             params.put("createId", user.getId());
+            userBillTypeList=userBillTypeMapper.selectByUserId(user.getId());
         }
 
         List<User> userList = userService.userCreater(params);
@@ -99,6 +102,7 @@ public class BillController extends BaseController {
         bms.put("user", user);
         modelMap.put("userList", userList);
         modelMap.put("dailiList", dailiList);
+        modelMap.put("userBillTypeList", userBillTypeList);
         modelMap.addAttribute("bmsModel", bms);
         return "/bill/billCustomer";
     }

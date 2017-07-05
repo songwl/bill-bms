@@ -223,4 +223,11 @@
   and DAY(change_time) = #{day,jdbcType=INTEGER}
   and item_type = #{itemType,jdbcType=VARCHAR}
   </select>
+
+  <select id="selectByUserIdItemType"    resultType="java.lang.Double">
+  SELECT IFNULL(SUM(a.change_amount),0) from t_fund_item as a,t_fund_account as b
+  where a.fund_account_id=b.id
+  and a.item_type=#{itemType,jdbcType=VARCHAR}
+  and b.user_id=#{userId,jdbcType=BIGINT}
+  </select>
 </mapper>

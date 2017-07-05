@@ -42,4 +42,5 @@ public interface FundItemMapper {
 
     FundItem selectByDayFunItem(Map<String, Object> params);
 
+    Double selectByUserIdItemType(Map<String, Object> params);
 }

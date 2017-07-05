@@ -3,6 +3,7 @@ package com.yipeng.bill.bms.web;
 import com.yipeng.bill.bms.core.model.ResultMessage;
 import com.yipeng.bill.bms.dao.UserBillTypeMapper;
 import com.yipeng.bill.bms.dao.offersetMapper;
+import com.yipeng.bill.bms.domain.BillPrice;
 import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.domain.UserBillType;
 import com.yipeng.bill.bms.domain.offerset;
@@ -404,6 +405,26 @@ public class CustomerController extends BaseController {
 
         }
         return  null;
+    }
+
+    /**
+     * 校正数据
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "/checkData")
+    @ResponseBody
+    public ResultMessage checkData() {
+
+        int a=customerService.checkData();
+        if(a==1)
+        {
+            return this.ajaxDoneSuccess("校正成功！");
+        }
+        else
+        {
+            return this.ajaxDoneSuccess("校正失败！");
+        }
     }
 
 }

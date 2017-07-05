@@ -224,7 +224,8 @@
   </select>
 
   <select id="selectByOutmemberList"  resultMap="BaseResultMap">
-  SELECT DISTINCT(b.out_member_id) from t_bill_cost as a,t_bill_price as b
+  SELECT DISTINCT(b.out_member_id) from t_bill_cost as a,
+  t_bill_price as b
   WHERE a.t_bill_price_id=b.id
   </select>
 </mapper>

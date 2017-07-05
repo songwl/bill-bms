@@ -61,4 +61,6 @@ public interface CustomerService {
      * @return
      */
     int updateDailiRole(Map<String, String[]> params, LoginUser user);
+
+    int checkData();
 }

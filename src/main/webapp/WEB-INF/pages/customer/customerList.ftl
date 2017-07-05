@@ -297,4 +297,10 @@
                 class="glyphicon glyphicon-send">&nbsp;</span><span>确认</span></button>
     </div>
 </div>
+  <#if  bmsModel.user.hasRole("SUPER_ADMIN")>
+    <div>
+        <button id="checkData" class="btn btn-success">校正数据</button>
+    </div>
+   </#if>
+
 </@base.html>

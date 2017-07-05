@@ -38,6 +38,8 @@ public class CustomerServiceImpl implements CustomerService {
     private BillPriceMapper billPriceMapper;
     @Autowired
     private FundItemMapper fundItemMapper;
+    @Autowired
+    private BillCostMapper billCostMapper;
     @Override
     public int savaUser(User user, int addMemberId, LoginUser loginUser, String realName, String contact, String phone, String qq, BigDecimal balance) {
 
@@ -707,5 +709,43 @@ public class CustomerServiceImpl implements CustomerService {
         {
             return 0;
         }
+    }
+
+    @Override
+    public int checkData() {
+        List<BillPrice> billPriceList=billPriceMapper.selectByOutmemberList();//获取所有人付款人
+        Map<String,Object> sqlMap=new HashMap<>();
+        Map<String,Object> rechargeMap=new HashMap<>();//充值
+        Map<String,Object> refundMap=new HashMap<>();//退款
+        try{
+            for (BillPrice item:billPriceList)
+            {
+                sqlMap.put("outUserId",item.getOutMemberId());
+                rechargeMap.put("userId",item.getOutMemberId());
+                rechargeMap.put("itemType","recharge");
+                refundMap.put("userId",item.getOutMemberId());
+                refundMap.put("itemType","refund");
+                //获取付款人的所有消费记录
+                Double cost=billCostMapper.MonthConsumption(sqlMap);
+                Double recharge=fundItemMapper.selectByUserIdItemType(rechargeMap);//充值
+                Double  refund=fundItemMapper.selectByUserIdItemType(refundMap);//退款
+
+                Double balance=recharge-refund-cost;
+
+                FundAccount fundAccount=fundAccountMapper.selectByUserId(item.getOutMemberId());
+                if(fundAccount!=null)
+                {
+                    fundAccount.setBalance(new BigDecimal(balance));
+                    fundAccountMapper.updateByPrimaryKey(fundAccount);
+                }
+
+            }
+            return 1;
+        }
+        catch (Exception e)
+        {
+            return 0;
+        }
+
     }
 }

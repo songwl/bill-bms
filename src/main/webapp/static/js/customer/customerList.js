@@ -1024,6 +1024,34 @@ $(function () {
         });
 
     });
+
+
+    $("#checkData").click(function () {
+        var  index;
+        layer.confirm('是否校正数据？', {
+            btn: ['开通', '关闭'] //按钮
+        }, function () {
+                $.ajax({
+                    type:'post',
+                    url:CTX+'/customer/checkData',
+                    beforeSend: function () {
+                        index  = layer.load(1, {
+                            shade: [0.1,'#fff'] //0.1透明度的白色背景
+                        });
+                    },
+                    success:function (result) {
+                        layer.alert(result.message, {
+                            skin: 'layui-layer-molv' //样式类名
+                            ,closeBtn: 0
+                        });
+                        layer.close(index);
+                        
+                    }
+                    
+                })
+        })
+
+    });
 });
 
 

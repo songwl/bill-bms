@@ -164,7 +164,9 @@
     <if test="outUserId != null">
       AND a.out_member_id=#{outUserId,jdbcType=BIGINT}
     </if>
-    and year(b.cost_date)=#{year,jdbcType=INTEGER}
+    <if test="year != null">
+      and year(b.cost_date)=#{year,jdbcType=INTEGER}
+    </if>
     <if test="month != null">
       and month(b.cost_date)=#{month,jdbcType=INTEGER}
     </if>

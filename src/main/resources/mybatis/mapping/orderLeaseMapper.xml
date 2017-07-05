@@ -355,7 +355,7 @@
     </select>
     <select id="selectOverdue" resultMap="BaseResultMap">
         select * from orderlease
-        where orderState &gt; 4 and orderState &lt; 6
+        where orderState &gt;= 4 and orderState &lt; 6
     </select>
     <select id="selectHaveOrderCount" resultType="java.lang.Integer">
     select * from orderlease

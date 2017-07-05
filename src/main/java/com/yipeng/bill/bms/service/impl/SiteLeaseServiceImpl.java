@@ -31,6 +31,8 @@ public class SiteLeaseServiceImpl implements SiteLeaseService {
     private KeywordsPriceMapper keywordsPriceMapper;
     @Autowired
     private BillSearchSupportMapper billSearchSupportMapper;
+    @Autowired
+    private leaseOverdueTbMapper leaseOverdueTbMapper;
 
 
     @Override
@@ -418,12 +420,41 @@ public class SiteLeaseServiceImpl implements SiteLeaseService {
 
     @Override
     public void websiteLeaseOverdue() {
+        //查询出所有订单状态在4到6之间的订单
         List<orderLease> orderLeaseList = orderLeaseMapper.selectOverdue();
         for (orderLease item : orderLeaseList
                 ) {
+            //查询某个网站里面是否包含已经订购的订单，如果未包含的话，判断从充值到现在是否超过六十天
+            //如果超过六十天，则要将订单切换成可重新划分给渠道商的状态
             int num = orderLeaseMapper.selectHaveOrderCount(item.getWebsite());
-            if (num == 0) {
-                
+            if (num == 0) {//没有包含已订购的订单
+                Date date = item.getReservetime();//取时间
+                Calendar calendar = new GregorianCalendar();
+                calendar.setTime(date);
+                calendar.add(calendar.MONTH, 2);//把月份往后增加两月.整数往后推,负数往前移动
+                date = calendar.getTime();   //这个时间就是日期往后推一天的结果
+                Date date1 = new Date();
+                if (date.after(date1)) {//超过两个月了
+                    String[] arr = {item.getWebsite()};
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("arr", arr);
+                    map.put("reserveid", "");
+                    map.put("customerid", "");
+                    map.put("orderstate", 3);
+                    orderLeaseMapper.updateByWebsite(map);
+                    leaseOverdueTb leaseOverdueTb = new leaseOverdueTb();
+                    leaseOverdueTb.setKeyword(item.getKeywords());
+                    leaseOverdueTb.setAllotid(item.getAllotid());
+                    leaseOverdueTb.setKeywordstate(item.getKeywordstate());
+                    leaseOverdueTb.setReceiveid(item.getReceiveid());
+                    leaseOverdueTb.setReservetime(item.getReservetime());
+                    leaseOverdueTb.setUpdatetime(new Date());
+                    leaseOverdueTb.setReserveid(Long.parseLong(item.getReserveid()));
+                    leaseOverdueTb.setOrderid(item.getOrderid());
+                    leaseOverdueTb.setOrderstate(item.getOrderstate());
+                    leaseOverdueTb.setWebsite(item.getWebsite());
+                    leaseOverdueTbMapper.insert(leaseOverdueTb);
+                }
             }
         }
     }

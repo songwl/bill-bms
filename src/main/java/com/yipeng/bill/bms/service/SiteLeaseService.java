@@ -40,4 +40,6 @@ public interface SiteLeaseService {
     int ConfirmCustomer(String website, LoginUser loginUser, String customer);
 
     void websiteLeaseOverdue();
+
+    Map<String, Object> GetLeaseOverdue(Map<String, Object> params, LoginUser loginUser);
 }

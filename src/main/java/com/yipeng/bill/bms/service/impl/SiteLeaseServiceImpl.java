@@ -433,12 +433,12 @@ public class SiteLeaseServiceImpl implements SiteLeaseService {
             //如果超过六十天，则要将订单切换成可重新划分给渠道商的状态
             int num = orderLeaseMapper.selectHaveOrderCount(item.getWebsite());
             if (num == 0) {//没有包含已订购的订单
-                Date date = item.getReservetime();//取时间
+                Date date = new Date();//取时间
                 Calendar calendar = new GregorianCalendar();
                 calendar.setTime(date);
                 calendar.add(calendar.MONTH, 2);//把月份往后增加两月.整数往后推,负数往前移动
                 date = calendar.getTime();   //这个时间就是日期往后推一天的结果
-                Date date1 = new Date();
+                Date date1 = item.getReservetime();
                 if (date.after(date1)) {//超过两个月了
                     String[] arr = {item.getWebsite()};
                     Map<String, Object> map = new HashMap<>();
@@ -462,5 +462,24 @@ public class SiteLeaseServiceImpl implements SiteLeaseService {
                 }
             }
         }
+    }
+
+    @Override
+    public Map<String, Object> GetLeaseOverdue(Map<String, Object> params, LoginUser loginUser) {
+        params.put("reserveId", loginUser.getId());
+        Long total = leaseOverdueTbMapper.selectByReserveIdCount(params);
+        List<Map<String, Object>> leaseHallList = leaseOverdueTbMapper.selectByReserveId(params);
+        for (int i = 0; i < leaseHallList.size(); i++) {
+            params.put("website", leaseHallList.get(i).get("website"));
+            if (leaseHallList.get(i).get("receiveId") != null) {
+                leaseHallList.get(i).put("username", userMapper.selectByPrimaryKey(Long.parseLong(leaseHallList.get(i).get("receiveId").toString())).getUserName());
+            }
+            leaseHallList.get(i).put("keywordNum", orderLeaseMapper.selectByKeywordCount(params));
+            leaseHallList.get(i).put("homePageNum", orderLeaseMapper.selectHomePageCount(params));
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("total", total);
+        map.put("rows", leaseHallList);
+        return map;
     }
 }

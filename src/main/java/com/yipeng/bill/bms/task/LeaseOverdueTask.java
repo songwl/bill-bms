@@ -7,7 +7,7 @@ public class LeaseOverdueTask {
     @Autowired
     private SiteLeaseService siteLeaseService;
 
-    public void WebsiteLeaseOverdue() {
+    public void execute() {
         siteLeaseService.websiteLeaseOverdue();
     }
 }

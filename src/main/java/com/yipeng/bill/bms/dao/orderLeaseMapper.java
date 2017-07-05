@@ -63,5 +63,7 @@ public interface orderLeaseMapper {
     List<orderLease> selectOverdue();
 
     int selectHaveOrderCount(String website);
+
+    int selectHaveCustomerIdCount(String customerId);
 }
 

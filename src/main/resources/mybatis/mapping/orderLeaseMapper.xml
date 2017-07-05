@@ -251,7 +251,7 @@
         <if test="reserveId != null">
             and (reserveId=#{reserveId,jdbcType=BIGINT} or orderstate=2 or orderstate=3)
         </if>
-        and orderstate>1
+        and orderstate &gt; 1
         group by website
         order by id DESC
         LIMIT #{offset},#{limit}
@@ -358,9 +358,13 @@
         where orderState &gt;= 4 and orderState &lt; 6
     </select>
     <select id="selectHaveOrderCount" resultType="java.lang.Integer">
-    select * from orderlease
+    select COUNT(*) from orderlease
     where website= #{website,jdbcType=VARCHAR} and orderState=6
   </select>
+    <select id="selectHaveCustomerIdCount" resultType="java.lang.Integer">
+    select COUNT(*) from orderlease
+    where customerId =#{customerId,jdbcType=VARCHAR} and orderState &gt;4
+</select>
     <update id="updateByWebsite" parameterType="com.yipeng.bill.bms.domain.orderLease">
         update orderlease
         <set>

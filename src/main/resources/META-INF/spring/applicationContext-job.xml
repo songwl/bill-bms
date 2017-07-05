@@ -109,6 +109,24 @@
         </property>
     </bean>
 
+    <!--统计总优化-->
+    <bean id="leaseOverdueTask" class="com.yipeng.bill.bms.task.LeaseOverdueTask"></bean>
+    <bean id="LeaseOverdueTaskJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="leaseOverdueTask"/>
+        <property name="targetMethod" value="execute"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="leaseOverdueTaskJobTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="LeaseOverdueTaskJob"/>
+        </property>
+        <property name="cronExpression">
+            <!--晚上11点05分-->
+            <value>0 10 2  * * ?</value>
+        </property>
+    </bean>
+
 
 
     <bean name="startQuertz" lazy-init="false" autowire="no"
@@ -121,6 +139,7 @@
                 <ref bean="callBillCommissionerStatisticsTaskJobTrigger"/>
                 <ref bean="callSearchTaskJobTrigger"/>
                 <ref bean="optimizationTaskJobTrigger"/>
+                <ref bean="leaseOverdueTaskJobTrigger"/>
             </list>
         </property>
     </bean>

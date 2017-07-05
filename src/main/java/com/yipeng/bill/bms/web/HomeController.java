@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.yipeng.bill.bms.dao.offersetMapper;
+import com.yipeng.bill.bms.dao.orderLeaseMapper;
 import com.yipeng.bill.bms.dao.sendBoxMapper;
 import com.yipeng.bill.bms.domain.noticepublish;
 import com.yipeng.bill.bms.domain.offerset;
@@ -38,6 +39,8 @@ public class HomeController extends BaseController {
     private MessageService messageService;
     @Autowired
     private offersetMapper offersetMapper;
+    @Autowired
+    private orderLeaseMapper orderLeaseMapper;
     //@Autowired
     //private AuthorityService authorityService;
 
@@ -57,12 +60,14 @@ public class HomeController extends BaseController {
             bms.put("leasepower", 0);
         }
         if (user.hasRole("CUSTOMER")) {
-            offerset offerset1 = offersetMapper.selectByUserId(user.getCreateUserId());
+            offerset offerset1 = offersetMapper.selectByUserId(user.getId());
             if (offerset1 != null) {
-                bms.put("leasepowercustomer", offerset1.getLeasepower());
+                bms.put("leasepowercustomer", offerset1.getState());
             } else {
                 bms.put("leasepowercustomer", 0);
             }
+            /*int num = orderLeaseMapper.selectHaveCustomerIdCount(user.getId().toString());
+            bms.put("HaveLease", num);*/
         }
         bms.put("UnReadNum", UnReadNum);
         bms.put("SendUnReadNum", SendUnReadNum);

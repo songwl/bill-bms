@@ -101,6 +101,12 @@ public class SiteLeaseController extends BaseController {
         return "/SiteLease/OrderDetails";
     }
 
+    @RequestMapping(value = "/LeaseOverdueList", method = RequestMethod.GET)
+    public String LeaseOverdueList( ModelMap modelMap) {
+        LoginUser loginUser = this.getCurrentAccount();
+        modelMap.put("userId", loginUser.getId());
+        return "/SiteLease/LeaseOverdueList";
+    }
     /**
      * 专员分配订单
      *
@@ -455,5 +461,25 @@ public class SiteLeaseController extends BaseController {
         }
         int result = siteLeaseService.ConfirmCustomer(website, loginUser, customer);
         return this.ajaxDone(result, "", null);
+    }
+
+    /**
+     * 获取保证金已过期的数据
+     * @param limit
+     * @param offset
+     * @return
+     */
+    @RequestMapping(value = "/GetLeaseOverdue", method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String, Object> GetLeaseOverdue(int limit, int offset) {
+        LoginUser loginUser = this.getCurrentAccount();
+        if (!loginUser.hasRole("AGENT")) {
+            return null;
+        }
+        Map<String, Object> params = this.getSearchRequest(); //查询参数
+        params.put("limit", limit);
+        params.put("offset", offset);
+        Map<String, Object> modelMap = siteLeaseService.GetLeaseOverdue(params, loginUser);
+        return modelMap;
     }
 }

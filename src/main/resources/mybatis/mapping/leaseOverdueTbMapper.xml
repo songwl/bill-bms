@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yipeng.bill.bms.dao.leaseOverdueTbMapper">
-  <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.leaseOverdueTb">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="website" jdbcType="VARCHAR" property="website" />
-    <result column="keyword" jdbcType="VARCHAR" property="keyword" />
-    <result column="orderId" jdbcType="BIGINT" property="orderid" />
-    <result column="allotId" jdbcType="BIGINT" property="allotid" />
-    <result column="receiveId" jdbcType="BIGINT" property="receiveid" />
-    <result column="reserveId" jdbcType="BIGINT" property="reserveid" />
-    <result column="keywordState" jdbcType="INTEGER" property="keywordstate" />
-    <result column="orderState" jdbcType="INTEGER" property="orderstate" />
-    <result column="reserveTime" jdbcType="TIMESTAMP" property="reservetime" />
-    <result column="updateTime" jdbcType="TIMESTAMP" property="updatetime" />
-  </resultMap>
-  <sql id="Base_Column_List">
+    <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.leaseOverdueTb">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="website" jdbcType="VARCHAR" property="website"/>
+        <result column="keyword" jdbcType="VARCHAR" property="keyword"/>
+        <result column="orderId" jdbcType="BIGINT" property="orderid"/>
+        <result column="allotId" jdbcType="BIGINT" property="allotid"/>
+        <result column="receiveId" jdbcType="BIGINT" property="receiveid"/>
+        <result column="reserveId" jdbcType="BIGINT" property="reserveid"/>
+        <result column="keywordState" jdbcType="INTEGER" property="keywordstate"/>
+        <result column="orderState" jdbcType="INTEGER" property="orderstate"/>
+        <result column="reserveTime" jdbcType="TIMESTAMP" property="reservetime"/>
+        <result column="updateTime" jdbcType="TIMESTAMP" property="updatetime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, website, keyword, orderId, allotId, receiveId, reserveId, keywordState, orderState, 
     reserveTime, updateTime
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from leaseoverduetb
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from leaseoverduetb
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from leaseoverduetb
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.leaseOverdueTb">
+    <insert id="insert" parameterType="com.yipeng.bill.bms.domain.leaseOverdueTb">
     insert into leaseoverduetb (id, website, keyword, 
       orderId, allotId, receiveId, 
       reserveId, keywordState, orderState, 
@@ -38,116 +38,116 @@
       #{reserveid,jdbcType=BIGINT}, #{keywordstate,jdbcType=INTEGER}, #{orderstate,jdbcType=INTEGER}, 
       #{reservetime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.leaseOverdueTb">
-    insert into leaseoverduetb
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="website != null">
-        website,
-      </if>
-      <if test="keyword != null">
-        keyword,
-      </if>
-      <if test="orderid != null">
-        orderId,
-      </if>
-      <if test="allotid != null">
-        allotId,
-      </if>
-      <if test="receiveid != null">
-        receiveId,
-      </if>
-      <if test="reserveid != null">
-        reserveId,
-      </if>
-      <if test="keywordstate != null">
-        keywordState,
-      </if>
-      <if test="orderstate != null">
-        orderState,
-      </if>
-      <if test="reservetime != null">
-        reserveTime,
-      </if>
-      <if test="updatetime != null">
-        updateTime,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="website != null">
-        #{website,jdbcType=VARCHAR},
-      </if>
-      <if test="keyword != null">
-        #{keyword,jdbcType=VARCHAR},
-      </if>
-      <if test="orderid != null">
-        #{orderid,jdbcType=BIGINT},
-      </if>
-      <if test="allotid != null">
-        #{allotid,jdbcType=BIGINT},
-      </if>
-      <if test="receiveid != null">
-        #{receiveid,jdbcType=BIGINT},
-      </if>
-      <if test="reserveid != null">
-        #{reserveid,jdbcType=BIGINT},
-      </if>
-      <if test="keywordstate != null">
-        #{keywordstate,jdbcType=INTEGER},
-      </if>
-      <if test="orderstate != null">
-        #{orderstate,jdbcType=INTEGER},
-      </if>
-      <if test="reservetime != null">
-        #{reservetime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updatetime != null">
-        #{updatetime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.leaseOverdueTb">
-    update leaseoverduetb
-    <set>
-      <if test="website != null">
-        website = #{website,jdbcType=VARCHAR},
-      </if>
-      <if test="keyword != null">
-        keyword = #{keyword,jdbcType=VARCHAR},
-      </if>
-      <if test="orderid != null">
-        orderId = #{orderid,jdbcType=BIGINT},
-      </if>
-      <if test="allotid != null">
-        allotId = #{allotid,jdbcType=BIGINT},
-      </if>
-      <if test="receiveid != null">
-        receiveId = #{receiveid,jdbcType=BIGINT},
-      </if>
-      <if test="reserveid != null">
-        reserveId = #{reserveid,jdbcType=BIGINT},
-      </if>
-      <if test="keywordstate != null">
-        keywordState = #{keywordstate,jdbcType=INTEGER},
-      </if>
-      <if test="orderstate != null">
-        orderState = #{orderstate,jdbcType=INTEGER},
-      </if>
-      <if test="reservetime != null">
-        reserveTime = #{reservetime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updatetime != null">
-        updateTime = #{updatetime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.leaseOverdueTb">
+    <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.leaseOverdueTb">
+        insert into leaseoverduetb
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="website != null">
+                website,
+            </if>
+            <if test="keyword != null">
+                keyword,
+            </if>
+            <if test="orderid != null">
+                orderId,
+            </if>
+            <if test="allotid != null">
+                allotId,
+            </if>
+            <if test="receiveid != null">
+                receiveId,
+            </if>
+            <if test="reserveid != null">
+                reserveId,
+            </if>
+            <if test="keywordstate != null">
+                keywordState,
+            </if>
+            <if test="orderstate != null">
+                orderState,
+            </if>
+            <if test="reservetime != null">
+                reserveTime,
+            </if>
+            <if test="updatetime != null">
+                updateTime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="website != null">
+                #{website,jdbcType=VARCHAR},
+            </if>
+            <if test="keyword != null">
+                #{keyword,jdbcType=VARCHAR},
+            </if>
+            <if test="orderid != null">
+                #{orderid,jdbcType=BIGINT},
+            </if>
+            <if test="allotid != null">
+                #{allotid,jdbcType=BIGINT},
+            </if>
+            <if test="receiveid != null">
+                #{receiveid,jdbcType=BIGINT},
+            </if>
+            <if test="reserveid != null">
+                #{reserveid,jdbcType=BIGINT},
+            </if>
+            <if test="keywordstate != null">
+                #{keywordstate,jdbcType=INTEGER},
+            </if>
+            <if test="orderstate != null">
+                #{orderstate,jdbcType=INTEGER},
+            </if>
+            <if test="reservetime != null">
+                #{reservetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatetime != null">
+                #{updatetime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.leaseOverdueTb">
+        update leaseoverduetb
+        <set>
+            <if test="website != null">
+                website = #{website,jdbcType=VARCHAR},
+            </if>
+            <if test="keyword != null">
+                keyword = #{keyword,jdbcType=VARCHAR},
+            </if>
+            <if test="orderid != null">
+                orderId = #{orderid,jdbcType=BIGINT},
+            </if>
+            <if test="allotid != null">
+                allotId = #{allotid,jdbcType=BIGINT},
+            </if>
+            <if test="receiveid != null">
+                receiveId = #{receiveid,jdbcType=BIGINT},
+            </if>
+            <if test="reserveid != null">
+                reserveId = #{reserveid,jdbcType=BIGINT},
+            </if>
+            <if test="keywordstate != null">
+                keywordState = #{keywordstate,jdbcType=INTEGER},
+            </if>
+            <if test="orderstate != null">
+                orderState = #{orderstate,jdbcType=INTEGER},
+            </if>
+            <if test="reservetime != null">
+                reserveTime = #{reservetime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatetime != null">
+                updateTime = #{updatetime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.leaseOverdueTb">
     update leaseoverduetb
     set website = #{website,jdbcType=VARCHAR},
       keyword = #{keyword,jdbcType=VARCHAR},
@@ -161,4 +161,21 @@
       updateTime = #{updatetime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+    <select id="selectByReserveId" resultType="java.util.HashMap">
+    select
+    id,website,updateTime as time,orderstate,receiveId,reserveId
+    from leaseoverduetb
+    where reserveId = #{reserveId,jdbcType=BIGINT}
+    group by website
+    order by id DESC
+    LIMIT #{offset},#{limit}
+  </select>
+    <select id="selectByReserveIdCount" resultType="java.lang.Long">
+      select
+      COUNT(*) from (
+      select id
+      from leaseoverduetb
+      where reserveId = #{reserveId,jdbcType=BIGINT}
+      group by website) aa
+  </select>
 </mapper>

@@ -3155,6 +3155,7 @@ public class BillServiceimpl implements BillService {
      */
     @Override
     public Map<String, Object> billOptimizationSettlement(LoginUser loginUser) {
+        SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM");
         //返回对象
         Map<String, Object> map = new HashMap<>();
         //查询参数
@@ -3209,10 +3210,7 @@ public class BillServiceimpl implements BillService {
         monthPreCount = getDaysOfMonth(preMonth);
         //上个月消费
         String seriesLastMonthSum = "";
-        //循环获取上个月每天的达标数
-        Map<String, Object> dateMap = new HashMap<>();
-        dateMap.put("userId", loginUser.getCreateUserId());
-        dateMap.put("outMemberId", loginUser.getId());
+
         //判断Y轴任务数的显示
         int MaxYbylast = 0;
         //判断Y轴消费的显示
@@ -3227,24 +3225,61 @@ public class BillServiceimpl implements BillService {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        for (int i = 0; i < monthPreCount; i++) {
-            calendar.setTime(fistDate);
-            calendar.add(Calendar.DAY_OF_MONTH, i);
-            Date tomorrow = calendar.getTime();
-            String str = formatter.format(tomorrow);
-            dateMap.put("date", str);
-            Double keywordsSum = billCostMapper.selectByBillCostOfDaySum(dateMap);
-
-            //比较消费最大数
-            if (MaxYbylastCost <= keywordsSum) {
-                MaxYbylastCost = keywordsSum;
+        //循环获取上个月每天的达标数
+        Map<String, Object> dateMap = new HashMap<>();
+        if(loginUser.hasRole("ASSISTANT"))
+        {
+            User usernew=userMapper.selectByPrimaryKey(loginUser.getCreateUserId());
+            if(usernew!=null)
+            {
+                dateMap.put("userId",usernew.getCreateUserId());
             }
-            seriesLastMonthSum += keywordsSum + ",";
 
         }
-        //上个月的达标数
-        //下一个月的日期
+        else
+        {
+            dateMap.put("userId",loginUser.getCreateUserId());
+        }
+        dateMap.put("dateArr",formatter1.format(preMonth));
+        if(loginUser.hasRole("ASSISTANT"))
+        {
+            dateMap.put("outMemberId",loginUser.getCreateUserId());
+        }
+        else
+        {
+            dateMap.put("outMemberId",loginUser.getId());
+        }
+        List<Map<String,Object>> lastSum=billCostMapper.selectByBillCostOfDaySumGroupBy(dateMap);
+        if(lastSum.size()>0)
+        {
+            int jianfaDate=monthPreCount-lastSum.size();
+            if(jianfaDate>0)
+            {
+                for(int i=0;i<jianfaDate;i++)
+                {
+                    seriesLastMonthSum+=0+",";
+                }
+            }
+            for(int i=0;i<lastSum.size();i++)
+            {
+                String sqlLastSum=lastSum.get(i).get("costSum").toString();
+                //比较消费最大数
+                if(MaxYbylastCost<=Double.parseDouble(sqlLastSum))
+                {
+                    MaxYbylastCost=Double.parseDouble(sqlLastSum);
+                }
 
+                seriesLastMonthSum+=sqlLastSum+",";
+            }
+        }
+        else
+        {
+            for(int i=0;i<monthPreCount;i++)
+            {
+                seriesLastMonthSum+=0+",";
+            }
+        }
+        //上个月的达标数
         map.put("seriesLastMonthSum", seriesLastMonthSum);
 
         //判断Y轴的显示
@@ -3271,19 +3306,58 @@ public class BillServiceimpl implements BillService {
         double MaxYbyNewCost = 0;
         String seriesNowMonthSum = "";
         int monthNowCount = calendar1.get(Calendar.DAY_OF_MONTH);
-        for (int i = 0; i < monthNowCount; i++) {
-            calendar.setTime(fistDateNow);
-            calendar.add(Calendar.DAY_OF_MONTH, i);
-            Date tomorrow = calendar.getTime();
-            String str1 = formatter.format(tomorrow);
-            dateMap.put("date", str1);
-            Double keywordsSum = billCostMapper.selectByBillCostOfDaySum(dateMap);
-
-            if (MaxYbyNewCost <= keywordsSum) {
-                MaxYbyNewCost = keywordsSum;
+        Map<String,Object> sqlMapNew=new HashMap<>();
+        if(loginUser.hasRole("ASSISTANT"))
+        {
+            User usernew=userMapper.selectByPrimaryKey(loginUser.getCreateUserId());
+            if(usernew!=null)
+            {
+                sqlMapNew.put("userId",usernew.getCreateUserId());
             }
-            seriesNowMonthSum += keywordsSum + ",";
 
+        }
+        else
+        {
+            sqlMapNew.put("userId",loginUser.getCreateUserId());
+        }
+        sqlMapNew.put("dateArr",formatter1.format(new Date()));
+        if(loginUser.hasRole("ASSISTANT"))
+        {
+            sqlMapNew.put("outMemberId",loginUser.getCreateUserId());
+        }
+        else
+        {
+            sqlMapNew.put("outMemberId",loginUser.getId());
+        }
+        List<Map<String,Object>> newSum=billCostMapper.selectByBillCostOfDaySumGroupBy(sqlMapNew);
+        if(newSum.size()<monthNowCount)
+        {
+            for(int i=0;i<monthNowCount-1;i++)
+            {
+                String sqlNewSum=newSum.get(i).get("costSum").toString();
+                //比较达标最大数
+                if(MaxYbyNewCost<=Double.parseDouble(sqlNewSum))
+                {
+                    MaxYbyNewCost=Double.parseDouble(sqlNewSum);
+                }
+
+                seriesNowMonthSum+=sqlNewSum+",";
+            }
+        }
+        else
+        {
+            for(int i=0;i<monthNowCount;i++)
+            {
+                String sqlNewSum=newSum.get(i).get("costSum").toString();
+                //比较达标最大数
+                if(MaxYbyNewCost<=Double.parseDouble(sqlNewSum))
+                {
+                    MaxYbyNewCost=Double.parseDouble(sqlNewSum);
+                }
+
+                seriesNowMonthSum+=sqlNewSum+",";
+
+            }
         }
 
 
@@ -3361,27 +3435,60 @@ public class BillServiceimpl implements BillService {
      */
     @Override
     public Map<String, Object> billDayCost(LoginUser loginUser, String searchTime) {
+        //转换时间
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+        //获取上一个月
+        Calendar calendar = Calendar.getInstance();
+        if(searchTime!=null)
+        {
+            try {
+                calendar.setTime(format1.parse(searchTime)); // 设置为当前时间
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            calendar.setTime(new Date());
+        }
+        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1); // 设置为上一个月
+        //上一个月的日期
+        Date preMonth=null;
+        try {
+            preMonth = format1.parse( formatter.format(calendar.getTime()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
         //获取渠道商的客户和代理商
         List<User> userList = userMapper.getUserByCreateId(loginUser.getId());
         Map<String, Object> params = new HashMap<>();
         params.put("InUserId", loginUser.getId());
+        //上月消费
+        Map<String, Object> paramsLast = new HashMap<>();
+        paramsLast.put("InUserId", loginUser.getId());
         List<FundItemSum> fundItemSumList = new ArrayList<>();
         SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat smm = new SimpleDateFormat("yyyy-MM");
         if (searchTime == null) {
             searchTime = sm.format(new Date());
         }
-        String monthTime = null;
+        String monthTime = null;//本月
         try {
             monthTime = smm.format(smm.parse(searchTime));
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        String monthLast = null;
+        monthLast = smm.format(preMonth);
         //本日
         params.put("searchTime", searchTime);
         //本月
         params.put("monthTime", monthTime);
 
+        paramsLast.put("monthTime", monthLast);
         Long i = new Long(0);
         for (User item : userList
                 ) {
@@ -3391,8 +3498,10 @@ public class BillServiceimpl implements BillService {
             if (role.getRoleCode().equals("AGENT") || role.getRoleCode().equals("CUSTOMER")) {
                 i++;
                 params.put("OutUserId", userRole.getUserId());
+                paramsLast.put("OutUserId", userRole.getUserId());
                 Double sumDay = billCostMapper.selectByBillDayCost(params);
                 Double sumMonth = billCostMapper.selectByBillMonthCost(params);
+                Double sumLastMonth= billCostMapper.selectByBillMonthCost(paramsLast);
                 FundItemSum fundItemSum = new FundItemSum();
                 fundItemSum.setId(i);
                 fundItemSum.setUserName(item.getUserName());
@@ -3405,6 +3514,7 @@ public class BillServiceimpl implements BillService {
                 fundItemSum.setChangeTime(searchTime);
                 fundItemSum.setChangeAmount(new BigDecimal(sumMonth));
                 fundItemSum.setdayAccountSum(new BigDecimal(sumDay));
+                fundItemSum.setLastMonthSum(new BigDecimal(sumLastMonth));
                 fundItemSumList.add(fundItemSum);
 
             }
@@ -3786,7 +3896,7 @@ public class BillServiceimpl implements BillService {
                     orderLeaseExsits.setOrderstate(1);
                     orderLeaseExsits.setAllotid(loginUser.getId());
                     orderLeaseExsits.setCreatetime(new Date());
-                  a=  orderLeaseMapper.updateByPrimaryKey(orderLeaseExsits);
+                     a=  orderLeaseMapper.updateByPrimaryKey(orderLeaseExsits);
                 }
                 else
                 {
@@ -3798,7 +3908,7 @@ public class BillServiceimpl implements BillService {
                     orderLease1.setOrderstate(1);
                     orderLease1.setAllotid(loginUser.getId());
                     orderLease1.setCreatetime(new Date());
-                  a=  orderLeaseMapper.insert(orderLease1);
+                    a=orderLeaseMapper.insert(orderLease1);
                 }
             }
 
@@ -3815,7 +3925,7 @@ public class BillServiceimpl implements BillService {
                 orderLease1.setOrderstate(1);
                 orderLease1.setAllotid(loginUser.getId());
                 orderLease1.setCreatetime(new Date());
-               a=  orderLeaseMapper.insert(orderLease1);
+                a= orderLeaseMapper.insert(orderLease1);
 
             }
 

@@ -91,6 +91,13 @@ var TableInit = function () {
 
                 },
                 {
+                    field: 'lastMonthSum',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '上月扣费',
+
+                },
+                {
                     field: 'changeAmount',
                     align: 'center',
                     valign: 'middle',

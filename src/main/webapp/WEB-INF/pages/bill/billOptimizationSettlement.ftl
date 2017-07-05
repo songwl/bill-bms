@@ -203,7 +203,7 @@
             chart: {
                 borderColor: '#D9D9D9',
                 borderWidth: 1,
-                type: 'line'
+                type: 'area'
             },
             credits: {
                 enabled: false,//不显示highCharts版权信息
@@ -239,6 +239,7 @@
             },
             series: [{
                 name: '上月',
+                color: '#ff0000',
                 data: [${bmsModel.seriesLastMonthSum}]
             }, {
                 name: '本月',
@@ -321,6 +322,13 @@
                         align: 'center',
                         valign: 'middle',
                         title: '客户名',
+
+                    },
+                    {
+                        field: 'lastMonthSum',
+                        align: 'center',
+                        valign: 'middle',
+                        title: '上月扣费',
 
                     },
                     {

@@ -387,8 +387,10 @@
     where t_bill_price_id in(
     select id from t_bill_price where bill_id IN (
     select bill_id from t_bill_price where
-    in_member_id=#{InUserId,jdbcType=BIGINT} and out_member_id=#{OutUserId,jdbcType=BIGINT})
-    and out_member_id=#{InUserId,jdbcType=BIGINT}) and cost_date=#{searchTime,jdbcType=VARCHAR}
+    in_member_id=#{InUserId,jdbcType=BIGINT}
+    and out_member_id=#{OutUserId,jdbcType=BIGINT})
+    and out_member_id=#{InUserId,jdbcType=BIGINT})
+     and cost_date=#{searchTime,jdbcType=VARCHAR}
   </select>
 
   <select id="selectByBillMonthCost"  resultType="java.lang.Double">
@@ -397,8 +399,10 @@
     where t_bill_price_id in(
     select id from t_bill_price where bill_id IN (
     select bill_id from t_bill_price where
-    in_member_id=#{InUserId,jdbcType=BIGINT} and out_member_id=#{OutUserId,jdbcType=BIGINT})
-    and out_member_id=#{InUserId,jdbcType=BIGINT}) and   date_format(cost_date,'%Y-%m')=#{monthTime,jdbcType=VARCHAR}
+    in_member_id=#{InUserId,jdbcType=BIGINT}
+    and out_member_id=#{OutUserId,jdbcType=BIGINT})
+    and out_member_id=#{InUserId,jdbcType=BIGINT})
+    and   date_format(cost_date,'%Y-%m')=#{monthTime,jdbcType=VARCHAR}
   </select>
 
 

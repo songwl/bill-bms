@@ -844,8 +844,8 @@ $(document).ready(function () {
                     "<th>" + item['id'] + "</th>" +
                     "<th>" + item['keywords'] + "</th> " +
                     "<th>" + item['website'] + "</th>" +
-                    "<th><input type='radio' name='radio" + index + "' value='1'></th>" +
                     "<th><input type='radio' name='radio" + index + "' value='0'></th>" +
+                    "<th><input type='radio' name='radio" + index + "' value='1'></th>" +
                     "</tr>"
 
             })

@@ -23,9 +23,9 @@
             <div id="optimizationStop">
                 <span>&nbsp;<i class="fa fa-cloud-download"></i>&nbsp;合作停止</span>
             </div>
-            <div id="billDelete">
+          <#--  <div id="billDelete">
                 <span>&nbsp;<i class="fa fa-trash"></i>&nbsp;删除</span>
-            </div>
+            </div>-->
             <div id="updatePrice">
                 <span>&nbsp;<i class="fa fa-cny"></i>&nbsp;调价</span>
             </div>

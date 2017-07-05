@@ -259,7 +259,7 @@
                                 $('#myTable').bootstrapTable('refresh');
                                 return;
                             }
-                            else if (data.code == "-1"||data.code == "-2") {
+                            else if (data.code == "-1" || data.code == "-2") {
                                 layer.msg(data.message);
                                 return;
                             }

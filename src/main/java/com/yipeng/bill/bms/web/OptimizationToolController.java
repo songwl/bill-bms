@@ -91,6 +91,17 @@ public class OptimizationToolController extends BaseController {
         if (loginUser.hasRole("SUPER_ADMIN") || loginUser.hasRole("COMMISSIONER")) {
             List<KeywordsPrice> list = optimizationToolService.forbiddenWordsList(keywords, 1);
             return this.ajaxDone(1, "", list);
+        } else if (loginUser.hasRole("AGENT")) {
+            offerset offerset = offersetMapper.selectByUserId(loginUser.getId());
+            offerset offerset1 = offersetMapper.selectByUserId(loginUser.getCreateUserId());
+            Pattern pattern = Pattern.compile("^(\\d+(\\.\\d{1,2})?)$");
+            if (offerset == null || offerset1 == null || offerset.getRate() == null || !pattern.matcher(offerset.getRate().toString()).matches()) {
+                return this.ajaxDone(-1, "请去设置正确的两位小数倍率", null);
+            }
+            double rote = offerset.getRate() * offerset1.getRate();
+            List<KeywordsPrice> list = optimizationToolService.forbiddenWordsList(keywords, rote);
+
+            return this.ajaxDone(1, "", list);
         } else {
 
             offerset offerset = offersetMapper.selectByUserId(loginUser.getId());
@@ -122,10 +133,17 @@ public class OptimizationToolController extends BaseController {
         return keypt;
     }
 
+    /**
+     * 自己设置倍率（弃用）
+     *
+     * @param rote
+     * @return
+     */
     @RequestMapping(value = "/UpdateRote", method = RequestMethod.POST)
     @ResponseBody
     public String UpdateRote(String rote) {
-        Pattern pattern = Pattern.compile("^(\\d+(\\.\\d{1,2})?)$");
+        return "-2";
+       /* Pattern pattern = Pattern.compile("^(\\d+(\\.\\d{1,2})?)$");
         if (!pattern.matcher(rote).matches()) {
             return "-1";
         }
@@ -135,14 +153,14 @@ public class OptimizationToolController extends BaseController {
             return "-2";
         }
         boolean flag = optimizationToolService.UpdateRote(loginUser, Double.parseDouble(rote));
-        return flag ? "1" : "0";
+        return flag ? "1" : "0";*/
     }
 
     @RequestMapping(value = "/SetOffer", method = RequestMethod.POST)
     @ResponseBody
-    public ResultMessage SetOffer(int type, String keywordNum, String dataUser) {
+    public ResultMessage SetOffer(int type, String keywordNum, String rote, String dataUser) {
         LoginUser loginUser = this.getCurrentAccount();
-        if (!loginUser.hasRole("SUPER_ADMIN") && !loginUser.hasRole("DISTRIBUTOR")) {
+        if (!loginUser.hasRole("SUPER_ADMIN") && !loginUser.hasRole("DISTRIBUTOR") && !loginUser.hasRole("AGENT")) {
             return this.ajaxDone(-1, "你没有权限", null);
         }
         if (loginUser.hasRole("DISTRIBUTOR")) {
@@ -154,7 +172,15 @@ public class OptimizationToolController extends BaseController {
         if (type != 0 && type != 1) {
             return this.ajaxDone(-2, "异常错误", null);
         }
-        boolean flag = optimizationToolService.setOffer(type, keywordNum, dataUser);
+        Double roteD = 1d;
+        if (type == 1) {
+            try {
+                roteD = Double.parseDouble(rote);
+            } catch (Exception e) {
+                return this.ajaxDone(-2, "倍率格式错误", null);
+            }
+        }
+        boolean flag = optimizationToolService.setOffer(type, keywordNum, roteD, dataUser);
         return this.ajaxDone(flag ? 0 : 1, flag ? "成功" : "失败", null);
     }
 
@@ -169,21 +195,21 @@ public class OptimizationToolController extends BaseController {
         if (offerset == null || offerset.getState() == 0) {
             return this.ajaxDone(0, "", null);
         }
-        return this.ajaxDone(1, offerset.getRequestsecond().toString(), null);
+        return this.ajaxDone(1, offerset.getRequestsecond().toString(), offerset);
     }
 
     @RequestMapping(value = "/GetOfferAgent", method = RequestMethod.POST)
     @ResponseBody
     public ResultMessage GetOfferAgent(String dataUser) {
         LoginUser loginUser = this.getCurrentAccount();
-        if (!loginUser.hasRole("DISTRIBUTOR")) {
+        if (!loginUser.hasRole("DISTRIBUTOR") && !loginUser.hasRole("AGENT")) {
             return this.ajaxDone(-1, "你没有权限", null);
         }
         offerset offerset = offersetMapper.selectByUserId(Long.parseLong(dataUser));
         if (offerset == null || offerset.getState() == 0) {
             return this.ajaxDone(0, "", null);
         }
-        return this.ajaxDone(1, offerset.getRequestsecond().toString(), null);
+        return this.ajaxDone(1, offerset.getRequestsecond().toString(), offerset);
     }
 
 
@@ -216,11 +242,11 @@ public class OptimizationToolController extends BaseController {
             return this.ajaxDone(-1, "你没有权限", null);
         }
         offerset offerset1 = offersetMapper.selectByUserId(loginUser.getId());
-        if (offerset1.getState()==0) {
+        if (offerset1.getState() == 0) {
             return this.ajaxDone(-2, "你没有权限", null);
         }
         offerset offerset = offersetMapper.selectByUserId(Long.parseLong(data));
-        if (offerset.getState()==0) {
+        if (offerset.getState() == 0) {
             return this.ajaxDone(-2, "请先开通该代理商报价权限", null);
         }
         String RoleName = userMapper.selectRoleName(data);
@@ -242,7 +268,7 @@ public class OptimizationToolController extends BaseController {
             return this.ajaxDone(-1, "你没有权限", null);
         }
         offerset offerset = offersetMapper.selectByUserId(Long.parseLong(data));
-        if (offerset.getState()==0) {
+        if (offerset.getState() == 0) {
             return this.ajaxDone(-2, "请先开通该渠道商报价权限", null);
         }
         Map<String, Object> map1 = new HashMap<>();

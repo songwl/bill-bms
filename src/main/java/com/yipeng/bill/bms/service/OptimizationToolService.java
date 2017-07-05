@@ -24,7 +24,7 @@ public interface OptimizationToolService {
 
     String UpdateToken(LoginUser loginUser);
 
-    Boolean setOffer(int type, String keywordNum, String dataUser);
+    Boolean setOffer(int type, String keywordNum, double rote, String dataUser);
 
     Boolean setWebsitePower(Map<String, Object> map);
 

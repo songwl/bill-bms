@@ -532,7 +532,7 @@
                             </ul>
                         </li>
                     </#if>
-                    <#if bmsModel.user.hasRole("DISTRIBUTOR")&&bmsModel.offerstate==1 >
+                    <#if (bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT"))&&bmsModel.offerstate==1 >
                         <li class="" style="border-bottom: 1px solid #3d3d3d;">
                             <a href="javascript:;">
                                 <i class="fa fa-wrench"></i><span class="title"> 优化工具 </span><span class="arrow"></span>

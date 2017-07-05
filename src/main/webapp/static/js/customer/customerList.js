@@ -10,9 +10,13 @@ $(document).ready(function () {
         switch ($("input[name='isOffer']:checked").attr("id")) {
             case "open":
                 $(".setkeyword").show();
+                $("#keywordNumLabel").show();
+                $("#roteLabel").show();
                 break;
             case "close":
                 $(".setkeyword").hide();
+                $("#keywordNumLabel").hide();
+                $("#roteLabel").hide();
                 break;
         }
     });
@@ -23,6 +27,10 @@ $(document).ready(function () {
                     layer.msg("请输入关键词数量");
                     return;
                 }
+                if ($("#rote").val() == "") {
+                    layer.msg("请输入倍率");
+                    return;
+                }
                 if (isNaN($("#keywordNum").val())) {
                     layer.msg("请输入数字");
                     return;
@@ -30,7 +38,12 @@ $(document).ready(function () {
                 $.ajax({
                     url: CTX + "/optimizationTool/SetOffer",
                     type: "post",
-                    data: {type: 1, keywordNum: $("#keywordNum").val(), dataUser: $("#confim").attr("dataUser")},
+                    data: {
+                        type: 1,
+                        keywordNum: $("#keywordNum").val(),
+                        rote: $("#rote").val(),
+                        dataUser: $("#confim").attr("dataUser")
+                    },
                     success: function (data) {
                         if (data.code == 0) {
                             layer.close(index1);
@@ -357,47 +370,41 @@ $(document).ready(function () {
     })
     //分配订单确认
     $("#billTypeCmt").click(function () {
-            var userId=$("#getUserId").val();
-            var  kuaipai=null;
-            var  baonian=null;
-            var chuzu=null;
-            if($("#kuaipai").is(':checked'))
-            {
-                kuaipai=1;
-            }
-            if($("#baonian").is(':checked'))
-            {
-                baonian=2;
-            }
-            if($("#chuzu").is(':checked'))
-            {
-                chuzu=3;
-            }
-            $.ajax({
-                type:'post',
-                url:CTX+"/customer/billTypeCmt",
-                data:{kuaipai:kuaipai,baonian:baonian,chuzu:chuzu,userId:userId},
-                success:function (result) {
-                    if(result==200)
-                    {
-                        layer.alert(result.message, {
-                            skin: 'layui-layer-molv' //样式类名  自定义样式
-                            , anim: 1 //动画类型
-                            , icon: 4   // icon
-                        });
-                    }
-                    else
-                    {
-                        layer.alert(result.message, {
-                            skin: 'layui-layer-molv' //样式类名  自定义样式
-                            , anim: 6 //动画类型
-                            , icon: 4   // icon
-                        });
-                    }
-                    $('#myTable').bootstrapTable('refresh');
+        var userId = $("#getUserId").val();
+        var kuaipai = null;
+        var baonian = null;
+        var chuzu = null;
+        if ($("#kuaipai").is(':checked')) {
+            kuaipai = 1;
+        }
+        if ($("#baonian").is(':checked')) {
+            baonian = 2;
+        }
+        if ($("#chuzu").is(':checked')) {
+            chuzu = 3;
+        }
+        $.ajax({
+            type: 'post',
+            url: CTX + "/customer/billTypeCmt",
+            data: {kuaipai: kuaipai, baonian: baonian, chuzu: chuzu, userId: userId},
+            success: function (result) {
+                if (result == 200) {
+                    layer.alert(result.message, {
+                        skin: 'layui-layer-molv' //样式类名  自定义样式
+                        , anim: 1 //动画类型
+                        , icon: 4   // icon
+                    });
                 }
-            })
-
+                else {
+                    layer.alert(result.message, {
+                        skin: 'layui-layer-molv' //样式类名  自定义样式
+                        , anim: 6 //动画类型
+                        , icon: 4   // icon
+                    });
+                }
+                $('#myTable').bootstrapTable('refresh');
+            }
+        })
 
 
     })
@@ -621,6 +628,13 @@ var TableInit = function () {
                                     a += "<span style='color:#4382CF;cursor:pointer;' id='websiteLeaseSet'>网租</span>   ";
                                 }
                             }
+                        }else if(row.roleName == 'AGENT')
+                        {
+                            a = "<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
+                                "<span style='color:#4382CF;cursor:pointer;' id='refund'>退款</span>   " +
+                                "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
+                                "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   "+
+                                "<span style='color:#4382CF;cursor:pointer;' id='OfferSetUpAgent' data-user='" + value + "'>报价</span> ";
                         }
                         else {
                             a = "<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
@@ -753,12 +767,18 @@ var TableInit = function () {
                     if (data.code == 0) {
                         $("#open").removeAttr("checked");
                         $("#close").prop("checked", "checked");
-                        $("#keywordNum").val("").hide();
+                        $("#keywordNum").val("0").hide();
+                        $("#rote").val("").hide();
+                        $("#keywordNumLabel").hide();
+                        $("#roteLabel").hide();
                     }
                     else {
                         $("#open").prop("checked", "checked");
                         $("#close").removeAttr("checked");
-                        $("#keywordNum").val(data.message).show();
+                        $("#keywordNum").val(data.data.requestsecond).show();
+                        $("#rote").val(data.data.rate).show();
+                        $("#keywordNumLabel").show();
+                        $("#roteLabel").show();
                     }
                 }
             })
@@ -767,7 +787,7 @@ var TableInit = function () {
                 title: '报价设置',
                 skin: 'layui-layer-molv',
                 shade: 0.6,
-                area: ['30%', '40%'],
+                area: ['30%', '45%'],
                 content: $('#offerSetUp'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
                 end: function () {
                     $("#offerSetUp").hide();
@@ -784,12 +804,18 @@ var TableInit = function () {
                     if (data.code == 0) {
                         $("#open").removeAttr("checked");
                         $("#close").prop("checked", "checked");
-                        $("#keywordNum").val("").hide();
+                        $("#keywordNum").val("0").hide();
+                        $("#rote").val("").hide();
+                        $("#keywordNumLabel").hide();
+                        $("#roteLabel").hide();
                     }
                     else {
                         $("#open").prop("checked", "checked");
                         $("#close").removeAttr("checked");
-                        $("#keywordNum").val(data.message).show();
+                        $("#keywordNum").val(data.data.requestsecond).show();
+                        $("#rote").val(data.data.rate).show();
+                        $("#keywordNumLabel").show();
+                        $("#roteLabel").show();
                     }
                 }
             })
@@ -798,7 +824,7 @@ var TableInit = function () {
                 title: '报价设置',
                 skin: 'layui-layer-molv',
                 shade: 0.6,
-                area: ['30%', '40%'],
+                area: ['30%', '45%'],
                 content: $('#offerSetUp'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
                 end: function () {
                     $("#offerSetUp").hide();
@@ -892,29 +918,23 @@ var TableInit = function () {
             $("#getUserId").val(row.customerId);
 
             $.ajax({
-                type:'get',
-                url:CTX+'/customer/getUserBillType',
-                data:{userId:row.customerId},
-                success:function (result) {
+                type: 'get',
+                url: CTX + '/customer/getUserBillType',
+                data: {userId: row.customerId},
+                success: function (result) {
                     console.log(result);
-                    if(result!=null)
-                    {
-                        for(var i=0;i<result.length;i++)
-                        {
-                            if(result[i]["billType"]==1)
-                            {
+                    if (result != null) {
+                        for (var i = 0; i < result.length; i++) {
+                            if (result[i]["billType"] == 1) {
                                 $("#zhengchang").attr('checked', true);
                             }
-                            if(result[i]["billType"]==2)
-                            {
+                            if (result[i]["billType"] == 2) {
                                 $("#kuaipai").attr('checked', true);
                             }
-                            if(result[i]["billType"]==3)
-                            {
+                            if (result[i]["billType"] == 3) {
                                 $("#baonian").attr('checked', true);
                             }
-                            if(result[i]["billType"]==4)
-                            {
+                            if (result[i]["billType"] == 4) {
                                 $("#chuzu").attr('checked', true);
                             }
 
@@ -922,7 +942,7 @@ var TableInit = function () {
                     }
                 }
             })
-            
+
 
             layer.open({
                 type: 1,

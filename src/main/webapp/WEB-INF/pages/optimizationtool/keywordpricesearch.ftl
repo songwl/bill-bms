@@ -56,12 +56,14 @@
                                                   style="width:100%;height:100%;"></textarea>
                                     </div>
                                     <div class="price_explanation">
+                                        <input class="form-control" id="rote" placeholder="请输入倍率">
+                                        </br>
                                         <button class="price_anniu font20">批量查询</button>
                                     <#--</br></br>
                                     <input type="text" name="rote" id="rote" placeholder="倍率">-->
                                         </br>
-                                        </br>
-                                        <button onclick="loopall();">循环所有关键词</button>
+                                        <#--</br>
+                                        <button onclick="loopall();">循环所有关键词</button>-->
                                     </div>
                                     <div class="hg10"></div>
                                     <div class="clear"></div>

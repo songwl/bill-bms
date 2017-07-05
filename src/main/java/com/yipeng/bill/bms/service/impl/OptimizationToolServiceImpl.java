@@ -211,7 +211,7 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
     }
 
     @Override
-    public Boolean setOffer(int type, String keywordNum, String dataUser) {
+    public Boolean setOffer(int type, String keywordNum, double rote, String dataUser) {
         offerset offerset = offersetMapper.selectByUserId(Long.parseLong(dataUser));
         if (offerset == null) {
             int max = 999999;
@@ -232,7 +232,7 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
             offerset1.setState(type);
             offerset1.setTokenid(keypt);
             offerset1.setSurplussecond(type == 0 ? 0 : Integer.parseInt(keywordNum));
-            offerset1.setRate(1d);
+            offerset1.setRate(rote);
             offerset1.setCreatetime(new Date());
             offerset1.setRequestsecond(type == 0 ? 0 : Integer.parseInt(keywordNum));
             return offersetMapper.insert(offerset1) > 0;
@@ -246,6 +246,7 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
             offerset.setUpdatetime(new Date());
             offerset.setRequestsecond(Integer.parseInt(keywordNum));
             offerset.setSurplussecond(Integer.parseInt(keywordNum));
+            offerset.setRate(rote);
             int num = offersetMapper.updateByPrimaryKeySelective(offerset);
             return num > 0;
         }

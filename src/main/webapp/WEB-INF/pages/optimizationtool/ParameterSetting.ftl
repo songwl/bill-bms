@@ -46,7 +46,7 @@
                         <a href="#a_null" class="sq-btn btn-primary" id="initApi">重 置</a>
                     </div>
                 </div>
-                <div class="form-group">
+                <#--<div class="form-group">
                     <div class="sq-control-label">
                         <span class="necessary-mark">*</span>
                         倍率：
@@ -57,7 +57,7 @@
                                value="#{rote}" placeholder="请输入倍率">
                         <a href="#a_null" class="sq-btn btn-strong" id="saveNotify">保 存</a>
                     </div>
-                </div>
+                </div>-->
                 <div class="form-group">
 
                     <div class="sq-control-label">
@@ -158,29 +158,29 @@
     var ParameterSet = {
         init: function () {
             $("#initApi").on("click", ParameterSet.RestKeyt);
-            $("#saveNotify").on("click", ParameterSet.saveNotify);
+            //$("#saveNotify").on("click", ParameterSet.saveNotify);
         },
         RestKeyt: function () {
-            var apiSign = "784675967BFC5B150DAECFD5F8F5B642";
-            var xAction = "selectPrice";
-            var xParam = "{'UserId':'yunkewang','Value':{'keyword':'A2级防火复合板'}}";
-            $.ajax({
-                type: "post",
-                url: "http://tj.yousouyun.com/QueryOffer/GetPrice",
-                dataType: "jsonp",
-                data: {xAction: xAction, xParam: xParam, apiSign: apiSign},
-                success: function (data) {
-                    console.info(data);
-                }
-            });
+            /*  var apiSign = "784675967BFC5B150DAECFD5F8F5B642";
+             var xAction = "selectPrice";
+             var xParam = "{'UserId':'yunkewang','Value':{'keyword':'A2级防火复合板'}}";
+             $.ajax({
+                 type: "post",
+                 url: "http://tj.yousouyun.com/QueryOffer/GetPrice",
+                 dataType: "jsonp",
+                 data: {xAction: xAction, xParam: xParam, apiSign: apiSign},
+                 success: function (data) {
+                     console.info(data);
+                 }
+             });*/
 
-            /* $.ajax({
-                type: "post",
-                url: CTX + "/optimizationTool/RestKeyt",
-                success: function (data) {
-                    $("#keypt").text("").text(data);
-                }
-            });*/
+          $.ajax({
+                 type: "post",
+                 url: CTX + "/optimizationTool/RestKeyt",
+                 success: function (data) {
+                     $("#keypt").text("").text(data);
+                 }
+             });
         },
         saveNotify: function () {
             var patt = /^(\d+(\.\d{1,2})?)$/g;

@@ -30,9 +30,9 @@
             <div class="updateDailiRole" style="width:130px;">
                 <span id="dailiRole">&nbsp;<i class="fa fa-gavel"></i>&nbsp;开通代理权限</span>
             </div>
-            <div class="" id="websiteLeasePower" style="width:130px;">
-                <span>&nbsp;<i class="fa fa-gavel"></i>&nbsp;开通网站出租权限</span>
-            </div>
+        <#--<div class="" id="websiteLeasePower" style="width:130px;">
+            <span>&nbsp;<i class="fa fa-gavel"></i>&nbsp;开通网站出租权限</span>
+        </div>-->
         </#if>
 
         <div class="search">
@@ -252,10 +252,28 @@
             <input type="radio" name="isOffer" id="open" checked><label for="open">开通</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <input type="radio" name="isOffer" id="close"><label for="close">关闭</label>
         </div>
+        <#if bmsModel.user.hasRole("AGENT")>
+            <div class="form-group" style="display: none;">
+                <label id="keywordNumLabel" for="keywordNum">关键词数量</label><input type="text"
+                                                                                 class="form-control setkeyword"
+                                                                                 id="keywordNum" placeholder="请输入关键词数量" value="0"
+                                                                                 onkeyup="this.value=this.value.replace(/\D/g,'')"
+                                                                                 onafterpaste="this.value=this.value.replace(/\D/g,'')">
+            </div>
+        <#else>
+            <div class="form-group">
+                <label id="keywordNumLabel" for="keywordNum">关键词数量</label><input type="text"
+                                                                                 class="form-control setkeyword"
+                                                                                 id="keywordNum" placeholder="请输入关键词数量"
+                                                                                 onkeyup="this.value=this.value.replace(/\D/g,'')"
+                                                                                 onafterpaste="this.value=this.value.replace(/\D/g,'')">
+            </div>
+        </#if>
         <div class="form-group">
-            <input type="text" class="form-control setkeyword" id="keywordNum" placeholder="请输入关键词数量"
-                   onkeyup="this.value=this.value.replace(/\D/g,'')"
-                   onafterpaste="this.value=this.value.replace(/\D/g,'')">
+            <label id="roteLabel" for="rote">倍率</label><input type="text" class="form-control setkeyword" id="rote"
+                                                              placeholder="请输入倍率"
+                                                              onkeyup="this.value=this.value.replace(/[^0-9.]/g,'')"
+                                                              onafterpaste="this.value=this.value.replace(/[^0-9.]/g,'')">
         </div>
         <button id="confim" class="btn btn-success form-control"><span
                 class="glyphicon glyphicon-send">&nbsp;</span><span>确认</span></button>

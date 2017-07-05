@@ -253,10 +253,11 @@ public class SiteLeaseServiceImpl implements SiteLeaseService {
             rote = Double.parseDouble(new java.text.DecimalFormat("#.00").format(rote));
             map.put("rote", rote);
         } else if (loginUser.hasRole("CUSTOMER")) {//客户
-            offerset offerset = offersetMapper.selectByUserId(loginUser.getCreateUserId());
+            offerset offerset = offersetMapper.selectByUserId(loginUser.getCreateUserId());//代理商倍率
             User user = userMapper.selectByPrimaryKey(loginUser.getCreateUserId());
-            offerset offerset1 = offersetMapper.selectByUserId(user.getCreateUserId());
-            double rote = offerset.getRate() * offerset1.getRate();
+            offerset offerset1 = offersetMapper.selectByUserId(user.getCreateUserId());//渠道商倍率
+            offerset offerset2 = offersetMapper.selectByUserId(loginUser.getId());//客户倍率
+            double rote = offerset.getRate() * offerset1.getRate() * offerset2.getRate();
             rote = Double.parseDouble(new java.text.DecimalFormat("#.00").format(rote));
             map.put("rote", rote);
         } else {
@@ -286,6 +287,8 @@ public class SiteLeaseServiceImpl implements SiteLeaseService {
                     double DRate = offerset.getRate();//渠道商倍率
                     offerset offerset1 = offersetMapper.selectByUserId(Long.parseLong(item.getReserveid()));
                     double ARate = offerset1.getRate();//代理商倍率
+                    offerset offerset2 = offersetMapper.selectByUserId(Long.parseLong(item.getCustomerid()));
+                    double CRate = offerset2.getRate();//客户倍率
                     BillSearchSupport billSearchSupport = billSearchSupportMapper.selectByBillId(item.getOrderid());
                     KeywordsPrice keywordsPrice = keywordsPriceMapper.selectOneBykeyword(item.getKeywords());
                     double price = 0d;
@@ -306,9 +309,9 @@ public class SiteLeaseServiceImpl implements SiteLeaseService {
                             price = keywordsPrice.getPricesm();
                             break;
                     }
-                    BigDecimal bd1 = new BigDecimal(price);//优化方与渠道商价格
-                    BigDecimal bd2 = new BigDecimal(price * DRate);//渠道商与代理商价格
-                    BigDecimal bd3 = new BigDecimal(price * ARate * DRate);//代理商与客户价格
+                    BigDecimal bd1 = new BigDecimal(price * DRate);//优化方与渠道商价格
+                    BigDecimal bd2 = new BigDecimal(price * DRate * ARate);//渠道商与代理商价格
+                    BigDecimal bd3 = new BigDecimal(price * ARate * DRate * CRate);//代理商与客户价格
                     for (BillPrice itm : billPriceList
                             ) {
                         if (itm.getInMemberId() == 1) {
@@ -346,6 +349,8 @@ public class SiteLeaseServiceImpl implements SiteLeaseService {
                 double DRate = offerset.getRate();//渠道商倍率
                 offerset offerset1 = offersetMapper.selectByUserId(Long.parseLong(orderLease.getReserveid()));
                 double ARate = offerset1.getRate();//代理商倍率
+                offerset offerset2 = offersetMapper.selectByUserId(Long.parseLong(orderLease.getCustomerid()));
+                double CRate = offerset2.getRate();//客户倍率
                 BillSearchSupport billSearchSupport = billSearchSupportMapper.selectByBillId(orderLease.getOrderid());
                 KeywordsPrice keywordsPrice = keywordsPriceMapper.selectOneBykeyword(orderLease.getKeywords());
                 double price = 0d;
@@ -366,9 +371,9 @@ public class SiteLeaseServiceImpl implements SiteLeaseService {
                         price = keywordsPrice.getPricesm();
                         break;
                 }
-                BigDecimal bd1 = new BigDecimal(price);//优化方与渠道商价格
-                BigDecimal bd2 = new BigDecimal(price * DRate);//渠道商与代理商价格
-                BigDecimal bd3 = new BigDecimal(price * ARate * DRate);//代理商与客户价格
+                BigDecimal bd1 = new BigDecimal(price * DRate);//优化方与渠道商价格
+                BigDecimal bd2 = new BigDecimal(price * DRate * ARate);//渠道商与代理商价格
+                BigDecimal bd3 = new BigDecimal(price * ARate * DRate * CRate);//代理商与客户价格
                 for (BillPrice itm : billPriceList
                         ) {
                     if (itm.getInMemberId() == 1) {

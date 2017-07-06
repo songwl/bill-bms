@@ -190,8 +190,12 @@ public class QueryOfferController extends BaseController {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", 1);
         jsonObject.put("message", keywordsPriceList);
-        List<KeywordToPrice> keywordToPriceListTj = keywordsPriceMapper.selectRecommendWords(stringList1.get(0).toString());//推荐词
-        jsonObject.put("recommendWords", keywordToPriceListTj);
+        if (stringList1.size() == 0) {
+            jsonObject.put("recommendWords", "");
+        } else {
+            List<KeywordToPrice> keywordToPriceListTj = keywordsPriceMapper.selectRecommendWords(stringList1.get(0).toString());//推荐词
+            jsonObject.put("recommendWords", keywordToPriceListTj);
+        }
         String response = jsonObject.toString();
         response = callback + "(" + response + ")";
         return response;

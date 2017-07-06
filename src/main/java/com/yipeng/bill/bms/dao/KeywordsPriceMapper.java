@@ -1,5 +1,6 @@
 package com.yipeng.bill.bms.dao;
 
+import com.sun.org.apache.xerces.internal.xs.StringList;
 import com.yipeng.bill.bms.domain.KeywordsPrice;
 import com.yipeng.bill.bms.model.KeywordToPrice;
 
@@ -32,4 +33,6 @@ public interface KeywordsPriceMapper {
     List<Map<String, Object>> selectAllKeywords(Map<String, Object> map);
 
     KeywordsPrice selectOneBykeyword(String keywords);
+
+    List<KeywordToPrice> selectRecommendWords(String keywords);
 }

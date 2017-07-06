@@ -301,4 +301,11 @@
     from keywords_price
     WHERE Keywords=#{keywords,jdbcType=VARCHAR}
   </select>
+  <select id="selectRecommendWords"  resultMap="KeywordToPriceMap">
+  select
+  keywords,#{rote,jdbcType=DOUBLE}*PriceBaiduPc as PriceBaiduPc,#{rote,jdbcType=DOUBLE}*PriceSogouPc as PriceSogouPc,#{rote,jdbcType=DOUBLE}*PriceSoPC as PriceSoPC,#{rote,jdbcType=DOUBLE}*PriceBaiduWap as PriceBaiduWap,#{rote,jdbcType=DOUBLE}*PriceSm as PriceSm
+  from keywords_price
+  where 1=2 or keywords LIKE CONCAT('%',#{keywords},'%')
+  and PriceBaiduPc is not NULL and PriceSogouPc is not NULL and PriceSoPC is not NULL and PriceBaiduWap is not NULL and PriceSm is not NULL
+</select>
 </mapper>

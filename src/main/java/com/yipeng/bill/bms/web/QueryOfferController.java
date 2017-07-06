@@ -180,13 +180,6 @@ public class QueryOfferController extends BaseController {
                 keywordsPriceList.add(keywordToPrice);
             }
         }
-        Logs logs = new Logs();
-        logs.setCreatetime(new Date());
-        logs.setOptype(-100);
-        logs.setUserid(new Long(UserId));
-        logs.setOpobj("2");
-        logs.setOpremake("xAction数据:" + xAction + ",xParam数据:" + xParam + ",apiSign数据:" + apiSign + ",ip地址：" + ip + "，结果：成功，剩余关键词数量：" + offerset1.getSurplussecond());
-        logsMapper.insert(logs);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", 1);
         jsonObject.put("message", keywordsPriceList);
@@ -198,6 +191,13 @@ public class QueryOfferController extends BaseController {
         }
         String response = jsonObject.toString();
         response = callback + "(" + response + ")";
+        Logs logs = new Logs();
+        logs.setCreatetime(new Date());
+        logs.setOptype(-100);
+        logs.setUserid(new Long(UserId));
+        logs.setOpobj("2");
+        logs.setOpremake("xAction数据:" + xAction + ",xParam数据:" + xParam + ",apiSign数据:" + apiSign + ",ip地址：" + ip + "，结果：成功，剩余关键词数量：" + offerset1.getSurplussecond()+","+response);
+        logsMapper.insert(logs);
         return response;
     }
 

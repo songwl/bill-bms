@@ -736,6 +736,13 @@
                                         代理商任务大厅
                                     </a>
                                 </li>
+                                <#if (bmsModel.leaseOverdue>0)>
+                                    <li class="">
+                                        <a href="${ctx}/SiteLease/LeaseOverdueList">
+                                            保证金过期大厅
+                                        </a>
+                                    </li>
+                                </#if>
                             </ul>
                         </li>
                     </#if>

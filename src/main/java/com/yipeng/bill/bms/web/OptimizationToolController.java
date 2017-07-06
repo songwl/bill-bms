@@ -246,7 +246,7 @@ public class OptimizationToolController extends BaseController {
             return this.ajaxDone(-2, "你没有权限", null);
         }
         offerset offerset = offersetMapper.selectByUserId(Long.parseLong(data));
-        if (offerset.getState() == 0) {
+        if (offerset == null || offerset.getState() == 0) {
             return this.ajaxDone(-2, "请先开通该代理商报价权限", null);
         }
         String RoleName = userMapper.selectRoleName(data);

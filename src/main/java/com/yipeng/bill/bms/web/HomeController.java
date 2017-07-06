@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.yipeng.bill.bms.dao.leaseOverdueTbMapper;
 import com.yipeng.bill.bms.dao.offersetMapper;
 import com.yipeng.bill.bms.dao.orderLeaseMapper;
 import com.yipeng.bill.bms.dao.sendBoxMapper;
+import com.yipeng.bill.bms.domain.leaseOverdueTb;
 import com.yipeng.bill.bms.domain.noticepublish;
 import com.yipeng.bill.bms.domain.offerset;
 import com.yipeng.bill.bms.service.HomeService;
@@ -41,6 +43,8 @@ public class HomeController extends BaseController {
     private offersetMapper offersetMapper;
     @Autowired
     private orderLeaseMapper orderLeaseMapper;
+    @Autowired
+    private leaseOverdueTbMapper leaseOverdueTbMapper;
     //@Autowired
     //private AuthorityService authorityService;
 
@@ -58,6 +62,12 @@ public class HomeController extends BaseController {
         } else {
             bms.put("offerstate", 0);
             bms.put("leasepower", 0);
+        }
+        if (user.hasRole("AGENT")) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("reserveId", user.getId());
+            long num = leaseOverdueTbMapper.selectByReserveIdCount(map);
+            bms.put("leaseOverdue", num);
         }
         if (user.hasRole("CUSTOMER")) {
             offerset offerset1 = offersetMapper.selectByUserId(user.getId());

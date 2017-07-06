@@ -13,6 +13,7 @@ import com.yipeng.bill.bms.model.GetAddressIP;
 import com.yipeng.bill.bms.model.KeywordToPrice;
 import com.yipeng.bill.bms.model.Md5_UrlEncode;
 import com.yipeng.bill.bms.service.OptimizationToolService;
+import org.apache.http.HttpResponse;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,8 +25,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.yipeng.bill.bms.vo.LoginUser;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,28 +50,20 @@ public class QueryOfferController extends BaseController {
     @Autowired
     private UserMapper userMapper;
 
-    @RequestMapping(value = "/GetPrice", method = RequestMethod.GET)
+    @RequestMapping(value = "/GetPrice", method = RequestMethod.GET,produces={"text/html;charset=UTF-8;","application/json;"})
     @ResponseBody
     public String  GetPrice(String xAction, String xParam, String apiSign, HttpServletRequest request) throws SocketException {
-
         GetAddressIP getAddressIP = new GetAddressIP();
         String ip = getAddressIP.getAllNetInterfaces();
         String callback = request.getParameter("callback");
 
-
-        /*Md5_UrlEncode md5_urlEncode = new Md5_UrlEncode();
-        String wSign = null;
-        //加密
-        try {
-            wSign = md5_urlEncode.EncoderByMd5(xAction + xParam);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        if (!xParam.isEmpty()) {
+            try {
+                xParam = new String(xParam.getBytes("ISO-8859-1"), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
-        if (!wSign.equals(xSign)) {
-            return this.ajaxDone(-1, "xSign验证失败", null);
-        }*/
         JsonObject json;
         com.google.gson.JsonParser parser = new com.google.gson.JsonParser();//创建Json解析器
         try {
@@ -170,8 +166,9 @@ public class QueryOfferController extends BaseController {
         logsMapper.insert(logs);
         JSONObject jsonObject=new JSONObject();
         jsonObject.put("keywordsPrice",keywordsPriceList);
-        String str=callback+"("+jsonObject.toString()+")";
-        return str;
+        String response=jsonObject.toString();
+        response=callback+"("+response+")";
+        return response;
     }
 
 }

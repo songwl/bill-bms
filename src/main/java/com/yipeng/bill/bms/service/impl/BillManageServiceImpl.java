@@ -447,6 +447,19 @@ public class BillManageServiceImpl implements BillManageService {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        //获取昨天
+        Calendar cal = Calendar.getInstance();
+        if (cal != null) {
+            try {
+                cal.setTime(format1.parse(searchTime)); // 设置为当前时间
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        } else {
+            cal.setTime(new Date());
+        }
+        cal.add(Calendar.DATE,-1);
+        Date yesterDay=cal.getTime();
         //获取渠道商的客户和代理商
         List<User> userList = userService.getSearchUser(loginUser, "2");
         Map<String, Object> params = new HashMap<>();
@@ -454,6 +467,9 @@ public class BillManageServiceImpl implements BillManageService {
         //上月消费
         Map<String, Object> paramsLast = new HashMap<>();
         paramsLast.put("userId", loginUser.getId());
+        //昨天消费
+        Map<String, Object> paramsYseterDay = new HashMap<>();
+        paramsYseterDay.put("userId", loginUser.getId());
         List<FundItemSum> fundItemSumList = new ArrayList<>();
         SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat smm = new SimpleDateFormat("yyyy-MM");
@@ -470,16 +486,22 @@ public class BillManageServiceImpl implements BillManageService {
         monthLast = smm.format(preMonth);
         //本日
         params.put("searchTime", searchTime);
+        //昨日
+        paramsYseterDay.put("searchTime", sm.format(yesterDay));
         //本月
         params.put("monthTime", monthTime);
         paramsLast.put("monthTime", monthLast);
+
         Long i = new Long(0);
         for (User item : userList
                 ) {
             params.put("OutUserId", item.getId());
+            paramsYseterDay.put("OutUserId", item.getId());
             paramsLast.put("OutUserId", item.getId());
             i++;
+
             Double sumDay = billCostMapper.selectByBillCaoZuoYuanDayCost(params);
+            Double sumYesterDay = billCostMapper.selectByBillCaoZuoYuanDayCost(paramsYseterDay);
             Double sumMonth = billCostMapper.selectByBillCaoZuoYuanMonthCost(params);
             Double sumMonthLast = billCostMapper.selectByBillCaoZuoYuanMonthCost(paramsLast);
             FundItemSum fundItemSum = new FundItemSum();
@@ -487,15 +509,22 @@ public class BillManageServiceImpl implements BillManageService {
             fundItemSum.setUserName(item.getUserName());
 
             fundItemSum.setChangeTime(searchTime);
-            if (sumMonth == null) {
-                fundItemSum.setChangeAmount(new BigDecimal(0));
-            } else {
-                fundItemSum.setChangeAmount(new BigDecimal(sumMonth));
-            }
             if (sumDay == null) {
                 fundItemSum.setdayAccountSum(new BigDecimal(0));
             } else {
                 fundItemSum.setdayAccountSum(new BigDecimal(sumDay));
+            }
+
+            if (sumYesterDay == null) {
+                fundItemSum.setYesterDaySum(new BigDecimal(0));
+            } else {
+                fundItemSum.setYesterDaySum(new BigDecimal(sumYesterDay));
+            }
+
+            if (sumMonth == null) {
+                fundItemSum.setChangeAmount(new BigDecimal(0));
+            } else {
+                fundItemSum.setChangeAmount(new BigDecimal(sumMonth));
             }
             if (sumMonthLast == null) {
                 fundItemSum.setLastMonthSum(new BigDecimal(0));

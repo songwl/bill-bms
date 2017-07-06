@@ -363,7 +363,7 @@
                         </li>
                     </#if>
 
-                    <#if bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")||bmsModel.user.hasRole("ASSISTANT")>
+                    <#if bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")||bmsModel.user.hasRole("ASSISTANT")>
                         <li class="" style="border-bottom: 1px solid #3d3d3d;">
                             <a href="javascript:;">
                                 <i class="fa fa-magic"></i><span class="title"> 资金管理 </span><span class="arrow"></span>

@@ -420,9 +420,9 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     formatter:function (value,row,index) {
-                        var a="<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
-                            "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   "
-
+                        var a="<a href='/loginSon?userId="+row.customerId+"'  target='_blank' style='color:#4382CF;cursor:pointer;'>登录</a>   " +
+                            "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
+                            "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   " ;
                         return a;
                     },
                     events:operateEvents
@@ -450,6 +450,7 @@ var TableInit = function () {
         return temp;
     }
     window.operateEvents = {
+
         'click #details': function (e, value, row, index) {
             $(".modal-backdrop").show();
             $(".addOperatorDiv").slideDown();

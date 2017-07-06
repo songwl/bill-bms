@@ -15,6 +15,8 @@ public interface HomeService {
     Map<String, Object> userCount(LoginUser loginUser);
     //账户余额balance
     Map<String, Object> balance(LoginUser loginUser);
+   //本月消费
+   Map<String, Object> AllConsumption(LoginUser loginUser);
     //本月消费
     Map<String, Object> MonthConsumption(LoginUser loginUser);
     //当日消费

@@ -182,8 +182,12 @@
     AND a.id=b.t_bill_price_id
     AND c.bill_ascription=#{ascription,jdbcType=BIGINT}
     AND a.in_member_id=#{createId,jdbcType=BIGINT}
+    <if test="year != null">
     and year(b.cost_date)=#{year,jdbcType=INTEGER}
+    </if>
+    <if test="month != null">
     and month(b.cost_date)=#{month,jdbcType=INTEGER}
+    </if>
     <if test="day != null">
       and DAY(b.cost_date) = #{day,jdbcType=INTEGER}
     </if>
@@ -194,8 +198,12 @@
     where a.bill_id=b.t_bill_id
     AND a.id=b.t_bill_price_id
     AND a.out_member_id=#{userId,jdbcType=BIGINT}
-    and year(b.cost_date)=#{year,jdbcType=INTEGER}
-    and month(b.cost_date)=#{month,jdbcType=INTEGER}
+    <if test="year != null">
+      and year(b.cost_date)=#{year,jdbcType=INTEGER}
+    </if>
+    <if test="month != null">
+      and month(b.cost_date)=#{month,jdbcType=INTEGER}
+    </if>
     <if test="day != null">
       and DAY(b.cost_date) = #{day,jdbcType=INTEGER}
     </if>
@@ -444,7 +452,8 @@
     select id from t_bill_price
     where bill_id in (
     select id from t_bill where bill_ascription=#{userId,jdbcType=BIGINT}
-    )and in_member_id=1 and out_member_id=#{OutUserId,jdbcType=BIGINT}) and  date_format(cost_date,'%Y-%m')=#{monthTime,jdbcType=VARCHAR}
+    )and in_member_id=1 and out_member_id=#{OutUserId,jdbcType=BIGINT})
+     and  date_format(cost_date,'%Y-%m')=#{monthTime,jdbcType=VARCHAR}
   </select>
 
   <!--最新排名（管理员）-->

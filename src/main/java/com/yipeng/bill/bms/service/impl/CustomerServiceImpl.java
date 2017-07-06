@@ -73,6 +73,16 @@ public class CustomerServiceImpl implements CustomerService {
                     fundAccount.setCreateUserId(loginUser.getId());
                    fundAccountMapper.insert(fundAccount);
 
+                    FundAccount fundAccountNew=fundAccountMapper.selectByUserId(user.getId());
+                    //资金流水
+                    FundItem fundItem=new FundItem();
+                    fundItem.setBalance(balance);
+                    fundItem.setChangeAmount(balance);
+                    fundItem.setFundAccountId(fundAccountNew.getId());
+                    fundItem.setChangeTime(new Date());
+                    fundItem.setItemType("recharge");
+                    fundItemMapper.insert(fundItem);
+
                     //用户权限
                     Role role=roleService.getRoleByRoleCode(Roles.DISTRIBUTOR.name());
                     if(role!=null)
@@ -117,6 +127,15 @@ public class CustomerServiceImpl implements CustomerService {
                         fundAccount.setCreateUserId(loginUser.getId());
                         fundAccountMapper.insert(fundAccount);
 
+                        FundAccount fundAccountNew=fundAccountMapper.selectByUserId(user.getId());
+                        //资金流水
+                        FundItem fundItem=new FundItem();
+                        fundItem.setBalance(balance);
+                        fundItem.setChangeAmount(balance);
+                        fundItem.setFundAccountId(fundAccountNew.getId());
+                        fundItem.setChangeTime(new Date());
+                        fundItem.setItemType("recharge");
+                        fundItemMapper.insert(fundItem);
                         Role role=roleService.getRoleByRoleCode(Roles.CUSTOMER.name());
                         if(role!=null)
                         {
@@ -151,6 +170,16 @@ public class CustomerServiceImpl implements CustomerService {
                         fundAccount.setCreateTime(new Date());
                         fundAccount.setCreateUserId(loginUser.getId());
                         fundAccountMapper.insert(fundAccount);
+
+                        FundAccount fundAccountNew=fundAccountMapper.selectByUserId(user.getId());
+                        //资金流水
+                        FundItem fundItem=new FundItem();
+                        fundItem.setBalance(balance);
+                        fundItem.setChangeAmount(balance);
+                        fundItem.setFundAccountId(fundAccountNew.getId());
+                        fundItem.setChangeTime(new Date());
+                        fundItem.setItemType("recharge");
+                        fundItemMapper.insert(fundItem);
 
                         Role role=roleService.getRoleByRoleCode(Roles.AGENT.name());
                         if(role!=null)
@@ -202,6 +231,15 @@ public class CustomerServiceImpl implements CustomerService {
                     fundAccount.setCreateUserId(loginUser.getId());
                     fundAccountMapper.insert(fundAccount);
 
+                    FundAccount fundAccountNew=fundAccountMapper.selectByUserId(user.getId());
+                    //资金流水
+                    FundItem fundItem=new FundItem();
+                    fundItem.setBalance(balance);
+                    fundItem.setChangeAmount(balance);
+                    fundItem.setFundAccountId(fundAccountNew.getId());
+                    fundItem.setChangeTime(new Date());
+                    fundItem.setItemType("recharge");
+                    fundItemMapper.insert(fundItem);
                     Role role=roleService.getRoleByRoleCode(Roles.CUSTOMER.name());
                     if(role!=null)
                     {

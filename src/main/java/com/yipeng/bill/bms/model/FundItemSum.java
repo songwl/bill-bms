@@ -24,6 +24,10 @@ public class FundItemSum {
 
     private BigDecimal lastMonthSum;
 
+
+
+    private BigDecimal yesterDaySum;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -97,5 +101,11 @@ public class FundItemSum {
     public void setLastMonthSum(BigDecimal lastMonthSum) {
         this.lastMonthSum = lastMonthSum;
     }
+    public BigDecimal getYesterDaySum() {
+        return yesterDaySum;
+    }
 
+    public void setYesterDaySum(BigDecimal yesterDaySum) {
+        this.yesterDaySum = yesterDaySum;
+    }
 }

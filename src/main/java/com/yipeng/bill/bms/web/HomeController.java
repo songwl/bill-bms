@@ -134,6 +134,15 @@ public class HomeController extends BaseController {
         model.addAttribute("bmsModel", bms);
         return bms;
     }
+    //总消费
+    @RequestMapping(value = "/AllConsumption")
+    @ResponseBody
+    public Map<String, Object> AllConsumption(ModelMap model) throws Exception {
+        LoginUser loginUser = this.getCurrentAccount();
+        Map<String, Object> bms = homeService.AllConsumption(loginUser);
+        model.addAttribute("bmsModel", bms);
+        return bms;
+    }
 
     //月总消费
     @RequestMapping(value = "/MonthConsumption")

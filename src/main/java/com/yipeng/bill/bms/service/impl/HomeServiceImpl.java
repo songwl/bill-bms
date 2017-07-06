@@ -702,6 +702,46 @@ public class HomeServiceImpl implements HomeService {
         return map;
     }
 
+    @Override
+    public Map<String, Object> AllConsumption(LoginUser loginUser) {
+        Map<String, Object> map=new HashMap<>();//视图返回对象
+        Map<String, Object> params=new HashMap<>();//查询参数对象
+        params.put("userId",loginUser.getId());
+        if(loginUser.hasRole("SUPER_ADMIN")) {
+            //本月消费
+            Double AllConsumption=AllConsumption(params);
+            map.put("AllConsumption",AllConsumption);
+        }
+        //渠道商和代理商
+        else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ASSISTANT")) {
+
+            if(loginUser.hasRole("ASSISTANT"))
+            {
+                params.put("userId",loginUser.getCreateUserId());
+            }
+            //月总消费
+            Double AllConsumption=AllConsumption(params);
+            map.put("AllConsumption",AllConsumption);
+        }
+        //操作员
+        else  if (loginUser.hasRole("COMMISSIONER"))
+        {
+            Calendar now =Calendar.getInstance();
+            params.put("createId",loginUser.getCreateUserId());
+            params.put("ascription",loginUser.getId());
+            params.put("inMemberId",loginUser.getCreateUserId());
+            Double sum=billCostMapper.MonthConsumptionCommissioner(params);
+            map.put("AllConsumption",sum);
+        }
+        else
+        {
+            Calendar now =Calendar.getInstance();
+            Double sum=billCostMapper.MonthConsumptionCustomer(params);
+            map.put("AllConsumption",sum);
+        }
+        return map;
+    }
+
     /**
      * 本月消费
      * @param loginUser
@@ -1122,6 +1162,14 @@ public class HomeServiceImpl implements HomeService {
         Long Count=userMapper.getUserRoleByCreateIdCount(params);
         return  Count;
     }
+
+    //总消费
+    public  Double AllConsumption(Map<String, Object> params)
+    {
+        Calendar now =Calendar.getInstance();
+        Double sum=billCostMapper.MonthConsumption(params);
+        return sum;
+    }
     //本月总消费
     public  Double MonthConsumption(Map<String, Object> params)
     {
@@ -1316,7 +1364,6 @@ public class HomeServiceImpl implements HomeService {
 
     public String getYAxis(int max)
     {
-
         String yAxis="";
         if(max<=50)
         {
@@ -1344,71 +1391,16 @@ public class HomeServiceImpl implements HomeService {
         {
             yAxis="400,410,420,430,440,450,460,470,480,490";
         }
-        else if(max<=600&&max>500)
+
+        else if(max<=5000&&max>500)
         {
-            yAxis="500,510,520,530,540,550,560,570,580,590";
-        }
-        else if(max<=700&&max>600)
-        {
-            yAxis="600,610,620,630,640,650,660,670,680,690";
-        }
-        else if(max<=800&&max>700)
-        {
-            yAxis="700,710,720,730,740,750,760,770,780,790";
+            yAxis="500,1000,1500,2000,2500,3000,3500,4000,4500,5000";
         }
 
-        else if(max<=900&&max>800)
+        else if(max<=10000&&max>5000)
         {
-            yAxis="800,810,820,830,840,850,860,870,880,890";
+            yAxis="5500,6000,6500,7000,7500,8000,8500,9000,9500,10000";
         }
-
-        else if(max<=1000&&max>900)
-        {
-            yAxis="900,910,920,930,940,950,960,970,980,990";
-        }
-        else if(max<=2000&&max>1000)
-        {
-            yAxis="1100,1200,1300,1400,1500,1600,1700,1800,1900,2000";
-        }
-        else if(max<=3000&&max>2000)
-        {
-            yAxis="2100,2200,2300,2400,2500,2600,2700,2800,2900,3000";
-        }
-
-        else if(max<=4000&&max>3000)
-        {
-            yAxis="3100,3200,3300,3400,3500,3600,3700,3800,3900,4000";
-        }
-        else if(max<=5000&&max>4000)
-        {
-            yAxis="4100,4200,4300,4400,4500,4600,4700,4800,4900,5000";
-        }
-        else if(max<=6000&&max>5000)
-        {
-            yAxis="5100,5200,5300,5400,5500,5600,5700,5800,5900,6000";
-        }
-
-        else if(max<=7000&&max>6000)
-        {
-            yAxis="6100,6200,6300,6400,6500,6600,6700,6800,6900,7000";
-        }
-
-        else if(max<=8000&&max>7000)
-        {
-            yAxis="7100,7200,7300,7400,7500,7600,7700,7800,7900,8000";
-        }
-
-        else if(max<=9000&&max>8000)
-        {
-            yAxis="8100,8200,8300,8400,8500,8600,8700,8800,8900,9000";
-        }
-
-        else if(max<=10000&&max>9000)
-        {
-            yAxis="9100,9200,9300,9400,9500,9600,9700,9800,9900,10000";
-        }
-
-
         else if(max<=15000&&max>10000)
         {
             yAxis="10500,11000,11500,12000,12500,13000,13500,14000,14500,15000";
@@ -1422,6 +1414,7 @@ public class HomeServiceImpl implements HomeService {
         {
             yAxis="20500,21000,21500,22000,22500,23000,23500,24000,24500,25000";
         }
+
 
 
         return yAxis;
@@ -1456,68 +1449,15 @@ public class HomeServiceImpl implements HomeService {
         {
             yAxis="400,410,420,430,440,450,460,470,480,490";
         }
-        else if(max<=600&&max>500)
+
+        else if(max<=5000&&max>500)
         {
-            yAxis="500,510,520,530,540,550,560,570,580,590";
-        }
-        else if(max<=700&&max>600)
-        {
-            yAxis="600,610,620,630,640,650,660,670,680,690";
-        }
-        else if(max<=800&&max>700)
-        {
-            yAxis="700,710,720,730,740,750,760,770,780,790";
+            yAxis="500,1000,1500,2000,2500,3000,3500,4000,4500,5000";
         }
 
-        else if(max<=900&&max>800)
+        else if(max<=10000&&max>5000)
         {
-            yAxis="800,810,820,830,840,850,860,870,880,890";
-        }
-
-        else if(max<=1000&&max>900)
-        {
-            yAxis="900,910,920,930,940,950,960,970,980,990";
-        }
-        else if(max<=2000&&max>1000)
-        {
-            yAxis="1100,1200,1300,1400,1500,1600,1700,1800,1900,2000";
-        }
-        else if(max<=3000&&max>2000)
-        {
-            yAxis="2100,2200,2300,2400,2500,2600,2700,2800,2900,3000";
-        }
-
-        else if(max<=4000&&max>3000)
-        {
-            yAxis="3100,3200,3300,3400,3500,3600,3700,3800,3900,4000";
-        }
-        else if(max<=5000&&max>4000)
-        {
-            yAxis="4100,4200,4300,4400,4500,4600,4700,4800,4900,5000";
-        }
-        else if(max<=6000&&max>5000)
-        {
-            yAxis="5100,5200,5300,5400,5500,5600,5700,5800,5900,6000";
-        }
-
-        else if(max<=7000&&max>6000)
-        {
-            yAxis="6100,6200,6300,6400,6500,6600,6700,6800,6900,7000";
-        }
-
-        else if(max<=8000&&max>7000)
-        {
-            yAxis="7100,7200,7300,7400,7500,7600,7700,7800,7900,8000";
-        }
-
-        else if(max<=9000&&max>8000)
-        {
-            yAxis="8100,8200,8300,8400,8500,8600,8700,8800,8900,9000";
-        }
-
-        else if(max<=10000&&max>9000)
-        {
-            yAxis="9100,9200,9300,9400,9500,9600,9700,9800,9900,10000";
+            yAxis="5500,6000,6500,7000,7500,8000,8500,9000,9500,10000";
         }
 
 

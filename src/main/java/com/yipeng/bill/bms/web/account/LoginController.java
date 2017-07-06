@@ -163,6 +163,22 @@ public class LoginController extends BaseController {
 
 	*/
 
+	/**
+	 * 重置密码
+	 * @param request
+	 * @param user
+	 * @return
+	 */
+	@RequestMapping(value = "/loginSon",method =RequestMethod.GET)
+	public String loginSon(HttpServletRequest request, HttpServletResponse response, @RequestParam String userId)
+	{
+
+		User user1=userMapper.selectByPrimaryKey(Long.parseLong(userId));
+		Boolean  flag= executeLogin(request, response, user1);
+		return "redirect:/index";
+	}
+
+
 	private boolean executeLogin(HttpServletRequest request, HttpServletResponse response, User user) {
 		try {
 			LoginUser loginUser = new LoginUser();

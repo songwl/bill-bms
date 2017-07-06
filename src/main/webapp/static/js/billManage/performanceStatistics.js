@@ -108,10 +108,16 @@ var TableInit = function () {
                     field: 'dayAccountSum',
                     align: 'center',
                     valign: 'middle',
-                    title: '本日扣费',
+                    title: '今日扣费',
 
                 },
+                {
+                    field: 'yesterDaySum',
+                    align: 'center',
+                    valign: 'middle',
+                    title: '昨日扣费',
 
+                },
                 {
                     field: 'changeTime',
                     align: 'center',

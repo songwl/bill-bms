@@ -592,7 +592,6 @@ var TableInit = function () {
                     visible: false
 
                 },
-
                 {
                     field: 'operate',
                     title: '操作',
@@ -608,17 +607,19 @@ var TableInit = function () {
 
                         }
                         else if (row.roleName == 'SUPER_ADMIN') {
-                            a = "<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
+                            a = "<a href='/bill/loginSon?userId="+row.customerId+"'  target='_blank' style='color:#4382CF;cursor:pointer;'>登录</a>   " +
+                                "<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='refund'>退款</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='OfferSetUp' data-user='" + value + "'>报价</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='AdminwebsiteLeaseSet'>网租</span>  " +
-                                " <span style='color:#4382CF;cursor:pointer;' id='billType'> 订单属性</span> ";
+                                " <span style='color:#4382CF;cursor:pointer;' id='billType'> 订单属性</span>";
 
                         }
                         else if (row.roleName == 'DISTRIBUTOR') {
-                            a = "<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
+                            a ="<a href='/bill/loginSon?userId="+row.customerId+"'  target='_blank' style='color:#4382CF;cursor:pointer;'>登录</a>   " +
+                                "<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='refund'>退款</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   ";
@@ -630,14 +631,16 @@ var TableInit = function () {
                             }
                         }else if(row.roleName == 'AGENT')
                         {
-                            a = "<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
+                            a = "<a href='/bill/loginSon?userId="+row.customerId+"'  target='_blank' style='color:#4382CF;cursor:pointer;'>登录</a>   " +
+                                "<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='refund'>退款</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   "+
                                 "<span style='color:#4382CF;cursor:pointer;' id='OfferSetUpAgent' data-user='" + value + "'>报价</span> ";
                         }
                         else {
-                            a = "<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
+                            a = "<a href='/bill/loginSon?userId="+row.customerId+"'  target='_blank' style='color:#4382CF;cursor:pointer;'>登录</a>   " +
+                                "<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='refund'>退款</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   ";
@@ -647,8 +650,6 @@ var TableInit = function () {
                         return a;
                     },
                     events: operateEvents
-
-
                 },
 
 
@@ -1045,9 +1046,7 @@ $(function () {
                             ,closeBtn: 0
                         });
                         layer.close(index);
-                        
                     }
-                    
                 })
         })
 

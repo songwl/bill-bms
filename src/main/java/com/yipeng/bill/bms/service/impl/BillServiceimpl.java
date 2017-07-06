@@ -1878,7 +1878,24 @@ public class BillServiceimpl implements BillService {
                             billPrice.setInMemberId(user.getId());
                             ;
                             String[] updateUserId = params.get("selectContent[" + i + "][updateUserId]");
-                            billPrice.setOutMemberId(Long.parseLong(updateUserId[0]));
+                            UserRole userRole=userRoleMapper.selectByUserId(Long.parseLong(updateUserId[0]));
+
+                            if(userRole!=null)
+                            {
+
+                                Role role=roleMapper.selectByPrimaryKey(userRole.getRoleId());
+                                User usernew=userMapper.selectByPrimaryKey(userRole.getUserId());
+                                if(role.getRoleCode().equals("ASSISTANT"))
+                                {
+                                    billPrice.setOutMemberId(usernew.getCreateUserId());
+                                }
+                                else
+                                {
+                                    billPrice.setOutMemberId(usernew.getId());
+                                }
+                            }
+
+
                             billPrice.setCreateTime(new Date());
                             //修改订单
                             billPriceMapper.insert(billPrice);
@@ -1904,8 +1921,20 @@ public class BillServiceimpl implements BillService {
                                 billPrice1.setPrice(ret1);
                                 billPrice1.setBillRankingStandard(Long.parseLong(rankend1[0]));
                                 billPrice1.setInMemberId(user.getId());
-                                String[] updateUserId1 = params.get("selectContent[" + i + "][updateUserId]");
-                                billPrice1.setOutMemberId(Long.parseLong(updateUserId1[0]));
+                                if(userRole!=null)
+                                {
+
+                                    Role role=roleMapper.selectByPrimaryKey(userRole.getRoleId());
+                                    User usernew=userMapper.selectByPrimaryKey(userRole.getUserId());
+                                    if(role.getRoleCode().equals("ASSISTANT"))
+                                    {
+                                        billPrice.setOutMemberId(usernew.getCreateUserId());
+                                    }
+                                    else
+                                    {
+                                        billPrice.setOutMemberId(usernew.getId());
+                                    }
+                                }
                                 billPrice1.setCreateTime(new Date());
                                 billPriceMapper.insert(billPrice1);
                                 if (!"NaN".equals(price2[0])) {
@@ -1919,8 +1948,20 @@ public class BillServiceimpl implements BillService {
                                     billPrice2.setPrice(ret2);
                                     billPrice2.setBillRankingStandard(Long.parseLong(rankend2[0]));
                                     billPrice2.setInMemberId(user.getId());
-                                    String[] updateUserId2 = params.get("selectContent[" + i + "][updateUserId]");
-                                    billPrice2.setOutMemberId(Long.parseLong(updateUserId2[0]));
+                                    if(userRole!=null)
+                                    {
+
+                                        Role role=roleMapper.selectByPrimaryKey(userRole.getRoleId());
+                                        User usernew=userMapper.selectByPrimaryKey(userRole.getUserId());
+                                        if(role.getRoleCode().equals("ASSISTANT"))
+                                        {
+                                            billPrice.setOutMemberId(usernew.getCreateUserId());
+                                        }
+                                        else
+                                        {
+                                            billPrice.setOutMemberId(usernew.getId());
+                                        }
+                                    }
                                     billPrice2.setCreateTime(new Date());
                                     billPriceMapper.insert(billPrice2);
                                     if (!"NaN".equals(price3[0])) {
@@ -1934,8 +1975,20 @@ public class BillServiceimpl implements BillService {
                                         billPrice3.setPrice(ret3);
                                         billPrice3.setBillRankingStandard(Long.parseLong(rankend3[0]));
                                         billPrice3.setInMemberId(user.getId());
-                                        String[] updateUserId3 = params.get("selectContent[" + i + "][updateUserId]");
-                                        billPrice3.setOutMemberId(Long.parseLong(updateUserId3[0]));
+                                        if(userRole!=null)
+                                        {
+
+                                            Role role=roleMapper.selectByPrimaryKey(userRole.getRoleId());
+                                            User usernew=userMapper.selectByPrimaryKey(userRole.getUserId());
+                                            if(role.getRoleCode().equals("ASSISTANT"))
+                                            {
+                                                billPrice.setOutMemberId(usernew.getCreateUserId());
+                                            }
+                                            else
+                                            {
+                                                billPrice.setOutMemberId(usernew.getId());
+                                            }
+                                        }
                                         billPrice3.setCreateTime(new Date());
                                         billPriceMapper.insert(billPrice3);
                                     }
@@ -3460,8 +3513,6 @@ public class BillServiceimpl implements BillService {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-
         //获取渠道商的客户和代理商
         List<User> userList = userMapper.getUserByCreateId(loginUser.getId());
         Map<String, Object> params = new HashMap<>();
@@ -4103,71 +4154,55 @@ public class BillServiceimpl implements BillService {
     }
 
     public String getYAxisSum(double max) {
-        String yAxis = "";
-        if (max <= 50) {
-            yAxis = "0,5,10,15,20,25,30,35,40,45";
-        } else if (max <= 100 && max > 50) {
+        String yAxis="";
+        if(max<=50)
+        {
+            yAxis="0,5,10,15,20,25,30,35,40,45";
+        }
+        else if(max<=100&&max>50)
+        {
 
-            yAxis = "50,55,60,65,70,75,80,85,90,95";
-        } else if (max > 100 && max <= 200) {
+            yAxis="50,55,60,65,70,75,80,85,90,95";
+        }
+        else if(max>100&&max<=200)
+        {
 
-            yAxis = "100,110,120,130,140,150,160,170,180,190";
-        } else if (max <= 300 && max > 200) {
-            yAxis = "200,210,220,230,240,250,260,270,280,290";
-        } else if (max <= 400 && max > 300) {
-            yAxis = "300,310,320,330,340,350,360,370,380,390";
-        } else if (max <= 500 && max > 400) {
-            yAxis = "400,410,420,430,440,450,460,470,480,490";
-        } else if (max <= 600 && max > 500) {
-            yAxis = "500,510,520,530,540,550,560,570,580,590";
-        } else if (max <= 700 && max > 600) {
-            yAxis = "600,610,620,630,640,650,660,670,680,690";
-        } else if (max <= 800 && max > 700) {
-            yAxis = "700,710,720,730,740,750,760,770,780,790";
-        } else if (max <= 900 && max > 800) {
-            yAxis = "800,810,820,830,840,850,860,870,880,890";
-        } else if (max <= 1000 && max > 900) {
-            yAxis = "900,910,920,930,940,950,960,970,980,990";
-        } else if (max <= 2000 && max > 1000) {
-            yAxis = "1100,1200,1300,1400,1500,1600,1700,1800,1900,2000";
-        } else if (max <= 3000 && max > 2000) {
-            yAxis = "2100,2200,2300,2400,2500,2600,2700,2800,2900,3000";
-        } else if (max <= 4000 && max > 3000) {
-            yAxis = "3100,3200,3300,3400,3500,3600,3700,3800,3900,4000";
-        } else if (max <= 5000 && max > 4000) {
-            yAxis = "4100,4200,4300,4400,4500,4600,4700,4800,4900,5000";
-        } else if (max <= 5000 && max > 4000) {
-            yAxis = "5100,5200,5300,5400,5500,5600,5700,5800,5900,6000";
-        } else if (max <= 6000 && max > 5000) {
-            yAxis = "5100,5200,5300,5400,5500,5600,5700,5800,5900,6000";
-        } else if (max <= 7000 && max > 6000) {
-            yAxis = "6100,6200,6300,6400,6500,6600,6700,6800,6900,7000";
-        } else if (max <= 8000 && max > 7000) {
-            yAxis = "7100,7200,7300,7400,7500,7600,7700,7800,7900,8000";
-        } else if (max <= 9000 && max > 8000) {
-            yAxis = "8100,8200,8300,8400,8500,8600,8700,8800,8900,9000";
-        } else if (max <= 10000 && max > 9000) {
-            yAxis = "9100,9200,9300,9400,9500,9600,9700,9800,9900,10000";
-        } else if (max <= 11000 && max > 10000) {
-            yAxis = "10100,10200,10300,10400,10500,10600,10700,10800,10900,11000";
-        } else if (max <= 12000 && max > 11000) {
-            yAxis = "11100,11200,11300,11400,11500,11600,11700,11800,11900,12000";
-        } else if (max <= 13000 && max > 12000) {
-            yAxis = "12100,12200,12300,12400,12500,12600,12700,12800,12900,13000";
-        } else if (max <= 14000 && max > 13000) {
-            yAxis = "13100,13200,13300,13400,13500,13600,13700,13800,13900,14000";
-        } else if (max <= 15000 && max > 14000) {
-            yAxis = "14100,14200,14300,14400,14500,14600,14700,14800,14900,15000";
-        } else if (max <= 16000 && max > 15000) {
-            yAxis = "15100,15200,15300,15400,15500,15600,15700,15800,15900,16000";
-        } else if (max <= 17000 && max > 16000) {
-            yAxis = "16100,16200,16300,16400,16500,16600,16700,16800,16900,17000";
-        } else if (max <= 18000 && max > 17000) {
-            yAxis = "17100,17200,17300,17400,17500,17600,17700,17800,17900,18000";
-        } else if (max <= 19000 && max > 18000) {
-            yAxis = "18100,18200,18300,18400,18500,18600,18700,18800,18900,19000";
-        } else if (max <= 20000 && max > 19000) {
-            yAxis = "19100,19200,19300,19400,19500,19600,19700,19800,19900,20000";
+            yAxis="100,110,120,130,140,150,160,170,180,190";
+        }
+        else if(max<=300&&max>200)
+        {
+            yAxis="200,210,220,230,240,250,260,270,280,290";
+        }
+        else if(max<=400&&max>300)
+        {
+            yAxis="300,310,320,330,340,350,360,370,380,390";
+        }
+        else if(max<=500&&max>400)
+        {
+            yAxis="400,410,420,430,440,450,460,470,480,490";
+        }
+
+        else if(max<=5000&&max>500)
+        {
+            yAxis="500,1000,1500,2000,2500,3000,3500,4000,4500,5000";
+        }
+
+        else if(max<=10000&&max>5000)
+        {
+            yAxis="5500,6000,6500,7000,7500,8000,8500,9000,9500,10000";
+        }
+        else if(max<=15000&&max>10000)
+        {
+            yAxis="10500,11000,11500,12000,12500,13000,13500,14000,14500,15000";
+        }
+
+        else if(max<=20000&&max>15000)
+        {
+            yAxis="15500,16000,16500,17000,17500,18000,18500,19000,19500,20000";
+        }
+        else if(max<=25000&&max>20000)
+        {
+            yAxis="20500,21000,21500,22000,22500,23000,23500,24000,24500,25000";
         }
         return yAxis;
     }

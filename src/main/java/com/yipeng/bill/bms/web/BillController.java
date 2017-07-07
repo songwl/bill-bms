@@ -9,6 +9,7 @@ import com.yipeng.bill.bms.domain.UserBillType;
 import com.yipeng.bill.bms.service.BillService;
 import com.yipeng.bill.bms.service.UserService;
 import com.yipeng.bill.bms.vo.LoginUser;
+import com.yipeng.bill.bms.vo.ZhuanYuanDetails;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
@@ -1776,6 +1777,22 @@ public class BillController extends BaseController {
         }
 
     }
+
+    /**
+     * 删除分组
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/getZhuanyuanDetails",method = RequestMethod.GET)
+    @ResponseBody
+    public  ResultMessage getZhuanyuanDetails(String groupId)
+    {
+        LoginUser loginUser=this.getCurrentAccount();
+        List<ZhuanYuanDetails> zhuanYuanDetailsList=billService.getZhuanyuanDetails();
+        return this.ajaxDone(1,"数据",zhuanYuanDetailsList);
+
+    }
     //导出excel(实例)
     @RequestMapping(value = "/export.controller")
     public void export(String ids, HttpServletResponse response) throws IOException {
@@ -1950,4 +1967,6 @@ public class BillController extends BaseController {
         list.removeAll(emptyRows);
         return list;
     }
+
+
 }

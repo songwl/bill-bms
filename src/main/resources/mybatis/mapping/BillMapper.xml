@@ -2707,4 +2707,28 @@
    WHERE
    web_app_id=#{webAppId,jdbcType=INTEGER}
   </update>
+
+  <select id="selectBybillStandardCount"  resultType="java.util.HashMap">
+    select COUNT(a.id) as num,b.user_name from t_bill as a, t_user as b where a.bill_ascription=b.id and  a.id IN
+    (select t_bill_id  from t_bill_cost where cost_date=#{date,jdbcType=VARCHAR} )
+    GROUP BY bill_ascription
+  </select>
+
+  <select id="selectBybillCount"  resultType="java.util.HashMap">
+    select COUNT(a.id) as num,b.user_name from t_bill as a, t_user as b where a.bill_ascription=b.id
+    GROUP BY bill_ascription
+  </select>
+
+  <select id="selectByWebsite"  resultType="java.util.HashMap">
+    select COUNT(DISTINCT a.website) as num,b.user_name from t_bill as a, t_user as b where a.bill_ascription=b.id
+    GROUP BY a.bill_ascription
+  </select>
+
+
+  <select id="selectByallCost"  resultType="java.util.HashMap">
+    SELECT SUM(b.price) as num,c.user_name FROM  t_bill as a,t_bill_price as b, t_user as c
+    where a.id=b.bill_id and a.bill_ascription=c.id
+    and b.bill_ranking_standard &lt;= 10
+    GROUP BY a.bill_ascription
+  </select>
 </mapper>

@@ -3986,6 +3986,90 @@ public class BillServiceimpl implements BillService {
     }
 
     /**
+     * 操作员详情
+     * @return
+     */
+    @Override
+    public List<ZhuanYuanDetails> getZhuanyuanDetails() {
+        List<ZhuanYuanDetails> zhuanYuanDetailsList=new ArrayList<>();
+        SimpleDateFormat sm=new SimpleDateFormat("yyyy-MM-dd");
+        Map<String,Object> sqlMap=new HashMap<>();
+        sqlMap.put("date",sm.format(new Date()));
+
+        List<Map<String,Object>>  standardCount=billMapper.selectBybillStandardCount(sqlMap);//达标数
+        List<Map<String,Object>>  billCount=billMapper.selectBybillCount();//关键词数
+        List<Map<String,Object>>  selectByWebsite=billMapper.selectByWebsite();//订单数
+
+        List<Map<String,Object>>  selectByallCost=billMapper.selectByallCost();//全部扣费
+        for(int i=0;i<billCount.size();i++)
+        {
+            if(billCount.get(i).get("user_name")!=null)
+            {
+                ZhuanYuanDetails zhuanYuanDetails=new ZhuanYuanDetails();
+                zhuanYuanDetails.setUserName(billCount.get(i).get("user_name").toString());
+                if(!CollectionUtils.isEmpty(standardCount))
+                {
+                    for(int j=0;i<standardCount.size();j++)
+                    {
+                        if(standardCount.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString())&&billCount.get(j).get("user_name").equals(billCount.get(i).get("user_name").toString()))
+                        {
+
+                            Double rate=Double.parseDouble(standardCount.get(j).get("num").toString())/Double.parseDouble(billCount.get(i).get("num").toString());
+                            zhuanYuanDetails.setBillStandardRate(rate);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    zhuanYuanDetails.setBillStandardRate(0);
+                }
+             if(billCount.get(i).get("num")!=null)
+             {
+                 zhuanYuanDetails.setKeywordsCount(Integer.parseInt(billCount.get(i).get("num").toString()));
+             }
+             else
+             {
+                 zhuanYuanDetails.setKeywordsCount(0);
+             }
+                if(!CollectionUtils.isEmpty(selectByWebsite))
+                {
+                    for(int j=0;i<selectByWebsite.size();j++)
+                    {
+                        if(selectByWebsite.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString()))
+                        {
+                            zhuanYuanDetails.setBillCount(Integer.parseInt(selectByWebsite.get(j).get("num").toString()));
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    zhuanYuanDetails.setBillCount(0);
+                }
+                if(!CollectionUtils.isEmpty(selectByallCost))
+                {
+                    for(int j=0;i<selectByallCost.size();j++)
+                    {
+                        if(selectByallCost.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString()))
+                        {
+                            zhuanYuanDetails.setAllCost(Double.parseDouble(selectByallCost.get(j).get("num").toString()));
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    zhuanYuanDetails.setAllCost(0);
+                }
+
+                zhuanYuanDetailsList.add(zhuanYuanDetails);
+            }
+        }
+        return zhuanYuanDetailsList;
+    }
+
+    /**
      * 批量修改价格
      *
      * @param bill

@@ -3,6 +3,7 @@ package com.yipeng.bill.bms.service;
 import com.yipeng.bill.bms.domain.Bill;
 import com.yipeng.bill.bms.domain.User;
 import com.yipeng.bill.bms.vo.LoginUser;
+import com.yipeng.bill.bms.vo.ZhuanYuanDetails;
 
 import java.util.List;
 import java.util.Map;
@@ -250,4 +251,6 @@ public interface BillService {
     int deleteGroup(String groupId,LoginUser loginUser);
     //分配出租订单
     int leaseBill( Map<String, String[]> params, LoginUser loginUser);
+
+    List<ZhuanYuanDetails> getZhuanyuanDetails();
 }

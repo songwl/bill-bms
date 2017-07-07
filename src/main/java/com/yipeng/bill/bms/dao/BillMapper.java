@@ -125,4 +125,12 @@ public interface BillMapper {
 
     //更新排名
     int updateByWebAppId(Map<String, Object> params);
+
+    List<Map<String,Object>> selectBybillStandardCount(Map<String, Object> params);
+
+    List<Map<String,Object>> selectBybillCount();
+
+    List<Map<String,Object>> selectByWebsite();
+
+    List<Map<String,Object>> selectByallCost();
 }

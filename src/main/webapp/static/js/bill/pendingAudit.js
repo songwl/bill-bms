@@ -97,20 +97,46 @@ $("#deleteBill").click(function () {
     }
 })
 
+//批设分组显示
+$("#zhuanDetails").click(function () {
+    var index1;
+        index1 = layer.open({
+            type: 1,
+            title: '专员详情',
+            skin: 'layui-layer-molv',
+            shade: 0.6,
+            area: ['70%', '95%'],
+            content: $('#zhuanyuanDiv'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+            end: function (e, u) {
+                $('#zhuanyuanDiv').hide();
+            }
+        });
+})
+$.ajax({
+    type:'get',
+    url:CTX+'/order/getZhuanyuanDetails',
+    async: true,
+    success:function (result) {
+        $("#caozuoyuanTbody").empty();
+        var str="";
+        console.log(result.data);
+        var j=0;
+         for(var i=0;i<result.data.length;i++)
+         {
+             j++;
+             str+='<tr> <th>'+j+'</th><th>'+result.data[i]['userName']+'</th><th>'+result.data[i]['countNoCostByWebsite']+'</th><th>'+result.data[i]['billStandardRate']+'</th><th>'+result.data[i]['keywordsCount']+'</th><th>'+result.data[i]['billCount']+'</th><th>'+result.data[i]['cost']+'</th><th>'+result.data[i]['allCost']+'</th> </tr>';
+         }
+          $("#caozuoyuanTbody").append(str);
+    }
+
+})
+
 
 $(function () {
 
     //1.初始化Table
     var oTable = new TableInit();
     oTable.Init();
-    var oTable1 = new TableInit();
-    oTable1.Init();
-
-    //2.初始化Button的点击事件
-    var oButtonInit = new ButtonInit();
-    oButtonInit.Init();
-
-
 });
 var TableInit = function () {
     var oTableInit = new Object();
@@ -289,8 +315,6 @@ var TableInit = function () {
 
     return oTableInit;
 };
-
-
 
 
 

@@ -34,5 +34,5 @@ public interface KeywordsPriceMapper {
 
     KeywordsPrice selectOneBykeyword(String keywords);
 
-    List<KeywordToPrice> selectRecommendWords(String keywords);
+    List<KeywordToPrice> selectRecommendWords(Map<String,Object> map);
 }

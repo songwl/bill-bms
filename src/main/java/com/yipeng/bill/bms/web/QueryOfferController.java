@@ -30,9 +30,7 @@ import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/QueryOffer")
@@ -183,8 +181,10 @@ public class QueryOfferController extends BaseController {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", 1);
         jsonObject.put("message", keywordsPriceList);
-
-        List<KeywordToPrice> keywordToPriceListTj = keywordsPriceMapper.selectRecommendWords(keywordsPriceList.get(0).getKeywords());//推荐词
+        Map<String, Object> map = new HashMap<>();
+        map.put("keywords", keywordsPriceList.get(0).getKeywords());
+        map.put("rote", rote);
+        List<KeywordToPrice> keywordToPriceListTj = keywordsPriceMapper.selectRecommendWords(map);//推荐词
         jsonObject.put("recommendWords", keywordToPriceListTj);
 
         String response = jsonObject.toString();

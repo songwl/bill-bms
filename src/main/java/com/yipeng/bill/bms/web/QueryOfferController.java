@@ -183,12 +183,10 @@ public class QueryOfferController extends BaseController {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", 1);
         jsonObject.put("message", keywordsPriceList);
-        if (stringList1.size() == 0) {
-            jsonObject.put("recommendWords", "");
-        } else {
-            List<KeywordToPrice> keywordToPriceListTj = keywordsPriceMapper.selectRecommendWords(stringList1.get(0).toString());//推荐词
-            jsonObject.put("recommendWords", keywordToPriceListTj);
-        }
+
+        List<KeywordToPrice> keywordToPriceListTj = keywordsPriceMapper.selectRecommendWords(keywordsPriceList.get(0).getKeywords());//推荐词
+        jsonObject.put("recommendWords", keywordToPriceListTj);
+
         String response = jsonObject.toString();
         response = callback + "(" + response + ")";
         Logs logs = new Logs();
@@ -196,7 +194,7 @@ public class QueryOfferController extends BaseController {
         logs.setOptype(-100);
         logs.setUserid(new Long(UserId));
         logs.setOpobj("2");
-        logs.setOpremake("xAction数据:" + xAction + ",xParam数据:" + xParam + ",apiSign数据:" + apiSign + ",ip地址：" + ip + "，结果：成功，剩余关键词数量：" + offerset1.getSurplussecond()+","+response);
+        logs.setOpremake("xAction数据:" + xAction + ",xParam数据:" + xParam + ",apiSign数据:" + apiSign + ",ip地址：" + ip + "，结果：成功，剩余关键词数量：" + offerset1.getSurplussecond() + "," + response);
         logsMapper.insert(logs);
         return response;
     }

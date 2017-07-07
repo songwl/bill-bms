@@ -3,6 +3,7 @@ package com.yipeng.bill.bms.service.impl;
 import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.service.HomeService;
+import com.yipeng.bill.bms.service.RankingUpdateService;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,8 +42,6 @@ public class HomeServiceImpl implements HomeService {
      */
     @Override
     public Map<String, Object> homeDetails(LoginUser loginUser) {
-
-
         //转换时间
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM");

@@ -122,4 +122,7 @@ public interface BillMapper {
     //下滑排名
     List<Map<String, Object>> selectDeclineBillTable(Map<String, Object> params);
     Long  selectDeclineBillTableCount(Map<String, Object> params);
+
+    //更新排名
+    int updateByWebAppId(Map<String, Object> params);
 }

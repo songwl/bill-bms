@@ -2699,4 +2699,12 @@
     WHERE keywords NOT IN (
     SELECT keywords FROM keywords_price) LIMIT 100
   </select>
+
+  <update id="updateByWebAppId" >
+  UPDATE t_bill
+  SET
+  first_ranking=#{firstRanking,jdbcType=INTEGER}, new_ranking= #{newRanking,jdbcType=INTEGER}
+   WHERE
+   web_app_id=#{webAppId,jdbcType=INTEGER}
+  </update>
 </mapper>

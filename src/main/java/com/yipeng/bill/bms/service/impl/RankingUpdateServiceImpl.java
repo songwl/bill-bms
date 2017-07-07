@@ -46,12 +46,10 @@ public class RankingUpdateServiceImpl implements RankingUpdateService {
                 billMapper.updateByPrimaryKeySelective(bill);
 
             }
-
             return 1;
         }
         else
         {
-
             return 0;
         }
 

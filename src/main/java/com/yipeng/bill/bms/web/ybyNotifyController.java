@@ -48,14 +48,7 @@ public class ybyNotifyController extends BaseController {
     @RequestMapping(value = "/getYbyNotify", method = RequestMethod.POST)
     @ResponseBody
     public String getYbyNotify(String xAction, String xParam, String xSign) {
-        Logs logs = new Logs();
-        logs.setCreatetime(new Date());
-        logs.setOptype(1);
-        logs.setUserid(new Long(1));
-        logs.setOpobj("2");
-        logs.setOpremake("xAction数据:" + xAction + ",xParam数据:" + xParam + ",xSign数据:" + xSign);
-        logsMapper.insert(logs);
-        System.out.print("xAction数据:" + xAction + ",xParam数据:" + xParam + ",xSign数据:" + xSign);
+
 
         Md5_UrlEncode md5_urlEncode = new Md5_UrlEncode();
         //api编号
@@ -83,7 +76,7 @@ public class ybyNotifyController extends BaseController {
                 if (a == 1) {
                     return "1";
                 }  else {
-                    return "修改失败";
+                    return "1";
                 }
 
             } else {
@@ -92,15 +85,28 @@ public class ybyNotifyController extends BaseController {
                 String RankFirst = json1.get("RankFirst").toString();//初排
                 String RankLast = json1.get("RankLast").toString();//新排
                 if (RankFirst == null || "".equals(RankFirst) || RankLast == null || "".equals(RankLast)) {
-                    System.out.print("排名出错:" + xParam);
-                    return "排名出错";
+                    return "1";
 
                 }
-
                 int a = rankingUpdateService.updateRanking(Integer.parseInt(TaskId), Integer.parseInt(RankLast), Integer.parseInt(RankFirst));
                 if (a == 1) {
+                    Logs logs = new Logs();
+                    logs.setCreatetime(new Date());
+                    logs.setOptype(1);
+                    logs.setUserid(new Long(1));
+                    logs.setOpobj("2");
+                    logs.setOpremake("更新成功！xParam数据:" + xParam );
+                    logsMapper.insert(logs);
                     return "1";
+
                 } else if (a == 0) {
+                    Logs logs = new Logs();
+                    logs.setCreatetime(new Date());
+                    logs.setOptype(999);
+                    logs.setUserid(new Long(1));
+                    logs.setOpobj("2");
+                    logs.setOpremake("更新失败！xParam数据:" + xParam );
+                    logsMapper.insert(logs);
                     return "1";
                 } else {
                     return "数据更新失败";
@@ -109,7 +115,6 @@ public class ybyNotifyController extends BaseController {
 
 
         } else {
-            System.out.print("对比错误");
             return "签名验证失败！";
         }
 

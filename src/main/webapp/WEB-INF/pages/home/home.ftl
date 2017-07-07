@@ -121,7 +121,7 @@
         </div>
     </#if>
     <#if bmsModel.user.hasRole("SUPER_ADMIN") ||bmsModel.user.hasRole("COMMISSIONER")||bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")||bmsModel.user.hasRole("ASSISTANT")||bmsModel.user.hasRole("CUSTOMER")>
-        <div class="col-sm-6 col-md-2 hidden-xs">
+        <#--<div class="col-sm-6 col-md-2 hidden-xs">
             <div class="dashboard-stat purple">
                 <div class="visual">
                     <i class="fa fa-tasks"></i>
@@ -131,7 +131,7 @@
                     <div class="desc" id="AllConsumption"></div>
                 </div>
             </div>
-        </div>
+        </div>-->
         <div class="col-sm-6 col-md-2 hidden-xs">
             <div class="dashboard-stat blue">
                 <div class="visual">
@@ -154,7 +154,17 @@
                 </div>
             </div>
         </div>
-
+        <div class="col-sm-6 col-md-2 hidden-xs">
+            <div class="dashboard-stat purple">
+                <div class="visual">
+                    <i class="fa fa-tasks"></i>
+                </div>
+                <div class="details">
+                    <div class="number">累计任务数</div>
+                    <div class="desc" id="AllbillCount"></div>
+                </div>
+            </div>
+        </div>
         <div class="col-sm-6 col-md-2 hidden-xs">
             <div class="dashboard-stat blue">
                 <div class="visual">
@@ -384,7 +394,7 @@
         }
     });
 
-    //总消费
+/*    //总消费
     $.ajax({
         type: 'get',
         async: true,
@@ -397,7 +407,7 @@
                 $("#AllConsumption").html("¥" + result.AllConsumption);
             }
         }
-    });
+    });*/
     //3，月总消费
     $.ajax({
         type: 'get',

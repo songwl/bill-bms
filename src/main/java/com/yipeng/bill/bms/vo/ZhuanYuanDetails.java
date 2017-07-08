@@ -61,4 +61,25 @@ public class ZhuanYuanDetails {
     }
 
 
+    private int weekCount;
+    public int getWeekCount() {
+        return weekCount;
+    }
+
+    public void setWeekCount(int weekCount) {
+        this.weekCount = weekCount;
+    }
+
+
+
+    private int monthCount;
+    public int getMonthCount() {
+        return monthCount;
+    }
+
+    public void setMonthCount(int monthCount) {
+        this.monthCount = monthCount;
+    }
+
+
 }

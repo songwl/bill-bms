@@ -1906,6 +1906,7 @@ public class BillServiceimpl implements BillService {
                             bill1.setWebAppId1(ApiId1);
                             bill1.setDayOptimization(1);
                             bill1.setBillAscription(caozuoyuanId);
+                            bill1.setUpdateTime(new Date());
                             bill1.setState(2);
                             //优化状态（优化中）（调点击）
                             bill1.setOpstate(1);
@@ -3999,8 +4000,9 @@ public class BillServiceimpl implements BillService {
         List<Map<String,Object>>  standardCount=billMapper.selectBybillStandardCount(sqlMap);//达标数
         List<Map<String,Object>>  billCount=billMapper.selectBybillCount();//关键词数
         List<Map<String,Object>>  selectByWebsite=billMapper.selectByWebsite();//订单数
-
         List<Map<String,Object>>  selectByallCost=billMapper.selectByallCost();//全部扣费
+        List<Map<String,Object>>  selectByWeekCount=billMapper.selectByWeekCount();
+        List<Map<String,Object>>  selectByMonthCount=billMapper.selectByMonthCount();
         for(int i=0;i<billCount.size();i++)
         {
             if(billCount.get(i).get("user_name")!=null)
@@ -4009,7 +4011,7 @@ public class BillServiceimpl implements BillService {
                 zhuanYuanDetails.setUserName(billCount.get(i).get("user_name").toString());
                 if(!CollectionUtils.isEmpty(standardCount))
                 {
-                    for(int j=0;i<standardCount.size();j++)
+                    for(int j=0;j<standardCount.size();j++)
                     {
                         if(standardCount.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString())&&billCount.get(j).get("user_name").equals(billCount.get(i).get("user_name").toString()))
                         {
@@ -4017,6 +4019,10 @@ public class BillServiceimpl implements BillService {
                             Double rate=Double.parseDouble(standardCount.get(j).get("num").toString())/Double.parseDouble(billCount.get(i).get("num").toString());
                             zhuanYuanDetails.setBillStandardRate(rate);
                             break;
+                        }
+                        else
+                        {
+                            zhuanYuanDetails.setBillStandardRate(0);
                         }
                     }
                 }
@@ -4034,12 +4040,16 @@ public class BillServiceimpl implements BillService {
              }
                 if(!CollectionUtils.isEmpty(selectByWebsite))
                 {
-                    for(int j=0;i<selectByWebsite.size();j++)
+                    for(int j=0;j<selectByWebsite.size();j++)
                     {
                         if(selectByWebsite.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString()))
                         {
                             zhuanYuanDetails.setBillCount(Integer.parseInt(selectByWebsite.get(j).get("num").toString()));
                             break;
+                        }
+                        else
+                        {
+                            zhuanYuanDetails.setBillCount(0);
                         }
                     }
                 }
@@ -4049,12 +4059,16 @@ public class BillServiceimpl implements BillService {
                 }
                 if(!CollectionUtils.isEmpty(selectByallCost))
                 {
-                    for(int j=0;i<selectByallCost.size();j++)
+                    for(int j=0;j<selectByallCost.size();j++)
                     {
                         if(selectByallCost.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString()))
                         {
                             zhuanYuanDetails.setAllCost(Double.parseDouble(selectByallCost.get(j).get("num").toString()));
                             break;
+                        }
+                        else
+                        {
+                            zhuanYuanDetails.setAllCost(0);
                         }
                     }
                 }
@@ -4062,7 +4076,44 @@ public class BillServiceimpl implements BillService {
                 {
                     zhuanYuanDetails.setAllCost(0);
                 }
-
+                if(!CollectionUtils.isEmpty(selectByWeekCount))
+                {
+                    for(int j=0;j<selectByWeekCount.size();j++)
+                    {
+                        if(selectByWeekCount.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString()))
+                        {
+                            zhuanYuanDetails.setWeekCount(Integer.parseInt(selectByWeekCount.get(j).get("num").toString()));
+                            break;
+                        }
+                        else
+                        {
+                            zhuanYuanDetails.setWeekCount(0);
+                        }
+                    }
+                }
+                else
+                {
+                    zhuanYuanDetails.setWeekCount(0);
+                }
+                if(!CollectionUtils.isEmpty(selectByMonthCount))
+                {
+                    for(int j=0;j<selectByMonthCount.size();j++)
+                    {
+                        if(selectByMonthCount.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString()))
+                        {
+                            zhuanYuanDetails.setMonthCount(Integer.parseInt(selectByMonthCount.get(j).get("num").toString()));
+                            break;
+                        }
+                        else
+                        {
+                            zhuanYuanDetails.setMonthCount(0);
+                        }
+                    }
+                }
+                else
+                {
+                    zhuanYuanDetails.setMonthCount(0);
+                }
                 zhuanYuanDetailsList.add(zhuanYuanDetails);
             }
         }

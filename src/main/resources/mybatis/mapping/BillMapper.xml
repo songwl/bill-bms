@@ -2731,4 +2731,18 @@
     and b.bill_ranking_standard &lt;= 10
     GROUP BY a.bill_ascription
   </select>
+
+  <select id="selectByMonthCount"  resultType="java.util.HashMap">
+    select COUNT(a.id) as num,b.user_name from
+    t_bill as a, t_user as b where a.bill_ascription=b.id
+    AND date_format(a.create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+    GROUP BY bill_ascription
+  </select>
+
+  <select id="selectByWeekCount"  resultType="java.util.HashMap">
+   select COUNT(a.id) as num,b.user_name from
+    t_bill as a, t_user as b where a.bill_ascription=b.id
+    AND YEARWEEK(date_format(a.create_time,'%Y-%m-%d')) = YEARWEEK(now())
+    GROUP BY bill_ascription
+  </select>
 </mapper>

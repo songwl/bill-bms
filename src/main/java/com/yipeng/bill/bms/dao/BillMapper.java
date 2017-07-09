@@ -132,6 +132,7 @@ public interface BillMapper {
 
     List<Map<String,Object>> selectByWebsite();
 
+    List<Map<String,Object>> selectByDayCost(Map<String, Object> params);
     List<Map<String,Object>> selectByallCost();
 
     List<Map<String,Object>> selectByWeekCount();

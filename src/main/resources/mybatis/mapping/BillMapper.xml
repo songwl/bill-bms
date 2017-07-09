@@ -2724,6 +2724,14 @@
     GROUP BY a.bill_ascription
   </select>
 
+  <select id="selectByDayCost"  resultType="java.util.HashMap">
+    SELECT SUM(b.cost_amount) as num,d.user_name  from t_bill_price as a,t_bill_cost as b,t_bill as c, t_user as d
+    where a.bill_id=b.t_bill_id  AND  b.t_bill_id=c.id and c.bill_ascription=d.id
+    AND a.id=b.t_bill_price_id
+    AND a.in_member_id=1
+	and b.cost_date=#{date,jdbcType=VARCHAR}
+	GROUP BY  c.bill_ascription
+  </select>
 
   <select id="selectByallCost"  resultType="java.util.HashMap">
     SELECT SUM(b.price) as num,c.user_name FROM  t_bill as a,t_bill_price as b, t_user as c

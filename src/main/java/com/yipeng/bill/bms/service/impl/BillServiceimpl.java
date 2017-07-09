@@ -4000,6 +4000,7 @@ public class BillServiceimpl implements BillService {
         List<Map<String,Object>>  standardCount=billMapper.selectBybillStandardCount(sqlMap);//达标数
         List<Map<String,Object>>  billCount=billMapper.selectBybillCount();//关键词数
         List<Map<String,Object>>  selectByWebsite=billMapper.selectByWebsite();//订单数
+        List<Map<String,Object>>  selectByDayCost=billMapper.selectByDayCost(sqlMap);//实际扣费
         List<Map<String,Object>>  selectByallCost=billMapper.selectByallCost();//全部扣费
         List<Map<String,Object>>  selectByWeekCount=billMapper.selectByWeekCount();
         List<Map<String,Object>>  selectByMonthCount=billMapper.selectByMonthCount();
@@ -4057,6 +4058,26 @@ public class BillServiceimpl implements BillService {
                 {
                     zhuanYuanDetails.setBillCount(0);
                 }
+                if(!CollectionUtils.isEmpty(selectByDayCost))
+                {
+                    for(int j=0;j<selectByDayCost.size();j++)
+                    {
+                        if(selectByDayCost.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString()))
+                        {
+                            zhuanYuanDetails.setCost(Double.parseDouble(selectByDayCost.get(j).get("num").toString()));
+                            break;
+                        }
+                        else
+                        {
+                            zhuanYuanDetails.setCost(0);
+                        }
+                    }
+                }
+                else
+                {
+                    zhuanYuanDetails.setAllCost(0);
+                }
+
                 if(!CollectionUtils.isEmpty(selectByallCost))
                 {
                     for(int j=0;j<selectByallCost.size();j++)

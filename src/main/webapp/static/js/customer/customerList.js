@@ -607,7 +607,7 @@ var TableInit = function () {
 
                         }
                         else if (row.roleName == 'SUPER_ADMIN') {
-                            a = "<a href='/bill/loginSon?userId="+row.customerId+"'  target='_blank' style='color:#4382CF;cursor:pointer;'>登录</a>   " +
+                            a = "<a href='/loginSon?userId="+row.customerId+"'  target='_blank' style='color:#4382CF;cursor:pointer;'>登录</a>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='refund'>退款</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
@@ -618,7 +618,7 @@ var TableInit = function () {
 
                         }
                         else if (row.roleName == 'DISTRIBUTOR') {
-                            a ="<a href='/bill/loginSon?userId="+row.customerId+"'  target='_blank' style='color:#4382CF;cursor:pointer;'>登录</a>   " +
+                            a ="<a href='/loginSon?userId="+row.customerId+"'  target='_blank' style='color:#4382CF;cursor:pointer;'>登录</a>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='recharge'>充值</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='refund'>退款</span>   " +
                                 "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +

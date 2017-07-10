@@ -2720,8 +2720,10 @@
   </select>
 
   <select id="selectByWebsite"  resultType="java.util.HashMap">
-    select COUNT(DISTINCT a.website) as num,b.user_name from t_bill as a, t_user as b where a.bill_ascription=b.id
-    GROUP BY a.bill_ascription
+      select  a.website,b.user_name
+		from t_bill as a, t_user as b
+		where a.bill_ascription=b.id and a.state=2
+    GROUP BY a.website
   </select>
 
   <select id="selectByDayCost"  resultType="java.util.HashMap">
@@ -2741,16 +2743,23 @@
   </select>
 
   <select id="selectByMonthCount"  resultType="java.util.HashMap">
-    select COUNT(a.id) as num,b.user_name from
+    select a.website,b.user_name from
     t_bill as a, t_user as b where a.bill_ascription=b.id
     AND date_format(a.create_time,'%Y-%m')=date_format(now(),'%Y-%m')
     GROUP BY bill_ascription
   </select>
 
   <select id="selectByWeekCount"  resultType="java.util.HashMap">
-   select COUNT(a.id) as num,b.user_name from
+   select a.website,b.user_name from
     t_bill as a, t_user as b where a.bill_ascription=b.id
     AND YEARWEEK(date_format(a.create_time,'%Y-%m-%d')) = YEARWEEK(now())
     GROUP BY bill_ascription
+  </select>
+
+  <select id="selectByAdminWebsite"  resultType="java.util.HashMap">
+   select DISTINCT(website),bill_ascription as caozuoyuan,b.out_member_id as kehu
+    from t_bill as a,t_bill_price as b
+    where a.id=b.bill_id  and state=2
+    GROUP BY website
   </select>
 </mapper>

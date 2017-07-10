@@ -8,10 +8,12 @@ import com.yipeng.bill.bms.model.*;
 import com.yipeng.bill.bms.service.BillService;
 import com.yipeng.bill.bms.service.RemoteService;
 import com.yipeng.bill.bms.vo.*;
+import org.apache.xmlbeans.impl.regex.Match;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import sun.misc.BASE64Encoder;
 
@@ -23,6 +25,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -3963,7 +3966,6 @@ public class BillServiceimpl implements BillService {
                     a=orderLeaseMapper.insert(orderLease1);
                 }
             }
-
         }
         else//不存在 直接录入
         {
@@ -3978,7 +3980,6 @@ public class BillServiceimpl implements BillService {
                 orderLease1.setAllotid(loginUser.getId());
                 orderLease1.setCreatetime(new Date());
                 a= orderLeaseMapper.insert(orderLease1);
-
             }
 
         }
@@ -3996,14 +3997,15 @@ public class BillServiceimpl implements BillService {
         SimpleDateFormat sm=new SimpleDateFormat("yyyy-MM-dd");
         Map<String,Object> sqlMap=new HashMap<>();
         sqlMap.put("date",sm.format(new Date()));
-
         List<Map<String,Object>>  standardCount=billMapper.selectBybillStandardCount(sqlMap);//达标数
         List<Map<String,Object>>  billCount=billMapper.selectBybillCount();//关键词数
         List<Map<String,Object>>  selectByWebsite=billMapper.selectByWebsite();//订单数
         List<Map<String,Object>>  selectByDayCost=billMapper.selectByDayCost(sqlMap);//实际扣费
         List<Map<String,Object>>  selectByallCost=billMapper.selectByallCost();//全部扣费
-        List<Map<String,Object>>  selectByWeekCount=billMapper.selectByWeekCount();
-        List<Map<String,Object>>  selectByMonthCount=billMapper.selectByMonthCount();
+        List<Map<String,Object>>  selectByWeekCount=billMapper.selectByWeekCount(); //周订单
+        List<Map<String,Object>>  selectByMonthCount=billMapper.selectByMonthCount();//月接单
+        Pattern p = Pattern.compile("(?<=http://|\\.)[^.]*?\\.(com|cn|net|org|biz|info|cc|tv.*)",Pattern.CASE_INSENSITIVE);
+
         for(int i=0;i<billCount.size();i++)
         {
             if(billCount.get(i).get("user_name")!=null)
@@ -4016,7 +4018,6 @@ public class BillServiceimpl implements BillService {
                     {
                         if(standardCount.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString())&&billCount.get(j).get("user_name").equals(billCount.get(i).get("user_name").toString()))
                         {
-
                             Double rate=Double.parseDouble(standardCount.get(j).get("num").toString())/Double.parseDouble(billCount.get(i).get("num").toString());
                             zhuanYuanDetails.setBillStandardRate(rate);
                             break;
@@ -4039,25 +4040,41 @@ public class BillServiceimpl implements BillService {
              {
                  zhuanYuanDetails.setKeywordsCount(0);
              }
+
                 if(!CollectionUtils.isEmpty(selectByWebsite))
                 {
+                    HashSet hashSet=new HashSet();
+
                     for(int j=0;j<selectByWebsite.size();j++)
                     {
                         if(selectByWebsite.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString()))
                         {
-                            zhuanYuanDetails.setBillCount(Integer.parseInt(selectByWebsite.get(j).get("num").toString()));
-                            break;
+
+                            Matcher matcher = p.matcher(selectByWebsite.get(j).get("website").toString());
+                            if(matcher.find())
+                            {
+                                hashSet.add(matcher.group());
+                            }
+                            else
+                            {
+                                hashSet.add(selectByWebsite.get(j).get("website").toString());
+                            }
                         }
-                        else
-                        {
-                            zhuanYuanDetails.setBillCount(0);
-                        }
+                    }
+                    if(hashSet.size()>0)
+                    {
+                        zhuanYuanDetails.setBillCount(hashSet.size());
+                    }
+                    else
+                    {
+                        zhuanYuanDetails.setBillCount(0);
                     }
                 }
                 else
                 {
                     zhuanYuanDetails.setBillCount(0);
                 }
+
                 if(!CollectionUtils.isEmpty(selectByDayCost))
                 {
                     for(int j=0;j<selectByDayCost.size();j++)
@@ -4099,17 +4116,29 @@ public class BillServiceimpl implements BillService {
                 }
                 if(!CollectionUtils.isEmpty(selectByWeekCount))
                 {
+                    HashSet hashSet1=new HashSet();
                     for(int j=0;j<selectByWeekCount.size();j++)
                     {
                         if(selectByWeekCount.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString()))
                         {
-                            zhuanYuanDetails.setWeekCount(Integer.parseInt(selectByWeekCount.get(j).get("num").toString()));
-                            break;
+                            Matcher matcher1 = p.matcher(selectByWeekCount.get(j).get("website").toString());
+                            if(matcher1.find())
+                            {
+                                hashSet1.add(matcher1.group());
+                            }
+                            else
+                            {
+                                hashSet1.add(selectByWeekCount.get(j).get("website").toString());
+                            }
                         }
-                        else
-                        {
-                            zhuanYuanDetails.setWeekCount(0);
-                        }
+                    }
+                    if(hashSet1.size()>0)
+                    {
+                        zhuanYuanDetails.setWeekCount(hashSet1.size());
+                    }
+                    else
+                    {
+                        zhuanYuanDetails.setWeekCount(0);
                     }
                 }
                 else
@@ -4118,18 +4147,31 @@ public class BillServiceimpl implements BillService {
                 }
                 if(!CollectionUtils.isEmpty(selectByMonthCount))
                 {
+                    HashSet hashSet2=new HashSet();
                     for(int j=0;j<selectByMonthCount.size();j++)
                     {
                         if(selectByMonthCount.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString()))
                         {
-                            zhuanYuanDetails.setMonthCount(Integer.parseInt(selectByMonthCount.get(j).get("num").toString()));
-                            break;
-                        }
-                        else
-                        {
-                            zhuanYuanDetails.setMonthCount(0);
+                            Matcher matcher2 = p.matcher(selectByMonthCount.get(j).get("website").toString());
+                            if(matcher2.find())
+                            {
+                                hashSet2.add(matcher2.group());
+                            }
+                            else
+                            {
+                                hashSet2.add(selectByMonthCount.get(j).get("website").toString());
+                            }
                         }
                     }
+                    if(hashSet2.size()>0)
+                    {
+                        zhuanYuanDetails.setMonthCount(hashSet2.size());
+                    }
+                    else
+                    {
+                        zhuanYuanDetails.setMonthCount(0);
+                    }
+
                 }
                 else
                 {

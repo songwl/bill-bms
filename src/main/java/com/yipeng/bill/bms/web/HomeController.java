@@ -7,10 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.yipeng.bill.bms.dao.leaseOverdueTbMapper;
-import com.yipeng.bill.bms.dao.offersetMapper;
-import com.yipeng.bill.bms.dao.orderLeaseMapper;
-import com.yipeng.bill.bms.dao.sendBoxMapper;
+import com.yipeng.bill.bms.dao.*;
+import com.yipeng.bill.bms.domain.UserPower;
 import com.yipeng.bill.bms.domain.leaseOverdueTb;
 import com.yipeng.bill.bms.domain.noticepublish;
 import com.yipeng.bill.bms.domain.offerset;
@@ -74,14 +72,13 @@ public class HomeController extends BaseController {
             long num = leaseOverdueTbMapper.selectByReserveIdCount(map);
             bms.put("leaseOverdue", num);
         }
-        if (user.hasRole("CUSTOMER")) {
+        if (user.hasRole("CUSTOMER")) {//客户
             offerset offerset1 = offersetMapper.selectByUserId(user.getId());
             if (offerset1 != null) {
                 bms.put("leasepowercustomer", offerset1.getState());
             } else {
                 bms.put("leasepowercustomer", 0);
             }
-
         }
         bms.put("UnReadNum", UnReadNum);
         bms.put("SendUnReadNum", SendUnReadNum);

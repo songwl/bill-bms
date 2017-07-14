@@ -1,19 +1,16 @@
-
 /**
  * Created by Administrator on 2017/3/16.
  */
 //显示搜索内容
 $(".search").click(function () {
-    if($(".Navs2").css("display")=="block"){
+    if ($(".Navs2").css("display") == "block") {
         $(".Navs2").slideUp();
 
     }
-    else
-    {
+    else {
         $(".Navs2").slideDown();
 
     }
-
 
 
 })
@@ -61,30 +58,29 @@ $(".openLeaseRole").click(function () {
 
 });
 
-var userName=false;
-var password=false;
-var searchUserName=null;
-var searchState=null;
+var userName = false;
+var password = false;
+var searchUserName = null;
+var searchState = null;
 //用户名
 $("input[name='userName']").blur(function () {
 
-    if ($("#userName1").val() != "")
-    {
+    if ($("#userName1").val() != "") {
         if (/^[A-Za-z]\w{5,12}$/.test($("#userName1").val())) {
 
 
             $.ajax({
                 type: "get",
-                data:{userName:$("#userName1").val()},
-                url:CTX+"/user/register/validUserName",
-                dataType:"json",
-                success:function (result) {
-                    if (result.code==200){ //返回结果code==200代表正确
+                data: {userName: $("#userName1").val()},
+                url: CTX + "/user/register/validUserName",
+                dataType: "json",
+                success: function (result) {
+                    if (result.code == 200) { //返回结果code==200代表正确
                         //验证可以使用,
-                        userName=true;
-                    }else{
+                        userName = true;
+                    } else {
                         //验证为已注册,不能使用,
-                        $(".pdlogid").css({ "color": "#ff0000" }).text("用户名已存在！");
+                        $(".pdlogid").css({"color": "#ff0000"}).text("用户名已存在！");
                         userName = false;
                     }
 
@@ -96,7 +92,7 @@ $("input[name='userName']").blur(function () {
         else {
             //格式不对
             userName = false;
-            $(".pdlogid").css({ "color": "#ff0000" }).text("用户名格式不正确！");
+            $(".pdlogid").css({"color": "#ff0000"}).text("用户名格式不正确！");
         }
 
     }
@@ -104,8 +100,7 @@ $("input[name='userName']").blur(function () {
 //密码
 $("input[name='password']").blur(function () {
 
-    if ($("input[name='password']").val()!= "")
-    {
+    if ($("input[name='password']").val() != "") {
         if (/^\w{6,12}$/.test($(this).val())) {
             password = true;
 
@@ -113,126 +108,118 @@ $("input[name='password']").blur(function () {
         else {
             //格式不对
             password = false;
-            $(".pdpwd").css({ "color": "#ff0000" }).text("密码格式不正确！");
+            $(".pdpwd").css({"color": "#ff0000"}).text("密码格式不正确！");
         }
     }
 });
 
 $("input[name='userName']").focus(function () {
-    $(".pdlogid").css({ "color": "#ff0000" }).text("");
+    $(".pdlogid").css({"color": "#ff0000"}).text("");
     userName = false;
 
 });
 
 //添加操作员确认
 $(".addOperatorcmt").click(function () {
-    if(userName&&password)
-    {
+    if (userName && password) {
         $.ajax({
             type: "post",
-            data:{userName:$("#userName1").val(),
-                password:$("input[name='password']").val(),
-                realName:$("input[name='realName']").val(),
-                contact:$("input[name='contact']").val(),
-                phone:$("input[name='phone']").val(),
-                qq:$("input[name='qq']").val(),
+            data: {
+                userName: $("#userName1").val(),
+                password: $("input[name='password']").val(),
+                realName: $("input[name='realName']").val(),
+                contact: $("input[name='contact']").val(),
+                phone: $("input[name='phone']").val(),
+                qq: $("input[name='qq']").val(),
             },
-            url:CTX+"/operator/list",
-            dataType:"json",
-            success:function (result) {
+            url: CTX + "/operator/list",
+            dataType: "json",
+            success: function (result) {
 
-                  if(result.code==200)
-                  {
-                      alert(result.message);
-                      $(".addOperatorDiv").slideUp();
-                      $(".modal-backdrop").hide();
-                      $('#myTable').bootstrapTable('refresh');
-                  }
-                  else
-                  {
-                      alert(result.Message);
-                  }
+                if (result.code == 200) {
+                    alert(result.message);
+                    $(".addOperatorDiv").slideUp();
+                    $(".modal-backdrop").hide();
+                    $('#myTable').bootstrapTable('refresh');
+                }
+                else {
+                    alert(result.Message);
+                }
 
             }
 
         })
     }
-  else
-    {
+    else {
         alert("填写信息有误，请重新输入！");
     }
 })
 
 
-
 //更改操作员信息
 $(".updateOperatorcmt").click(function () {
-    if(/^[A-Za-z]\w{5,12}$/.test($("input[name='userName1']").val()))
-    {
-          $.ajax({
-              type:'post',
-              url:CTX+"/operator/updateOperator",
-              data:{
-                  id:$("input[name='operator']").val(),
-                  userName:  $("input[name='userName1']").val(),
-                  realName:$("input[name='realName']").val(),
-                  contact:$("input[name='contact']").val(),
-                  phone:$("input[name='phone']").val(),
-                  qq:$("input[name='qq']").val(),
-                  status:$("#viewstatus option:selected").val()
-              },
-              success:function (result) {
-                  if(result.code==200)
-                  {
-                      alert(result.message);
-                      $(".addOperatorDiv").slideUp();
-                      $(".modal-backdrop").hide();
-                      $('#myTable').bootstrapTable('refresh');
-                  }
-                  else
-                  {
-                      alert(result.Message);
-                  }
-              }
-          })
+    if (/^[A-Za-z]\w{5,12}$/.test($("input[name='userName1']").val())) {
+        $.ajax({
+            type: 'post',
+            url: CTX + "/operator/updateOperator",
+            data: {
+                id: $("input[name='operator']").val(),
+                userName: $("input[name='userName1']").val(),
+                realName: $("input[name='realName']").val(),
+                contact: $("input[name='contact']").val(),
+                phone: $("input[name='phone']").val(),
+                qq: $("input[name='qq']").val(),
+                status: $("#viewstatus option:selected").val()
+            },
+            success: function (result) {
+                if (result.code == 200) {
+                    alert(result.message);
+                    $(".addOperatorDiv").slideUp();
+                    $(".modal-backdrop").hide();
+                    $('#myTable').bootstrapTable('refresh');
+                }
+                else {
+                    alert(result.Message);
+                }
+            }
+        })
     }
-    else
-    {
+    else {
         alert("用户名不能为空或格式错误!");
     }
 })
 
 //添加操作员
-    $("#addOperator").click(function () {
+$("#addOperator").click(function () {
 
-        $(".modal-backdrop").show();
-        $(".addOperatorDiv").slideDown();
-        $("#nameDiv").show();
-        $("#nameDiv1").hide();
-        $(".modal-title").html("添加操作员");
-       $(".addOperatorcmt").show();
-        $(".updateOperatorcmt").hide();
-        $("#viewpwd").show();
-        $("#viewstate").hide();
-        $("input[name='userName']").val("");
-        $("input[name='realName']").val("");
-        $("input[name='contact']").val("");
-        $("input[name='phone']").val("");
-        $("input[name='qq']").val("");
-
-
-    })
-    $(".close").click(function () {
-        $(".addOperatorDiv").slideUp();
-        $(".modal-backdrop").hide();
+    $(".modal-backdrop").show();
+    $(".addOperatorDiv").slideDown();
+    $("#nameDiv").show();
+    $("#nameDiv1").hide();
+    $(".modal-title").html("添加操作员");
+    $(".addOperatorcmt").show();
+    $(".updateOperatorcmt").hide();
+    $("#viewpwd").show();
+    $("#viewstate").hide();
+    $("input[name='userName']").val("");
+    $("input[name='realName']").val("");
+    $("input[name='contact']").val("");
+    $("input[name='phone']").val("");
+    $("input[name='qq']").val("");
 
 
-    })
-    $(".cancel").click(function () {
-        $(".addOperatorDiv").slideUp();
-        $(".modal-backdrop").hide();
+})
+$(".close").click(function () {
+    $(".addOperatorDiv").slideUp();
+    $(".modal-backdrop").hide();
 
-    })
+
+})
+$(".cancel").click(function () {
+    $(".addOperatorDiv").slideUp();
+    $(".modal-backdrop").hide();
+
+})
 
 $(function () {
 
@@ -241,15 +228,13 @@ $(function () {
     oTable.Init();
 
 
-
-
 });
 var TableInit = function () {
     var oTableInit = new Object();
     //初始化Table
     oTableInit.Init = function () {
         $('#myTable').bootstrapTable({
-            url: CTX+'/operator/getOperator',         //请求后台的URL（*）
+            url: CTX + '/operator/getOperator',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
@@ -275,18 +260,18 @@ var TableInit = function () {
             rowStyle: function (row, index) {
                 //这里有5个取值代表5中颜色['active', 'success', 'info', 'warning', 'danger'];
                 var strclass = "";
-                if ((row.id)%2==0){
+                if ((row.id) % 2 == 0) {
                     strclass = '';
                 }
                 else {
                     strclass = 'active';
                 }
-                return { classes: strclass }
+                return {classes: strclass}
             },
             columns: [
                 {
                     checkbox: true
-                },{
+                }, {
                     field: 'id',
                     sortable: true,
                     align: 'center',
@@ -300,7 +285,7 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '数据库编号',
-                    visible:false
+                    visible: false
 
                 },
                 {
@@ -309,10 +294,10 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '操作员',
-                    formatter:function (value,row,index) {
-                        var a="";
+                    formatter: function (value, row, index) {
+                        var a = "";
 
-                            a="<span style='color:#4382CF;cursor:pointer;' id='details'>"+value+"</span>";
+                        a = "<span style='color:#4382CF;cursor:pointer;' id='details'>" + value + "</span>";
 
 
                         return a;
@@ -370,26 +355,22 @@ var TableInit = function () {
                     title: '登录次数',
 
 
-
                 },
                 {
                     field: "status",
                     align: 'center',
                     valign: 'middle',
                     title: '状态',
-                    formatter:function (value,row,index) {
-                        var a="";
-                        if(value==1)
-                        {
-                       a="<span style='color:#4382CF;cursor:pointer;' id='details'>正常</span>";
+                    formatter: function (value, row, index) {
+                        var a = "";
+                        if (value == 1) {
+                            a = "<span style='color:#4382CF;cursor:pointer;' id='details'>正常</span>";
                         }
-                        else
-                        {
-                            a="<span>冻结中</span>";
+                        else {
+                            a = "<span>冻结中</span>";
                         }
                         return a;
                     }
-
 
 
                 },
@@ -398,19 +379,18 @@ var TableInit = function () {
                     align: 'center',
                     valign: 'middle',
                     title: '租站',
-                    formatter:function (value,row,index) {
-                        var a="";
-                        if(value==1)
-                        {
-                            a="<span style='color:#4382CF;cursor:pointer;' id='details'>有</span>";
+                    formatter: function (value, row, index) {
+                        var a = "";
+                        if (value == 1&&row.userPower==1) {
+                            a = "<span style='color:#4382CF;cursor:pointer;' id='details'>有</span>";
+                        }else if (value == 1&&row.userPower==0) {
+                            a = "<span style='color:#4382CF;cursor:pointer;' id='details'>总账号</span>";
                         }
-                        else
-                        {
-                            a="<span style='color:#4382CF;'>-</span>";
+                        else {
+                            a = "<span style='color:#4382CF;'>-</span>";
                         }
                         return a;
                     }
-
 
 
                 },
@@ -419,13 +399,16 @@ var TableInit = function () {
                     title: '操作',
                     align: 'center',
                     valign: 'middle',
-                    formatter:function (value,row,index) {
-                        var a="<a href='/loginSon?userId="+row.customerId+"'  target='_blank' style='color:#4382CF;cursor:pointer;'>登录</a>   " +
+                    formatter: function (value, row, index) {
+                        var a = "<a href='/loginSon?userId=" + row.customerId + "'  target='_blank' style='color:#4382CF;cursor:pointer;'>登录</a>   " +
                             "<span style='color:#4382CF;cursor:pointer;' id='details'>资料</span>   " +
-                            "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   " ;
+                            "<span style='color:#4382CF;cursor:pointer;' id='changepwd'>改密</span>   ";
+                        if (row.leaseRole == 1&&row.userPower!=0) {
+                            a += "<span style='color:#4382CF;cursor:pointer;' id='UpToTotal'>升为总账号</span>   ";
+                        }
                         return a;
                     },
-                    events:operateEvents
+                    events: operateEvents
 
 
                 },
@@ -443,8 +426,8 @@ var TableInit = function () {
             offset: params.pageNumber,  //页码
             sortOrder: params.sortOrder,
             sortName: params.sortName,
-            searchUserName :searchUserName,
-            searchState:searchState,
+            searchUserName: searchUserName,
+            searchState: searchState,
 
         };
         return temp;
@@ -472,8 +455,7 @@ var TableInit = function () {
             $("input[name='phone']").val(row.phone);
             $("input[name='qq']").val(row.qq);
             $("#viewstatus").empty();
-            if(row.status=="1")
-            {
+            if (row.status == "1") {
                 $("#viewstatus").append("<option value='1'>正常</option>");
                 $("#viewstatus").append("<option value='0'>冻结</option>");
             }
@@ -484,22 +466,36 @@ var TableInit = function () {
             $("input[name='operator']").empty();
             $("input[name='operator']").val(row.customerId);
         },
-        'click #changepwd': function (e, value, row, index)
-        {
-            if(confirm("是否重置密码？"))
-            {
+        'click #changepwd': function (e, value, row, index) {
+            if (confirm("是否重置密码？")) {
                 $.ajax({
-                    type:'post',
-                    url:CTX+ "/operator/updatePwd",
-                    data:{id:row.customerId},
-                    success:function (result) {
-                        if(result.code==200)
-                        {
+                    type: 'post',
+                    url: CTX + "/operator/updatePwd",
+                    data: {id: row.customerId},
+                    success: function (result) {
+                        if (result.code == 200) {
                             alert(result.message);
                             $('#myTable').bootstrapTable('refresh');
                         }
-                        else
-                        {
+                        else {
+                            alert(result.Message);
+                        }
+                    }
+                })
+            }
+        },
+        'click #UpToTotal': function (e, value, row, index) {
+            if (confirm("确定提升当前账号为总账号吗？")) {
+                $.ajax({
+                    type: 'post',
+                    url: CTX + "/optimizationTool/UpToTotal",
+                    data: {dataUser: row.customerId},
+                    success: function (result) {
+                        if (result.code == 200) {
+                            alert(result.message);
+                            $('#myTable').bootstrapTable('refresh');
+                        }
+                        else {
                             alert(result.Message);
                         }
                     }
@@ -511,21 +507,17 @@ var TableInit = function () {
 };
 //搜索按钮
 $("#searchButton").click(function () {
-    if($("#searchUserName").val()!="")
-    {
-        searchUserName=$("#searchUserName").val();
+    if ($("#searchUserName").val() != "") {
+        searchUserName = $("#searchUserName").val();
     }
-    else
-    {
-        searchUserName=null;
+    else {
+        searchUserName = null;
     }
-    if($("#searchState option:selected").text()!="--请选择--")
-    {
-        searchState=$("#searchState option:selected").val();
+    if ($("#searchState option:selected").text() != "--请选择--") {
+        searchState = $("#searchState option:selected").val();
     }
-    else
-    {
-        searchState=null;
+    else {
+        searchState = null;
     }
     $('#myTable').bootstrapTable('refresh');
 });

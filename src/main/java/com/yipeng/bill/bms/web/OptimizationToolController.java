@@ -4,9 +4,11 @@ import com.google.gson.JsonObject;
 import com.mchange.v1.db.sql.ConnectionUtils;
 import com.yipeng.bill.bms.core.model.ResultMessage;
 import com.yipeng.bill.bms.dao.UserMapper;
+import com.yipeng.bill.bms.dao.UserPowerMapper;
 import com.yipeng.bill.bms.dao.offersetMapper;
 import com.yipeng.bill.bms.domain.KeywordsPrice;
 import com.yipeng.bill.bms.domain.User;
+import com.yipeng.bill.bms.domain.UserPower;
 import com.yipeng.bill.bms.domain.offerset;
 import com.yipeng.bill.bms.model.GetAddressIP;
 import com.yipeng.bill.bms.model.KeywordToPrice;
@@ -49,6 +51,8 @@ public class OptimizationToolController extends BaseController {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private UserPowerMapper userPowerMapper;
 
     /**
      * 关键词价格查询页面
@@ -212,7 +216,12 @@ public class OptimizationToolController extends BaseController {
         return this.ajaxDone(1, offerset.getRequestsecond().toString(), offerset);
     }
 
-
+    /**
+     * 开通网站出租平台权限
+     *
+     * @param httpServletRequest
+     * @return
+     */
     @RequestMapping(value = "/OpenWebsitePower", method = RequestMethod.POST)
     @ResponseBody
     public ResultMessage OpenWebsitePower(HttpServletRequest httpServletRequest) {
@@ -299,5 +308,29 @@ public class OptimizationToolController extends BaseController {
         }
         Map<String, Object> modelMap = optimizationToolService.GetKeywordsList(params);
         return modelMap;
+    }
+
+    /**
+     * 将账号升为总账号
+     *
+     * @param dataUser
+     * @return
+     */
+    @RequestMapping(value = "/UpToTotal", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage UpToTotal(String dataUser) {
+        LoginUser loginUser = this.getCurrentAccount();
+        if (!loginUser.hasRole("SUPER_ADMIN")) {
+            return this.ajaxDone(-1, "你没有权限", null);
+        }
+        int result = optimizationToolService.UpToTotal(Long.parseLong(dataUser));
+        switch (result) {
+            case 1:
+                return this.ajaxDoneSuccess("成功");
+            case -2:
+                return this.ajaxDoneError("请先开通出租平台权限");
+            default:
+                return this.ajaxDoneError("失败");
+        }
     }
 }

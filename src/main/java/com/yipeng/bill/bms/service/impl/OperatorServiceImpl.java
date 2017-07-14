@@ -3,10 +3,7 @@ package com.yipeng.bill.bms.service.impl;
 import com.yipeng.bill.bms.core.crypto.CryptoUtils;
 import com.yipeng.bill.bms.core.utils.DateUtils;
 import com.yipeng.bill.bms.dao.*;
-import com.yipeng.bill.bms.domain.Role;
-import com.yipeng.bill.bms.domain.User;
-import com.yipeng.bill.bms.domain.UserRole;
-import com.yipeng.bill.bms.domain.offerset;
+import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.service.OperatorService;
 import com.yipeng.bill.bms.service.RoleService;
 import com.yipeng.bill.bms.service.UserRoleService;
@@ -38,18 +35,17 @@ public class OperatorServiceImpl implements OperatorService {
     private FundAccountMapper fundAccountMapper;
     @Autowired
     private offersetMapper offersetMapper;
+    @Autowired
+    private UserPowerMapper userPowerMapper;
 
 
     @Override
-    public int saveOperator(User user, LoginUser users,String roleName) {
+    public int saveOperator(User user, LoginUser users, String roleName) {
 
-        User user1=userMapper.selectByUserName(user.getUserName());
-        if(user1!=null)
-        {
-            return  0;
-        }
-        else
-        {
+        User user1 = userMapper.selectByUserName(user.getUserName());
+        if (user1 != null) {
+            return 0;
+        } else {
             user.setStatus(true);
             user.setCreateTime(new Date());
             user.setPassword(CryptoUtils.md5(user.getPassword()));
@@ -60,30 +56,27 @@ public class OperatorServiceImpl implements OperatorService {
             user.setContact(user.getContact());
             user.setRealName(user.getRealName());
             int num = userMapper.insert(user);
-            Role role=null;
-            if(roleName.equals("COMMISSIONER"))
-            {
-                role=roleService.getRoleByRoleCode(Roles.COMMISSIONER.name());
-            }
-           else
-            {
-                role=roleService.getRoleByRoleCode(Roles.ADMIN.name());
+            Role role = null;
+            if (roleName.equals("COMMISSIONER")) {
+                role = roleService.getRoleByRoleCode(Roles.COMMISSIONER.name());
+            } else {
+                role = roleService.getRoleByRoleCode(Roles.ADMIN.name());
             }
 
-            if(role!=null)
-            {
+            if (role != null) {
                 UserRole userRole = new UserRole();
                 userRole.setUserId(user.getId());
                 userRole.setRoleId(role.getId());
                 userRoleService.saveUserRole(userRole);
             }
-            return  num;
+            return num;
         }
 
     }
 
     /**
      * 获取操作员列表
+     *
      * @param params
      * @return
      */
@@ -91,16 +84,16 @@ public class OperatorServiceImpl implements OperatorService {
     public Map<String, Object> getOperator(Map<String, Object> params) {
 
         //模型对象
-        List<CustomerListDetails> customerListDetailsList=new ArrayList<>();
+        List<CustomerListDetails> customerListDetailsList = new ArrayList<>();
 
-        List<User> userList=userMapper.getQueryUserAll(params);
-        int limit=Integer.parseInt(params.get("limit").toString()) ;
-        int offset=Integer.parseInt(params.get("offset").toString()) ;
-        int i=offset;
-        for ( User user:userList
+        List<User> userList = userMapper.getQueryUserAll(params);
+        int limit = Integer.parseInt(params.get("limit").toString());
+        int offset = Integer.parseInt(params.get("offset").toString());
+        int i = offset;
+        for (User user : userList
                 ) {
             i++;
-            CustomerListDetails customerListDetails=new CustomerListDetails();
+            CustomerListDetails customerListDetails = new CustomerListDetails();
             customerListDetails.setId(i);
             customerListDetails.setCustomerId(user.getId());
             customerListDetails.setUserName(user.getUserName());
@@ -110,46 +103,46 @@ public class OperatorServiceImpl implements OperatorService {
             customerListDetails.setQq(user.getQq());
             customerListDetails.setPhone(user.getPhone());
             customerListDetails.setCreateTime(DateUtils.formatDate(user.getCreateTime()));
-            if(user.getLastLoginTime()!=null)
-            {
+            if (user.getLastLoginTime() != null) {
                 customerListDetails.setLastLoginTime(DateUtils.formatDate(user.getLastLoginTime()));
             }
-            if(user.getLoginCount()!=null)
-            {
+            if (user.getLoginCount() != null) {
                 customerListDetails.setLoginCount(user.getLoginCount());
             }
             //查询是否拥有出租平台权限
-            offerset offerset=offersetMapper.selectByUserId(user.getId());
-            if(offerset==null)
-            {
+            offerset offerset = offersetMapper.selectByUserId(user.getId());
+            if (offerset == null) {
                 customerListDetails.setLeaseRole(0);
-            }
-            else
-            {
-                if(offerset.getLeasepower()==1)
-                {
+            } else {
+                if (offerset.getLeasepower() == 1) {
                     customerListDetails.setLeaseRole(1);
-                }
-                else
-                {
+                } else {
                     customerListDetails.setLeaseRole(0);
                 }
+            }
+            UserPower userPower = userPowerMapper.selectByUserId(user.getId());
+            if (userPower == null) {
+                customerListDetails.setUserPower(1);
+            } else {
+                customerListDetails.setUserPower(userPower.getPowerid());
             }
 
             customerListDetailsList.add(customerListDetails);
 
         }
         Map<String, Object> modelMap = new HashMap();
-        Role role= roleMapper.selectByPrimaryKey(Long.parseLong(params.get("roleId").toString()));
-        int roleCount=userRoleMapper.getCount(role.getId());
-        modelMap.put("total",roleCount);
-        modelMap.put("rows",customerListDetailsList);
+        Role role = roleMapper.selectByPrimaryKey(Long.parseLong(params.get("roleId").toString()));
+        int roleCount = userRoleMapper.getCount(role.getId());
+        modelMap.put("total", roleCount);
+        modelMap.put("rows", customerListDetailsList);
 
         return modelMap;
 
     }
+
     /**
      * 修改信息
+     *
      * @return
      */
     @Override
@@ -160,8 +153,10 @@ public class OperatorServiceImpl implements OperatorService {
         userMapper.updateByPrimaryKeySelective(user);
         return 1;
     }
+
     /**
      * 重置密码
+     *
      * @return
      */
     @Override
@@ -176,19 +171,14 @@ public class OperatorServiceImpl implements OperatorService {
     @Override
     public int deleteUser(User user, LoginUser loginUser) {
 
-        if (user.getId()!=null)
-        {
+        if (user.getId() != null) {
             userRoleMapper.deleteByUserId(user.getId());
             fundAccountMapper.deleteByUserId(user.getId());
             userMapper.deleteByPrimaryKey(user.getId());
             return 1;
-        }
-        else
-        {
+        } else {
             return 0;
         }
-
-
 
 
     }

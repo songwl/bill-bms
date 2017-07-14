@@ -439,3 +439,10 @@ CREATE TABLE `sendbox` (
   `SendTime` datetime DEFAULT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `userpower` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `userId` bigint(20) DEFAULT NULL COMMENT '用户id',
+  `powerId` int(11) DEFAULT NULL COMMENT '权限id 0总账号1分账号',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

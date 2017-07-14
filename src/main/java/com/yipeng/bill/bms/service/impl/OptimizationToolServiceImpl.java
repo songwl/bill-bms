@@ -2,10 +2,7 @@ package com.yipeng.bill.bms.service.impl;
 
 import com.yipeng.bill.bms.core.model.ResultMessage;
 import com.yipeng.bill.bms.dao.*;
-import com.yipeng.bill.bms.domain.ForbiddenWords;
-import com.yipeng.bill.bms.domain.KeywordsPrice;
-import com.yipeng.bill.bms.domain.User;
-import com.yipeng.bill.bms.domain.offerset;
+import com.yipeng.bill.bms.domain.*;
 import com.yipeng.bill.bms.model.Define;
 import com.yipeng.bill.bms.model.KeywordToPrice;
 import com.yipeng.bill.bms.model.Md5_UrlEncode;
@@ -17,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
@@ -42,6 +40,8 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
     private BillMapper billMapper;
     @Autowired
     private offersetMapper offersetMapper;
+    @Autowired
+    private UserPowerMapper userPowerMapper;
     Md5_UrlEncode md5_urlEncode = new Md5_UrlEncode();
 
     @Override
@@ -253,9 +253,11 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
     }
 
     @Override
+    @Transactional
     public Boolean setWebsitePower(Map<String, Object> map) {
         String[] arr = (String[]) map.get("arr");
         int type = Integer.parseInt(map.get("type").toString());
+        int num = 0;
         for (int i = 0; i < arr.length; i++) {
             offerset offerset = offersetMapper.selectByUserId(Long.parseLong(arr[i]));
             if (offerset == null) {
@@ -281,19 +283,27 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
                 offerset1.setCreatetime(new Date());
                 offerset1.setRequestsecond(0);
                 offerset1.setLeasepower(type);
-                int num = offersetMapper.insert(offerset1);
-                if (num == 0) {
-                    return false;
-                }
+                num += offersetMapper.insert(offerset1);
             } else {
                 offerset.setLeasepower(type);
-                int num = offersetMapper.updateByPrimaryKeySelective(offerset);
-                if (num == 0) {
-                    return false;
+                num += offersetMapper.updateByPrimaryKeySelective(offerset);
+            }
+            UserPower userPower = userPowerMapper.selectByUserId(Long.parseLong(arr[i]));
+            if (userPower == null) {
+                UserPower userPower1 = new UserPower();
+                userPower1.setUserid(Long.parseLong(arr[i]));
+                userPower1.setPowerid(1);
+                int num1 = userPowerMapper.insert(userPower1);
+                if (num1 == 0) {
+                    throw new RuntimeException();
                 }
             }
         }
-        return true;
+        if (num == arr.length) {
+            return true;
+        } else {
+            throw new RuntimeException();
+        }
     }
 
     @Override
@@ -341,6 +351,23 @@ public class OptimizationToolServiceImpl implements OptimizationToolService {
         map1.put("total", total);
         map1.put("rows", mapList);
         return map1;
+    }
+
+    @Override
+    @Transactional
+    public int UpToTotal(long dataUser) {
+        offerset offerset = offersetMapper.selectByUserId(dataUser);
+        if (offerset == null || offerset.getLeasepower() == 0) {
+            return -2;//未开通网租
+        }
+        UserPower userPower = userPowerMapper.selectByUserId(dataUser);
+        if (userPower == null) {
+            return -2;
+        }
+        int num = userPowerMapper.updateByPowerId();
+        userPower.setPowerid(0);
+        userPowerMapper.updateByPrimaryKeySelective(userPower);
+        return 1;
     }
 
 

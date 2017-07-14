@@ -691,6 +691,11 @@
                                         管理员任务大厅
                                     </a>
                                 </li>
+                                <li class="">
+                                    <a href="${ctx}/StatisticsData/WebsiteMonitor">
+                                        网站监控
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     </#if>
@@ -706,6 +711,13 @@
                                         专员任务大厅
                                     </a>
                                 </li>
+                                <#if bmsModel.leasepower=1>
+                                    <li class="">
+                                        <a href="${ctx}/StatisticsData/WebsiteMonitor">
+                                            网站监控
+                                        </a>
+                                    </li>
+                                </#if>
                             </ul>
                         </li>
                     </#if>

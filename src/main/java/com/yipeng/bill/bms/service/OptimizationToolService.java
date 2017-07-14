@@ -31,4 +31,6 @@ public interface OptimizationToolService {
     Boolean setAgentWebsitePower(Map<String, Object> map);
 
     Map<String, Object> GetKeywordsList(Map<String, Object> map);
+
+    int UpToTotal(long dataUser);
 }

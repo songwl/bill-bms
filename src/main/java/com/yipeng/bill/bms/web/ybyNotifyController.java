@@ -10,6 +10,7 @@ import com.yipeng.bill.bms.domain.Logs;
 import com.yipeng.bill.bms.model.Md5_UrlEncode;
 import com.yipeng.bill.bms.service.RankingUpdateService;
 import jdk.nashorn.internal.parser.JSONParser;
+import org.apache.logging.log4j.core.config.Loggers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
@@ -46,9 +47,7 @@ public class ybyNotifyController extends BaseController {
      */
 
     @RequestMapping(value = "/getYbyNotify", method = RequestMethod.POST)
-    @ResponseBody
     public String getYbyNotify(String xAction, String xParam, String xSign) {
-
 
         Md5_UrlEncode md5_urlEncode = new Md5_UrlEncode();
         //api编号
@@ -89,7 +88,7 @@ public class ybyNotifyController extends BaseController {
 
                 }
                 int a = rankingUpdateService.updateRanking(Integer.parseInt(TaskId), Integer.parseInt(RankLast), Integer.parseInt(RankFirst));
-                if (a == 1) {
+                if (a >0) {
                     Logs logs = new Logs();
                     logs.setCreatetime(new Date());
                     logs.setOptype(1);

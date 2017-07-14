@@ -7,6 +7,7 @@ import com.yipeng.bill.bms.service.RankingUpdateService;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -360,17 +361,21 @@ public class HomeServiceImpl implements HomeService {
             List<Map<String,Object>> newSum=billCostMapper.selectByBillCostOfDaySumGroupBy(sqlMapNew);
             if(newSum.size()<monthNowCount)
             {
-                for(int i=0;i<monthNowCount-1;i++)
+                if(!CollectionUtils.isEmpty(newSum))
                 {
-                    String sqlNewSum=newSum.get(i).get("costSum").toString();
-                    //比较达标最大数
-                    if(MaxYbyNewCost<=Double.parseDouble(sqlNewSum))
+                    for(int i=0;i<monthNowCount-1;i++)
                     {
-                        MaxYbyNewCost=Double.parseDouble(sqlNewSum);
-                    }
+                        String sqlNewSum=newSum.get(i).get("costSum").toString();
+                        //比较达标最大数
+                        if(MaxYbyNewCost<=Double.parseDouble(sqlNewSum))
+                        {
+                            MaxYbyNewCost=Double.parseDouble(sqlNewSum);
+                        }
 
-                    seriesNowMonthSum+=sqlNewSum+",";
+                        seriesNowMonthSum+=sqlNewSum+",";
+                    }
                 }
+
             }
             else
             {
@@ -592,35 +597,39 @@ public class HomeServiceImpl implements HomeService {
             sqlMapNew.put("dateArr",formatter1.format(new Date())); ;
             sqlMapNew.put("outMemberId",loginUser.getId());
             List<Map<String,Object>> newSum=billCostMapper.selectByBillCostOfDaySumGroupBy(sqlMapNew);
-            if(newSum.size()<monthNowCount)
+            if(!CollectionUtils.isEmpty(newSum))
             {
-                for(int i=0;i<monthNowCount-1;i++)
+                if(newSum.size()<monthNowCount)
                 {
-                    String sqlNewSum=newSum.get(i).get("costSum").toString();
-                    //比较达标最大数
-                    if(MaxYbyNewCost<=Double.parseDouble(sqlNewSum))
+                    for(int i=0;i<monthNowCount-1;i++)
                     {
-                        MaxYbyNewCost=Double.parseDouble(sqlNewSum);
-                    }
+                        String sqlNewSum=newSum.get(i).get("costSum").toString();
+                        //比较达标最大数
+                        if(MaxYbyNewCost<=Double.parseDouble(sqlNewSum))
+                        {
+                            MaxYbyNewCost=Double.parseDouble(sqlNewSum);
+                        }
 
-                    seriesNowMonthSum+=sqlNewSum+",";
+                        seriesNowMonthSum+=sqlNewSum+",";
+                    }
+                }
+                else
+                {
+                    for(int i=0;i<monthNowCount;i++)
+                    {
+                        String sqlNewSum=newSum.get(i).get("costSum").toString();
+                        //比较达标最大数
+                        if(MaxYbyNewCost<=Double.parseDouble(sqlNewSum))
+                        {
+                            MaxYbyNewCost=Double.parseDouble(sqlNewSum);
+                        }
+
+                        seriesNowMonthSum+=sqlNewSum+",";
+
+                    }
                 }
             }
-            else
-            {
-                for(int i=0;i<monthNowCount;i++)
-                {
-                    String sqlNewSum=newSum.get(i).get("costSum").toString();
-                    //比较达标最大数
-                    if(MaxYbyNewCost<=Double.parseDouble(sqlNewSum))
-                    {
-                        MaxYbyNewCost=Double.parseDouble(sqlNewSum);
-                    }
 
-                    seriesNowMonthSum+=sqlNewSum+",";
-
-                }
-            }
             String yAxis="";
             if(MaxYbyNew!=0)
             {

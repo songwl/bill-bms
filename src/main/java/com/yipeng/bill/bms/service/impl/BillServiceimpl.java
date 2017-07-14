@@ -1724,7 +1724,7 @@ public class BillServiceimpl implements BillService {
                 jsonObj.put("time", System.currentTimeMillis());
                 if (billNew != null) {
                     if (billNew.getBillType() == 1 || billNew.getBillType() == 2) {
-                        int[] timeSet = {9,15};
+                        int[] timeSet = {9, 15};
                         jsonObj.put("timeSet", timeSet);
                         jsonObj.put("searchOnce", true);
                         jsonObj.put("businessType", 2006);
@@ -1881,19 +1881,15 @@ public class BillServiceimpl implements BillService {
                             billPrice.setInMemberId(user.getId());
                             ;
                             String[] updateUserId = params.get("selectContent[" + i + "][updateUserId]");
-                            UserRole userRole=userRoleMapper.selectByUserId(Long.parseLong(updateUserId[0]));
+                            UserRole userRole = userRoleMapper.selectByUserId(Long.parseLong(updateUserId[0]));
 
-                            if(userRole!=null)
-                            {
+                            if (userRole != null) {
 
-                                Role role=roleMapper.selectByPrimaryKey(userRole.getRoleId());
-                                User usernew=userMapper.selectByPrimaryKey(userRole.getUserId());
-                                if(role.getRoleCode().equals("ASSISTANT"))
-                                {
+                                Role role = roleMapper.selectByPrimaryKey(userRole.getRoleId());
+                                User usernew = userMapper.selectByPrimaryKey(userRole.getUserId());
+                                if (role.getRoleCode().equals("ASSISTANT")) {
                                     billPrice.setOutMemberId(usernew.getCreateUserId());
-                                }
-                                else
-                                {
+                                } else {
                                     billPrice.setOutMemberId(usernew.getId());
                                 }
                             }
@@ -1925,18 +1921,14 @@ public class BillServiceimpl implements BillService {
                                 billPrice1.setPrice(ret1);
                                 billPrice1.setBillRankingStandard(Long.parseLong(rankend1[0]));
                                 billPrice1.setInMemberId(user.getId());
-                                if(userRole!=null)
-                                {
+                                if (userRole != null) {
 
-                                    Role role=roleMapper.selectByPrimaryKey(userRole.getRoleId());
-                                    User usernew=userMapper.selectByPrimaryKey(userRole.getUserId());
-                                    if(role.getRoleCode().equals("ASSISTANT"))
-                                    {
-                                        billPrice.setOutMemberId(usernew.getCreateUserId());
-                                    }
-                                    else
-                                    {
-                                        billPrice.setOutMemberId(usernew.getId());
+                                    Role role = roleMapper.selectByPrimaryKey(userRole.getRoleId());
+                                    User usernew = userMapper.selectByPrimaryKey(userRole.getUserId());
+                                    if (role.getRoleCode().equals("ASSISTANT")) {
+                                        billPrice1.setOutMemberId(usernew.getCreateUserId());
+                                    } else {
+                                        billPrice1.setOutMemberId(usernew.getId());
                                     }
                                 }
                                 billPrice1.setCreateTime(new Date());
@@ -1952,18 +1944,14 @@ public class BillServiceimpl implements BillService {
                                     billPrice2.setPrice(ret2);
                                     billPrice2.setBillRankingStandard(Long.parseLong(rankend2[0]));
                                     billPrice2.setInMemberId(user.getId());
-                                    if(userRole!=null)
-                                    {
+                                    if (userRole != null) {
 
-                                        Role role=roleMapper.selectByPrimaryKey(userRole.getRoleId());
-                                        User usernew=userMapper.selectByPrimaryKey(userRole.getUserId());
-                                        if(role.getRoleCode().equals("ASSISTANT"))
-                                        {
-                                            billPrice.setOutMemberId(usernew.getCreateUserId());
-                                        }
-                                        else
-                                        {
-                                            billPrice.setOutMemberId(usernew.getId());
+                                        Role role = roleMapper.selectByPrimaryKey(userRole.getRoleId());
+                                        User usernew = userMapper.selectByPrimaryKey(userRole.getUserId());
+                                        if (role.getRoleCode().equals("ASSISTANT")) {
+                                            billPrice2.setOutMemberId(usernew.getCreateUserId());
+                                        } else {
+                                            billPrice2.setOutMemberId(usernew.getId());
                                         }
                                     }
                                     billPrice2.setCreateTime(new Date());
@@ -1979,18 +1967,14 @@ public class BillServiceimpl implements BillService {
                                         billPrice3.setPrice(ret3);
                                         billPrice3.setBillRankingStandard(Long.parseLong(rankend3[0]));
                                         billPrice3.setInMemberId(user.getId());
-                                        if(userRole!=null)
-                                        {
+                                        if (userRole != null) {
 
-                                            Role role=roleMapper.selectByPrimaryKey(userRole.getRoleId());
-                                            User usernew=userMapper.selectByPrimaryKey(userRole.getUserId());
-                                            if(role.getRoleCode().equals("ASSISTANT"))
-                                            {
-                                                billPrice.setOutMemberId(usernew.getCreateUserId());
-                                            }
-                                            else
-                                            {
-                                                billPrice.setOutMemberId(usernew.getId());
+                                            Role role = roleMapper.selectByPrimaryKey(userRole.getRoleId());
+                                            User usernew = userMapper.selectByPrimaryKey(userRole.getUserId());
+                                            if (role.getRoleCode().equals("ASSISTANT")) {
+                                                billPrice3.setOutMemberId(usernew.getCreateUserId());
+                                            } else {
+                                                billPrice3.setOutMemberId(usernew.getId());
                                             }
                                         }
                                         billPrice3.setCreateTime(new Date());
@@ -2204,7 +2188,7 @@ public class BillServiceimpl implements BillService {
                 params.put("userId", user.getCreateUserId());
                 params.put("billAscription", user.getId());
                 List<Bill> billList = billMapper.selectByInMemberId(params);
-                Long total = billMapper.getBillListCount(params);
+                Long total = billMapper.selectByInMemberIdCount(params);
                 for (Bill bill : billList
                         ) {
                     i++;
@@ -3284,56 +3268,41 @@ public class BillServiceimpl implements BillService {
         }
         //循环获取上个月每天的达标数
         Map<String, Object> dateMap = new HashMap<>();
-        if(loginUser.hasRole("ASSISTANT"))
-        {
-            User usernew=userMapper.selectByPrimaryKey(loginUser.getCreateUserId());
-            if(usernew!=null)
-            {
-                dateMap.put("userId",usernew.getCreateUserId());
+        if (loginUser.hasRole("ASSISTANT")) {
+            User usernew = userMapper.selectByPrimaryKey(loginUser.getCreateUserId());
+            if (usernew != null) {
+                dateMap.put("userId", usernew.getCreateUserId());
             }
 
+        } else {
+            dateMap.put("userId", loginUser.getCreateUserId());
         }
-        else
-        {
-            dateMap.put("userId",loginUser.getCreateUserId());
+        dateMap.put("dateArr", formatter1.format(preMonth));
+        if (loginUser.hasRole("ASSISTANT")) {
+            dateMap.put("outMemberId", loginUser.getCreateUserId());
+        } else {
+            dateMap.put("outMemberId", loginUser.getId());
         }
-        dateMap.put("dateArr",formatter1.format(preMonth));
-        if(loginUser.hasRole("ASSISTANT"))
-        {
-            dateMap.put("outMemberId",loginUser.getCreateUserId());
-        }
-        else
-        {
-            dateMap.put("outMemberId",loginUser.getId());
-        }
-        List<Map<String,Object>> lastSum=billCostMapper.selectByBillCostOfDaySumGroupBy(dateMap);
-        if(lastSum.size()>0)
-        {
-            int jianfaDate=monthPreCount-lastSum.size();
-            if(jianfaDate>0)
-            {
-                for(int i=0;i<jianfaDate;i++)
-                {
-                    seriesLastMonthSum+=0+",";
+        List<Map<String, Object>> lastSum = billCostMapper.selectByBillCostOfDaySumGroupBy(dateMap);
+        if (lastSum.size() > 0) {
+            int jianfaDate = monthPreCount - lastSum.size();
+            if (jianfaDate > 0) {
+                for (int i = 0; i < jianfaDate; i++) {
+                    seriesLastMonthSum += 0 + ",";
                 }
             }
-            for(int i=0;i<lastSum.size();i++)
-            {
-                String sqlLastSum=lastSum.get(i).get("costSum").toString();
+            for (int i = 0; i < lastSum.size(); i++) {
+                String sqlLastSum = lastSum.get(i).get("costSum").toString();
                 //比较消费最大数
-                if(MaxYbylastCost<=Double.parseDouble(sqlLastSum))
-                {
-                    MaxYbylastCost=Double.parseDouble(sqlLastSum);
+                if (MaxYbylastCost <= Double.parseDouble(sqlLastSum)) {
+                    MaxYbylastCost = Double.parseDouble(sqlLastSum);
                 }
 
-                seriesLastMonthSum+=sqlLastSum+",";
+                seriesLastMonthSum += sqlLastSum + ",";
             }
-        }
-        else
-        {
-            for(int i=0;i<monthPreCount;i++)
-            {
-                seriesLastMonthSum+=0+",";
+        } else {
+            for (int i = 0; i < monthPreCount; i++) {
+                seriesLastMonthSum += 0 + ",";
             }
         }
         //上个月的达标数
@@ -3363,56 +3332,42 @@ public class BillServiceimpl implements BillService {
         double MaxYbyNewCost = 0;
         String seriesNowMonthSum = "";
         int monthNowCount = calendar1.get(Calendar.DAY_OF_MONTH);
-        Map<String,Object> sqlMapNew=new HashMap<>();
-        if(loginUser.hasRole("ASSISTANT"))
-        {
-            User usernew=userMapper.selectByPrimaryKey(loginUser.getCreateUserId());
-            if(usernew!=null)
-            {
-                sqlMapNew.put("userId",usernew.getCreateUserId());
+        Map<String, Object> sqlMapNew = new HashMap<>();
+        if (loginUser.hasRole("ASSISTANT")) {
+            User usernew = userMapper.selectByPrimaryKey(loginUser.getCreateUserId());
+            if (usernew != null) {
+                sqlMapNew.put("userId", usernew.getCreateUserId());
             }
 
+        } else {
+            sqlMapNew.put("userId", loginUser.getCreateUserId());
         }
-        else
-        {
-            sqlMapNew.put("userId",loginUser.getCreateUserId());
+        sqlMapNew.put("dateArr", formatter1.format(new Date()));
+        if (loginUser.hasRole("ASSISTANT")) {
+            sqlMapNew.put("outMemberId", loginUser.getCreateUserId());
+        } else {
+            sqlMapNew.put("outMemberId", loginUser.getId());
         }
-        sqlMapNew.put("dateArr",formatter1.format(new Date()));
-        if(loginUser.hasRole("ASSISTANT"))
-        {
-            sqlMapNew.put("outMemberId",loginUser.getCreateUserId());
-        }
-        else
-        {
-            sqlMapNew.put("outMemberId",loginUser.getId());
-        }
-        List<Map<String,Object>> newSum=billCostMapper.selectByBillCostOfDaySumGroupBy(sqlMapNew);
-        if(newSum.size()<monthNowCount)
-        {
-            for(int i=0;i<monthNowCount-1;i++)
-            {
-                String sqlNewSum=newSum.get(i).get("costSum").toString();
+        List<Map<String, Object>> newSum = billCostMapper.selectByBillCostOfDaySumGroupBy(sqlMapNew);
+        if (newSum.size() < monthNowCount) {
+            for (int i = 0; i < monthNowCount - 1; i++) {
+                String sqlNewSum = newSum.get(i).get("costSum").toString();
                 //比较达标最大数
-                if(MaxYbyNewCost<=Double.parseDouble(sqlNewSum))
-                {
-                    MaxYbyNewCost=Double.parseDouble(sqlNewSum);
+                if (MaxYbyNewCost <= Double.parseDouble(sqlNewSum)) {
+                    MaxYbyNewCost = Double.parseDouble(sqlNewSum);
                 }
 
-                seriesNowMonthSum+=sqlNewSum+",";
+                seriesNowMonthSum += sqlNewSum + ",";
             }
-        }
-        else
-        {
-            for(int i=0;i<monthNowCount;i++)
-            {
-                String sqlNewSum=newSum.get(i).get("costSum").toString();
+        } else {
+            for (int i = 0; i < monthNowCount; i++) {
+                String sqlNewSum = newSum.get(i).get("costSum").toString();
                 //比较达标最大数
-                if(MaxYbyNewCost<=Double.parseDouble(sqlNewSum))
-                {
-                    MaxYbyNewCost=Double.parseDouble(sqlNewSum);
+                if (MaxYbyNewCost <= Double.parseDouble(sqlNewSum)) {
+                    MaxYbyNewCost = Double.parseDouble(sqlNewSum);
                 }
 
-                seriesNowMonthSum+=sqlNewSum+",";
+                seriesNowMonthSum += sqlNewSum + ",";
 
             }
         }
@@ -3497,23 +3452,20 @@ public class BillServiceimpl implements BillService {
         DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
         //获取上一个月
         Calendar calendar = Calendar.getInstance();
-        if(searchTime!=null)
-        {
+        if (searchTime != null) {
             try {
                 calendar.setTime(format1.parse(searchTime)); // 设置为当前时间
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        }
-        else
-        {
+        } else {
             calendar.setTime(new Date());
         }
         calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 1); // 设置为上一个月
         //上一个月的日期
-        Date preMonth=null;
+        Date preMonth = null;
         try {
-            preMonth = format1.parse( formatter.format(calendar.getTime()));
+            preMonth = format1.parse(formatter.format(calendar.getTime()));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -3556,7 +3508,7 @@ public class BillServiceimpl implements BillService {
                 paramsLast.put("OutUserId", userRole.getUserId());
                 Double sumDay = billCostMapper.selectByBillDayCost(params);
                 Double sumMonth = billCostMapper.selectByBillMonthCost(params);
-                Double sumLastMonth= billCostMapper.selectByBillMonthCost(paramsLast);
+                Double sumLastMonth = billCostMapper.selectByBillMonthCost(paramsLast);
                 FundItemSum fundItemSum = new FundItemSum();
                 fundItemSum.setId(i);
                 fundItemSum.setUserName(item.getUserName());
@@ -3924,25 +3876,20 @@ public class BillServiceimpl implements BillService {
      */
     @Override
     public int leaseBill(Map<String, String[]> params, LoginUser loginUser) {
-        String[] website=params.get("website");
-        String[][] arr=new String[params.size()-1][];
-        int a=0;
-        for (int i=0;i<params.size()-1;i++)
-        {
-            arr[i]=params.get("billarr["+i+"][]");
+        String[] website = params.get("website");
+        String[][] arr = new String[params.size() - 1][];
+        int a = 0;
+        for (int i = 0; i < params.size() - 1; i++) {
+            arr[i] = params.get("billarr[" + i + "][]");
         }
-        orderLease orderLease=orderLeaseMapper.selectReserveByWebsite(website[0]);
-        if(orderLease!=null)
-        {
-            if(orderLease.getOrderstate()!=1)
-            {
+        orderLease orderLease = orderLeaseMapper.selectReserveByWebsite(website[0]);
+        if (orderLease != null) {
+            if (orderLease.getOrderstate() != 1) {
                 return 2;//订单状态部位1，无法分配
             }
-            for(int i=0;i<params.size()-1;i++)
-            {
-                orderLease orderLeaseExsits=orderLeaseMapper.selectAllByOrderId(arr[i][0].toString());
-                if (orderLeaseExsits!=null)
-                {
+            for (int i = 0; i < params.size() - 1; i++) {
+                orderLease orderLeaseExsits = orderLeaseMapper.selectAllByOrderId(arr[i][0].toString());
+                if (orderLeaseExsits != null) {
 
                     orderLeaseExsits.setOrderid(Long.parseLong(arr[i][0].toString()));
                     orderLeaseExsits.setKeywordstate(Integer.parseInt(arr[i][1].toString()));
@@ -3951,11 +3898,9 @@ public class BillServiceimpl implements BillService {
                     orderLeaseExsits.setOrderstate(1);
                     orderLeaseExsits.setAllotid(loginUser.getId());
                     orderLeaseExsits.setCreatetime(new Date());
-                     a=  orderLeaseMapper.updateByPrimaryKey(orderLeaseExsits);
-                }
-                else
-                {
-                    orderLease orderLease1=new orderLease();
+                    a = orderLeaseMapper.updateByPrimaryKey(orderLeaseExsits);
+                } else {
+                    orderLease orderLease1 = new orderLease();
                     orderLease1.setOrderid(Long.parseLong(arr[i][0].toString()));
                     orderLease1.setKeywordstate(Integer.parseInt(arr[i][1].toString()));
                     orderLease1.setKeywords(arr[i][2].toString());
@@ -3963,15 +3908,13 @@ public class BillServiceimpl implements BillService {
                     orderLease1.setOrderstate(1);
                     orderLease1.setAllotid(loginUser.getId());
                     orderLease1.setCreatetime(new Date());
-                    a=orderLeaseMapper.insert(orderLease1);
+                    a = orderLeaseMapper.insert(orderLease1);
                 }
             }
-        }
-        else//不存在 直接录入
+        } else//不存在 直接录入
         {
-            for(int i=0;i<params.size()-1;i++)
-            {
-                orderLease orderLease1=new orderLease();
+            for (int i = 0; i < params.size() - 1; i++) {
+                orderLease orderLease1 = new orderLease();
                 orderLease1.setOrderid(Long.parseLong(arr[i][0].toString()));
                 orderLease1.setKeywordstate(Integer.parseInt(arr[i][1].toString()));
                 orderLease1.setKeywords(arr[i][2].toString());
@@ -3979,7 +3922,7 @@ public class BillServiceimpl implements BillService {
                 orderLease1.setOrderstate(1);
                 orderLease1.setAllotid(loginUser.getId());
                 orderLease1.setCreatetime(new Date());
-                a= orderLeaseMapper.insert(orderLease1);
+                a = orderLeaseMapper.insert(orderLease1);
             }
 
         }
@@ -3989,192 +3932,161 @@ public class BillServiceimpl implements BillService {
 
     /**
      * 操作员详情
+     *
      * @return
      */
     @Override
     public List<ZhuanYuanDetails> getZhuanyuanDetails() {
-        List<ZhuanYuanDetails> zhuanYuanDetailsList=new ArrayList<>();
-        SimpleDateFormat sm=new SimpleDateFormat("yyyy-MM-dd");
-        Map<String,Object> sqlMap=new HashMap<>();
-        sqlMap.put("date",sm.format(new Date()));
-        List<Map<String,Object>>  standardCount=billMapper.selectBybillStandardCount(sqlMap);//达标数
-        List<Map<String,Object>>  billCount=billMapper.selectBybillCount();//关键词数
-        List<Map<String,Object>>  selectByWebsite=billMapper.selectByWebsite();//订单数
-        List<Map<String,Object>>  selectByDayCost=billMapper.selectByDayCost(sqlMap);//实际扣费
-        List<Map<String,Object>>  selectByallCost=billMapper.selectByallCost();//全部扣费
-        List<Map<String,Object>>  selectByWeekCount=billMapper.selectByWeekCount(); //周订单
-        List<Map<String,Object>>  selectByMonthCount=billMapper.selectByMonthCount();//月接单
-        Pattern p = Pattern.compile("(?<=http://|\\.)[^.]*?\\.(com|cn|net|org|biz|info|cc|tv.*)",Pattern.CASE_INSENSITIVE);
+        List<ZhuanYuanDetails> zhuanYuanDetailsList = new ArrayList<>();
+        SimpleDateFormat sm = new SimpleDateFormat("yyyy-MM-dd");
+        Map<String, Object> sqlMap = new HashMap<>();
+        sqlMap.put("date", sm.format(new Date()));
+        List<Map<String, Object>> standardCount = billMapper.selectBybillStandardCount(sqlMap);//达标数
+        List<Map<String, Object>> billCount = billMapper.selectBybillCount();//关键词数
+        List<Map<String, Object>> selectByWebsite = billMapper.selectByWebsite();//订单数
+        List<Map<String, Object>> selectByDayCost = billMapper.selectByDayCost(sqlMap);//实际扣费
+        List<Map<String, Object>> selectByallCost = billMapper.selectByallCost();//全部扣费
+        List<Map<String, Object>> selectByWeekCount = billMapper.selectByWeekCount(); //周订单
+        List<Map<String, Object>> selectByMonthCount = billMapper.selectByMonthCount();//月接单
+        Pattern p = Pattern.compile("(?<=http://|\\.)[^.]*?\\.(com|cn|net|org|biz|info|cc|tv.*)", Pattern.CASE_INSENSITIVE);
 
-        for(int i=0;i<billCount.size();i++)
-        {
-            if(billCount.get(i).get("user_name")!=null)
-            {
-                ZhuanYuanDetails zhuanYuanDetails=new ZhuanYuanDetails();
+        for (int i = 0; i < billCount.size(); i++) {
+            if (billCount.get(i).get("user_name") != null&&(!billCount.get(i).get("user_name").equals("zhaosen"))) {
+                ZhuanYuanDetails zhuanYuanDetails = new ZhuanYuanDetails();
                 zhuanYuanDetails.setUserName(billCount.get(i).get("user_name").toString());
-                if(!CollectionUtils.isEmpty(standardCount))
-                {
-                    for(int j=0;j<standardCount.size();j++)
-                    {
-                        if(standardCount.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString())&&billCount.get(j).get("user_name").equals(billCount.get(i).get("user_name").toString()))
-                        {
-                            Double rate=Double.parseDouble(standardCount.get(j).get("num").toString())/Double.parseDouble(billCount.get(i).get("num").toString());
+                if (!CollectionUtils.isEmpty(standardCount)) {
+                    for (int j = 0; j < standardCount.size(); j++) {
+                        if (standardCount.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString()) && billCount.get(j).get("user_name").equals(billCount.get(i).get("user_name").toString())) {
+                            Double rate = Double.parseDouble(standardCount.get(j).get("num").toString()) / Double.parseDouble(billCount.get(i).get("num").toString());
                             zhuanYuanDetails.setBillStandardRate(rate);
                             break;
-                        }
-                        else
-                        {
+                        } else {
                             zhuanYuanDetails.setBillStandardRate(0);
                         }
                     }
-                }
-                else
-                {
+                } else {
                     zhuanYuanDetails.setBillStandardRate(0);
                 }
-             if(billCount.get(i).get("num")!=null)
-             {
-                 zhuanYuanDetails.setKeywordsCount(Integer.parseInt(billCount.get(i).get("num").toString()));
-             }
-             else
-             {
-                 zhuanYuanDetails.setKeywordsCount(0);
-             }
+                if (billCount.get(i).get("num") != null) {
+                    zhuanYuanDetails.setKeywordsCount(Integer.parseInt(billCount.get(i).get("num").toString()));
+                } else {
+                    zhuanYuanDetails.setKeywordsCount(0);
+                }
 
-                if(!CollectionUtils.isEmpty(selectByWebsite))
-                {
-                    HashSet hashSet=new HashSet();
-
-                    for(int j=0;j<selectByWebsite.size();j++)
-                    {
-                        if(selectByWebsite.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString()))
-                        {
+                if (!CollectionUtils.isEmpty(selectByWebsite)) {
+                    HashSet hashSet = new HashSet();
+                    int sum = 0;
+                    Map<String, Object> Maps = new HashMap<>();
+                    for (int j = 0; j < selectByWebsite.size(); j++) {
+                        if (selectByWebsite.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString())) {
 
                             Matcher matcher = p.matcher(selectByWebsite.get(j).get("website").toString());
-                            if(matcher.find())
-                            {
+                            if (matcher.find()) {
                                 hashSet.add(matcher.group());
-                            }
-                            else
-                            {
+
+                            } else {
                                 hashSet.add(selectByWebsite.get(j).get("website").toString());
                             }
                         }
                     }
-                    if(hashSet.size()>0)
-                    {
+
+
+                    if (hashSet.size() > 0) {
                         zhuanYuanDetails.setBillCount(hashSet.size());
-                    }
-                    else
-                    {
+                        Iterator iterator = hashSet.iterator();
+                        List<String> arr = new ArrayList<>();
+                        while (iterator.hasNext()) {
+                            arr.add(iterator.next().toString());
+                        }
+                        List<Map<String, Object>> map = billMapper.selectByWebsiteNoCost(arr);
+                        HashSet hashSetNew = new HashSet();
+                        for (int j = 0; j < map.size(); j++) {
+                            if (map.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString())) {
+
+                                Matcher matcher = p.matcher(map.get(j).get("website").toString());
+                                if (matcher.find()) {
+                                    hashSetNew.add(matcher.group());
+
+                                } else {
+                                    hashSetNew.add(map.get(j).get("website").toString());
+                                }
+                            }
+                        }
+                        zhuanYuanDetails.setCountNoCostByWebsite(hashSet.size()-hashSetNew.size());
+
+                    } else {
                         zhuanYuanDetails.setBillCount(0);
+                        zhuanYuanDetails.setCountNoCostByWebsite(0);
                     }
-                }
-                else
-                {
+                } else {
                     zhuanYuanDetails.setBillCount(0);
+                    zhuanYuanDetails.setCountNoCostByWebsite(0);
                 }
 
-                if(!CollectionUtils.isEmpty(selectByDayCost))
-                {
-                    for(int j=0;j<selectByDayCost.size();j++)
-                    {
-                        if(selectByDayCost.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString()))
-                        {
+                if (!CollectionUtils.isEmpty(selectByDayCost)) {
+                    for (int j = 0; j < selectByDayCost.size(); j++) {
+                        if (selectByDayCost.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString())) {
                             zhuanYuanDetails.setCost(Double.parseDouble(selectByDayCost.get(j).get("num").toString()));
                             break;
-                        }
-                        else
-                        {
+                        } else {
                             zhuanYuanDetails.setCost(0);
                         }
                     }
-                }
-                else
-                {
+                } else {
                     zhuanYuanDetails.setAllCost(0);
                 }
 
-                if(!CollectionUtils.isEmpty(selectByallCost))
-                {
-                    for(int j=0;j<selectByallCost.size();j++)
-                    {
-                        if(selectByallCost.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString()))
-                        {
+                if (!CollectionUtils.isEmpty(selectByallCost)) {
+                    for (int j = 0; j < selectByallCost.size(); j++) {
+                        if (selectByallCost.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString())) {
                             zhuanYuanDetails.setAllCost(Double.parseDouble(selectByallCost.get(j).get("num").toString()));
                             break;
-                        }
-                        else
-                        {
+                        } else {
                             zhuanYuanDetails.setAllCost(0);
                         }
                     }
-                }
-                else
-                {
+                } else {
                     zhuanYuanDetails.setAllCost(0);
                 }
-                if(!CollectionUtils.isEmpty(selectByWeekCount))
-                {
-                    HashSet hashSet1=new HashSet();
-                    for(int j=0;j<selectByWeekCount.size();j++)
-                    {
-                        if(selectByWeekCount.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString()))
-                        {
+                if (!CollectionUtils.isEmpty(selectByWeekCount)) {
+                    HashSet hashSet1 = new HashSet();
+                    for (int j = 0; j < selectByWeekCount.size(); j++) {
+                        if (selectByWeekCount.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString())) {
                             Matcher matcher1 = p.matcher(selectByWeekCount.get(j).get("website").toString());
-                            if(matcher1.find())
-                            {
+                            if (matcher1.find()) {
                                 hashSet1.add(matcher1.group());
-                            }
-                            else
-                            {
+                            } else {
                                 hashSet1.add(selectByWeekCount.get(j).get("website").toString());
                             }
                         }
                     }
-                    if(hashSet1.size()>0)
-                    {
+                    if (hashSet1.size() > 0) {
                         zhuanYuanDetails.setWeekCount(hashSet1.size());
-                    }
-                    else
-                    {
+                    } else {
                         zhuanYuanDetails.setWeekCount(0);
                     }
-                }
-                else
-                {
+                } else {
                     zhuanYuanDetails.setWeekCount(0);
                 }
-                if(!CollectionUtils.isEmpty(selectByMonthCount))
-                {
-                    HashSet hashSet2=new HashSet();
-                    for(int j=0;j<selectByMonthCount.size();j++)
-                    {
-                        if(selectByMonthCount.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString()))
-                        {
+                if (!CollectionUtils.isEmpty(selectByMonthCount)) {
+                    HashSet hashSet2 = new HashSet();
+                    for (int j = 0; j < selectByMonthCount.size(); j++) {
+                        if (selectByMonthCount.get(j).get("user_name").toString().equals(billCount.get(i).get("user_name").toString())) {
                             Matcher matcher2 = p.matcher(selectByMonthCount.get(j).get("website").toString());
-                            if(matcher2.find())
-                            {
+                            if (matcher2.find()) {
                                 hashSet2.add(matcher2.group());
-                            }
-                            else
-                            {
+                            } else {
                                 hashSet2.add(selectByMonthCount.get(j).get("website").toString());
                             }
                         }
                     }
-                    if(hashSet2.size()>0)
-                    {
+                    if (hashSet2.size() > 0) {
                         zhuanYuanDetails.setMonthCount(hashSet2.size());
-                    }
-                    else
-                    {
+                    } else {
                         zhuanYuanDetails.setMonthCount(0);
                     }
 
-                }
-                else
-                {
+                } else {
                     zhuanYuanDetails.setMonthCount(0);
                 }
                 zhuanYuanDetailsList.add(zhuanYuanDetails);
@@ -4352,55 +4264,31 @@ public class BillServiceimpl implements BillService {
     }
 
     public String getYAxisSum(double max) {
-        String yAxis="";
-        if(max<=50)
-        {
-            yAxis="0,5,10,15,20,25,30,35,40,45";
-        }
-        else if(max<=100&&max>50)
-        {
+        String yAxis = "";
+        if (max <= 50) {
+            yAxis = "0,5,10,15,20,25,30,35,40,45";
+        } else if (max <= 100 && max > 50) {
 
-            yAxis="50,55,60,65,70,75,80,85,90,95";
-        }
-        else if(max>100&&max<=200)
-        {
+            yAxis = "50,55,60,65,70,75,80,85,90,95";
+        } else if (max > 100 && max <= 200) {
 
-            yAxis="100,110,120,130,140,150,160,170,180,190";
-        }
-        else if(max<=300&&max>200)
-        {
-            yAxis="200,210,220,230,240,250,260,270,280,290";
-        }
-        else if(max<=400&&max>300)
-        {
-            yAxis="300,310,320,330,340,350,360,370,380,390";
-        }
-        else if(max<=500&&max>400)
-        {
-            yAxis="400,410,420,430,440,450,460,470,480,490";
-        }
-
-        else if(max<=5000&&max>500)
-        {
-            yAxis="500,1000,1500,2000,2500,3000,3500,4000,4500,5000";
-        }
-
-        else if(max<=10000&&max>5000)
-        {
-            yAxis="5500,6000,6500,7000,7500,8000,8500,9000,9500,10000";
-        }
-        else if(max<=15000&&max>10000)
-        {
-            yAxis="10500,11000,11500,12000,12500,13000,13500,14000,14500,15000";
-        }
-
-        else if(max<=20000&&max>15000)
-        {
-            yAxis="15500,16000,16500,17000,17500,18000,18500,19000,19500,20000";
-        }
-        else if(max<=25000&&max>20000)
-        {
-            yAxis="20500,21000,21500,22000,22500,23000,23500,24000,24500,25000";
+            yAxis = "100,110,120,130,140,150,160,170,180,190";
+        } else if (max <= 300 && max > 200) {
+            yAxis = "200,210,220,230,240,250,260,270,280,290";
+        } else if (max <= 400 && max > 300) {
+            yAxis = "300,310,320,330,340,350,360,370,380,390";
+        } else if (max <= 500 && max > 400) {
+            yAxis = "400,410,420,430,440,450,460,470,480,490";
+        } else if (max <= 5000 && max > 500) {
+            yAxis = "500,1000,1500,2000,2500,3000,3500,4000,4500,5000";
+        } else if (max <= 10000 && max > 5000) {
+            yAxis = "5500,6000,6500,7000,7500,8000,8500,9000,9500,10000";
+        } else if (max <= 15000 && max > 10000) {
+            yAxis = "10500,11000,11500,12000,12500,13000,13500,14000,14500,15000";
+        } else if (max <= 20000 && max > 15000) {
+            yAxis = "15500,16000,16500,17000,17500,18000,18500,19000,19500,20000";
+        } else if (max <= 25000 && max > 20000) {
+            yAxis = "20500,21000,21500,22000,22500,23000,23500,24000,24500,25000";
         }
         return yAxis;
     }

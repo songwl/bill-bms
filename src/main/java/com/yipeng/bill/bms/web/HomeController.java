@@ -16,6 +16,7 @@ import com.yipeng.bill.bms.domain.noticepublish;
 import com.yipeng.bill.bms.domain.offerset;
 import com.yipeng.bill.bms.service.HomeService;
 import com.yipeng.bill.bms.service.MessageService;
+import com.yipeng.bill.bms.service.RankingUpdateService;
 import com.yipeng.bill.bms.service.RemoteService;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,11 +46,15 @@ public class HomeController extends BaseController {
     private orderLeaseMapper orderLeaseMapper;
     @Autowired
     private leaseOverdueTbMapper leaseOverdueTbMapper;
+
+    @Autowired
+    private RankingUpdateService rankingUpdateService;
     //@Autowired
     //private AuthorityService authorityService;
 
     @RequestMapping(value = "/index")
     public String index(ModelMap model) throws Exception {
+
         Map<String, Object> bms = new HashMap<>();
         LoginUser user = this.getCurrentAccount();
         Long UnReadNum = sendBoxMapper.selectUnreadCount(user.getId().toString());//反馈未读数量
@@ -76,8 +81,7 @@ public class HomeController extends BaseController {
             } else {
                 bms.put("leasepowercustomer", 0);
             }
-            /*int num = orderLeaseMapper.selectHaveCustomerIdCount(user.getId().toString());
-            bms.put("HaveLease", num);*/
+
         }
         bms.put("UnReadNum", UnReadNum);
         bms.put("SendUnReadNum", SendUnReadNum);

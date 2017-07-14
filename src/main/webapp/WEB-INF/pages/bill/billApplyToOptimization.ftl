@@ -16,11 +16,14 @@
         <div id="pass1">
             <span>&nbsp;<i class="fa fa-play"></i>&nbsp;优化待通过</span>
         </div>
+        <div class="search">
+            <span>&nbsp;<i class="fa fa-search"></i>&nbsp;查询</span>
+        </div>
     </div>
     <div class="cls">
     </div>
 </div>
-<div class="Navs2" style="width: 100%; height: 100px; line-height: 50px;border-left: 1px solid #d9d9d9;background: #eee;z-index: 99;display: none;">
+<div class="Navs2" style="width: 100%; height: 50px; line-height: 50px;border-left: 1px solid #d9d9d9;background: #eee;z-index: 99;display: none;">
     <div class="nav_R2 right col-md-11" >
         <div>
             网址:
@@ -36,25 +39,7 @@
         <select style="height: 35px;border: 1px solid #aaaaaa;" id="searchName">
             <@dict.showOptions dictKey="search" dictType="DICT" haveBlank="Y" />
         </select>
-
-        <span style="font-size:13px;text-align:center;cursor:pointer;font-weight:bold;margin-left: 10px;">
-        客户:
-        </span>
-        <select style="height: 35px;border: 1px solid #aaaaaa;" id="searchUserName">
-            <option>--请选择--</option>
-            <#list userList as user>
-                <option value="${user.id}">${user.userName}</option>
-            </#list>
-        </select>
-        <span style="font-size:13px;text-align:center;cursor:pointer;font-weight:bold;margin-left: 10px;">
-            今日达标:
-        </span>
-        <select style="height: 35px;border: 1px solid #aaaaaa;" id="searchStandard">
-            <option>--请选择--</option>
-            <option value="1">是</option>
-            <option value="0">否</option>
-        </select>
-
+        <span id="searchButton">查询</span>
     </div>
 
     <div class="cls">

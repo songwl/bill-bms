@@ -1,7 +1,9 @@
 /**
  * Created by 鱼在我这里。 on 2017/5/10.
  */
-
+var website = null;
+var keywords = null;
+var searchName = null;
 $(document).ready(function () {
 
 //切换订单页面
@@ -62,86 +64,6 @@ $(document).ready(function () {
         else
         {
             searchName=null;
-        }
-        if($("#searchUserName").val()!="--请选择--")//客户名称
-        {
-            searchUserName=  $("#searchUserName").val();
-        }
-        else
-        {
-            searchUserName=null;
-        }
-        if($("#searchStandard option:selected").val()!="--请选择--"&&$("#searchStandard option:selected").val()!="0")//是否达标
-        {
-            searchStandard=  $("#searchStandard").val();
-        }
-        else
-        {
-            searchStandard=null;
-        }
-        if($("#firstRanking1").val()!="")//初排1
-        {
-            firstRanking1=$.trim($("#firstRanking1").val());
-        }
-        else
-        {
-            firstRanking1=null;
-        }
-        if($("#firstRanking2").val()!="")//初排2
-        {
-            firstRanking2=$.trim($("#firstRanking2").val());
-        }
-        else
-        {
-            firstRanking2=null;
-        }
-        if($("#newRanking1").val()!="")//新排1
-        {
-            newRanking1=$.trim($("#newRanking1").val());
-        }
-        else
-        {
-            newRanking1=null;
-        }
-        if($("#newRanking2").val()!="")//新排2
-        {
-            newRanking2=$.trim($("#newRanking2").val());
-        }
-        else
-        {
-            newRanking2=null;
-        }
-        if($("#newchange1").val()!="")//新变1
-        {
-            newchange1=$.trim($("#newchange1").val());
-        }
-        else
-        {
-            newchange1=null;
-        }
-        if($("#newchange2").val()!="")//新变2
-        {
-            newchange2=$.trim($("#newchange2").val());
-        }
-        else
-        {
-            newchange2=null;
-        }
-        if($("#addTime1").val()!="")//新排2
-        {
-            addTime1=$.trim($("#addTime1").val());
-        }
-        else
-        {
-            addTime1=null;
-        }
-        if($("#addTime2").val()!="")//新排2
-        {
-            addTime2=$.trim($("#addTime2").val());
-        }
-        else
-        {
-            addTime2=null;
         }
         $('#myTable').bootstrapTable('refresh');
     });
@@ -385,14 +307,13 @@ var TableInit = function () {
             offset: params.pageNumber,  //页码
             sortOrder: params.sortOrder,
             sortName: params.sortName,
-
+            website: website,
+            keywords: keywords,
+            searchName: searchName,
 
         };
         return temp;
     }
-
-
-
     return oTableInit;
 };
 
@@ -402,7 +323,6 @@ var TableInit = function () {
 
 $(function () {
     $("#queren").click(function () {
-
         $('#myTable').bootstrapTable('refresh');
     });
 

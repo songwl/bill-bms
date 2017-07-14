@@ -239,7 +239,6 @@
       <if test="billType != null">
         bill_type = #{billType,jdbcType=INTEGER},
       </if>
-
       <if test="billAscription != null">
         bill_ascription= #{billAscription,jdbcType=BIGINT},
       </if>
@@ -2700,7 +2699,7 @@
     SELECT keywords FROM keywords_price) LIMIT 100
   </select>
 
-  <update id="updateByWebAppId" >
+  <update id="updateByWebAppId"  parameterType="com.yipeng.bill.bms.domain.Bill">
   UPDATE t_bill
   SET
   first_ranking=#{firstRanking,jdbcType=INTEGER}, new_ranking= #{newRanking,jdbcType=INTEGER}
@@ -2709,13 +2708,13 @@
   </update>
 
   <select id="selectBybillStandardCount"  resultType="java.util.HashMap">
-    select COUNT(a.id) as num,b.user_name from t_bill as a, t_user as b where a.bill_ascription=b.id and  a.id IN
+    select COUNT(a.id) as num,b.user_name from t_bill as a, t_user as b where a.bill_ascription=b.id and  a.id and a.state=2 IN
     (select t_bill_id  from t_bill_cost where cost_date=#{date,jdbcType=VARCHAR} )
     GROUP BY bill_ascription
   </select>
 
   <select id="selectBybillCount"  resultType="java.util.HashMap">
-    select COUNT(a.id) as num,b.user_name from t_bill as a, t_user as b where a.bill_ascription=b.id
+    select COUNT(a.id) as num,b.user_name from t_bill as a, t_user as b where a.bill_ascription=b.id and a.state=2
     GROUP BY bill_ascription
   </select>
 
@@ -2737,7 +2736,7 @@
 
   <select id="selectByallCost"  resultType="java.util.HashMap">
     SELECT SUM(b.price) as num,c.user_name FROM  t_bill as a,t_bill_price as b, t_user as c
-    where a.id=b.bill_id and a.bill_ascription=c.id
+    where a.id=b.bill_id and a.bill_ascription=c.id and a.state=2
     and b.bill_ranking_standard &lt;= 10
     GROUP BY a.bill_ascription
   </select>
@@ -2746,20 +2745,32 @@
     select a.website,b.user_name from
     t_bill as a, t_user as b where a.bill_ascription=b.id
     AND date_format(a.create_time,'%Y-%m')=date_format(now(),'%Y-%m')
-    GROUP BY bill_ascription
+    GROUP BY a.website
   </select>
 
   <select id="selectByWeekCount"  resultType="java.util.HashMap">
    select a.website,b.user_name from
     t_bill as a, t_user as b where a.bill_ascription=b.id
     AND YEARWEEK(date_format(a.create_time,'%Y-%m-%d')) = YEARWEEK(now())
-    GROUP BY bill_ascription
+    GROUP BY a.website
   </select>
 
   <select id="selectByAdminWebsite"  resultType="java.util.HashMap">
    select DISTINCT(website),bill_ascription as caozuoyuan,b.out_member_id as kehu
     from t_bill as a,t_bill_price as b
-    where a.id=b.bill_id  and state=2
-    GROUP BY website
+    where a.id=b.bill_id  and a.state=2
+    GROUP BY a.website
+  </select>
+
+  <select id="selectByWebsiteNoCost"  resultType="java.util.HashMap">
+  select a.website,b.user_name from t_bill as a,t_user as b where a.bill_ascription=b.id and a.id  in
+  (
+    SELECT t_bill_id
+   from  t_bill_cost )
+    and a.state=2 and (
+    <foreach collection="list" item="item" index="index" separator="OR">
+      website LIKE CONCAT('%',#{item},'%')
+    </foreach>
+    )
   </select>
 </mapper>

@@ -1,3 +1,48 @@
+
+var website = null;
+var keywords = null;
+var searchName = null;
+//显示搜索内容
+$(".search").click(function () {
+    if($(".Navs2").css("display")=="block"){
+        $(".Navs2").slideUp();
+
+    }
+    else
+    {
+        $(".Navs2").slideDown();
+
+    }
+})
+//搜索按钮
+$("#searchButton").click(function () {
+
+    if($("#website").val()!="")//网址
+    {
+        website=$.trim($("#website").val());
+    }
+    else
+    {
+        website=null
+    }
+    if($("#keywords").val()!="")//关键词
+    {
+        keywords=$.trim($("#keywords").val())
+    }
+    else
+    {
+        keywords=null;
+    }
+    if($("#searchName option:selected").text()!="--请选择--")//搜索引擎
+    {
+        searchName=$("#searchName option:selected").text();
+    }
+    else
+    {
+        searchName=null;
+    }
+    $('#myTable').bootstrapTable('refresh');
+});
 //切换订单页面
 $("#pass").click(function () {
     $('.page-content').empty().load(CTX+'/order/billApplyStopPass');
@@ -248,7 +293,9 @@ var TableInit = function () {
             offset: params.pageNumber,  //页码
             sortOrder: params.sortOrder,
             sortName: params.sortName,
-
+            website: website,
+            keywords: keywords,
+            searchName: searchName,
 
         };
         return temp;

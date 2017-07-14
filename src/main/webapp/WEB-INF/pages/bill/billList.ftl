@@ -537,36 +537,8 @@
         </div>
     </div>
 </div>
-<#-- <#if  bmsModel.user.hasRole("SUPER_ADMIN")||bmsModel.user.hasRole("COMMISSIONER")>
-<form id= "uploadForm" enctype="multipart/form-data">
-   <p >上传文件： <input type="file" name="file"/></p>
-   <input type="button" value="上传" onclick="doUpload()" />
-</form>
-<script>
-   function doUpload() {
-       var formData = new FormData($( "#uploadForm" )[0]);
-       $.ajax({
-           url:CTX+ '/order/uploadPrice' ,
-           type: 'POST',
-           data: formData,
-           async: false,
-           cache: false,
-           contentType: false,
-           processData: false,
-           beforeSend: function () {
-               $(".pload").show();
 
-               $(".modal-backdrop").show();
-           },
-           success: function (result) {
-               $(".pload").hide();
-               $(".modal-backdrop").hide();
-               alert(result.message);
 
-           }
-       });
-   }
-</script>
-</#if>-->
+
 <!--详情end-->
 </@base.html>

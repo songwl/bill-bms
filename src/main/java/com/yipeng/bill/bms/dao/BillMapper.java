@@ -1,6 +1,7 @@
 package com.yipeng.bill.bms.dao;
 
 import com.yipeng.bill.bms.domain.Bill;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -124,7 +125,7 @@ public interface BillMapper {
     Long  selectDeclineBillTableCount(Map<String, Object> params);
 
     //更新排名
-    int updateByWebAppId(Map<String, Object> params);
+    int updateByWebAppId(Bill record);
 
     List<Map<String,Object>> selectBybillStandardCount(Map<String, Object> params);
 
@@ -137,4 +138,6 @@ public interface BillMapper {
 
     List<Map<String,Object>> selectByWeekCount();
     List<Map<String,Object>> selectByMonthCount();
+
+    List<Map<String,Object>> selectByWebsiteNoCost(List<String> arr);
 }

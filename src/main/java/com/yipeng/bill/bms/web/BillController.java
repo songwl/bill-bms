@@ -1308,11 +1308,30 @@ public class BillController extends BaseController {
      */
     @RequestMapping(value = "/billApplyToOptimizationTable")
     @ResponseBody
-    public Map<String, Object> billApplyToOptimizationTable(int limit, int offset, String sortOrder, String sortName) {
+    public Map<String, Object> billApplyToOptimizationTable(int limit, int offset, String sortOrder, String sortName, String website, String keywords,
+                                                            String searchName) {
         offset = (offset - 1) * limit;
         Map<String, Object> params = this.getSearchRequest(); //查询参数
         LoginUser user = this.getCurrentAccount();
-
+        if (!keywords.isEmpty()) {
+            try {
+                keywords = new String(keywords.getBytes("ISO-8859-1"), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            params.put("keywords", keywords);
+        }
+        if (!website.isEmpty()) {
+            params.put("website", website);
+        }
+        if (!searchName.isEmpty()) {
+            try {
+                searchName = new String(searchName.getBytes("ISO-8859-1"), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            params.put("searchName", searchName);
+        }
         params.put("limit", limit);
         params.put("offset", offset);
         params.put("sortOrder",sortOrder);
@@ -1399,11 +1418,31 @@ public class BillController extends BaseController {
      */
     @RequestMapping(value = "/billApplyStopPassTable")
     @ResponseBody
-    public Map<String, Object> billApplyStopPassTable(int limit, int offset, String sortOrder, String sortName) {
+    public Map<String, Object> billApplyStopPassTable(int limit, int offset, String sortOrder, String sortName, String website, String keywords,
+                                                      String searchName) {
         offset = (offset - 1) * limit;
         Map<String, Object> params = this.getSearchRequest(); //查询参数
         LoginUser user = this.getCurrentAccount();
 
+        if (!keywords.isEmpty()) {
+            try {
+                keywords = new String(keywords.getBytes("ISO-8859-1"), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            params.put("keywords", keywords);
+        }
+        if (!website.isEmpty()) {
+            params.put("website", website);
+        }
+        if (!searchName.isEmpty()) {
+            try {
+                searchName = new String(searchName.getBytes("ISO-8859-1"), "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            params.put("searchName", searchName);
+        }
         params.put("limit", limit);
         params.put("offset", offset);
         params.put("sortOrder",sortOrder);

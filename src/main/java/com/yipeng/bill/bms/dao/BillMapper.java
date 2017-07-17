@@ -170,6 +170,7 @@ public interface BillMapper {
     List<Map<String, Object>> selectByWebsiteNoCost(List<String> arr);
 
     List<Long> selectByLeasePower(Map<String, Object> map);
+
     List<Long> selectAllByLeasePower();
 
     int selectByLeasePowerCount();
@@ -177,5 +178,6 @@ public interface BillMapper {
     List<Integer> selectKeywordNumByAscription(Map<String, Object> map);
 
     List<Map<String, Object>> selectKeywordNumByAscriptionRanking(Map<String, Object> map);
+
     int selectAllKeywordNumByAscription(Map<String, Object> map);
 }

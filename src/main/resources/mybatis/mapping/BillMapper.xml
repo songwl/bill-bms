@@ -2709,7 +2709,7 @@
   </update>
 
     <select id="selectBybillStandardCount" resultType="java.util.HashMap">
-    select COUNT(a.id) as num,b.user_name from t_bill as a, t_user as b where a.bill_ascription=b.id and  a.id and a.state=2 IN
+    select COUNT(a.id) as num,b.user_name from t_bill as a, t_user as b where a.bill_ascription=b.id and a.state=2  and a.id  IN
     (select t_bill_id  from t_bill_cost where cost_date=#{date,jdbcType=VARCHAR} )
     GROUP BY bill_ascription
   </select>

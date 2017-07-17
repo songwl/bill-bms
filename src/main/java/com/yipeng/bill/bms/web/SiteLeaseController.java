@@ -132,7 +132,7 @@ public class SiteLeaseController extends BaseController {
      */
     @RequestMapping(value = "/AdminGetMission", method = RequestMethod.GET)
     @ResponseBody
-    public Map<String, Object> AdminGetMission(int limit, int offset) {
+    public Map<String, Object> AdminGetMission(int limit, int offset,String website,String trade) {
         LoginUser loginUser = this.getCurrentAccount();
         if (!loginUser.hasRole("SUPER_ADMIN")) {
             return null;
@@ -140,6 +140,8 @@ public class SiteLeaseController extends BaseController {
         Map<String, Object> params = this.getSearchRequest(); //查询参数
         params.put("limit", limit);
         params.put("offset", offset);
+        params.put("website", website);
+        params.put("trade", trade);
         Map<String, Object> modelMap = siteLeaseService.AdminGetMission(params, loginUser);
         return modelMap;
     }

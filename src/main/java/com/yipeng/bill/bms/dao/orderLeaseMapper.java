@@ -66,4 +66,3 @@ public interface orderLeaseMapper {
 
     int selectHaveCustomerIdCount(String customerId);
 }
-

@@ -24,6 +24,23 @@
     <div class="cls">
     </div>
 </div>
+<div class="Navs2" style="">
+    <div class="nav_R2 right col-md-11">
+        <div>
+            网址：
+        </div>
+        <input id="website" name="website" class="form-control" value="" style="width: 150px;" type="text">
+        <div>
+            行业：
+        </div>
+        <input id="trade" name="trade" class="form-control" value="" style="width: 150px;" type="text">
+
+        <span id="searchButton">查询</span>
+
+    </div>
+    <div class="cls">
+    </div>
+</div>
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-primary" id="list-panel" style="border-color: #eeeeee;">
@@ -60,12 +77,14 @@
     </div>
 </div>
 <style type="text/css">
-    td{
+    td {
         text-align: center;
     }
 </style>
 <script type="text/javascript">
     var index1;
+    var website = null;
+    var trade = null;
     $(function () {
         MissionHall.init();
     });
@@ -77,6 +96,8 @@
             //划分按钮
             $("#divide").on("click", MissionHall.divideClick);
             $("#confirm").on("click", MissionHall.confirmDistributor);
+            $(".search").on("click", MissionHall.ShowSearch);
+            $("#searchButton").on("click", MissionHall.ConfirmSearch);
         },
         TableInit: function () {
             var oTableInit = new Object();
@@ -119,6 +140,15 @@
                             align: 'center',
                             valign: 'middle',
                             visible: false
+                        },
+                        {
+                            field: 'trade',
+                            align: 'center',
+                            valign: 'middle',
+                            title: '行业',
+                            formatter: function (value, row, index) {
+                                return value;
+                            }
                         },
                         {
                             field: 'website',
@@ -224,7 +254,9 @@
             oTableInit.queryParams = function (params) {
                 var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
                     limit: params.limit,   //页面大小
-                    offset: params.offset  //页码
+                    offset: params.offset,  //页码
+                    website: website,
+                    trade: trade
                 };
                 return temp;
             };
@@ -318,6 +350,31 @@
                 }
                 layer.msg("失败");
             });
+        },
+        ShowSearch: function () {
+            if ($(".Navs2").css("display") == "block") {
+                $(".Navs2").slideUp();
+            }
+            else {
+                $(".Navs2").slideDown();
+            }
+        },
+        ConfirmSearch: function () {
+            if ($("#website").val() != "")//网址
+            {
+                website = $.trim($("#website").val());
+            }
+            else {
+                website = null
+            }
+            if ($("#keywords").val() != "")//关键词
+            {
+                keywords = $.trim($("#keywords").val())
+            }
+            else {
+                keywords = null;
+            }
+            $('#myTable').bootstrapTable('refresh');
         }
     };
 </script>

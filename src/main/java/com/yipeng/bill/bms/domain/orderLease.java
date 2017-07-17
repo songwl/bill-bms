@@ -8,6 +8,8 @@ public class orderLease implements Serializable {
 
     private Long orderid;
 
+    private String trade;
+
     private Long allotid;
 
     private Long receiveid;
@@ -46,6 +48,14 @@ public class orderLease implements Serializable {
 
     public void setOrderid(Long orderid) {
         this.orderid = orderid;
+    }
+
+    public String getTrade() {
+        return trade;
+    }
+
+    public void setTrade(String trade) {
+        this.trade = trade == null ? null : trade.trim();
     }
 
     public Long getAllotid() {

@@ -19,19 +19,10 @@ public class BillCallCostServiceImpl implements BillCallCostService {
 
     @Autowired
     private BillPriceMapper billPriceMapper;
-
     @Autowired
     private BillCostMapper billCostMapper;
     @Autowired
-    private FundItemMapper fundItemMapper;
-
-    @Autowired
     private BillMapper billMapper;
-
-    @Autowired
-    private FundAccountMapper fundAccountMapper;
-
-
     @Override
     public int updateCallCost(Bill bill) {
 

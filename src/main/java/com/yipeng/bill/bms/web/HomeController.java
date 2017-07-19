@@ -47,12 +47,13 @@ public class HomeController extends BaseController {
 
     @Autowired
     private RankingUpdateService rankingUpdateService;
-    //@Autowired
-    //private AuthorityService authorityService;
+     @Autowired
+    private ybyNotifyController ybyNotifyController;
 
     @RequestMapping(value = "/index")
     public String index(ModelMap model) throws Exception {
 
+       // ybyNotifyController.getYbyNotify("NotifySearchTaskResult","{\"BusinessType\":2006,\"Value\":{\"RankFirst\":1,\"RankLast\":1,\"RankLastChange\":0,\"TaskId\":71799,\"UpdateTime\":\"2017-05-31 14:02:46\"}}","20F6D4A220826816B7BCA78B00F8C70D");
         Map<String, Object> bms = new HashMap<>();
         LoginUser user = this.getCurrentAccount();
         Long UnReadNum = sendBoxMapper.selectUnreadCount(user.getId().toString());//反馈未读数量

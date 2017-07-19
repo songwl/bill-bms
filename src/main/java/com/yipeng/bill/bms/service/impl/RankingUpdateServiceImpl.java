@@ -42,21 +42,16 @@ public class RankingUpdateServiceImpl implements RankingUpdateService {
             bill.setNewRanking(RankLast);
             bill.setFirstRanking(RankFirst);
             billMapper.updateByPrimaryKeySelective(bill);
-
             return 1;
         }
         else
         {
-
             return 0;
         }
-
-
     }
 
     @Autowired
     private KeywordsPriceMapper keywordsPriceMapper;
-
     @Override
     public int updateKeywords(JsonObject json1) {
         KeywordsPrice keywordsPrice = keywordsPriceMapper.selectByTaskId(Integer.parseInt(json1.get("TaskId").toString()));

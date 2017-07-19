@@ -8,6 +8,7 @@ import com.yipeng.bill.bms.dao.LogsMapper;
 import com.yipeng.bill.bms.domain.KeywordsPrice;
 import com.yipeng.bill.bms.domain.Logs;
 import com.yipeng.bill.bms.model.Md5_UrlEncode;
+import com.yipeng.bill.bms.service.JedisClientService;
 import com.yipeng.bill.bms.service.RankingUpdateService;
 import jdk.nashorn.internal.parser.JSONParser;
 import org.apache.logging.log4j.core.config.Loggers;
@@ -38,7 +39,8 @@ public class ybyNotifyController extends BaseController {
     private LogsMapper logsMapper;
     @Autowired
     private KeywordsPriceMapper keywordsPriceMapper;
-
+    @Autowired
+    private JedisClientService jedisClientService;
     /**
      * 获取优帮云通知
      *
@@ -73,8 +75,9 @@ public class ybyNotifyController extends BaseController {
                 //报价
                 int a = rankingUpdateService.updateKeywords(json1);
                 if (a == 1) {
+
                     return "1";
-                }  else {
+                } else {
                     return "1";
                 }
 
@@ -87,14 +90,16 @@ public class ybyNotifyController extends BaseController {
                     return "1";
 
                 }
+
+             //   jedisClientService.set("taskId",TaskId);
                 int a = rankingUpdateService.updateRanking(Integer.parseInt(TaskId), Integer.parseInt(RankLast), Integer.parseInt(RankFirst));
-                if (a >0) {
+                if (a > 0) {
                     Logs logs = new Logs();
                     logs.setCreatetime(new Date());
                     logs.setOptype(1);
                     logs.setUserid(new Long(1));
                     logs.setOpobj("2");
-                    logs.setOpremake("更新成功！xParam数据:" + xParam );
+                    logs.setOpremake("更新成功！xParam数据:" + xParam);
                     logsMapper.insert(logs);
                     return "1";
 
@@ -104,7 +109,7 @@ public class ybyNotifyController extends BaseController {
                     logs.setOptype(999);
                     logs.setUserid(new Long(1));
                     logs.setOpobj("2");
-                    logs.setOpremake("更新失败！xParam数据:" + xParam );
+                    logs.setOpremake("更新失败！xParam数据:" + xParam);
                     logsMapper.insert(logs);
                     return "1";
                 } else {

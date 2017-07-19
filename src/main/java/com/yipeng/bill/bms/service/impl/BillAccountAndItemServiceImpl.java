@@ -30,19 +30,16 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
     @Autowired
     private LogsMapper logsMapper;
 
-    private volatile  ReentrantLock lock = new ReentrantLock();
     @Override
     public int BillAccountAndItem(Map<String, Object> params) {
-        try
-        {
-        Calendar now =Calendar.getInstance();
-        params.put("year",now.get(Calendar.YEAR));
-        params.put("month",now.get(Calendar.MONTH)+1);
-        params.put("day",now.get(Calendar.DATE));
-        params.put("itemType","cost");
-        Double cost=billCostMapper.selectByUseDayCost(params);
-        if (cost!=0)
-        {
+        try {
+            Calendar now = Calendar.getInstance();
+            params.put("year", now.get(Calendar.YEAR));
+            params.put("month", now.get(Calendar.MONTH) + 1);
+            params.put("day", now.get(Calendar.DATE));
+            params.put("itemType", "cost");
+            Double cost = billCostMapper.selectByUseDayCost(params);
+            if (cost != 0) {
 
                 //获取当前用户的FUNDACCOUNT
                 FundAccount fundAccount = fundAccountMapper.selectByUserId(Long.parseLong(params.get("userId").toString()));
@@ -64,12 +61,11 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
                     fundItem.setItemType("cost");
                     fundItemMapper.insert(fundItem);
                     return 1;
-                }
-                else {
+                } else {
                     //获取今日的FUNDITEM
                     params.put("fundAccountId", fundAccount.getId());
                     FundItem fundItem = fundItemMapper.selectByDayFunItem(params);//判断今日是否存在今日消费
-                    if (fundItem != null&&fundItem.getId()>0) {
+                    if (fundItem != null && fundItem.getId() > 0) {
 
 
                         //修改余额
@@ -91,8 +87,7 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
 
                         return 1;
 
-                    }
-                    else {
+                    } else {
 
                         //先扣余额
                         BigDecimal lastAccount = fundAccount.getBalance();
@@ -104,13 +99,10 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
                         logs.setUserid(new Long(1));
                         logs.setCreatetime(new Date());
 
-                            int a = logsMapper.insert(logs);
+                        int a = logsMapper.insert(logs);
 
                         fundAccount.setBalance(fundAccount.getBalance().subtract(new BigDecimal(cost)));
-
                         fundAccountMapper.updateByPrimaryKey(fundAccount);
-
-
                         //产生资金明细
                         FundAccount fundAccountNow = fundAccountMapper.selectByUserId(Long.parseLong(params.get("userId").toString()));//客户当前余额
                         FundItem fundItemNow = new FundItem();
@@ -132,9 +124,9 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
 
                 }
 
-        }
-        //判断fundItem今日是否存在()
-        else {
+            }
+            //判断fundItem今日是否存在()
+            else {
                 //获取当前用户的FUNDACCOUNT
                 FundAccount fundAccount = fundAccountMapper.selectByUserId(Long.parseLong(params.get("userId").toString()));
                 //获取今日的FUNDITEM
@@ -149,13 +141,9 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
                     fundItemMapper.deleteByPrimaryKey(fundItem.getId());
                     return 1;
                 }
-
-
-         }
-        }
-        catch (Exception e)
-        {
-            System.out.print("计算余额错误："+e.getMessage());
+            }
+        } catch (Exception e) {
+            System.out.print("计算余额错误：" + e.getMessage());
             return 1;
         }
     }

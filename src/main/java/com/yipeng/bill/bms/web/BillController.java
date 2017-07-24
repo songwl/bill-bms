@@ -70,6 +70,10 @@ public class BillController extends BaseController {
         Map<String,Object> sqlMap=new HashMap<>();
         sqlMap.put("userId",user.getId());
         List<BillGroup> billGroupList=billGroupMapper.selectByUserId(sqlMap);
+        Map<String,Object> params=new HashMap<>();
+        params.put("createId", user.getId());
+        List<User> qudaoList = userService.getQudaoUser(params);
+        model.put("qudaoList", qudaoList);
         model.put("billGroupList", billGroupList);
         return "/bill/billList";
     }
@@ -565,6 +569,28 @@ public class BillController extends BaseController {
         if (user != null) {
             String message = billService.billChangeDailiCmt(params, user);
             if ("".equals(message)) {
+                return this.ajaxDoneSuccess("调整成功!");
+            } else {
+                return this.ajaxDoneError(message);
+            }
+
+        } else {
+            return this.ajaxDoneError("未登录");
+        }
+    }
+    /**
+     * 渠道商切换订单到渠道商
+     *
+     * @return
+     */
+    @RequestMapping(value = "/billChangeQudaoCmt", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage billChangeQudaoCmt(HttpServletRequest request, HttpServletResponse response) {
+        Map<String, String[]> params = request.getParameterMap();
+        LoginUser user = this.getCurrentAccount();
+        if (user != null) {
+            String message = billService.billChangeQudaoCmt(params, user);
+            if ("1".equals(message)) {
                 return this.ajaxDoneSuccess("调整成功!");
             } else {
                 return this.ajaxDoneError(message);

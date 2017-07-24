@@ -170,6 +170,35 @@ public class UserServiceImpl implements UserService {
         }
         return userList1;
     }
+    /**
+     * 查找当前登录对象对应的渠道商
+     * @param params
+     * @return
+     */
+    @Override
+    public List<User> getQudaoUser(Map<String, Object> params) {
+        Long createId=new Long(params.get("createId").toString());
+        List<User> userList=userMapper.userCreater(createId);
+        List<User> userList1=new ArrayList<>() ;
+        for (User user:userList
+                ) {
+            List<UserRole> userRoles=userRoleService.findUserRolesByUserId(user.getId());
+
+            if(!CollectionUtils.isEmpty(userRoles))
+            {
+                UserRole userRole= userRoles.get(0);
+                Role role=roleMapper.selectByPrimaryKey(userRole.getRoleId());
+                if(role.getRoleCode().equals("DISTRIBUTOR"))
+                {
+                    User user1=new User();
+                    user1.setId(user.getId());
+                    user1.setUserName(user.getUserName());
+                    userList1.add(user1);
+                }
+            }
+        }
+        return userList1;
+    }
 
     /**
      * 搜索框获取的客户

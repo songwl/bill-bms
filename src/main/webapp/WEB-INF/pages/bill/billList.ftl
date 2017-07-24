@@ -38,6 +38,9 @@
             <div id="billChangeClick">
                 <span>&nbsp;<i class="fa fa-users"></i>&nbsp;订单调换</span>
             </div>
+            <div id="quYuquClick">
+                <span>&nbsp;<i class="fa fa-users"></i>&nbsp;渠与渠调换</span>
+            </div>
         </#if>
         <#if  bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")>
             <div id="applyStopBill">
@@ -537,7 +540,133 @@
         </div>
     </div>
 </div>
+<#--订单切换代理商-->
+<div class="bootbox modal in billChangeQudaosDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
+    <div class="modal-dialog" style="width: 990px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="bootbox-close-button close">×</button>
+                <h4 class="modal-title">切换订单</h4>
+            </div>
+            <div class="modal-body" style="max-height: 574px;">
+                <div class="bootbox-body">
+                    <style type="text/css">
+                        .modal-dialog {
+                            width: 990px;
+                        }
+                    </style>
+                    <div>
+                        <div class="row" style="margin-bottom: 10px;">
+                            <div class="col-md-3">
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px"
+                                       style="width: 82px;">
+                                    代理商：
+                                </label>
+                                <select id="dailiListSelect">
+                                    <option value="0">--请选择--</option>
+                                    <#list qudaoList as user>
+                                        <option value="${user.id}">${user.userName}</option>
+                                    </#list>
+                                </select>
 
+                            </div>
+                            <div class="col-md-3">
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px"
+                                       style="width: 82px;">
+                                    客户：
+                                </label>
+                                <select id="kehuListSelect">
+                                    <option value="0">--请选择--</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info fade in">
+                            录入价格的时候请按对应的顺序录入，请谨慎录入。顺序（排名1，价格1，排名2，价格2,......）
+                        </div>
+                        <div class="form-group" style="height:30px;">
+                            <div class="form-group" style="margin-top:30px;">
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px"
+                                       style="width: 82px;">
+                                    前
+                                    <span class="red">N</span>名<span class="required">*</span>
+                                </label>
+                                <div class="" style="width: 35px;float: left;">
+                                    <input name="changeDailirankend" style="width: 35px;">
+                                </div>
+
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px"
+                                       style="width: 82px;">
+                                    <span>元/天</span><span class="required">*</span>
+                                </label>
+                                <div class="" style="width: 35px;float: left;">
+                                    <input name="changeDailiprice" style="width: 35px;">
+                                </div>
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px"
+                                       style="width: 78px;">
+                                    前
+                                    <span class="red">N</span>名
+                                </label>
+                                <div class="" style="width: 35px;float: left;">
+                                    <input name="changeDailirankend1" style="width: 35px;">
+                                </div>
+
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px"
+                                       style="width: 68px;">
+                                    <span>元/天</span>
+                                </label>
+                                <div class="" style="width: 35px;float: left;">
+                                    <input name="changeDailiprice1" style="width: 35px;">
+                                </div>
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px"
+                                       style="width: 78px;">
+                                    前
+                                    <span class="red">N</span>名
+                                </label>
+                                <div class="" style="width: 35px;float: left;">
+                                    <input name="changeDailirankend2" style="width: 35px;">
+                                </div>
+
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px"
+                                       style="width: 68px;">
+                                    <span>元/天</span><span class="required"></span>
+                                </label>
+                                <div class="" style="width: 35px;float: left;">
+                                    <input name="changeDailiprice2" style="width: 35px;">
+                                </div>
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px"
+                                       style="width: 78px;">
+                                    前
+                                    <span class="red">N</span>名
+                                </label>
+                                <div class="" style="width: 35px;float: left;">
+                                    <input name="changeDailirankend3" style="width: 35px;">
+                                </div>
+
+                                <label class="col-md-1 control-label padding-right-0px padding-left-0px"
+                                       style="width:68px;">
+                                    <span>元/天</span>
+                                </label>
+                                <div class="" style="width: 35px;float: left;">
+                                    <input name="changeDailiprice3" style="width: 35px;">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer" style="height:70px;">
+                <button data-bb-handler="success" type="button" class="btn wzgj-blue billChangeDailiCmt"
+                        style="background: #09C;color: #fff;">确定
+                </button>
+                <button data-bb-handler="cancel" type="button" class="btn wzgj-btn cancel">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <!--详情end-->

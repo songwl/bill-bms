@@ -215,6 +215,13 @@
     <select id="selectAllCount" resultType="java.lang.Long">
     select COUNT(*) from (
     select website from orderlease
+        where 1=1
+        <if test="trade != null and trade!=''">
+            and trade like CONCAT('%',#{trade,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="website != null and website!=''">
+            and website like CONCAT('%',#{website,jdbcType=VARCHAR},'%')
+        </if>
     group by website) aa
   </select>
     <select id="selectByAllotIdCount" resultType="java.lang.Long">
@@ -243,10 +250,10 @@
         id,website,createTime as time,orderstate,receiveId,reserveId,trade
         from orderlease
         where 1=1
-        <if test="trade != null">
+        <if test="trade != null and trade!=''">
             and trade like CONCAT('%',#{trade,jdbcType=VARCHAR},'%')
         </if>
-        <if test="website != null">
+        <if test="website != null and website!=''">
             and website like CONCAT('%',#{website,jdbcType=VARCHAR},'%')
         </if>
         group by website

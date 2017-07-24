@@ -73,6 +73,13 @@ public interface BillService {
      */
     String billChangeDailiCmt(Map<String, String[]> params, LoginUser loginUser);
     /**
+     * 渠道商切换订单到渠道商
+     * @param params
+     * @param user
+     * @return
+     */
+    String billChangeQudaoCmt(Map<String, String[]> params, LoginUser loginUser);
+    /**
      * 修改订单信息（待审核的订单）
      * @param params
      * @param user

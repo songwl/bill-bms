@@ -1087,8 +1087,6 @@ public class BillServiceimpl implements BillService {
             billPrice.setBillId(billId);
             List<BillPrice> billPriceList = billPriceMapper.selectByBillPrice(billPrice);
             if (!CollectionUtils.isEmpty(billPriceList)) {
-
-
                 if (billPriceList.size() == 1) {
                     if (!"".equals(rankend[0]) && !"".equals(price[0])) {
                         billPriceList.get(0).setOutMemberId(Long.parseLong(dailiUserId[0]));
@@ -1198,6 +1196,56 @@ public class BillServiceimpl implements BillService {
         }
 
         return message;
+    }
+
+    @Override
+    @Transactional
+    public String billChangeQudaoCmt(Map<String, String[]> params, LoginUser loginUser) {
+        //获取参数
+        String[] selectContent = params.get("selectContent[0][userName]");
+        String[] checkboxLength = params.get("checkboxLength");
+        String[] price = params.get("price");
+        String[] price1 = params.get("price1");
+        String[] price2 = params.get("price2");
+        String[] price3 = params.get("price3");
+        String[] rankend = params.get("rankend");
+        String[] rankend1 = params.get("rankend1");
+        String[] rankend2 = params.get("rankend2");
+        String[] rankend3 = params.get("rankend3");
+        String[] dailiUserId = params.get("dailiUserId");
+        String[] kehuUserId = params.get("kehuUserId");
+        int length = Integer.parseInt(checkboxLength[0]);
+        String message = "";
+        try {
+            for (int i = 0; i < length; i++) {
+                //数据库订单ID
+                String[] id = params.get("selectContent[" + i + "][id]");
+                Long billId = Long.parseLong(id[0]);
+                Bill bill = billMapper.selectByPrimaryKey(billId);
+                bill.setUpdateUserId(new Long(dailiUserId[0]));
+                billMapper.updateByPrimaryKeySelective(bill);
+                //查询单价
+                BillPrice billPrice = new BillPrice();
+                billPrice.setBillId(billId);
+                List<BillPrice> billPriceList = billPriceMapper.selectByBillPrice(billPrice);
+                for (BillPrice item : billPriceList
+                        ) {
+                    if (item.getInMemberId() == 1) {
+                        item.setOutMemberId(new Long(dailiUserId[0]));
+                        billPriceMapper.updateByPrimaryKeySelective(item);
+                    } else {
+                        item.setInMemberId(new Long(dailiUserId[0]));
+                        item.setOutMemberId(new Long(kehuUserId[0]));
+                        billPriceMapper.updateByPrimaryKeySelective(item);
+                    }
+                }
+            }
+            return  "1";
+
+        } catch (Exception e) {
+            return  "0";
+        }
+
     }
 
     /**
@@ -3951,7 +3999,7 @@ public class BillServiceimpl implements BillService {
         Pattern p = Pattern.compile("(?<=http://|\\.)[^.]*?\\.(com|cn|net|org|biz|info|cc|tv.*)", Pattern.CASE_INSENSITIVE);
 
         for (int i = 0; i < billCount.size(); i++) {
-            if (billCount.get(i).get("user_name") != null&&(!billCount.get(i).get("user_name").equals("zhaosen"))) {
+            if (billCount.get(i).get("user_name") != null && (!billCount.get(i).get("user_name").equals("zhaosen"))) {
                 ZhuanYuanDetails zhuanYuanDetails = new ZhuanYuanDetails();
                 zhuanYuanDetails.setUserName(billCount.get(i).get("user_name").toString());
                 if (!CollectionUtils.isEmpty(standardCount)) {
@@ -4012,7 +4060,7 @@ public class BillServiceimpl implements BillService {
                                 }
                             }
                         }
-                        zhuanYuanDetails.setCountNoCostByWebsite(hashSet.size()-hashSetNew.size());
+                        zhuanYuanDetails.setCountNoCostByWebsite(hashSet.size() - hashSetNew.size());
 
                     } else {
                         zhuanYuanDetails.setBillCount(0);

@@ -891,9 +891,165 @@ $(document).ready(function () {
           }
 
       })
+    })
+
+    //订单切换渠道商
+    $("#quYuquClick").click(function () {
+        var selectContent = $('#myTable').bootstrapTable('getSelections');
+        if(selectContent == "") {
+            layer.alert('请选择一列数据', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
+
+        }else {
+            $(".modal-backdrop").show();
+            $(".billChangeQudaosDiv").slideDown();
+        }
+    })
+    $("#dailiListSelect").change(function () {
+        if($("#dailiListSelect option:selected").val()!="0")
+        {
+            $("#kehuListSelect").empty();
+            var str="<option value='0'>--请选择--</option>";
+            $.ajax({
+                type:'get',
+                url:CTX+"/order/getDailiKehu",
+                data:{userId:$("#dailiListSelect option:selected").val()},
+                success:function (result) {
 
 
+                    if(result.data!=null)
+                    {
+                        for(var i=0;i<result.data.length;i++)
+                        {
+                            str+="<option value='"+result.data[i]['id']+"'>"+result.data[i]['userName']+"</option>";
+                        }
 
+                    }
+                    console.log(str);
+                    $("#kehuListSelect").append(str);
+
+                }
+            })
+        }
+        else
+        {
+            $("#kehuListSelect").empty();
+            var str="<option value='0'>--请选择--</option>";
+            $("#kehuListSelect").append(str);
+        }
+
+    })
+    //切换订单确认\]
+    $(".billChangeDailiCmt").click(function () {
+        var index;
+        var rankend = parseInt(jQuery("input[name='changeDailirankend']").val());
+        var price = parseFloat(jQuery("input[name='changeDailiprice']").val());
+        var rankend1 = parseInt(jQuery("input[name='changeDailirankend1']").val());
+        var price1 = parseFloat(jQuery("input[name='changeDailiprice1']").val());
+        var rankend2 = parseInt(jQuery("input[name='changeDailirankend2']").val());
+        var price2 = parseFloat(jQuery("input[name='changeDailiprice2']").val());
+        var rankend3 = parseInt(jQuery("input[name='changeDailirankend3']").val());
+        var price3 = parseFloat(jQuery("input[name='changeDailiprice3']").val());
+
+        if (!isNaN(rankend) && !isNaN(rankend1) && !isNaN(rankend2) && !isNaN(rankend3)
+            && !isNaN(price) && !isNaN(price1) && !isNaN(price2) && !isNaN(price3)
+            && rankend > 0 && rankend1 > rankend && rankend2 > rankend1 && rankend3 > rankend2 && 51 > rankend3
+            && 1000 > price && price > price1 && price1 > price2 && price2 > price3 && price3 > 0
+            ||
+            !isNaN(rankend) && !isNaN(rankend1) && !isNaN(rankend2) && isNaN(rankend3)
+            && !isNaN(price) && !isNaN(price1) && !isNaN(price2) && isNaN(price3)
+            && rankend > 0 && rankend1 > rankend && rankend2 > rankend1 && 51 > rankend2
+            && 1000 > price && price > price1 && price1 > price2 && price2 > 0
+            ||
+            !isNaN(rankend) && !isNaN(rankend1) && isNaN(rankend2) && isNaN(rankend3)
+            && !isNaN(price) && !isNaN(price1) && isNaN(price2) && isNaN(price3)
+            && rankend > 0 && rankend1 > rankend && 51 > rankend1
+            && 1000 > price && price > price1 && price1 > 0
+            ||
+            !isNaN(rankend) && isNaN(rankend1) && isNaN(rankend2) && isNaN(rankend3)
+            && !isNaN(price) && isNaN(price1) && isNaN(price2) && isNaN(price3)
+            && rankend > 0 && 51 > rankend
+            && 1000 > price && price > 0
+        )
+        {
+            var selectContent = $('#myTable').bootstrapTable('getSelections');
+            var len =selectContent.length;
+            var dailiUserId=$("#dailiListSelect option:selected").val();
+            var kehuUserId=$("#kehuListSelect option:selected").val();
+            if($("#dailiListSelect option:selected").val()!="0"&&$("#kehuListSelect option:selected").val()!="0")
+            {
+                $.ajax({
+                    type: 'post',
+                    url: CTX + "/order/billChangeQudaoCmt",
+                    dataType: 'json',
+                    data: {
+                        rankend: rankend,
+                        price: price,
+                        rankend1: rankend1,
+                        price1: price1,
+                        rankend2: rankend2,
+                        price2: price2,
+                        rankend3: rankend3,
+                        price3: price3,
+                        selectContent: selectContent,
+                        checkboxLength: len,
+                        dailiUserId:dailiUserId,
+                        kehuUserId:kehuUserId
+                    },
+                    beforeSend: function () {
+                        index  = layer.load(1, {
+                            shade: [0.1,'#fff'] //0.1透明度的白色背景
+                        });
+                    },
+                    success:function (result) {
+
+                        layer.close(index);
+                        $(".modal-backdrop").hide();
+                        if(result.code==200)
+                        {
+                            layer.alert(result.message, {
+                                skin: 'layui-layer-molv' //样式类名  自定义样式
+                                , anim: 2 //动画类型
+                                , icon: 4   // icon
+                            });
+
+                            $(".billChangeDailiDiv").slideUp();
+                            $('#myTable').bootstrapTable('refresh');
+                        }
+                        else
+                        {
+                            result.message+=result.message+"  订单出错";
+                            layer.alert(result.message, {
+                                skin: 'layui-layer-molv' //样式类名  自定义样式
+                                , anim: 2 //动画类型
+                                , icon: 4   // icon
+                            });
+                        }
+                    }
+                })
+            }
+            else
+            {
+                layer.alert('渠道商和客户必须同时选择！', {
+                    skin: 'layui-layer-molv' //样式类名  自定义样式
+                    , anim: 6 //动画类型
+                    , icon: 4   // icon
+                });
+            }
+
+
+        }
+        else
+        {
+            layer.alert('前N名依次增大，并且值介于1-50之间，收费依次减小，并且值大于0小于1000；前N名和收费必须同时提供', {
+                skin: 'layui-layer-molv' //样式类名  自定义样式
+                , anim: 6 //动画类型
+                , icon: 4   // icon
+            });
+        }
 
     })
 

@@ -12,14 +12,12 @@ import com.yipeng.bill.bms.domain.UserPower;
 import com.yipeng.bill.bms.domain.leaseOverdueTb;
 import com.yipeng.bill.bms.domain.noticepublish;
 import com.yipeng.bill.bms.domain.offerset;
-import com.yipeng.bill.bms.service.HomeService;
-import com.yipeng.bill.bms.service.MessageService;
-import com.yipeng.bill.bms.service.RankingUpdateService;
-import com.yipeng.bill.bms.service.RemoteService;
+import com.yipeng.bill.bms.service.*;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,15 +43,9 @@ public class HomeController extends BaseController {
     @Autowired
     private leaseOverdueTbMapper leaseOverdueTbMapper;
 
-    @Autowired
-    private RankingUpdateService rankingUpdateService;
-     @Autowired
-    private ybyNotifyController ybyNotifyController;
-
     @RequestMapping(value = "/index")
     public String index(ModelMap model) throws Exception {
 
-       // ybyNotifyController.getYbyNotify("NotifySearchTaskResult","{\"BusinessType\":2006,\"Value\":{\"RankFirst\":1,\"RankLast\":1,\"RankLastChange\":0,\"TaskId\":71799,\"UpdateTime\":\"2017-05-31 14:02:46\"}}","20F6D4A220826816B7BCA78B00F8C70D");
         Map<String, Object> bms = new HashMap<>();
         LoginUser user = this.getCurrentAccount();
         Long UnReadNum = sendBoxMapper.selectUnreadCount(user.getId().toString());//反馈未读数量

@@ -56,7 +56,12 @@ public interface UserService {
      * @return
      */
     List<User> getDailiUser(Map<String, Long> params);
-
+    /**
+     * 查找当前登录对象对应的渠道商
+     * @param params
+     * @return
+     */
+    List<User> getQudaoUser(Map<String, Object> params);
     List<User> getUserAll(Map<String, Long> params);
 
     List<User> getSearchUser(LoginUser loginUser, String way);

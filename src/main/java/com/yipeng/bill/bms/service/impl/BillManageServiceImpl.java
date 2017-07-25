@@ -39,7 +39,8 @@ public class BillManageServiceImpl implements BillManageService {
     private UserService userService;
     @Autowired
     private FundAccountMapper fundAccountMapper;
-
+    @Autowired
+    private  LogsMapper logsMapper;
     /**
      * 管理员订单管理
      *
@@ -51,7 +52,7 @@ public class BillManageServiceImpl implements BillManageService {
     public Map<String, Object> manageListByAdminTable(Map<String, Object> params, LoginUser loginUser) {
 
 
-         return null;
+        return null;
     }
 
     /**
@@ -213,8 +214,18 @@ public class BillManageServiceImpl implements BillManageService {
                         billDetails.setWebsite(bill.getWebsite());
                         billDetails.setKeywords(bill.getKeywords());
                         //获取搜索引擎
-                        BillSearchSupport billSearchSupport = billSearchSupportMapper.selectByBillId(bill.getId());
-                        billDetails.setSearchName(billSearchSupport.getSearchSupport());
+                        System.out.print(bill.getId());
+                        try {
+                            BillSearchSupport billSearchSupport = billSearchSupportMapper.selectByBillId(bill.getId());
+                            billDetails.setSearchName(billSearchSupport.getSearchSupport());
+                        } catch (Exception e) {
+                          Logs logs=new Logs();
+                          logs.setOpobj("1");
+                          logs.setOptype(1);
+                          logs.setUserid(loginUser.getId());
+                          logs.setOpremake("錯誤Id:"+bill.getId());
+                            logsMapper.insert(logs);
+                        }
                         //获取客户
                         BillPrice billPrice = new BillPrice();
                         billPrice.setInMemberId(loginUser.getId());
@@ -355,8 +366,8 @@ public class BillManageServiceImpl implements BillManageService {
         } else {
             cal.setTime(new Date());
         }
-        cal.add(Calendar.DATE,-1);
-        Date yesterDay=cal.getTime();
+        cal.add(Calendar.DATE, -1);
+        Date yesterDay = cal.getTime();
         //获取渠道商的客户和代理商
         List<User> userList = userService.getSearchUser(loginUser, "2");
         Map<String, Object> params = new HashMap<>();

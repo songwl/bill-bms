@@ -1152,7 +1152,7 @@ public class BillController extends BaseController {
     }
 
     /**
-     * 审核订单
+     * 审核停单
      *
      * @param model
      * @param

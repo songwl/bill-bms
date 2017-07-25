@@ -82,8 +82,7 @@ public class HomeController extends BaseController {
                 bms.put("leasepowercustomer", 0);
             }
         }
-        if (user.hasRole("COMMISSIONER"))//消息
-        {
+
             Map<String,Object> sqlMap=new HashMap<>();
             sqlMap.put("userId",user.getId());
             List<PushMessage> pushMessageList=pushMessageMapper.selectByUserId(sqlMap);
@@ -118,7 +117,7 @@ public class HomeController extends BaseController {
                     pushMessageDetailsList.add(pushMessageDetails);
                 }
                 bms.put("pushMessageList", pushMessageDetailsList);
-            }
+
 
         }
         bms.put("UnReadNum", UnReadNum);

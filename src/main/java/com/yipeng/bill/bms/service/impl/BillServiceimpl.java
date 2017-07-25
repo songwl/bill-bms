@@ -437,6 +437,8 @@ public class BillServiceimpl implements BillService {
                 .compile("^([mM]{1}[.])(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/]*$)");
         String[] urls = urlsArr[0].split("\n");
         String[] keywords = keywordsArr[0].split("\n");
+        //消息通知 --网址
+        HashSet hashSet=new HashSet();
         if (urls.length == keywords.length) {
             //违禁词库
             List<ForbiddenWords> forbiddenWordsList = forbiddenWordsMapper.selectBySelective();
@@ -553,12 +555,29 @@ public class BillServiceimpl implements BillService {
                         billSearchSupport.setSearchSupport(search[0]);
                         billSearchSupportMapper.insert(billSearchSupport);
                     }
+                    //将网址插入到hashset中
+                    hashSet.add(urlss);
+
                 } else {
                     errorDetails += +(i + 1) + "网址：" + urls[i] + " 格式错误或关键词：" + keywords[i] + "是违禁词   ";
                 }
             }
         }
-
+        //通知操作员
+        Iterator iterator = hashSet.iterator();
+        while (iterator.hasNext()) {
+            PushMessage pushMessage=new PushMessage();
+            pushMessage.setReceiveuserid(user.getCreateUserId());
+            pushMessage.setAlias("新单");//消息备注
+            pushMessage.setTypev("A1");//业务类型
+            pushMessage.setModal(true);//消息模式
+            pushMessage.setTitle("您有"+user.getUserName()+"新的订单需要审核");//消息标题
+            pushMessage.setContent("订单网址为："+iterator.next().toString());
+            pushMessage.setFlag(0);//消息处理状态
+            pushMessage.setCreatetime(new Date());
+            pushMessage.setSendtime(new Date());
+            pushMessageMapper.insert(pushMessage);
+        }
         return errorDetails;
     }
 
@@ -650,6 +669,545 @@ public class BillServiceimpl implements BillService {
             }
         }
     }
+
+    /**
+     * 渠道商审核订单，录入单价表数据
+     *
+     * @param params 价格
+     * @param user   当前登录对象
+     * @return
+     */
+    @Override
+    public int distributorPrice(Map<String, String[]> params, LoginUser user) {
+
+        String[] selectContent = params.get("selectContent[0][userName]");
+        String[] checkboxLength = params.get("checkboxLength");
+        String[] price1 = params.get("price1");
+        String[] price2 = params.get("price2");
+        String[] price3 = params.get("price3");
+
+        int length = Integer.parseInt(checkboxLength[0]);
+        //消息通知 --网址
+        HashSet hashSet=new HashSet();
+        for (int i = 0; i < length; i++) {
+            String[] id = params.get("selectContent[" + i + "][id]");
+            String[] price = params.get("price");
+            String[] rankend = params.get("rankend");
+            Long billId = Long.parseLong(id[0]);
+            //判断渠道商订单价格是否已经存在(有BUG 如果管理员录入价格 bool会变成true)
+            List<BillPrice> billPriceList = billPriceMapper.selectByBillId(billId);
+            Boolean bool = true;
+            //如果有了 就修改
+            if (billPriceList.size() > 0) {
+                for (BillPrice billPrice1 : billPriceList
+                        ) {
+                    if (billPrice1.getInMemberId().longValue() == user.getId().longValue()) {
+                        bool = false;
+                    }
+                }
+            }
+            if (bool) {
+                BillPrice billPrice = new BillPrice();
+                billPrice.setBillId(billId);
+                BigDecimal ret = null;
+                ret = new BigDecimal((String) price[0]);
+                billPrice.setPrice(ret);
+                billPrice.setBillRankingStandard(Long.parseLong(rankend[0]));
+                if (user.hasRole("ASSISTANT")) {
+                    billPrice.setInMemberId(user.getCreateUserId());
+                } else {
+                    billPrice.setInMemberId(user.getId());
+                }
+                ;
+                String[] updateUserId = params.get("selectContent[" + i + "][updateUserId]");
+                billPrice.setOutMemberId(Long.parseLong(updateUserId[0]));
+                billPrice.setCreateTime(new Date());
+                billPriceMapper.insert(billPrice);
+                Bill bill1 = new Bill();
+                bill1.setId(billId);
+                bill1.setUpdateUserId(user.getId());
+                bill1.setState(1);
+                billMapper.updateByPrimaryKeySelective(bill1);
+                if (!"NaN".equals(price1[0])) {
+                    String[] id1 = params.get("selectContent[" + i + "][id]");
+                    String[] rankend1 = params.get("rankend1");
+                    Long billId1 = Long.parseLong(id1[0]);
+                    BillPrice billPrice1 = new BillPrice();
+                    billPrice1.setBillId(billId1);
+                    BigDecimal ret1 = null;
+                    ret1 = new BigDecimal((String) price1[0]);
+                    billPrice1.setPrice(ret1);
+                    billPrice1.setBillRankingStandard(Long.parseLong(rankend1[0]));
+                    if (user.hasRole("ASSISTANT")) {
+                        billPrice1.setInMemberId(user.getCreateUserId());
+                    } else {
+                        billPrice1.setInMemberId(user.getId());
+                    }
+
+                    String[] updateUserId1 = params.get("selectContent[" + i + "][updateUserId]");
+                    billPrice1.setOutMemberId(Long.parseLong(updateUserId1[0]));
+                    billPrice1.setCreateTime(new Date());
+                    billPriceMapper.insert(billPrice1);
+                    if (!"NaN".equals(price2[0])) {
+                        String[] id2 = params.get("selectContent[" + i + "][id]");
+                        String[] rankend2 = params.get("rankend2");
+                        Long billId2 = Long.parseLong(id2[0]);
+                        BillPrice billPrice2 = new BillPrice();
+                        billPrice2.setBillId(billId2);
+                        BigDecimal ret2 = null;
+                        ret2 = new BigDecimal((String) price2[0]);
+                        billPrice2.setPrice(ret2);
+                        billPrice2.setBillRankingStandard(Long.parseLong(rankend2[0]));
+                        if (user.hasRole("ASSISTANT")) {
+                            billPrice2.setInMemberId(user.getCreateUserId());
+                        } else {
+                            billPrice2.setInMemberId(user.getId());
+                        }
+
+                        String[] updateUserId2 = params.get("selectContent[" + i + "][updateUserId]");
+                        billPrice2.setOutMemberId(Long.parseLong(updateUserId2[0]));
+                        billPrice2.setCreateTime(new Date());
+                        billPriceMapper.insert(billPrice2);
+                        if (!"NaN".equals(price3[0])) {
+                            String[] id3 = params.get("selectContent[" + i + "][id]");
+                            String[] rankend3 = params.get("rankend3");
+                            Long billId3 = Long.parseLong(id3[0]);
+                            BillPrice billPrice3 = new BillPrice();
+                            billPrice3.setBillId(billId3);
+                            BigDecimal ret3 = null;
+                            ret3 = new BigDecimal((String) price3[0]);
+                            billPrice3.setPrice(ret3);
+                            billPrice3.setBillRankingStandard(Long.parseLong(rankend3[0]));
+                            if (user.hasRole("ASSISTANT")) {
+                                billPrice3.setInMemberId(user.getCreateUserId());
+                            } else {
+                                billPrice3.setInMemberId(user.getId());
+                            }
+
+                            String[] updateUserId3 = params.get("selectContent[" + i + "][updateUserId]");
+                            billPrice3.setOutMemberId(Long.parseLong(updateUserId3[0]));
+                            billPrice3.setCreateTime(new Date());
+                            billPriceMapper.insert(billPrice3);
+                        }
+                    }
+                }
+
+                //将网址插入到hashset中
+                String[] website= params.get("selectContent[" + i + "][website]");
+                hashSet.add(website[0]);
+            } else {
+                return 1;
+            }
+
+
+        }
+        Iterator iterator = hashSet.iterator();
+        while (iterator.hasNext()) {
+            PushMessage pushMessage=new PushMessage();
+            pushMessage.setReceiveuserid(user.getCreateUserId());
+            pushMessage.setAlias("新单");//消息备注
+            pushMessage.setTypev("A1");//业务类型
+            pushMessage.setModal(true);//消息模式
+            pushMessage.setTitle("您有"+user.getUserName()+"提交的新的订单需要审核");//消息标题
+            pushMessage.setContent("订单网址为："+iterator.next().toString());
+            pushMessage.setFlag(0);//消息处理状态
+            pushMessage.setCreatetime(new Date());
+            pushMessage.setSendtime(new Date());
+            pushMessageMapper.insert(pushMessage);
+        }
+        return 0;
+    }
+
+    /**
+     * 优化方录入价格
+     *
+     * @param params
+     * @param user
+     * @return
+     */
+    @Override
+    public int adminPrice(Map<String, String[]> params, User user) {
+        //获取参数
+        String[] bill = params.get("rankend1");
+        String[] selectContent = params.get("selectContent[0][userName]");
+        String[] checkboxLength = params.get("checkboxLength");
+        String[] price1 = params.get("price1");
+        String[] price2 = params.get("price2");
+        String[] price3 = params.get("price3");
+        String[] caozuoyuan = params.get("caozuoyuan");
+        Long caozuoyuanId = Long.parseLong(caozuoyuan[0]);
+        //消息通知 --网址
+        HashSet hashSet=new HashSet();
+        int length = Integer.parseInt(checkboxLength[0]);
+        //region  录入
+        for (int i = 0; i < length; i++) {
+            String[] id = params.get("selectContent[" + i + "][id]");
+            String[] price = params.get("price");
+            String[] rankend = params.get("rankend");
+            Long billId = Long.parseLong(id[0]);
+            Bill billNew = billMapper.selectByPrimaryKey(billId);//判断属性
+            //判断渠道商订单价格是否已经存在(有BUG 如果管理员录入价格 bool会变成true)
+            List<BillPrice> billPriceList = billPriceMapper.selectByBillId(billId);
+            Boolean bool = true;
+            //如果有了 就修改
+            if (billPriceList.size() > 0) {
+                for (BillPrice billPrice1 : billPriceList
+                        ) {
+                    if (billPrice1.getInMemberId().longValue() == user.getId().longValue()) {
+                        bool = false;
+                    }
+                }
+            }
+            if (bool) {
+                CustomerRankingParam customerRankingParam = new CustomerRankingParam();
+                Bill billA = billMapper.selectByPrimaryKey(billId);
+                BillSearchSupport billSearchSupport = billSearchSupportMapper.selectByBillId(billId);
+                int ApiId;
+                String wAction = "AddSearchTask";
+                String keyword = billA.getKeywords();
+                keyword = keyword.replaceAll("[\\u00A0]+", "");
+                String[] qkeyword = {keyword};
+                String[] qurl = {billA.getWebsite()};
+
+                //查询报价
+                addKeywordsPriceTask(keyword);
+
+                //组合参数
+
+                JSONObject jsonObj = new JSONObject();
+                jsonObj.put("keyword", qkeyword);
+                jsonObj.put("url", qurl);
+                jsonObj.put("time", System.currentTimeMillis());
+                if (billNew != null) {
+                    if (billNew.getBillType() == 1 || billNew.getBillType() == 2) {
+                        int[] timeSet = {9, 15};
+                        jsonObj.put("timeSet", timeSet);
+                        jsonObj.put("searchOnce", true);
+                        jsonObj.put("businessType", 2006);
+                    } else if (billNew.getBillType() == 4) {
+                        jsonObj.put("businessType", 1006);
+                    }
+                }
+                jsonObj.put("userId", Define.userId);
+
+                //判断搜索引擎
+                switch (billSearchSupport.getSearchSupport()) {
+                    case "百度":
+                        jsonObj.put("searchType", 1010);
+                        break;
+                    case "360":
+                        jsonObj.put("searchType", 1015);
+                        break;
+                    case "搜狗":
+                        jsonObj.put("searchType", 1030);
+                        break;
+                    case "手机百度":
+                        jsonObj.put("searchType", 7010);
+                        break;
+                    case "手机360":
+                        jsonObj.put("searchType", 7015);
+                        break;
+                    case "手机搜狗":
+                        jsonObj.put("searchType", 7030);
+                        break;
+                    case "神马":
+                        jsonObj.put("searchType", 7070);
+                        break;
+                }
+                String wParam = jsonObj.toString();
+                String wSign = null;
+                try {
+                    wSign = md5_urlEncode.EncoderByMd5(wAction + Define.token + jsonObj.toString());
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                customerRankingParam.setwAction("AddSearchTask");
+                customerRankingParam.setwParam(wParam);
+                customerRankingParam.setwSign(wSign);
+
+
+                //调整点击录入订单
+                int agid = OpDefine.agid;
+                String action = "importkw";
+                String md5Key = OpDefine.md5Key;
+
+                //取现在时间
+                String dateString = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+                //填充实体类
+                List<Yby> ybyList = new ArrayList<Yby>();
+                //加密sign
+                Yby yby = new Yby();
+                yby.setKw(billA.getKeywords().replaceAll("[\\u00A0]+", ""));
+                yby.setUrl(billA.getWebsite());
+                //判断搜索引擎
+                switch (billSearchSupport.getSearchSupport()) {
+                    case "百度":
+                        yby.setSe(1);
+                        break;
+                    case "360":
+                        yby.setSe(2);
+                        break;
+                    case "搜狗":
+                        yby.setSe(3);
+                        break;
+                    case "手机百度":
+                        yby.setSe(4);
+                        break;
+                    case "手机360":
+                        yby.setSe(5);
+                        break;
+                    case "手机搜狗":
+                        yby.setSe(6);
+                        break;
+                    case "神马":
+                        yby.setSe(7);
+                        break;
+                }
+                yby.setMcpd(1);
+                ybyList.add(yby);
+                //组包
+                String str = "";
+                str = str.concat(JSON.toJSONString(dateString));
+                str = str.concat(JSON.toJSONString(action));
+                str = str.concat(JSON.toJSONString(ybyList));
+                str = str.concat(JSON.toJSONString(md5Key));
+                str = str.concat(JSON.toJSONString(agid));
+                //加密sign
+                String sign = null;
+                try {
+                    sign = md5_urlEncode.EncoderByMd51(str);
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                //创建JSON
+                JSONObject jaction = new JSONObject();
+                jaction.put("action", action);
+                JSONObject jagid = new JSONObject();
+                jagid.put("agid", agid);
+                JSONObject jstamp = new JSONObject();
+                jstamp.put("stamp", dateString);
+                JSONObject jargs = new JSONObject();
+                jargs.put("args", JSON.toJSONString(ybyList));
+                JSONObject jsign = new JSONObject();
+                jsign.put("sign", sign);
+                //拼接字符串
+                String str11 = "{" + jagid.toString().replace("{", "").replace("}", "") + "," + jstamp.toString().replace("{", "").replace("}", "") + "," +
+                        jaction.toString().replace("{", "").replace("}", "") + "," + jsign.toString().replace("{", "").replace("}", "") + "," +
+                        jargs.toString().replace("\"[", "[").replace("]\"", "]").replace("\\", "").replace("{\"args\"", "\"args\"");
+
+                //Base64  编码
+                BASE64Encoder base64Encoder = new BASE64Encoder();
+                String data = null;
+                try {
+                    data = base64Encoder.encode(str11.getBytes("UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("data", data);
+                try {
+                    //查排名返回对象（导入订单）
+                    CustomerRankingResult customerRankingResult = remoteService.getCustomerRanking(customerRankingParam);
+                    //调点击返回对象（导入订单）
+                    CustomerOptimizationResult customerOptimizationResult = remoteService.getOptimizationApi(map);
+                    //判断两个返回结果是否为空
+                    if (customerRankingResult != null && customerOptimizationResult != null) {
+                        //判断两个返回结果是否成功
+                        JSONObject jsonObject = customerOptimizationResult.getArgs();
+                        String code = jsonObject.get("code").toString();
+                        if (customerRankingResult.getMessage().equals("success.") && ("success").equals(code)) {
+
+                            JSONArray OptimizationValue = jsonObject.getJSONArray("value");
+                            String message = OptimizationValue.getJSONArray(0).get(1).toString();
+                            JSONArray value = customerRankingResult.getValue();
+                            JSONArray valueJSONArray = value.getJSONArray(0);
+                            ApiId = Integer.parseInt(valueJSONArray.get(0).toString());
+                            int ApiId1 = Integer.parseInt(OptimizationValue.getJSONArray(0).get(0).toString());
+                            //录入价格
+                            BillPrice billPrice = new BillPrice();
+                            billPrice.setBillId(billId);
+                            BigDecimal ret = null;
+                            ret = new BigDecimal((String) price[0]);
+                            billPrice.setPrice(ret);
+                            billPrice.setBillRankingStandard(Long.parseLong(rankend[0]));
+                            billPrice.setInMemberId(user.getId());
+                            ;
+                            String[] updateUserId = params.get("selectContent[" + i + "][updateUserId]");
+                            UserRole userRole = userRoleMapper.selectByUserId(Long.parseLong(updateUserId[0]));
+
+                            if (userRole != null) {
+
+                                Role role = roleMapper.selectByPrimaryKey(userRole.getRoleId());
+                                User usernew = userMapper.selectByPrimaryKey(userRole.getUserId());
+                                if (role.getRoleCode().equals("ASSISTANT")) {
+                                    billPrice.setOutMemberId(usernew.getCreateUserId());
+                                } else {
+                                    billPrice.setOutMemberId(usernew.getId());
+                                }
+                            }
+
+
+                            billPrice.setCreateTime(new Date());
+                            //修改订单
+                            billPriceMapper.insert(billPrice);
+                            Bill bill1 = new Bill();
+                            bill1.setId(billId);
+                            bill1.setUpdateUserId(user.getId());
+                            bill1.setWebAppId(ApiId);
+                            bill1.setWebAppId1(ApiId1);
+                            bill1.setDayOptimization(1);
+                            bill1.setBillAscription(caozuoyuanId);
+                            bill1.setUpdateTime(new Date());
+                            bill1.setState(2);
+                            //将网址插入到hashset中
+                            hashSet.add(billA.getWebsite());
+                            //优化状态（优化中）（调点击）
+                            bill1.setOpstate(1);
+                            billMapper.updateByPrimaryKeySelective(bill1);
+                            if (!"NaN".equals(price1[0])) {
+                                String[] id1 = params.get("selectContent[" + i + "][id]");
+                                String[] rankend1 = params.get("rankend1");
+                                Long billId1 = Long.parseLong(id1[0]);
+                                BillPrice billPrice1 = new BillPrice();
+                                billPrice1.setBillId(billId1);
+                                BigDecimal ret1 = null;
+                                ret1 = new BigDecimal((String) price1[0]);
+                                billPrice1.setPrice(ret1);
+                                billPrice1.setBillRankingStandard(Long.parseLong(rankend1[0]));
+                                billPrice1.setInMemberId(user.getId());
+                                if (userRole != null) {
+
+                                    Role role = roleMapper.selectByPrimaryKey(userRole.getRoleId());
+                                    User usernew = userMapper.selectByPrimaryKey(userRole.getUserId());
+                                    if (role.getRoleCode().equals("ASSISTANT")) {
+                                        billPrice1.setOutMemberId(usernew.getCreateUserId());
+                                    } else {
+                                        billPrice1.setOutMemberId(usernew.getId());
+                                    }
+                                }
+                                billPrice1.setCreateTime(new Date());
+                                billPriceMapper.insert(billPrice1);
+                                if (!"NaN".equals(price2[0])) {
+                                    String[] id2 = params.get("selectContent[" + i + "][id]");
+                                    String[] rankend2 = params.get("rankend2");
+                                    Long billId2 = Long.parseLong(id2[0]);
+                                    BillPrice billPrice2 = new BillPrice();
+                                    billPrice2.setBillId(billId2);
+                                    BigDecimal ret2 = null;
+                                    ret2 = new BigDecimal((String) price2[0]);
+                                    billPrice2.setPrice(ret2);
+                                    billPrice2.setBillRankingStandard(Long.parseLong(rankend2[0]));
+                                    billPrice2.setInMemberId(user.getId());
+                                    if (userRole != null) {
+
+                                        Role role = roleMapper.selectByPrimaryKey(userRole.getRoleId());
+                                        User usernew = userMapper.selectByPrimaryKey(userRole.getUserId());
+                                        if (role.getRoleCode().equals("ASSISTANT")) {
+                                            billPrice2.setOutMemberId(usernew.getCreateUserId());
+                                        } else {
+                                            billPrice2.setOutMemberId(usernew.getId());
+                                        }
+                                    }
+                                    billPrice2.setCreateTime(new Date());
+                                    billPriceMapper.insert(billPrice2);
+                                    if (!"NaN".equals(price3[0])) {
+                                        String[] id3 = params.get("selectContent[" + i + "][id]");
+                                        String[] rankend3 = params.get("rankend3");
+                                        Long billId3 = Long.parseLong(id3[0]);
+                                        BillPrice billPrice3 = new BillPrice();
+                                        billPrice3.setBillId(billId3);
+                                        BigDecimal ret3 = null;
+                                        ret3 = new BigDecimal((String) price3[0]);
+                                        billPrice3.setPrice(ret3);
+                                        billPrice3.setBillRankingStandard(Long.parseLong(rankend3[0]));
+                                        billPrice3.setInMemberId(user.getId());
+                                        if (userRole != null) {
+
+                                            Role role = roleMapper.selectByPrimaryKey(userRole.getRoleId());
+                                            User usernew = userMapper.selectByPrimaryKey(userRole.getUserId());
+                                            if (role.getRoleCode().equals("ASSISTANT")) {
+                                                billPrice3.setOutMemberId(usernew.getCreateUserId());
+                                            } else {
+                                                billPrice3.setOutMemberId(usernew.getId());
+                                            }
+                                        }
+                                        billPrice3.setCreateTime(new Date());
+                                        billPriceMapper.insert(billPrice3);
+                                    }
+                                }
+                            }
+                        } else {
+
+                            return 1;
+                        }
+                    }
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return 1;
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                    return 1;
+                }
+            }
+        }
+        //endregion
+        //通知操作员
+        Iterator iterator = hashSet.iterator();
+        while (iterator.hasNext()) {
+            PushMessage pushMessage=new PushMessage();
+            pushMessage.setReceiveuserid(caozuoyuanId);
+            pushMessage.setAlias("新单");//消息备注
+            pushMessage.setTypev("A1");//业务类型
+            pushMessage.setModal(true);//消息模式
+            pushMessage.setTitle("您有新的订单");//消息标题
+            pushMessage.setContent("订单网址为："+iterator.next().toString());
+            pushMessage.setFlag(0);//消息处理状态
+            pushMessage.setCreatetime(new Date());
+            pushMessage.setSendtime(new Date());
+            pushMessageMapper.insert(pushMessage);
+        }
+        return 0;
+    }
+
+    /**
+     * 审核不通过
+     *
+     * @param params
+     * @param user
+     * @return
+     */
+    @Override
+    public int billNotExamine(Map<String, String[]> params, LoginUser user) {
+        String[] checkboxLength = params.get("length");
+        int length = Integer.parseInt(checkboxLength[0]);
+        for (int i = 0; i < length; i++) {
+            //获取订单ID
+            String[] id = params.get("selectContent[" + i + "][id]");
+            Long billId = Long.parseLong(id[0]);
+            //获取订单
+            Bill bill = billMapper.selectByPrimaryKey(billId);
+            //修改订单的操作员
+            Bill newBill = new Bill();
+            newBill.setId(billId);
+            if (user.hasRole("SUPER_ADMIN")) {
+                newBill.setState(-4);
+            } else if (user.hasRole("DISTRIBUTOR") || user.hasRole("ASSISTANT")) {
+                newBill.setState(-3);
+            } else if (user.hasRole("AGENT")) {
+                newBill.setState(-2);
+            }
+            billMapper.updateByPrimaryKeySelective(newBill);
+        }
+
+        return 0;
+    }
+
 
     /**
      * 实现通过主键ID查订单
@@ -1586,528 +2144,6 @@ public class BillServiceimpl implements BillService {
     }
 
     /**
-     * 渠道商审核订单，录入单价表数据
-     *
-     * @param params 价格
-     * @param user   当前登录对象
-     * @return
-     */
-    @Override
-    public int distributorPrice(Map<String, String[]> params, LoginUser user) {
-
-        String[] selectContent = params.get("selectContent[0][userName]");
-        String[] checkboxLength = params.get("checkboxLength");
-        String[] price1 = params.get("price1");
-        String[] price2 = params.get("price2");
-        String[] price3 = params.get("price3");
-
-        int length = Integer.parseInt(checkboxLength[0]);
-        for (int i = 0; i < length; i++) {
-            String[] id = params.get("selectContent[" + i + "][id]");
-            String[] price = params.get("price");
-            String[] rankend = params.get("rankend");
-            Long billId = Long.parseLong(id[0]);
-            //判断渠道商订单价格是否已经存在(有BUG 如果管理员录入价格 bool会变成true)
-            List<BillPrice> billPriceList = billPriceMapper.selectByBillId(billId);
-            Boolean bool = true;
-            //如果有了 就修改
-            if (billPriceList.size() > 0) {
-                for (BillPrice billPrice1 : billPriceList
-                        ) {
-                    if (billPrice1.getInMemberId().longValue() == user.getId().longValue()) {
-                        bool = false;
-                    }
-                }
-            }
-            if (bool) {
-                BillPrice billPrice = new BillPrice();
-                billPrice.setBillId(billId);
-                BigDecimal ret = null;
-                ret = new BigDecimal((String) price[0]);
-                billPrice.setPrice(ret);
-                billPrice.setBillRankingStandard(Long.parseLong(rankend[0]));
-                if (user.hasRole("ASSISTANT")) {
-                    billPrice.setInMemberId(user.getCreateUserId());
-                } else {
-                    billPrice.setInMemberId(user.getId());
-                }
-                ;
-                String[] updateUserId = params.get("selectContent[" + i + "][updateUserId]");
-                billPrice.setOutMemberId(Long.parseLong(updateUserId[0]));
-                billPrice.setCreateTime(new Date());
-                billPriceMapper.insert(billPrice);
-                Bill bill1 = new Bill();
-                bill1.setId(billId);
-                bill1.setUpdateUserId(user.getId());
-                bill1.setState(1);
-                billMapper.updateByPrimaryKeySelective(bill1);
-                if (!"NaN".equals(price1[0])) {
-                    String[] id1 = params.get("selectContent[" + i + "][id]");
-                    String[] rankend1 = params.get("rankend1");
-                    Long billId1 = Long.parseLong(id1[0]);
-                    BillPrice billPrice1 = new BillPrice();
-                    billPrice1.setBillId(billId1);
-                    BigDecimal ret1 = null;
-                    ret1 = new BigDecimal((String) price1[0]);
-                    billPrice1.setPrice(ret1);
-                    billPrice1.setBillRankingStandard(Long.parseLong(rankend1[0]));
-                    if (user.hasRole("ASSISTANT")) {
-                        billPrice1.setInMemberId(user.getCreateUserId());
-                    } else {
-                        billPrice1.setInMemberId(user.getId());
-                    }
-
-                    String[] updateUserId1 = params.get("selectContent[" + i + "][updateUserId]");
-                    billPrice1.setOutMemberId(Long.parseLong(updateUserId1[0]));
-                    billPrice1.setCreateTime(new Date());
-                    billPriceMapper.insert(billPrice1);
-                    if (!"NaN".equals(price2[0])) {
-                        String[] id2 = params.get("selectContent[" + i + "][id]");
-                        String[] rankend2 = params.get("rankend2");
-                        Long billId2 = Long.parseLong(id2[0]);
-                        BillPrice billPrice2 = new BillPrice();
-                        billPrice2.setBillId(billId2);
-                        BigDecimal ret2 = null;
-                        ret2 = new BigDecimal((String) price2[0]);
-                        billPrice2.setPrice(ret2);
-                        billPrice2.setBillRankingStandard(Long.parseLong(rankend2[0]));
-                        if (user.hasRole("ASSISTANT")) {
-                            billPrice2.setInMemberId(user.getCreateUserId());
-                        } else {
-                            billPrice2.setInMemberId(user.getId());
-                        }
-
-                        String[] updateUserId2 = params.get("selectContent[" + i + "][updateUserId]");
-                        billPrice2.setOutMemberId(Long.parseLong(updateUserId2[0]));
-                        billPrice2.setCreateTime(new Date());
-                        billPriceMapper.insert(billPrice2);
-                        if (!"NaN".equals(price3[0])) {
-                            String[] id3 = params.get("selectContent[" + i + "][id]");
-                            String[] rankend3 = params.get("rankend3");
-                            Long billId3 = Long.parseLong(id3[0]);
-                            BillPrice billPrice3 = new BillPrice();
-                            billPrice3.setBillId(billId3);
-                            BigDecimal ret3 = null;
-                            ret3 = new BigDecimal((String) price3[0]);
-                            billPrice3.setPrice(ret3);
-                            billPrice3.setBillRankingStandard(Long.parseLong(rankend3[0]));
-                            if (user.hasRole("ASSISTANT")) {
-                                billPrice3.setInMemberId(user.getCreateUserId());
-                            } else {
-                                billPrice3.setInMemberId(user.getId());
-                            }
-
-                            String[] updateUserId3 = params.get("selectContent[" + i + "][updateUserId]");
-                            billPrice3.setOutMemberId(Long.parseLong(updateUserId3[0]));
-                            billPrice3.setCreateTime(new Date());
-                            billPriceMapper.insert(billPrice3);
-                        }
-                    }
-                }
-            } else {
-                return 1;
-            }
-
-
-        }
-        return 0;
-    }
-
-    /**
-     * 优化方录入价格
-     *
-     * @param params
-     * @param user
-     * @return
-     */
-    @Override
-    public int adminPrice(Map<String, String[]> params, User user) {
-        //获取参数
-        String[] bill = params.get("rankend1");
-        String[] selectContent = params.get("selectContent[0][userName]");
-        String[] checkboxLength = params.get("checkboxLength");
-        String[] price1 = params.get("price1");
-        String[] price2 = params.get("price2");
-        String[] price3 = params.get("price3");
-        String[] caozuoyuan = params.get("caozuoyuan");
-        Long caozuoyuanId = Long.parseLong(caozuoyuan[0]);
-        //消息通知 --网址
-        HashSet hashSet=new HashSet();
-        int length = Integer.parseInt(checkboxLength[0]);
-        //region  录入
-        for (int i = 0; i < length; i++) {
-            String[] id = params.get("selectContent[" + i + "][id]");
-            String[] price = params.get("price");
-            String[] rankend = params.get("rankend");
-            Long billId = Long.parseLong(id[0]);
-            Bill billNew = billMapper.selectByPrimaryKey(billId);//判断属性
-            //判断渠道商订单价格是否已经存在(有BUG 如果管理员录入价格 bool会变成true)
-            List<BillPrice> billPriceList = billPriceMapper.selectByBillId(billId);
-            Boolean bool = true;
-            //如果有了 就修改
-            if (billPriceList.size() > 0) {
-                for (BillPrice billPrice1 : billPriceList
-                        ) {
-                    if (billPrice1.getInMemberId().longValue() == user.getId().longValue()) {
-                        bool = false;
-                    }
-                }
-            }
-            if (bool) {
-                CustomerRankingParam customerRankingParam = new CustomerRankingParam();
-                Bill billA = billMapper.selectByPrimaryKey(billId);
-                BillSearchSupport billSearchSupport = billSearchSupportMapper.selectByBillId(billId);
-                int ApiId;
-                String wAction = "AddSearchTask";
-                String keyword = billA.getKeywords();
-                keyword = keyword.replaceAll("[\\u00A0]+", "");
-                String[] qkeyword = {keyword};
-                String[] qurl = {billA.getWebsite()};
-
-                //查询报价
-                addKeywordsPriceTask(keyword);
-
-                //组合参数
-
-                JSONObject jsonObj = new JSONObject();
-                jsonObj.put("keyword", qkeyword);
-                jsonObj.put("url", qurl);
-                jsonObj.put("time", System.currentTimeMillis());
-                if (billNew != null) {
-                    if (billNew.getBillType() == 1 || billNew.getBillType() == 2) {
-                        int[] timeSet = {9, 15};
-                        jsonObj.put("timeSet", timeSet);
-                        jsonObj.put("searchOnce", true);
-                        jsonObj.put("businessType", 2006);
-                    } else if (billNew.getBillType() == 4) {
-                        jsonObj.put("businessType", 1006);
-                    }
-                }
-                jsonObj.put("userId", Define.userId);
-
-                //判断搜索引擎
-                switch (billSearchSupport.getSearchSupport()) {
-                    case "百度":
-                        jsonObj.put("searchType", 1010);
-                        break;
-                    case "360":
-                        jsonObj.put("searchType", 1015);
-                        break;
-                    case "搜狗":
-                        jsonObj.put("searchType", 1030);
-                        break;
-                    case "手机百度":
-                        jsonObj.put("searchType", 7010);
-                        break;
-                    case "手机360":
-                        jsonObj.put("searchType", 7015);
-                        break;
-                    case "手机搜狗":
-                        jsonObj.put("searchType", 7030);
-                        break;
-                    case "神马":
-                        jsonObj.put("searchType", 7070);
-                        break;
-                }
-                String wParam = jsonObj.toString();
-                String wSign = null;
-                try {
-                    wSign = md5_urlEncode.EncoderByMd5(wAction + Define.token + jsonObj.toString());
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                customerRankingParam.setwAction("AddSearchTask");
-                customerRankingParam.setwParam(wParam);
-                customerRankingParam.setwSign(wSign);
-
-
-                //调整点击录入订单
-                int agid = OpDefine.agid;
-                String action = "importkw";
-                String md5Key = OpDefine.md5Key;
-
-                //取现在时间
-                String dateString = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-                //填充实体类
-                List<Yby> ybyList = new ArrayList<Yby>();
-                //加密sign
-                Yby yby = new Yby();
-                yby.setKw(billA.getKeywords().replaceAll("[\\u00A0]+", ""));
-                yby.setUrl(billA.getWebsite());
-                //判断搜索引擎
-                switch (billSearchSupport.getSearchSupport()) {
-                    case "百度":
-                        yby.setSe(1);
-                        break;
-                    case "360":
-                        yby.setSe(2);
-                        break;
-                    case "搜狗":
-                        yby.setSe(3);
-                        break;
-                    case "手机百度":
-                        yby.setSe(4);
-                        break;
-                    case "手机360":
-                        yby.setSe(5);
-                        break;
-                    case "手机搜狗":
-                        yby.setSe(6);
-                        break;
-                    case "神马":
-                        yby.setSe(7);
-                        break;
-                }
-                yby.setMcpd(1);
-                ybyList.add(yby);
-                //组包
-                String str = "";
-                str = str.concat(JSON.toJSONString(dateString));
-                str = str.concat(JSON.toJSONString(action));
-                str = str.concat(JSON.toJSONString(ybyList));
-                str = str.concat(JSON.toJSONString(md5Key));
-                str = str.concat(JSON.toJSONString(agid));
-                //加密sign
-                String sign = null;
-                try {
-                    sign = md5_urlEncode.EncoderByMd51(str);
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                //创建JSON
-                JSONObject jaction = new JSONObject();
-                jaction.put("action", action);
-                JSONObject jagid = new JSONObject();
-                jagid.put("agid", agid);
-                JSONObject jstamp = new JSONObject();
-                jstamp.put("stamp", dateString);
-                JSONObject jargs = new JSONObject();
-                jargs.put("args", JSON.toJSONString(ybyList));
-                JSONObject jsign = new JSONObject();
-                jsign.put("sign", sign);
-                //拼接字符串
-                String str11 = "{" + jagid.toString().replace("{", "").replace("}", "") + "," + jstamp.toString().replace("{", "").replace("}", "") + "," +
-                        jaction.toString().replace("{", "").replace("}", "") + "," + jsign.toString().replace("{", "").replace("}", "") + "," +
-                        jargs.toString().replace("\"[", "[").replace("]\"", "]").replace("\\", "").replace("{\"args\"", "\"args\"");
-
-                //Base64  编码
-                BASE64Encoder base64Encoder = new BASE64Encoder();
-                String data = null;
-                try {
-                    data = base64Encoder.encode(str11.getBytes("UTF-8"));
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("data", data);
-                try {
-                    //查排名返回对象（导入订单）
-                    CustomerRankingResult customerRankingResult = remoteService.getCustomerRanking(customerRankingParam);
-                    //调点击返回对象（导入订单）
-                    CustomerOptimizationResult customerOptimizationResult = remoteService.getOptimizationApi(map);
-                    //判断两个返回结果是否为空
-                    if (customerRankingResult != null && customerOptimizationResult != null) {
-                        //判断两个返回结果是否成功
-                        JSONObject jsonObject = customerOptimizationResult.getArgs();
-                        String code = jsonObject.get("code").toString();
-                        if (customerRankingResult.getMessage().equals("success.") && ("success").equals(code)) {
-
-                            JSONArray OptimizationValue = jsonObject.getJSONArray("value");
-                            String message = OptimizationValue.getJSONArray(0).get(1).toString();
-                            JSONArray value = customerRankingResult.getValue();
-                            JSONArray valueJSONArray = value.getJSONArray(0);
-                            ApiId = Integer.parseInt(valueJSONArray.get(0).toString());
-                            int ApiId1 = Integer.parseInt(OptimizationValue.getJSONArray(0).get(0).toString());
-                            //录入价格
-                            BillPrice billPrice = new BillPrice();
-                            billPrice.setBillId(billId);
-                            BigDecimal ret = null;
-                            ret = new BigDecimal((String) price[0]);
-                            billPrice.setPrice(ret);
-                            billPrice.setBillRankingStandard(Long.parseLong(rankend[0]));
-                            billPrice.setInMemberId(user.getId());
-                            ;
-                            String[] updateUserId = params.get("selectContent[" + i + "][updateUserId]");
-                            UserRole userRole = userRoleMapper.selectByUserId(Long.parseLong(updateUserId[0]));
-
-                            if (userRole != null) {
-
-                                Role role = roleMapper.selectByPrimaryKey(userRole.getRoleId());
-                                User usernew = userMapper.selectByPrimaryKey(userRole.getUserId());
-                                if (role.getRoleCode().equals("ASSISTANT")) {
-                                    billPrice.setOutMemberId(usernew.getCreateUserId());
-                                } else {
-                                    billPrice.setOutMemberId(usernew.getId());
-                                }
-                            }
-
-
-                            billPrice.setCreateTime(new Date());
-                            //修改订单
-                            billPriceMapper.insert(billPrice);
-                            Bill bill1 = new Bill();
-                            bill1.setId(billId);
-                            bill1.setUpdateUserId(user.getId());
-                            bill1.setWebAppId(ApiId);
-                            bill1.setWebAppId1(ApiId1);
-                            bill1.setDayOptimization(1);
-                            bill1.setBillAscription(caozuoyuanId);
-                            bill1.setUpdateTime(new Date());
-                            bill1.setState(2);
-                            //将网址插入到hashset中
-                            hashSet.add(billA.getWebsite());
-                            //优化状态（优化中）（调点击）
-                            bill1.setOpstate(1);
-                            billMapper.updateByPrimaryKeySelective(bill1);
-                            if (!"NaN".equals(price1[0])) {
-                                String[] id1 = params.get("selectContent[" + i + "][id]");
-                                String[] rankend1 = params.get("rankend1");
-                                Long billId1 = Long.parseLong(id1[0]);
-                                BillPrice billPrice1 = new BillPrice();
-                                billPrice1.setBillId(billId1);
-                                BigDecimal ret1 = null;
-                                ret1 = new BigDecimal((String) price1[0]);
-                                billPrice1.setPrice(ret1);
-                                billPrice1.setBillRankingStandard(Long.parseLong(rankend1[0]));
-                                billPrice1.setInMemberId(user.getId());
-                                if (userRole != null) {
-
-                                    Role role = roleMapper.selectByPrimaryKey(userRole.getRoleId());
-                                    User usernew = userMapper.selectByPrimaryKey(userRole.getUserId());
-                                    if (role.getRoleCode().equals("ASSISTANT")) {
-                                        billPrice1.setOutMemberId(usernew.getCreateUserId());
-                                    } else {
-                                        billPrice1.setOutMemberId(usernew.getId());
-                                    }
-                                }
-                                billPrice1.setCreateTime(new Date());
-                                billPriceMapper.insert(billPrice1);
-                                if (!"NaN".equals(price2[0])) {
-                                    String[] id2 = params.get("selectContent[" + i + "][id]");
-                                    String[] rankend2 = params.get("rankend2");
-                                    Long billId2 = Long.parseLong(id2[0]);
-                                    BillPrice billPrice2 = new BillPrice();
-                                    billPrice2.setBillId(billId2);
-                                    BigDecimal ret2 = null;
-                                    ret2 = new BigDecimal((String) price2[0]);
-                                    billPrice2.setPrice(ret2);
-                                    billPrice2.setBillRankingStandard(Long.parseLong(rankend2[0]));
-                                    billPrice2.setInMemberId(user.getId());
-                                    if (userRole != null) {
-
-                                        Role role = roleMapper.selectByPrimaryKey(userRole.getRoleId());
-                                        User usernew = userMapper.selectByPrimaryKey(userRole.getUserId());
-                                        if (role.getRoleCode().equals("ASSISTANT")) {
-                                            billPrice2.setOutMemberId(usernew.getCreateUserId());
-                                        } else {
-                                            billPrice2.setOutMemberId(usernew.getId());
-                                        }
-                                    }
-                                    billPrice2.setCreateTime(new Date());
-                                    billPriceMapper.insert(billPrice2);
-                                    if (!"NaN".equals(price3[0])) {
-                                        String[] id3 = params.get("selectContent[" + i + "][id]");
-                                        String[] rankend3 = params.get("rankend3");
-                                        Long billId3 = Long.parseLong(id3[0]);
-                                        BillPrice billPrice3 = new BillPrice();
-                                        billPrice3.setBillId(billId3);
-                                        BigDecimal ret3 = null;
-                                        ret3 = new BigDecimal((String) price3[0]);
-                                        billPrice3.setPrice(ret3);
-                                        billPrice3.setBillRankingStandard(Long.parseLong(rankend3[0]));
-                                        billPrice3.setInMemberId(user.getId());
-                                        if (userRole != null) {
-
-                                            Role role = roleMapper.selectByPrimaryKey(userRole.getRoleId());
-                                            User usernew = userMapper.selectByPrimaryKey(userRole.getUserId());
-                                            if (role.getRoleCode().equals("ASSISTANT")) {
-                                                billPrice3.setOutMemberId(usernew.getCreateUserId());
-                                            } else {
-                                                billPrice3.setOutMemberId(usernew.getId());
-                                            }
-                                        }
-                                        billPrice3.setCreateTime(new Date());
-                                        billPriceMapper.insert(billPrice3);
-                                    }
-                                }
-                            }
-                        } else {
-
-                            return 1;
-                        }
-                    }
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return 1;
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                    return 1;
-                }
-
-
-            }
-
-
-        }
-        //endregion
-        //通知操作员
-        Iterator iterator = hashSet.iterator();
-        while (iterator.hasNext()) {
-            PushMessage pushMessage=new PushMessage();
-            pushMessage.setReceiveuserid(caozuoyuanId);
-            pushMessage.setAlias("新单");//消息备注
-            pushMessage.setTypev("A1");//业务类型
-            pushMessage.setModal(true);//消息模式
-            pushMessage.setTitle("您有新的订单");//消息标题
-            pushMessage.setContent("订单网址为："+iterator.next().toString());
-            pushMessage.setFlag(0);//消息处理状态
-            pushMessageMapper.insert(pushMessage);
-        }
-
-
-        return 0;
-    }
-
-    /**
-     * 审核不通过
-     *
-     * @param params
-     * @param user
-     * @return
-     */
-    @Override
-    public int billNotExamine(Map<String, String[]> params, LoginUser user) {
-        String[] checkboxLength = params.get("length");
-        int length = Integer.parseInt(checkboxLength[0]);
-        for (int i = 0; i < length; i++) {
-            //获取订单ID
-            String[] id = params.get("selectContent[" + i + "][id]");
-            Long billId = Long.parseLong(id[0]);
-            //获取订单
-            Bill bill = billMapper.selectByPrimaryKey(billId);
-            //修改订单的操作员
-            Bill newBill = new Bill();
-            newBill.setId(billId);
-            if (user.hasRole("SUPER_ADMIN")) {
-                newBill.setState(-4);
-            } else if (user.hasRole("DISTRIBUTOR") || user.hasRole("ASSISTANT")) {
-                newBill.setState(-3);
-            } else if (user.hasRole("AGENT")) {
-                newBill.setState(-2);
-            }
-            billMapper.updateByPrimaryKeySelective(newBill);
-        }
-
-        return 0;
-    }
-
-    /**
      * 待审核订单预览页面（提交订单页面）删除
      *
      * @param params
@@ -3014,7 +3050,8 @@ public class BillServiceimpl implements BillService {
 
         String[] checkboxLength = params.get("length");
         int length = Integer.parseInt(checkboxLength[0]);
-
+        //消息通知 --网址
+        HashSet hashSet=new HashSet();
         for (int i = 0; i < length; i++) {
             String[] id = params.get("selectContent[" + i + "][id]");
             Long billId = Long.parseLong(id[0]);
@@ -3029,10 +3066,24 @@ public class BillServiceimpl implements BillService {
             if (loginUser.hasRole("DISTRIBUTOR")) {
                 bill.setApplyState(2);
             }
-
-
+            String[] website=params.get("selectContent[" + i + "][website]");
+            hashSet.add(website[0]);
             billMapper.updateByPrimaryKeySelective(bill);
 
+        }
+        Iterator iterator = hashSet.iterator();
+        while (iterator.hasNext()) {
+            PushMessage pushMessage=new PushMessage();
+            pushMessage.setReceiveuserid(loginUser.getCreateUserId());
+            pushMessage.setAlias("停单");//消息备注
+            pushMessage.setTypev("B1");//业务类型
+            pushMessage.setModal(true);//消息模式
+            pushMessage.setTitle("您有"+loginUser.getUserName()+"提交的停单需要审核");//消息标题
+            pushMessage.setContent("订单网址为："+iterator.next().toString());
+            pushMessage.setFlag(0);//消息处理状态
+            pushMessage.setCreatetime(new Date());
+            pushMessage.setSendtime(new Date());
+            pushMessageMapper.insert(pushMessage);
         }
 
         return 0;
@@ -3162,7 +3213,8 @@ public class BillServiceimpl implements BillService {
 
         String[] checkboxLength = params.get("length");
         int length = Integer.parseInt(checkboxLength[0]);
-
+        //消息通知 --网址
+        HashSet hashSet=new HashSet();
         for (int i = 0; i < length; i++) {
             String[] id = params.get("selectContent[" + i + "][id]");
             Long billId = Long.parseLong(id[0]);
@@ -3177,8 +3229,24 @@ public class BillServiceimpl implements BillService {
                 bill.setApplyState(-2);
             }
             billMapper.updateByPrimaryKeySelective(bill);
-
+            String[] website=params.get("selectContent[" + i + "][website]");
+            hashSet.add(website[0]);
         }
+        Iterator iterator = hashSet.iterator();
+        while (iterator.hasNext()) {
+            PushMessage pushMessage=new PushMessage();
+            pushMessage.setReceiveuserid(loginUser.getCreateUserId());
+            pushMessage.setAlias("申请优化");//消息备注
+            pushMessage.setTypev("C1");//业务类型
+            pushMessage.setModal(true);//消息模式
+            pushMessage.setTitle("您有"+loginUser.getUserName()+"提交的申请优化订单需要审核");//消息标题
+            pushMessage.setContent("订单网址为："+iterator.next().toString());
+            pushMessage.setFlag(0);//消息处理状态
+            pushMessage.setCreatetime(new Date());
+            pushMessage.setSendtime(new Date());
+            pushMessageMapper.insert(pushMessage);
+        }
+
 
         return 0;
 
@@ -3706,7 +3774,8 @@ public class BillServiceimpl implements BillService {
         String[] price1 = params.get("price1");
         String[] price2 = params.get("price2");
         String[] price3 = params.get("price3");
-
+        //消息通知 --网址
+        HashSet hashSet=new HashSet();
         int length = Integer.parseInt(checkboxLength[0]);
         for (int i = 0; i < length; i++) {
             String[] id = params.get("selectContent[" + i + "][id]");
@@ -3793,11 +3862,26 @@ public class BillServiceimpl implements BillService {
                         }
                     }
                 }
+                //将网址插入到hashset中
+                String[] website= params.get("selectContent[" + i + "][website]");
+                hashSet.add(website[0]);
             } else {
                 return 1;
             }
-
-
+        }
+        Iterator iterator = hashSet.iterator();
+        while (iterator.hasNext()) {
+            PushMessage pushMessage=new PushMessage();
+            pushMessage.setReceiveuserid(user.getCreateUserId());
+            pushMessage.setAlias("新单");//消息备注
+            pushMessage.setTypev("A1");//业务类型
+            pushMessage.setModal(true);//消息模式
+            pushMessage.setTitle("您有"+user.getUserName()+"提交的新的订单需要审核");//消息标题
+            pushMessage.setContent("订单网址为："+iterator.next().toString());
+            pushMessage.setFlag(0);//消息处理状态
+            pushMessage.setCreatetime(new Date());
+            pushMessage.setSendtime(new Date());
+            pushMessageMapper.insert(pushMessage);
         }
         return 0;
     }

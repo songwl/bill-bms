@@ -172,7 +172,7 @@
                     <a class="dropdown-toggle" data-toggle="dropdown" id="clickMessage">
                         <i class="fa fa-volume-up"></i>
                         <span class="username">消息</span>
-                        <span id="shandong" style="height: 20px;width: 20px;line-height: 20px;
+                        <span id="shandong" style="height: 25px;width: 25px;line-height:25px;text-align: center;font-size: 12px;
                         display: inline-block;border: 1px solid #e3cf7a;background-color:#e3cf7a;
                         border-radius: 100%;font-weight: bold;display: none;"> </span>
 

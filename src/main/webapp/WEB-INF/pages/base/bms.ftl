@@ -51,7 +51,70 @@
     </@base.jscontent>
 
     <@base.html title "page-header-fixed">
+    <style>
+        .layim-msgbox {
+            margin: 15px;
+        }
 
+        .layim-msgbox li {
+            position: relative;
+            margin-bottom: 10px;
+            padding: 0 130px 10px 60px;
+            padding-bottom: 10px;
+            line-height: 22px;
+            border-bottom: 1px dotted #e2e2e2;
+        }
+
+        .layim-msgbox .layim-msgbox-tips {
+            margin: 0;
+            padding: 10px 0;
+            border: none;
+            text-align: center;
+            color: #999;
+        }
+
+        .layim-msgbox .layim-msgbox-system {
+            padding: 0 10px 10px 10px;
+        }
+
+        .layim-msgbox li p span {
+            padding-left: 5px;
+            color: #999;
+        }
+
+        .layim-msgbox li p em {
+            font-style: normal;
+            color: #FF5722;
+        }
+
+        .layim-msgbox-avatar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 50px;
+            height: 50px;
+        }
+
+        .layim-msgbox-user {
+            padding-top: 5px;
+        }
+
+        .layim-msgbox-content {
+            margin-top: 3px;
+        }
+
+        .layim-msgbox .layui-btn-small {
+            padding: 0 15px;
+            margin-left: 5px;
+        }
+
+        .layim-msgbox-btn {
+            position: absolute;
+            right: 0;
+            top: 12px;
+            color: #999;
+        }
+    </style>
     <!--顶部导航栏     开始 -->
     <header class="header navbar navbar-fixed-top" role="banner">
         <div class="container">
@@ -104,36 +167,34 @@
                     </ul>
                 </li>
             </ul>
-        <#--<ul class="nav navbar-right"  style="height:50px;">
-            <li class="dropdown user" style="height:48px;" >
-                <a class="dropdown-toggle" data-toggle="dropdown"  id="clickMessage">
-                    <i class="fa fa-bell"></i>
-                    <span class="username">消息中心</span>
-                    <i class="icon-caret-down small"></i>
-                </a>
-            </li>
-            <ul class="dropdown-menu messageShow" style="margin-top: 2px!important;position: absolute!important;	float: left!important;	background-color: #fff!important;
+            <ul class="nav navbar-right" style="height:50px;">
+                <li class="dropdown user" style="height:48px;">
+                    <a class="dropdown-toggle" data-toggle="dropdown" id="clickMessage">
+                        <i class="fa fa-volume-up"></i>
+                        <span class="username">消息</span>
+                        <span id="shandong" style="height: 20px;width: 20px;line-height: 20px;
+                        display: inline-block;border: 1px solid #e3cf7a;background-color:#e3cf7a;
+                        border-radius: 100%;font-weight: bold;display: none;"> </span>
+
+                        <i class="icon-caret-down small"></i>
+                    </a>
+                </li>
+                <ul class="dropdown-menu messageShow" style="margin-top: 2px!important;position: absolute!important;	float: left!important;	background-color: #fff!important;
                 border: 1px solid #ccc!important;
                 border: 1px solid rgba(0, 0, 0, 0.15)!important;
                 -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175)!important;
                 -moz-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175)!important;
                 box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175)!important;
-                right: 100px;
+                right: 120px;
                 left: auto;
                 display: none;">
-                <li>
-                    <a class="dlg-user-edit-info">
-                        <i class="icon-user"></i> 新的订单
-                    </a>
-                </li>
-               <!-- <li>
-                    <a class="dlg-user-edit-pwd">
-                        <i class="icon-pencil"></i> 订单反馈
-                    </a>
-                </li>
-                &ndash;&gt;
+                    <li id="messageClick">
+                        <a class="dlg-user-edit-info">
+                            <i class="icon-user"></i> 新的订单
+                        </a>
+                    </li>
+                </ul>
             </ul>
-        </ul>-->
         </div>
     </header>
     <div class="clearfix">
@@ -912,6 +973,47 @@
         </div>
     </div>
     <!--修改密码end-->
+
+    <div id="messageDiv" style="display: none;">
+        <ul class="layim-msgbox" id="LAY_view">
+            <#if bmsModel.pushMessageList??>
+                <#list bmsModel.pushMessageList as item>
+                    <form action="">
+                    <li data-uid="166488" data-fromgroup="0">
+                        <img src="/bill/static/img/face.png"
+                             class="layui-circle layim-msgbox-avatar">
+                        <p class="layim-msgbox-user">
+                            <span style="color: #00a0e9">${item.title}</span>
+                            <span>${item.createtime}</span></p>
+                        <p class="layim-msgbox-content">${item.content}
+                            <span></span></p>
+                        <input type="hidden" name="messageId" value="${item.id}">
+                        <p class="layim-msgbox-btn">
+                            <button id="leaseBillCmt" class="btn btn-default form-control" type="submit" onclick="confirmMessage(this.form);return false">
+                                确定
+                            </button>
+                        </p>
+                    </li>
+                    </form>
+                </#list>
+            </#if>
+            <div style="margin: 0 15px;">
+                <blockquote class="layui-elem-quote" style="margin-bottom: 10px;
+                padding: 15px;
+                line-height: 22px;
+                border-left: 5px solid #009688;
+                border-radius: 0 2px 2px 0;
+                background-color: #f2f2f2;
+                text-align: center;">
+                    暂无更多新消息
+                </blockquote>
+            </div>
+
+        </ul>
+
+    </div>
+
+
     </@base.html>
 
 </#macro>

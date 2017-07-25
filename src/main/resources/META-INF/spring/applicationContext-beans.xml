@@ -12,7 +12,7 @@
 
 		<context:component-scan base-package="com.yipeng.bill.bms.service,com.yipeng.bill.bms.dao">
     	</context:component-scan>
-    	
        <import resource="classpath*:META-INF/spring/applicationContext-database.xml"/>
        <import resource="classpath*:META-INF/spring/applicationContext-job.xml"/>
+        <import resource="classpath*:META-INF/spring/applicationContext-redis.xml"/>
 </beans>

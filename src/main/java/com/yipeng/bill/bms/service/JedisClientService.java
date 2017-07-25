@@ -1,5 +1,7 @@
 package com.yipeng.bill.bms.service;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2017/7/18.
  */
@@ -103,4 +105,21 @@ public interface JedisClientService {
      * @return
      */
     boolean clear();
+
+    /**
+     * 右插
+     * @return
+     */
+    Long rpush(String key, String value);
+    /**
+     * 获取
+     * @return
+     */
+    List<String> lrange(String key, Long start, Long end);
+    /**
+     * 移出并获取列表的第一个元素，当列表不存在或者为空时，返回Null
+     * @param key
+     * @return String
+     */
+    String lpop(String key);
 }

@@ -1,12 +1,14 @@
 package com.yipeng.bill.bms.service.impl;
 
 import com.yipeng.bill.bms.service.JedisClientService;
+import org.jcp.xml.dsig.internal.dom.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -199,4 +201,31 @@ public class JedisClientServiceImpl implements JedisClientService {
         jedis.close();
         return true;
     }
+
+    @Override
+    public Long rpush(String key, String value) {
+        Jedis jedis = jedisPool.getResource();
+        Long length = jedis.rpush(key, value);
+        jedis.close();
+        return length;
+    }
+
+
+    @Override
+    public List<String> lrange(String key, Long start, Long end) {
+        Jedis jedis = jedisPool.getResource();
+        List<String> list = jedis.lrange(key, start, end);
+        jedis.close();
+        return list;
+    }
+
+    @Override
+    public String lpop(String key) {
+        Jedis jedis = jedisPool.getResource();
+        String value = jedis.lpop(key);
+        jedis.close();
+        return value;
+    }
+
+
 }

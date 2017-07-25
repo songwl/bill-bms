@@ -36,6 +36,7 @@ public class HomeServiceImpl implements HomeService {
     private SearchenginecompletionrateMapper searchenginecompletionrateMapper;
     @Autowired
     private  noticepublishMapper noticepublishMapper;
+
     /**
      * 首页详情
      * @param loginUser

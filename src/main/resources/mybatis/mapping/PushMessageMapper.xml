@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yipeng.bill.bms.dao.PushMessageMapper">
+  <resultMap id="BaseResultMap" type="com.yipeng.bill.bms.domain.PushMessage">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="receiveUserId" jdbcType="BIGINT" property="receiveuserid" />
+    <result column="alias" jdbcType="VARCHAR" property="alias" />
+    <result column="tag" jdbcType="VARCHAR" property="tag" />
+    <result column="typev" jdbcType="VARCHAR" property="typev" />
+    <result column="modal" jdbcType="BIT" property="modal" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="extras" jdbcType="VARCHAR" property="extras" />
+    <result column="flag" jdbcType="INTEGER" property="flag" />
+    <result column="retries" jdbcType="INTEGER" property="retries" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="sendtime" jdbcType="TIMESTAMP" property="sendtime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, receiveUserId, alias, tag, typev, modal, title, content, extras, flag, retries, 
+    createtime, sendtime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_push_message
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_push_message
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.yipeng.bill.bms.domain.PushMessage">
+    insert into t_push_message (id, receiveUserId, alias, 
+      tag, typev, modal, title, 
+      content, extras, flag, 
+      retries, createtime, sendtime
+      )
+    values (#{id,jdbcType=BIGINT}, #{receiveuserid,jdbcType=BIGINT}, #{alias,jdbcType=VARCHAR}, 
+      #{tag,jdbcType=VARCHAR}, #{typev,jdbcType=VARCHAR}, #{modal,jdbcType=BIT}, #{title,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, #{extras,jdbcType=VARCHAR}, #{flag,jdbcType=INTEGER}, 
+      #{retries,jdbcType=INTEGER}, #{createtime,jdbcType=TIMESTAMP}, #{sendtime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yipeng.bill.bms.domain.PushMessage">
+    insert into t_push_message
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="receiveuserid != null">
+        receiveUserId,
+      </if>
+      <if test="alias != null">
+        alias,
+      </if>
+      <if test="tag != null">
+        tag,
+      </if>
+      <if test="typev != null">
+        typev,
+      </if>
+      <if test="modal != null">
+        modal,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="extras != null">
+        extras,
+      </if>
+      <if test="flag != null">
+        flag,
+      </if>
+      <if test="retries != null">
+        retries,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+      <if test="sendtime != null">
+        sendtime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="receiveuserid != null">
+        #{receiveuserid,jdbcType=BIGINT},
+      </if>
+      <if test="alias != null">
+        #{alias,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null">
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="typev != null">
+        #{typev,jdbcType=VARCHAR},
+      </if>
+      <if test="modal != null">
+        #{modal,jdbcType=BIT},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="extras != null">
+        #{extras,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null">
+        #{flag,jdbcType=INTEGER},
+      </if>
+      <if test="retries != null">
+        #{retries,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendtime != null">
+        #{sendtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yipeng.bill.bms.domain.PushMessage">
+    update t_push_message
+    <set>
+      <if test="receiveuserid != null">
+        receiveUserId = #{receiveuserid,jdbcType=BIGINT},
+      </if>
+      <if test="alias != null">
+        alias = #{alias,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null">
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="typev != null">
+        typev = #{typev,jdbcType=VARCHAR},
+      </if>
+      <if test="modal != null">
+        modal = #{modal,jdbcType=BIT},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="extras != null">
+        extras = #{extras,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null">
+        flag = #{flag,jdbcType=INTEGER},
+      </if>
+      <if test="retries != null">
+        retries = #{retries,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sendtime != null">
+        sendtime = #{sendtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yipeng.bill.bms.domain.PushMessage">
+    update t_push_message
+    set receiveUserId = #{receiveuserid,jdbcType=BIGINT},
+      alias = #{alias,jdbcType=VARCHAR},
+      tag = #{tag,jdbcType=VARCHAR},
+      typev = #{typev,jdbcType=VARCHAR},
+      modal = #{modal,jdbcType=BIT},
+      title = #{title,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      extras = #{extras,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=INTEGER},
+      retries = #{retries,jdbcType=INTEGER},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      sendtime = #{sendtime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByUserId"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_push_message
+    where receiveUserId = #{userId,jdbcType=BIGINT}
+    AND flag !=1
+  </select>
+</mapper>

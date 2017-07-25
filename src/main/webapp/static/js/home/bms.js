@@ -192,5 +192,76 @@ $(document).ready(function () {
             alert("信息有误,请重新尝试！");
         }
     })
+    $("#messageClick").click(function () {
+        var index1;
+        index1 = layer.open({
+            type: 1,
+            title: '消息盒子',
+            skin: 'layui-layer-molv',
+            shade: 0.6,
+            area: ['35%', '60%'],
+            content: $('#messageDiv'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+            end: function (e, u) {
+                $('#messageDiv').hide();
+            }
+        });
+    })
+    setInterval(function(){
+        if($("#shandong").text()!="0")
+        {
+            $("#shandong").fadeOut(200).fadeIn(200);
+        }
+
+    },1000);
+
+
+    pushMessageListCount();
+
 
 })
+
+//获取消息个数
+function pushMessageListCount() {
+
+    $.ajax({
+        type:'get',
+        url:CTX+'/pushMessageListCount',
+        success:function (result) {
+             if(result!=0)
+             {
+                 $("#shandong").text(result);
+                 $("#shandong").css("display","inline-block");
+             }
+             else
+             {
+                 $("#shandong").text(result);
+                $("#shandong").hide();
+             }
+        }
+    })
+}
+//更改消息状态
+function confirmMessage(form) {
+    $.ajax({
+        type:'get',
+        url:CTX+'/confirmMessage',
+        data:{messageId:form.messageId.value},
+        success:function (result) {
+            if(result.code!=200)
+            {
+                layer.alert(result.message, {
+                    skin: 'layui-layer-molv' //样式类名  自定义样式
+                    , anim: 6 //动画类型
+                    , icon: 4   // icon
+                });
+            }
+            else
+            {
+                $(form).fadeOut();
+                pushMessageListCount();
+            }
+        }
+    })
+
+}
+

@@ -65,7 +65,8 @@ public class BillServiceimpl implements BillService {
     private KeywordsPriceMapper keywordsPriceMapper;
     @Autowired
     private orderLeaseMapper orderLeaseMapper;
-
+    @Autowired
+    private PushMessageMapper pushMessageMapper;
     Md5_UrlEncode md5_urlEncode = new Md5_UrlEncode();
 
     /**
@@ -1730,8 +1731,10 @@ public class BillServiceimpl implements BillService {
         String[] price3 = params.get("price3");
         String[] caozuoyuan = params.get("caozuoyuan");
         Long caozuoyuanId = Long.parseLong(caozuoyuan[0]);
-
+        //消息通知 --网址
+        HashSet hashSet=new HashSet();
         int length = Integer.parseInt(checkboxLength[0]);
+        //region  录入
         for (int i = 0; i < length; i++) {
             String[] id = params.get("selectContent[" + i + "][id]");
             String[] price = params.get("price");
@@ -1955,6 +1958,8 @@ public class BillServiceimpl implements BillService {
                             bill1.setBillAscription(caozuoyuanId);
                             bill1.setUpdateTime(new Date());
                             bill1.setState(2);
+                            //将网址插入到hashset中
+                            hashSet.add(billA.getWebsite());
                             //优化状态（优化中）（调点击）
                             bill1.setOpstate(1);
                             billMapper.updateByPrimaryKeySelective(bill1);
@@ -2050,6 +2055,22 @@ public class BillServiceimpl implements BillService {
 
 
         }
+        //endregion
+        //通知操作员
+        Iterator iterator = hashSet.iterator();
+        while (iterator.hasNext()) {
+            PushMessage pushMessage=new PushMessage();
+            pushMessage.setReceiveuserid(caozuoyuanId);
+            pushMessage.setAlias("新单");//消息备注
+            pushMessage.setTypev("A1");//业务类型
+            pushMessage.setModal(true);//消息模式
+            pushMessage.setTitle("您有新的订单");//消息标题
+            pushMessage.setContent("订单网址为："+iterator.next().toString());
+            pushMessage.setFlag(0);//消息处理状态
+            pushMessageMapper.insert(pushMessage);
+        }
+
+
         return 0;
     }
 
@@ -2198,7 +2219,6 @@ public class BillServiceimpl implements BillService {
                 Long total = billMapper.selectByInMemberIdCount(params);
                 for (Bill bill : billList
                         ) {
-
                     //调用方法  加入集合
                     BillPrice billPrice = new BillPrice();
                     billPrice.setBillId(bill.getId());
@@ -2222,10 +2242,7 @@ public class BillServiceimpl implements BillService {
                             }
                         }
                     }
-
                 }
-
-
                 Map<String, Object> map = new HashMap<>();
                 map.put("total", total);
                 map.put("rows", billDetailsList);
@@ -2430,6 +2447,7 @@ public class BillServiceimpl implements BillService {
         String[] checkboxLength = params.get("length");
         int length = Integer.parseInt(checkboxLength[0]);
         String[] num = params.get("num");
+
         int nums = Integer.parseInt(num[0]);
         for (int i = 0; i < length; i++) {
             //获取订单ID

@@ -2,21 +2,27 @@ package com.yipeng.bill.bms.web;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
+import com.yipeng.bill.bms.core.model.ResultMessage;
 import com.yipeng.bill.bms.dao.*;
+
 import com.yipeng.bill.bms.domain.UserPower;
 import com.yipeng.bill.bms.domain.leaseOverdueTb;
 import com.yipeng.bill.bms.domain.noticepublish;
 import com.yipeng.bill.bms.domain.offerset;
+
+import com.yipeng.bill.bms.domain.*;
+
 import com.yipeng.bill.bms.service.*;
 import com.yipeng.bill.bms.vo.LoginUser;
+import com.yipeng.bill.bms.vo.PushMessageDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -42,6 +48,9 @@ public class HomeController extends BaseController {
     private orderLeaseMapper orderLeaseMapper;
     @Autowired
     private leaseOverdueTbMapper leaseOverdueTbMapper;
+    @Autowired
+    private  PushMessageMapper pushMessageMapper;
+
 
     @RequestMapping(value = "/index")
     public String index(ModelMap model) throws Exception {
@@ -73,10 +82,50 @@ public class HomeController extends BaseController {
                 bms.put("leasepowercustomer", 0);
             }
         }
+        if (user.hasRole("COMMISSIONER"))//消息
+        {
+            Map<String,Object> sqlMap=new HashMap<>();
+            sqlMap.put("userId",user.getId());
+            List<PushMessage> pushMessageList=pushMessageMapper.selectByUserId(sqlMap);
+            if(!CollectionUtils.isEmpty(pushMessageList))
+            {
+                SimpleDateFormat sm=new SimpleDateFormat("yyy-MM-dd");
+                String today=sm.format(new Date());
+                List<PushMessageDetails> pushMessageDetailsList=new ArrayList<>();
+                for (PushMessage item:pushMessageList
+                     ) {
+                    PushMessageDetails pushMessageDetails=new PushMessageDetails();
+                    pushMessageDetails.setId(item.getId());
+                    pushMessageDetails.setReceiveuserid(item.getReceiveuserid());
+                    pushMessageDetails.setAlias(item.getAlias());
+                    pushMessageDetails.setTag(item.getTag());
+                    pushMessageDetails.setTypev(item.getTypev());
+                    pushMessageDetails.setModal(item.getModal());
+                    pushMessageDetails.setTitle(item.getTitle());
+                    pushMessageDetails.setContent(item.getContent());
+                    pushMessageDetails.setExtras(item.getExtras());
+                    pushMessageDetails.setFlag(item.getFlag());
+                    pushMessageDetails.setRetries(item.getRetries());
+                    if(today.equals(sm.format(item.getCreatetime())))
+                    {
+                        pushMessageDetails.setCreatetime("今天");
+                    }
+                    else
+                    {
+                        pushMessageDetails.setCreatetime(sm.format(item.getCreatetime()));
+                    }
+                    pushMessageDetails.setSendtime(item.getSendtime());
+                    pushMessageDetailsList.add(pushMessageDetails);
+                }
+                bms.put("pushMessageList", pushMessageDetailsList);
+            }
+
+        }
         bms.put("UnReadNum", UnReadNum);
         bms.put("SendUnReadNum", SendUnReadNum);
         bms.put("InUnReadNum", InUnReadNum);
         bms.put("user", user);
+
         //bms.put("bmsNavigationList", authorityService.queryBmsNavByUserType(NumberUtils.toInt(account.getLoginUserType())));
         model.addAttribute("bmsModel", bms);
         return "index";
@@ -226,5 +275,59 @@ public class HomeController extends BaseController {
         Map<String, Object> bms = homeService.shenmaCompleteness(loginUser);
 
         return bms;
+    }
+
+    //获取信息个数
+    @RequestMapping(value = "/pushMessageListCount")
+    @ResponseBody
+    public int pushMessageListCount(ModelMap model) throws Exception {
+        LoginUser loginUser=this.getCurrentAccount();
+        Map<String,Object> sqlMap=new HashMap<>();
+        sqlMap.put("userId",loginUser.getId());
+        List<PushMessage> pushMessageList=pushMessageMapper.selectByUserId(sqlMap);
+
+        if (!CollectionUtils.isEmpty(pushMessageList))
+        {
+            int num=pushMessageList.size();
+            return num;
+        }
+        else
+        {
+            return 0;
+        }
+
+    }
+
+    //获取信息个数
+    @RequestMapping(value = "/confirmMessage")
+    @ResponseBody
+    public ResultMessage confirmMessage(String messageId) throws Exception {
+        if(messageId!=null)
+        {
+            PushMessage pushMessage=pushMessageMapper.selectByPrimaryKey(new Long(messageId));
+            if(pushMessage!=null)
+            {
+                pushMessage.setFlag(1);
+                int a=   pushMessageMapper.updateByPrimaryKey(pushMessage);
+                if(a>0)
+                {
+                    return this.ajaxDoneSuccess("操作成功");
+                }
+                else
+                {
+                    return this.ajaxDoneSuccess("操作失败");
+                }
+            }
+            else {
+
+                return this.ajaxDoneSuccess("操作失败");
+            }
+        }
+        else
+        {
+            return ajaxDoneError("未知错误，请联系管理员！");
+        }
+
+
     }
 }

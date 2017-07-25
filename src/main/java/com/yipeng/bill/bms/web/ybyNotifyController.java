@@ -2,29 +2,24 @@ package com.yipeng.bill.bms.web;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.mchange.v1.db.sql.ConnectionUtils;
 import com.yipeng.bill.bms.dao.KeywordsPriceMapper;
 import com.yipeng.bill.bms.dao.LogsMapper;
-import com.yipeng.bill.bms.domain.KeywordsPrice;
 import com.yipeng.bill.bms.domain.Logs;
 import com.yipeng.bill.bms.model.Md5_UrlEncode;
 import com.yipeng.bill.bms.service.JedisClientService;
 import com.yipeng.bill.bms.service.RankingUpdateService;
-import jdk.nashorn.internal.parser.JSONParser;
-import org.apache.logging.log4j.core.config.Loggers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import redis.clients.jedis.Jedis;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/5/4.
@@ -47,7 +42,6 @@ public class ybyNotifyController extends BaseController {
      * @param
      * @return
      */
-
     @RequestMapping(value = "/getYbyNotify", method = RequestMethod.POST)
     public String getYbyNotify(String xAction, String xParam, String xSign) {
 
@@ -91,8 +85,10 @@ public class ybyNotifyController extends BaseController {
 
                 }
 
-             //   jedisClientService.set("taskId",TaskId);
-                int a = rankingUpdateService.updateRanking(Integer.parseInt(TaskId), Integer.parseInt(RankLast), Integer.parseInt(RankFirst));
+                jedisClientService.rpush("xParam",xParam);
+                 return "1";
+
+               /* int a = rankingUpdateService.updateRanking(Integer.parseInt(TaskId), Integer.parseInt(RankLast), Integer.parseInt(RankFirst));
                 if (a > 0) {
                     Logs logs = new Logs();
                     logs.setCreatetime(new Date());
@@ -114,7 +110,7 @@ public class ybyNotifyController extends BaseController {
                     return "1";
                 } else {
                     return "数据更新失败";
-                }
+                }*/
             }
 
 

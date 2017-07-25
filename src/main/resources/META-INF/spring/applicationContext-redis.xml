@@ -35,9 +35,9 @@
         <!-- 获取连接时的最大等待毫秒数,小于零:阻塞不确定的时间,默认-1 -->
         <property name="maxWaitMillis" value="${redis.maxWaitMillis}" />
         <!-- 在获取连接的时候检查有效性, 默认false -->
-        <property name="testOnBorrow" value="${redis.testOnBorrow}" />
+<!--        <property name="testOnBorrow" value="${redis.testOnBorrow}" />-->
         <!-- 在空闲时检查有效性, 默认false -->
-        <property name="testWhileIdle" value="${redis.testWhileIdle}" />
+     <!--   <property name="testWhileIdle" value="${redis.testWhileIdle}" />-->
         <!-- 连接耗尽时是否阻塞, false报异常,ture阻塞直到超时, 默认true -->
         <property name="blockWhenExhausted" value="${redis.blockWhenExhausted}" />
     </bean>
@@ -49,5 +49,5 @@
         <constructor-arg name="poolConfig" ref="jedisPoolConfig"></constructor-arg>
     </bean>
     <!-- 引用工程中自己书写的redis常用接口实现类 -->
-    <bean id="_jedisClient" class="com.yipeng.bill.bms.service.impl.JedisClientServiceImpl"/>
+    <bean id="jedisClientService" class="com.yipeng.bill.bms.service.impl.JedisClientServiceImpl"/>
 </beans>

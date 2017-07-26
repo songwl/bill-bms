@@ -3,6 +3,7 @@ package com.yipeng.bill.bms.web;
 import com.google.gson.JsonObject;
 import com.mchange.v1.db.sql.ConnectionUtils;
 import com.yipeng.bill.bms.core.model.ResultMessage;
+import com.yipeng.bill.bms.dao.KeywordsPriceMapper;
 import com.yipeng.bill.bms.dao.UserMapper;
 import com.yipeng.bill.bms.dao.UserPowerMapper;
 import com.yipeng.bill.bms.dao.offersetMapper;
@@ -17,6 +18,7 @@ import com.yipeng.bill.bms.service.OptimizationToolService;
 import com.yipeng.bill.bms.service.impl.OptimizationToolServiceImpl;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.aspectj.apache.bcel.generic.RET;
+import org.omg.CORBA.PRIVATE_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -53,6 +55,8 @@ public class OptimizationToolController extends BaseController {
 
     @Autowired
     private UserPowerMapper userPowerMapper;
+    @Autowired
+    private KeywordsPriceMapper keywordsPriceMapper;
 
     /**
      * 关键词价格查询页面
@@ -333,4 +337,46 @@ public class OptimizationToolController extends BaseController {
                 return this.ajaxDoneError("失败");
         }
     }
+    /**
+     * 修改价格
+     *
+     * @param dataUser
+     * @return
+     */
+    @RequestMapping(value = "/updateKeyWordsPrice", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultMessage updateKeyWordsPrice(HttpServletRequest request) {
+        Map<String,String[]> params=request.getParameterMap();
+        LoginUser loginUser = this.getCurrentAccount();
+        if (!loginUser.hasRole("SUPER_ADMIN")) {
+            return this.ajaxDone(-1, "你没有权限", null);
+        }
+        else
+        {
+            String[] id=params.get("id");
+            String[] PriceBaiduPc=params.get("PriceBaiduPc");
+            String[] PriceBaiduWap=params.get("PriceBaiduWap");
+            String[] PriceSoPc=params.get("PriceSoPc");
+            String[] PriceSoWap=params.get("PriceSoWap");
+            String[] PriceSogouPc=params.get("PriceSogouPc");
+            String[] PriceSogouWap=params.get("PriceSogouWap");
+            String[] PriceSm=params.get("PriceSm");
+            KeywordsPrice keywordsPrice=new KeywordsPrice();
+            keywordsPrice.setId(new Long(id[0]));
+            keywordsPrice.setPricebaidupc(Double.parseDouble(PriceBaiduPc[0]));
+            keywordsPrice.setPricebaiduwap(Double.parseDouble(PriceBaiduWap[0]));
+
+            keywordsPrice.setPricesopc(Double.parseDouble(PriceSoPc[0]));
+            keywordsPrice.setPricesowap(Double.parseDouble(PriceSoWap[0]));
+
+            keywordsPrice.setPricesogoupc(Double.parseDouble(PriceSogouPc[0]));
+            keywordsPrice.setPricesogouwap(Double.parseDouble(PriceSogouWap[0]));
+
+            keywordsPrice.setPricesm(Double.parseDouble(PriceSm[0]));
+            int a=keywordsPriceMapper.updateByPrimaryKeySelective(keywordsPrice);
+            return this.ajaxDone(-1, "修改成功", null);
+        }
+
+    }
+
 }

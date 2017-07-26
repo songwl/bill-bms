@@ -540,7 +540,7 @@
         </div>
     </div>
 </div>
-<#--订单切换代理商-->
+<#--订单切换渠道商-->
 <div class="bootbox modal in billChangeQudaosDiv" tabindex="-1" role="dialog" style="display: none;" aria-hidden="false">
     <div class="modal-dialog" style="width: 990px;">
         <div class="modal-content">

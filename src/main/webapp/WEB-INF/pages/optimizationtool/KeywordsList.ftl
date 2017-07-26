@@ -7,7 +7,8 @@
 <link href="${ctx}/static/css/Message/custom.css" rel="stylesheet">
 <script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
 <#--<link href="${ctx}/static/css/Message/Index.css" rel="stylesheet">-->
-
+<script src="${ctx}/static/js/public/bootstrap-editable.js"></script>
+<script src="${ctx}/static/js/public/bootstrap-table-editable.js"></script>
 <link href="${ctx}/static/css/bill/KeyWordsRanking.css" rel="stylesheet">
 <div class="Navs">
     <div class="nav_L left">
@@ -50,7 +51,11 @@
                 <table id="myTable" class="table table-striped  table-condensed table-responsive"
                        style="width:100%;font-size: 13px;font-family: " 微软雅黑
                 "></table>
-
+                <style>
+                    table a{
+                        color: #0099CC;
+                    }
+                </style>
             </div>
 
         </div>
@@ -110,7 +115,7 @@
                     sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
                     //queryParamsType: "",
                     pageNumber: 1,                       //初始化加载第一页，默认第一页
-                    pageSize: 10,                       //每页的记录行数（*）
+                    pageSize: 50,                       //每页的记录行数（*）
                     pageList: [100, 300, 500, 1000],        //可供选择的每页的行数（*）
                     showColumns: false,                  //是否显示所有的列
                     showRefresh: false,                  //是否显示刷新按钮
@@ -123,7 +128,7 @@
                     detailView: false,                   //是否显示父子表
 
                     showExport: true,  //是否显示导出
-                    exportDataType: "basic",
+
                     columns: [
                         {
                             field: 'id',
@@ -183,42 +188,61 @@
                             align: 'center',
                             valign: 'middle',
                             title: '百度价格',
+                            editable: true,
                         },
                         {
                             field: 'PriceBaiduWap',
                             align: 'center',
                             valign: 'middle',
                             title: '百度手机价格',
+                            editable: true,
                         },
                         {
                             field: 'PriceSoPc',
                             align: 'center',
                             valign: 'middle',
                             title: '360价格',
+                            editable: true,
                         },
                         {
                             field: 'PriceSoWap',
                             align: 'center',
                             valign: 'middle',
                             title: '360手机价格',
+                            editable: true,
                         },
                         {
                             field: 'PriceSogouPc',
                             align: 'center',
                             valign: 'middle',
                             title: '搜狗价格',
+                            editable: true,
                         },
                         {
                             field: 'PriceSogouWap',
                             align: 'center',
                             valign: 'middle',
                             title: '搜狗手机价格',
+                            editable: true,
                         },
                         {
                             field: 'PriceSm',
                             align: 'center',
                             valign: 'middle',
                             title: '神马价格',
+                            editable: true,
+                        },
+                        {
+                            field: 'operate',
+                            align: 'center',
+                            valign: 'middle',
+                            title: '修改',
+                            formatter: function (value, row, index) {
+                                var a = "<span style='color:#4382CF;cursor:pointer;' id='details'>修改</span> ";
+
+                                return a;
+                            },
+                            events: operateEvents
                         }
                     ]
                 });
@@ -242,7 +266,31 @@
                     keywords:keywords
                 };
                 return temp;
-            };
+            }
+            window.operateEvents = {
+                'click #details': function (e, value, row, index) {
+                    $.ajax({
+                        type: "post",
+                        url: CTX+"/optimizationTool/updateKeyWordsPrice",
+                        data: row,
+                        dataType: 'JSON',
+                        success: function (result) {
+
+                                $('#myTable').bootstrapTable('refresh');
+                                alert(result.message);
+
+                        },
+                        error: function () {
+                            alert('未知错误');
+                        },
+                        complete: function () {
+
+                        }
+
+                    });
+                }
+
+            }
             return oTableInit;
         }
     };

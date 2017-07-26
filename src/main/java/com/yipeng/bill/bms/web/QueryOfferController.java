@@ -2,7 +2,7 @@ package com.yipeng.bill.bms.web;
 
 
 import com.google.gson.JsonObject;
-import com.sun.org.apache.xerces.internal.xs.StringList;
+
 import com.yipeng.bill.bms.core.model.ResultMessage;
 import com.yipeng.bill.bms.dao.*;
 import com.yipeng.bill.bms.domain.*;

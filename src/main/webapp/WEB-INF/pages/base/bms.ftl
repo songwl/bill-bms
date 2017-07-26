@@ -980,8 +980,9 @@
                 <#list bmsModel.pushMessageList as item>
                     <form action="">
                     <li data-uid="166488" data-fromgroup="0">
-                        <img src="/bill/static/img/face.png"
-                             class="layui-circle layim-msgbox-avatar">
+                        <i class="fa fa-github-alt layui-circle layim-msgbox-avatar" style="font-size: 35px;
+line-height: 35px;color: #09c"></i>
+
                         <p class="layim-msgbox-user">
                             <span style="color: #00a0e9">${item.title}</span>
                             <span>${item.createtime}</span></p>

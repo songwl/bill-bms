@@ -1,6 +1,6 @@
 package com.yipeng.bill.bms.dao;
 
-import com.sun.org.apache.xerces.internal.xs.StringList;
+
 import com.yipeng.bill.bms.domain.KeywordsPrice;
 import com.yipeng.bill.bms.model.KeywordToPrice;
 

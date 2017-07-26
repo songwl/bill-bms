@@ -446,3 +446,20 @@ CREATE TABLE `userpower` (
   `powerId` int(11) DEFAULT NULL COMMENT '权限id 0总账号1分账号',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `t_push_message` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `receiveUserId` bigint(20) DEFAULT NULL,
+  `alias` varchar(255) DEFAULT '' COMMENT '消息别名',
+  `tag` varchar(255) DEFAULT NULL COMMENT '发送标记',
+  `typev` varchar(255) DEFAULT NULL COMMENT '消息类型 业务相关',
+  `modal` tinyint(4) DEFAULT NULL COMMENT '消息模式 0 - 静默消息 1 - 弹出消息',
+  `title` varchar(255) DEFAULT NULL COMMENT '消息标题',
+  `content` varchar(255) DEFAULT NULL COMMENT '消息内容',
+  `extras` varchar(255) DEFAULT NULL COMMENT '消息扩展内容',
+  `flag` mediumint(9) DEFAULT NULL COMMENT '消息处理标志 0 - 未处理 1 - 已发送 2 - 发送失败 3 - 已超时',
+  `retries` mediumint(9) DEFAULT NULL COMMENT '重试次数',
+  `createtime` datetime DEFAULT NULL COMMENT '创建时间',
+  `sendtime` datetime DEFAULT NULL COMMENT '发送时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

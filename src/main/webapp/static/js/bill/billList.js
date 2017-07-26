@@ -29,6 +29,7 @@ $(document).ready(function () {
         $(".billChangeDiv").slideUp();
         $(".samepriceDiv").slideUp();
         $(".billChangeToKeHuDiv").slideUp();
+        $(".billChangeQudaosDiv").slideUp();
 
     })
     $(".cancel").click(function () {
@@ -40,7 +41,7 @@ $(document).ready(function () {
         $(".billChangeDiv").slideUp();
         $(".samepriceDiv").slideUp();
         $(".billChangeToKeHuDiv").slideUp();
-
+        $(".billChangeQudaosDiv").slideUp();
     })
     //显示搜索内容
     $(".search").click(function () {
@@ -942,7 +943,7 @@ $(document).ready(function () {
         }
 
     })
-    //切换订单确认\]
+    //切换订单确认
     $(".billChangeDailiCmt").click(function () {
         var index;
         var rankend = parseInt(jQuery("input[name='changeDailirankend']").val());
@@ -1050,7 +1051,6 @@ $(document).ready(function () {
                 , icon: 4   // icon
             });
         }
-
     })
 
 })

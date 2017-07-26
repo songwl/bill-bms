@@ -20,6 +20,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.*;
 
 /**
  * Created by Administrator on 2017/5/4.
@@ -36,6 +37,8 @@ public class ybyNotifyController extends BaseController {
     private KeywordsPriceMapper keywordsPriceMapper;
     @Autowired
     private JedisClientService jedisClientService;
+
+
     /**
      * 获取优帮云通知
      *
@@ -44,6 +47,7 @@ public class ybyNotifyController extends BaseController {
      */
     @RequestMapping(value = "/getYbyNotify", method = RequestMethod.POST)
     public String getYbyNotify(String xAction, String xParam, String xSign) {
+
 
         Md5_UrlEncode md5_urlEncode = new Md5_UrlEncode();
         //api编号

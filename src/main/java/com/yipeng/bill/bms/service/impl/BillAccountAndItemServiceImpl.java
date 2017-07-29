@@ -143,7 +143,15 @@ public class BillAccountAndItemServiceImpl implements BillAccountAndItemService 
                 }
             }
         } catch (Exception e) {
-            System.out.print("计算余额错误：" + e.getMessage());
+
+            Logs logs = new Logs();
+            logs.setOpobj("1");
+            logs.setOpremake( "计算余额错误："+e.getMessage());
+            logs.setOptype(11111);
+            logs.setUserid(new Long(1));
+            logs.setCreatetime(new Date());
+            int a = logsMapper.insert(logs);
+            System.out.print("计算余额错误：" + e.getMessage()+"错误ID："+params.get("userId"));
             return 1;
         }
     }

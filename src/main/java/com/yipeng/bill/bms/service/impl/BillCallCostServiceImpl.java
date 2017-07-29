@@ -25,7 +25,6 @@ public class BillCallCostServiceImpl implements BillCallCostService {
     private BillMapper billMapper;
     @Override
     public int updateCallCost(Bill bill) {
-
         //2.根据计算单Bill查询单价BillPrice
         List<BillPrice> prices = billPriceMapper.selectByBillId(bill.getId());
         //判断是否扣费
@@ -63,7 +62,6 @@ public class BillCallCostServiceImpl implements BillCallCostService {
             params.put("day",now.get(Calendar.DATE));
             params.put("billId",bill.getId());
             params.put("userIdDayCost",userId);
-
             //查询
             List<BillCost> billCostList=billCostMapper.selectByDayCost(params);
             //进行判断

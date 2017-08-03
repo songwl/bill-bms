@@ -67,6 +67,8 @@ public class BillServiceimpl implements BillService {
     private orderLeaseMapper orderLeaseMapper;
     @Autowired
     private PushMessageMapper pushMessageMapper;
+    @Autowired
+     private  LogsMapper logsMapper;
     Md5_UrlEncode md5_urlEncode = new Md5_UrlEncode();
 
     /**
@@ -4246,6 +4248,130 @@ public class BillServiceimpl implements BillService {
     }
 
     /**
+     * 查询
+     * @param loginUser
+     */
+    @Override
+    public String searchRanking(LoginUser loginUser) {
+        Map<String,Object> sqlMap=new HashMap<>();
+        sqlMap.put("billType",4);
+        sqlMap.put("billAscription",loginUser.getId());
+        List<Bill> billList=billMapper.selectBill(sqlMap);
+        String errorMessage=null;
+        if(!CollectionUtils.isEmpty(billList))
+        {
+            for (Bill item :billList
+                 ) {
+             String str= sendTask(item);
+             if(str!=null)
+             {
+                 errorMessage+="  "+str+"  ";
+             }
+            }
+        }
+        return errorMessage;
+    }
+    //请求接口
+    public String sendTask(Bill bill)
+    {
+        String retrunStr=null;
+        Long billId=bill.getId();
+        CustomerRankingParam customerRankingParam = new CustomerRankingParam();
+        BillSearchSupport billSearchSupport = billSearchSupportMapper.selectByBillId(billId);
+        int ApiId;
+        String wAction = "AddSearchTask";
+        String keyword = bill.getKeywords();
+        keyword = keyword.replaceAll("[\\u00A0]+", "");
+        String[] qkeyword = {keyword};
+        String[] qurl = {bill.getWebsite()};
+
+        //查询报价
+        addKeywordsPriceTask(keyword);
+
+        //组合参数
+
+        JSONObject jsonObj = new JSONObject();
+        jsonObj.put("keyword", qkeyword);
+        jsonObj.put("url", qurl);
+        jsonObj.put("time", System.currentTimeMillis());
+        if (bill != null) {
+            if (bill.getBillType() == 1 || bill.getBillType() == 2) {
+                int[] timeSet = {9, 15};
+                jsonObj.put("timeSet", timeSet);
+                jsonObj.put("searchOnce", true);
+                jsonObj.put("businessType", 2006);
+            } else if (bill.getBillType() == 4) {
+                jsonObj.put("businessType", 1006);
+            }
+        }
+        jsonObj.put("userId", Define.userId);
+
+        //判断搜索引擎
+        switch (billSearchSupport.getSearchSupport()) {
+            case "百度":
+                jsonObj.put("searchType", 1010);
+                break;
+            case "360":
+                jsonObj.put("searchType", 1015);
+                break;
+            case "搜狗":
+                jsonObj.put("searchType", 1030);
+                break;
+            case "手机百度":
+                jsonObj.put("searchType", 7010);
+                break;
+            case "手机360":
+                jsonObj.put("searchType", 7015);
+                break;
+            case "手机搜狗":
+                jsonObj.put("searchType", 7030);
+                break;
+            case "神马":
+                jsonObj.put("searchType", 7070);
+                break;
+        }
+        String wParam = jsonObj.toString();
+        String wSign = null;
+        try {
+            wSign = md5_urlEncode.EncoderByMd5(wAction + Define.token + jsonObj.toString());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        customerRankingParam.setwAction("AddSearchTask");
+        customerRankingParam.setwParam(wParam);
+        customerRankingParam.setwSign(wSign);
+
+
+        try {
+            //查排名返回对象（导入订单）
+            CustomerRankingResult customerRankingResult = remoteService.getCustomerRanking(customerRankingParam);
+            if (customerRankingResult != null  ) {
+                //判断两个返回结果是否成功
+
+                if (customerRankingResult.getMessage().equals("success.")) {
+                    JSONArray value = customerRankingResult.getValue();
+                    JSONArray valueJSONArray = value.getJSONArray(0);
+                    ApiId = Integer.parseInt(valueJSONArray.get(0).toString());
+                    bill.setWebAppId(ApiId);
+                    billMapper.updateByPrimaryKeySelective(bill);
+                }
+            }
+        }catch (Exception e)
+        {
+            Logs logs=new Logs();
+            logs.setCreatetime(new Date());
+            logs.setOptype(1);
+            logs.setUserid(new Long(1));
+            logs.setOpobj("2");
+            logs.setOpremake("查询排名出错，当前订单：" + bill.getId());
+            logsMapper.insert(logs);
+            retrunStr+=""+bill.getKeywords();
+        }
+        return  retrunStr;
+    }
+    /**
      * 批量修改价格
      *
      * @param bill
@@ -4301,6 +4427,12 @@ public class BillServiceimpl implements BillService {
                                 billPrice1.setCreateTime(new Date());
                                 billPrice1.setBillRankingStandard(new Long(20));
                                 billPriceMapper.insert(billPrice1);
+                            }
+                            if(billPriceList.size() == 2) {
+                                BillPrice billPrice2 = new BillPrice();
+                                billPrice2.setId(billPriceList.get(1).getId());
+                                billPrice2.setPrice(price2);
+                                billPriceMapper.updateByPrimaryKeySelective(billPrice2);
                             }
                         }
                         updateCount++;

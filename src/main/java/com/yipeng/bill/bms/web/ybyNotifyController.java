@@ -12,15 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import redis.clients.jedis.Jedis;
+
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.*;
+
 
 /**
  * Created by Administrator on 2017/5/4.
@@ -88,7 +86,6 @@ public class ybyNotifyController extends BaseController {
                     return "1";
 
                 }
-
                 jedisClientService.rpush("xParam",xParam);
                  return "1";
 
@@ -97,7 +94,7 @@ public class ybyNotifyController extends BaseController {
                     Logs logs = new Logs();
                     logs.setCreatetime(new Date());
                     logs.setOptype(1);
-                    logs.setUserid(new Long(1));
+                    logs.setUserid(new Long(1));i
                     logs.setOpobj("2");
                     logs.setOpremake("更新成功！xParam数据:" + xParam);
                     logsMapper.insert(logs);

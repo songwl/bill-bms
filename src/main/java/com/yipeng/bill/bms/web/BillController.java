@@ -1858,6 +1858,20 @@ public class BillController extends BaseController {
         return this.ajaxDone(1,"数据",zhuanYuanDetailsList);
 
     }
+
+    //查询排名（出租订单）
+    @RequestMapping(value = "/searchRanking",method = RequestMethod.GET)
+    @ResponseBody
+    public  ResultMessage searchRanking()
+    {
+        LoginUser loginUser=this.getCurrentAccount();
+        String  str=null;
+        if(loginUser.hasRole("COMMISSIONER")||loginUser.hasRole("SUPER_ADMIN"))
+        {
+           str= billService.searchRanking(loginUser);
+        }
+        return  this.ajaxDoneSuccess(str);
+    }
     //导出excel(实例)
     @RequestMapping(value = "/export.controller")
     public void export(String ids, HttpServletResponse response) throws IOException {

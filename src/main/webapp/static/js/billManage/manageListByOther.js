@@ -2,6 +2,40 @@
 /**
  * Created by 鱼在我这里。 on 2017/3/16.
  */
+
+var website = null;
+var searchUserName = null;
+//显示搜索内容
+$(".search").click(function () {
+    if($(".Navs2").css("display")=="block"){
+        $(".Navs2").slideUp();
+
+    }
+    else
+    {
+        $(".Navs2").slideDown();
+
+    }
+})
+//搜索按钮
+$("#searchButton").click(function () {
+    if ($("#website").val() != "")//网址
+    {
+        website = $.trim($("#website").val());
+    }
+    else {
+        website = null
+    }
+
+    if ($("#searchUserName").val() != "--请选择--") {
+        searchUserName = $("#searchUserName").val();
+    }
+    else {
+        searchUserName = null;
+    }
+
+    $('#myTable').bootstrapTable('refresh');
+});
 $(function () {
 
     //1.初始化Table
@@ -21,10 +55,10 @@ var TableInit = function () {
             toolbar: '#toolbar',                //工具按钮用哪个容器
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，
-            pagination: true,                   //是否显示分页（*）
+           // pagination: true,                   //是否显示分页（*）
             pageNumber: 1,                       //初始化加载第一页，默认第一页
-            pageSize: 20,                       //每页的记录行数（*）
-            pageList: [20, 50, 100],        //可供选择的每页的行数（*）
+           // pageSize: 20,                       //每页的记录行数（*）
+           // pageList: [20, 50, 100],        //可供选择的每页的行数（*）
             sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
             queryParams: oTableInit.queryParams,//传递参数（*）
             queryParamsType: "",
@@ -95,7 +129,7 @@ var TableInit = function () {
                         var a="";
                         if(value>60.00)
                         {
-                            a="<span style='color:#09c;font-weight: 400;'>"+value+"%</span>";
+                            a="<span style='color:#FF0000;font-weight: 600;'>"+value+"%</span>";
                         }
                         else
                         {
@@ -112,7 +146,7 @@ var TableInit = function () {
 
                 },
 
-                {
+                /*{
                     field: 'dayConsumption',
                     align: 'center',
                     valign: 'middle',
@@ -132,7 +166,7 @@ var TableInit = function () {
                     valign: 'middle',
                     title: '本月消费',
                     visible:false
-                },
+                },*/
             ],
 
         });
@@ -145,7 +179,8 @@ var TableInit = function () {
             offset: params.pageNumber,  //页码
             sortOrder: params.sortOrder,
             sortName: params.sortName,
-
+            website: website,
+            searchUserName: searchUserName,
         };
         return temp;
     }

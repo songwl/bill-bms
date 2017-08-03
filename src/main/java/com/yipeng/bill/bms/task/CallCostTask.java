@@ -36,7 +36,7 @@ public class CallCostTask {
         int offset = 0;
         int limit = 50; //每次查询50条
 
-     /*   while (true) {
+     while (true) {
 
             //1.查询有效的计费单Bill
             Map<String, Object> params = new HashMap<>();
@@ -55,7 +55,7 @@ public class CallCostTask {
             }
             offset += limit; //查询下一页
 
-        }*/
+        }
         //统计每个用户的资金流水和余额
         Map<String,Object> map=new  HashMap<>();
         Calendar now =Calendar.getInstance();

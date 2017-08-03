@@ -7,8 +7,7 @@
 <script src="${ctx}/static/js/bill/billListchangePrice.js"></script>
 <script src="${ctx}/static/js/bill/billListsamePrice.js"></script>
 <script src="${ctx}/static/js/My97DatePicker/WdatePicker.js"></script>
-<script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
-
+<script src="${ctx}/static/js/public/Export.js"></script>
 
 <div class="Navs">
     <div class="nav_L left">
@@ -43,6 +42,9 @@
             </div>
         </#if>
         <#if  bmsModel.user.hasRole("DISTRIBUTOR")||bmsModel.user.hasRole("AGENT")>
+            <div id="updatePrice">
+                <span>&nbsp;<i class="fa fa-cny"></i>&nbsp;调价</span>
+            </div>
             <div id="applyStopBill">
                 <span>&nbsp;<i class="fa fa-trash"></i>&nbsp;申请停单</span>
             </div>

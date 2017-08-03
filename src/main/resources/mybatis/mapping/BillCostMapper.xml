@@ -153,11 +153,10 @@
     WHERE a.t_bill_price_id = b.id
     AND b.in_member_id=#{userId,jdbcType=BIGINT} AND a.t_bill_id=#{billId,jdbcType=BIGINT}
   </select>
- <!--总消费-->
+  <!--总消费-->
   <select id="MonthConsumption"  resultType="java.lang.Double">
-    SELECT SUM(b.cost_amount) from t_bill_price as a,t_bill_cost as b
-    where a.bill_id=b.t_bill_id
-    AND a.id=b.t_bill_price_id
+    SELECT SUM(b.cost_amount) from t_bill_price as a,t_bill_cost as b,t_bill as c
+    where  a.id=b.t_bill_price_id and c.id=a.bill_id
     <if test="userId != null">
       AND a.in_member_id=#{userId,jdbcType=BIGINT}
     </if>
@@ -171,7 +170,10 @@
       and month(b.cost_date)=#{month,jdbcType=INTEGER}
     </if>
     <if test="day != null">
-    and DAY(b.cost_date) = #{day,jdbcType=INTEGER}
+      and DAY(b.cost_date) = #{day,jdbcType=INTEGER}
+    </if>
+    <if test="billType != null">
+      and c.bill_type=#{billType,jdbcType=INTEGER}
     </if>
   </select>
 

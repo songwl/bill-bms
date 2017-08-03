@@ -27,6 +27,9 @@
             <div id="OptimizationUpdate">
                 <span>&nbsp;<i class="fa fa-paint-brush"></i>&nbsp;点击调整</span>
             </div>
+            <div id="searchRanking">
+                <span>&nbsp;<i class="fa fa-paint-brush"></i>&nbsp;查询排名</span>
+            </div>
         </#if>
 
         <div id="billCreateGroupClick">

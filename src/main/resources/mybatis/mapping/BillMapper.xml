@@ -400,7 +400,9 @@
         <if test="applyState != null">
             AND apply_state= #{applyState,jdbcType=INTEGER}
         </if>
-        limit #{offset},#{limit}
+        <if test="offset != null">
+            limit #{offset},#{limit}
+        </if>
     </select>
     <!--下游-->
 
@@ -2737,7 +2739,7 @@
 
     <select id="selectByallCost" resultType="java.util.HashMap">
     SELECT SUM(b.price) as num,c.user_name FROM  t_bill as a,t_bill_price as b, t_user as c
-    where a.id=b.bill_id and a.bill_ascription=c.id and a.state=2
+    where a.id=b.bill_id and a.bill_ascription=c.id and a.state=2 and b.in_member_id=1
     and b.bill_ranking_standard &lt;= 10
     GROUP BY a.bill_ascription
   </select>
@@ -2833,4 +2835,45 @@
             and new_ranking &lt;= #{ranking,jdbcType=INTEGER}
         </if>
     </select>
+    <select id="selectByGroupBillCount" resultType="java.util.HashMap">
+        SELECT  b.out_member_id as kehu,c.user_name as caozuoyuan,a.website ,COUNT(website) as num,a.create_time as dateTime
+         from t_bill as a,t_bill_price as b,t_user as c
+        where a.id=b.bill_id and a.bill_ascription=c.id
+        and b.in_member_id=#{userId,jdbcType=BIGINT}
+        and a.delete_state=0
+        and a.state=2
+        and b.bill_ranking_standard &lt;=10
+        <if test="website != null">
+        and   a.website  LIKE CONCAT('%',#{website,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="searchUserName != null">
+            and  b.out_member_id=#{searchUserName,jdbcType=BIGINT}
+        </if>
+        <if test="billAscription != null">
+            and  a.bill_ascription=#{billAscription,jdbcType=BIGINT}
+        </if>
+        GROUP BY  REPLACE(replace(a.website,'http://',''),'www.','')
+    </select>
+
+    <select id="selectByGroupBillDabiaoCount" resultType="java.util.HashMap">
+    SELECT b.out_member_id,a.bill_ascription,a.website ,COUNT(website) as num
+    from t_bill as a,t_bill_price as b,t_bill_cost as c
+    where a.id=b.bill_id
+    and b.in_member_id=#{userId,jdbcType=BIGINT}
+    and b.id=c.t_bill_price_id
+    and a.delete_state=0
+    and a.state=2
+    and  b.bill_ranking_standard &lt;=10
+    and c.cost_date=#{dateTime,jdbcType=VARCHAR}
+        <if test="website != null">
+            and   a.website  LIKE CONCAT('%',#{website,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="searchUserName != null">
+            and  b.out_member_id=#{searchUserName,jdbcType=BIGINT}
+        </if>
+        <if test="billAscription != null">
+            and  a.bill_ascription=#{billAscription,jdbcType=BIGINT}
+        </if>
+    GROUP BY  REPLACE(replace(a.website,'http://',''),'www.','')
+    </select> 
 </mapper>

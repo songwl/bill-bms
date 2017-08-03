@@ -261,7 +261,6 @@
         <include refid="Base_Column_List"/>
         from t_user
         where create_user_id= #{userId,jdbcType=BIGINT}
-
     </select>
 
     <select id="getUserRoleByCreateId" resultMap="BaseResultMap">
@@ -308,7 +307,42 @@
         <if test="searchState != null">
             AND a.status = #{searchState,jdbcType=BIT}
         </if>
+    </select>
 
+    <select id="selectByCustomerList" resultType="java.util.HashMap">
+        SELECT a.*,d.role_name,c.balance  from
+        t_user as a,
+        t_user_role as b,
+        t_fund_account as c,
+        t_role as d
+        where a.id=b.user_id
+        and a.id =c.user_id
+        and b.role_id=d.id
+        and a.create_user_id= #{userId,jdbcType=BIGINT}
+        <if test="roleId != null">
+            AND b.role_id = #{roleId,jdbcType=BIGINT}
+        </if>
+        <if test="searchUserName != null">
+            AND a.user_name LIKE CONCAT('%',#{searchUserName,jdbcType=VARCHAR},'%')
+        </if>
+        <if test="searchState != null">
+            AND a.status = #{searchState,jdbcType=BIT}
+        </if>
+        <if test="sortName != null">
+            <if test="sortName =='userName'">
+                ORDER BY a.user_name ${sortOrder}
+            </if>
+            <if test="sortName =='realName'">
+                ORDER BY a.real_name ${sortOrder}
+            </if>
+            <if test="sortName =='createTime'">
+                ORDER BY a.create_time ${sortOrder}
+            </if>
+            <if test="sortName =='balance'">
+                ORDER BY c.balance ${sortOrder}
+            </if>
+        </if>
+        limit #{offset},#{limit}
     </select>
 
     <select id="getUserBillAscription" resultMap="BaseResultMap">
@@ -378,6 +412,7 @@
     <select id="selectAllUsers" resultMap="BaseResultMap">
     select u.* from t_user as u ,t_user_role as ur
     where u.id = ur.user_id and ur.role_id=#{role,jdbcType=VARCHAR}
+    ORDER BY  u.user_name ASC
   </select>
     <select id="selectAddressee" resultMap="BaseResultMap">
     select * from t_user

@@ -763,12 +763,12 @@ public class HomeServiceImpl implements HomeService {
         params.put("userId",loginUser.getId());
         if(loginUser.hasRole("SUPER_ADMIN")) {
             //本月消费
+            params.put("billType",1);
             Double MonthConsumption=MonthConsumption(params);
             map.put("MonthConsumption",MonthConsumption);
         }
         //渠道商和代理商
         else if(loginUser.hasRole("DISTRIBUTOR")||loginUser.hasRole("AGENT")||loginUser.hasRole("ASSISTANT")) {
-
             if(loginUser.hasRole("ASSISTANT"))
             {
                 params.put("userId",loginUser.getCreateUserId());
@@ -811,7 +811,7 @@ public class HomeServiceImpl implements HomeService {
         params.put("userId",loginUser.getId());
         if(loginUser.hasRole("SUPER_ADMIN"))
         {
-
+            params.put("billType",1);
             Double DayConsumption=DayConsumption(params);
             map.put("DayConsumption",DayConsumption);
         }

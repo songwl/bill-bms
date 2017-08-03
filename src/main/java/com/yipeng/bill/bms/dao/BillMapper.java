@@ -180,4 +180,7 @@ public interface BillMapper {
     List<Map<String, Object>> selectKeywordNumByAscriptionRanking(Map<String, Object> map);
 
     int selectAllKeywordNumByAscription(Map<String, Object> map);
+
+    List<Map<String,Object>> selectByGroupBillCount(Map<String,Object> sqlMap);
+    List<Map<String,Object>> selectByGroupBillDabiaoCount(Map<String,Object> sqlMap);
 }

@@ -260,4 +260,6 @@ public interface BillService {
     int leaseBill( Map<String, String[]> params, LoginUser loginUser);
 
     List<ZhuanYuanDetails> getZhuanyuanDetails();
+
+    String searchRanking(LoginUser loginUser);
 }

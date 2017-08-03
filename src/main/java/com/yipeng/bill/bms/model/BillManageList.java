@@ -37,7 +37,7 @@ public class BillManageList {
 
     private  String keywordsCompletionRate;
 
-    private  int optimizationDays;
+    private  String optimizationDays;
 
     private  double dayConsumption;
 
@@ -75,11 +75,11 @@ public class BillManageList {
         this.keywordsCompletionRate = keywordsCompletionRate;
     }
 
-    public int getOptimizationDays() {
+    public String getOptimizationDays() {
         return optimizationDays;
     }
 
-    public void setOptimizationDays(int optimizationDays) {
+    public void setOptimizationDays(String optimizationDays) {
         this.optimizationDays = optimizationDays;
     }
 

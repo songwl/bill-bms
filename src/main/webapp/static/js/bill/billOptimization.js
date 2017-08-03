@@ -508,6 +508,44 @@ $(document).ready(function () {
             })
         }
     })
+    //查询排名（出租订单）
+    $("#searchRanking").click(function () {
+        layer.confirm('是否启动查询排名？（注：查询可能消耗时间较长，请耐心等待）', {
+            btn: ['确定', '取消']
+        }, function () {
+            $.ajax({
+                type:'get',
+                url:CTX+"/order/searchRanking",
+                beforeSend: function () {
+                    index1 = layer.load(1, {
+                        shade: [0.1, '#fff'] //0.1透明度的白色背景
+                    });
+                },
+                success:function (result) {
+                    if(result.message!=null)
+                    {
+                        layer.alert(result.message+" 查询有误", {
+                            skin: 'layui-layer-molv' //样式类名
+                            , closeBtn: 0
+                        });
+                        $('#myTable').bootstrapTable('refresh');
+                    }
+                    else
+                    {
+                        layer.alert(" 查询成功!", {
+                            skin: 'layui-layer-molv' //样式类名
+                            , closeBtn: 0
+                        });
+                        $('#myTable').bootstrapTable('refresh');
+                    }
+                    layer.close(index1);
+                }
+
+            });
+        })
+
+    })
+
 
 })
 $(function () {

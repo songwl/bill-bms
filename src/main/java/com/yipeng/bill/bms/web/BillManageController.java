@@ -1,18 +1,27 @@
 package com.yipeng.bill.bms.web;
 
+import com.yipeng.bill.bms.dao.UserMapper;
+import com.yipeng.bill.bms.dao.UserRoleMapper;
+import com.yipeng.bill.bms.domain.User;
+import com.yipeng.bill.bms.domain.UserRole;
 import com.yipeng.bill.bms.service.BillManageService;
 import com.yipeng.bill.bms.service.BillService;
 import com.yipeng.bill.bms.service.UserService;
 import com.yipeng.bill.bms.vo.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,14 +37,21 @@ public class BillManageController extends BaseController {
     private UserService userService;
     @Autowired
     private BillService billService;
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private UserRoleMapper userRoleMapper;
     /**
      * 订单管理(管理员)
      * @param request
      * @return
      */
     @RequestMapping(value="/manageListByAdmin",method = RequestMethod.GET)
-    public  String manageListByAdmin(HttpServletRequest request)
+    public  String manageListByAdmin(HttpServletRequest request, ModelMap modelMap)
     {
+
+        List<User> userList=userMapper.selectAllUsers("4");//所有渠道商
+        modelMap.put("userList",userList);
         return "/billManage/manageListByAdmin";
     }
 
@@ -49,13 +65,16 @@ public class BillManageController extends BaseController {
     public Map<String,Object> manageListByAdminTable(HttpServletRequest request)
     {
         LoginUser user=this.getCurrentAccount();
-        int limit =Integer.parseInt(request.getParameter("limit"));
-        int offset=Integer.parseInt(request.getParameter("offset"));
-
-        offset=(offset-1)*limit;
         Map<String, Object> params=new HashMap<>();
-        params.put("limit",limit);
-        params.put("offset",offset);
+
+        String  website =request.getParameter("website");
+        String searchUserName=request.getParameter("searchUserName");
+        if (!website.isEmpty()) {
+            params.put("website", website);
+        }
+        if (!searchUserName.isEmpty()) {
+            params.put("searchUserName", searchUserName);
+        }
         Map<String,Object> map=billManageService.manageListByAdminTable(params,user);
         return  map;
     }
@@ -67,8 +86,51 @@ public class BillManageController extends BaseController {
      * @return
      */
     @RequestMapping(value="/manageListByOther",method = RequestMethod.GET)
-    public  String manageListByOther(HttpServletRequest request)
+    public  String manageListByOther(HttpServletRequest request, ModelMap modelMap)
     {
+        LoginUser loginUser=this.getCurrentAccount();
+        Map<String,Object> params=new HashMap<>();
+        if(loginUser.hasRole("COMMISSIONER"))
+        {
+            params.put("ascription",loginUser.getId());
+            params.put("inMemberId",loginUser.getCreateUserId());
+            List<User> userList=userMapper.getSearchUserBillAscription(params);
+            modelMap.put("userList",userList);
+        }
+        else
+        {
+            if (loginUser.hasRole("ASSISTANT")) {
+                List<User> userList =userMapper.getUserByCreateId(loginUser.getCreateUserId());
+                if (!CollectionUtils.isEmpty(userList))
+                {
+                    for (User user:userList
+                         ) {
+                        UserRole userRole=userRoleMapper.selectByUserId(user.getId());
+                        if(userRole.getRoleId()!=5||userRole.getRoleId()!=6)
+                        {
+                            userList.remove(user);
+                        }
+                    }
+                }
+                modelMap.put("userList",userList);
+            } else {
+                List<User> userList =userMapper.getUserByCreateId(loginUser.getId());
+                List<User> userListNew=new ArrayList<>();
+                if (!CollectionUtils.isEmpty(userList))
+                {
+                    for (User user:userList
+                            ) {
+                        UserRole userRole=userRoleMapper.selectByUserId(user.getId());
+                        if(userRole.getRoleId()==5||userRole.getRoleId()==6)
+                        {
+                            userListNew.add(user);
+                        }
+                    }
+                }
+                modelMap.put("userList",userListNew);
+            }
+
+        }
         return "/billManage/manageListByOther";
     }
 
@@ -82,17 +144,15 @@ public class BillManageController extends BaseController {
     public Map<String,Object> manageListByOtherTable(HttpServletRequest request,String sortOrder, String sortName)
     {
         LoginUser user=this.getCurrentAccount();
-        int limit =Integer.parseInt(request.getParameter("limit"));
-        int offset=Integer.parseInt(request.getParameter("offset"));
+        String  website =request.getParameter("website");
+        String searchUserName=request.getParameter("searchUserName");
 
-        offset=(offset-1)*limit;
         Map<String, Object> params=new HashMap<>();
-        params.put("limit",limit);
-        params.put("offset",offset);
-        if(sortName!=null)
-        {
-            params.put("sortName",sortName);
-            params.put("sortOrder",sortOrder);
+        if (!website.isEmpty()) {
+            params.put("website", website);
+        }
+        if (!searchUserName.isEmpty()) {
+            params.put("searchUserName", searchUserName);
         }
         Map<String,Object> map= billManageService.manageListByOtherTable(params,user);
         return  map;

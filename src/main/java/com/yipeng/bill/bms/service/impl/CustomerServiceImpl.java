@@ -275,46 +275,58 @@ public class CustomerServiceImpl implements CustomerService {
             Role role=roleMapper.selectByRoleCode("DISTRIBUTOR");
             params.put("roleId",role.getId());
             params.put("userId",user.getId());
-             List<User> userList=userMapper.getUserRoleByCreateId(params);
+            List<Map<String, Object>> userList=userMapper.selectByCustomerList(params);
              Long total=userMapper.getUserRoleByCreateIdCount(params);
-            for (User user1: userList
-                 ) {
-                     i++;
-                     CustomerListDetails customerListDetails=new CustomerListDetails();
-                     customerListDetails.setId(i);
-                     customerListDetails.setCustomerId(user1.getId());
-                     UserRole userRole=userRoleMapper.selectByUserId(user1.getId());
-                     if(userRole!=null)
-                     {
-                         Role role1=roleMapper.selectByPrimaryKey(userRole.getRoleId());
-                         customerListDetails.setKehuRoleName(role1.getRoleName());
-                     }
+            for (int j = 0; j < userList.size(); j++) {
+                i++;
+                CustomerListDetails customerListDetails=new CustomerListDetails();
+                customerListDetails.setId(i);
+                customerListDetails.setCustomerId(Long.parseLong(userList.get(j).get("id").toString()));
+                customerListDetails.setKehuRoleName(userList.get(j).get("role_name").toString());
+                customerListDetails.setUserName(userList.get(j).get("user_name").toString());
+                if(userList.get(j).get("real_name")!=null)
+                {
+                    customerListDetails.setRealName(userList.get(j).get("real_name").toString());
+                }
+                if(userList.get(j).get("contact")!=null)
+                {
+                    customerListDetails.setContact(userList.get(j).get("contact").toString());
+                }
 
-                     customerListDetails.setUserName(user1.getUserName());
-                     customerListDetails.setRealName(user1.getRealName());
-                     customerListDetails.setContact(user1.getContact());
-                     customerListDetails.setPhone(user1.getPhone());
-                     customerListDetails.setQq(user1.getQq());
-                     customerListDetails.setStatus(user1.getStatus());
-                     customerListDetails.setCreateTime(DateUtils.formatDate(user1.getCreateTime()));
-                     customerListDetails.setDailiRole(user1.getDailiRole());
-                     customerListDetails.setRoleName(user.getRoles().get(0));
-                     if(user1.getLastLoginTime()!=null)
-                     {
-                         customerListDetails.setLastLoginTime(DateUtils.formatDate(user1.getLastLoginTime()));
-                     }
-                     customerListDetails.setLoginCount(user1.getLoginCount());
+                customerListDetails.setStatus(Boolean.parseBoolean(userList.get(j).get("status").toString()));
+                if(userList.get(j).get("phone")!=null)
+                {
+                    customerListDetails.setPhone(userList.get(j).get("phone").toString());
+                }
+                if(userList.get(j).get("qq")!=null)
+                {
+                    customerListDetails.setQq(userList.get(j).get("qq").toString());
+                }
+                if(userList.get(j).get("create_time")!=null)
+                {
+                    customerListDetails.setCreateTime(userList.get(j).get("create_time").toString());
+                }
+                if(userList.get(j).get("daili_Role")!=null)
+                {
 
-                     int count=billPriceMapper.selectBillCount(user1.getId());
+                    customerListDetails.setDailiRole(Integer.parseInt(userList.get(j).get("daili_Role").toString()));
+                }
 
-                     FundAccount fundAccount= fundAccountMapper.selectByUserId(user1.getId());
-                     if(fundAccount!=null)
-                     {
-                         customerListDetails.setBalance(fundAccount.getBalance());
-                     }
-                     customerListDetails.setMissionCount(count);
-                     customerListDetailsList.add(customerListDetails);
+                customerListDetails.setRoleName(user.getRoles().get(0));
+                if(userList.get(j).get("balance")!=null)
+                {
 
+                    customerListDetails.setBalance(new BigDecimal(userList.get(j).get("balance").toString()));
+                }
+                if(userList.get(j).get("login_count")!=null)
+                {
+
+                    customerListDetails.setLoginCount(Integer.parseInt(userList.get(j).get("login_count").toString()));
+                }
+
+                int count=billPriceMapper.selectBillCount(Long.parseLong(userList.get(j).get("id").toString()));
+                customerListDetails.setMissionCount(count);
+                customerListDetailsList.add(customerListDetails);
             }
             Map<String,Object> map=new HashMap<>();
             map.put("rows",customerListDetailsList);
@@ -386,45 +398,58 @@ public class CustomerServiceImpl implements CustomerService {
                 params.put("userId",user.getId());
             }
 
-            List<User> userList=userMapper.getUserRoleByCreateId(params);
+            List<Map<String, Object>> userList=userMapper.selectByCustomerList(params);
             Long total=userMapper.getUserRoleByCreateIdCount(params);
-            for (User user1: userList
-                    ) {
+            for (int j = 0; j < userList.size(); j++) {
                 i++;
                 CustomerListDetails customerListDetails=new CustomerListDetails();
                 customerListDetails.setId(i);
-                customerListDetails.setCustomerId(user1.getId());
-                UserRole userRole=userRoleMapper.selectByUserId(user1.getId());
-                if(userRole!=null)
+                customerListDetails.setCustomerId(Long.parseLong(userList.get(j).get("id").toString()));
+                customerListDetails.setKehuRoleName(userList.get(j).get("role_name").toString());
+                customerListDetails.setUserName(userList.get(j).get("user_name").toString());
+                if(userList.get(j).get("real_name")!=null)
                 {
-                    Role role1=roleMapper.selectByPrimaryKey(userRole.getRoleId());
-                    customerListDetails.setKehuRoleName(role1.getRoleName());
+                    customerListDetails.setRealName(userList.get(j).get("real_name").toString());
                 }
-                customerListDetails.setUserName(user1.getUserName());
-                customerListDetails.setRealName(user1.getRealName());
-                customerListDetails.setContact(user1.getContact());
-                customerListDetails.setStatus(user1.getStatus());
-                customerListDetails.setPhone(user1.getPhone());
-                customerListDetails.setQq(user1.getQq());
-                customerListDetails.setCreateTime(DateUtils.formatDate(user1.getCreateTime()));
-                customerListDetails.setDailiRole(user1.getDailiRole());
+                if(userList.get(j).get("contact")!=null)
+                {
+                    customerListDetails.setContact(userList.get(j).get("contact").toString());
+                }
+
+                customerListDetails.setStatus(Boolean.parseBoolean(userList.get(j).get("status").toString()));
+                if(userList.get(j).get("phone")!=null)
+                {
+                    customerListDetails.setPhone(userList.get(j).get("phone").toString());
+                }
+                if(userList.get(j).get("qq")!=null)
+                {
+                    customerListDetails.setQq(userList.get(j).get("qq").toString());
+                }
+                if(userList.get(j).get("create_time")!=null)
+                {
+                    customerListDetails.setCreateTime(userList.get(j).get("create_time").toString());
+                }
+                if(userList.get(j).get("daili_Role")!=null)
+                {
+
+                    customerListDetails.setDailiRole(Integer.parseInt(userList.get(j).get("daili_Role").toString()));
+                }
+
                 customerListDetails.setRoleName(user.getRoles().get(0));
-                if(user1.getLastLoginTime()!=null)
+                if(userList.get(j).get("balance")!=null)
                 {
-                    customerListDetails.setLastLoginTime(DateUtils.formatDate(user1.getLastLoginTime()));
+
+                    customerListDetails.setBalance(new BigDecimal(userList.get(j).get("balance").toString()));
                 }
-                customerListDetails.setLoginCount(user1.getLoginCount());
-
-                int count=billPriceMapper.selectBillCount(user1.getId());
-
-                FundAccount fundAccount= fundAccountMapper.selectByUserId(user1.getId());
-                if(fundAccount!=null)
+                if(userList.get(j).get("login_count")!=null)
                 {
-                    customerListDetails.setBalance(fundAccount.getBalance());
+
+                    customerListDetails.setLoginCount(Integer.parseInt(userList.get(j).get("login_count").toString()));
                 }
+
+                int count=billPriceMapper.selectBillCount(Long.parseLong(userList.get(j).get("id").toString()));
                 customerListDetails.setMissionCount(count);
                 customerListDetailsList.add(customerListDetails);
-
             }
             Map<String,Object> map=new HashMap<>();
             map.put("rows",customerListDetailsList);

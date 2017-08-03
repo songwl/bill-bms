@@ -124,12 +124,16 @@ $.ajax({
          for(var i=0;i<result.data.length;i++)
          {
              j++;
-             str+='<tr> <th>'+j+'</th><th>'+result.data[i]['userName']+'</th>' +
+             str+='<tr> ' +
+                 '<th>'+j+'</th><th>'+result.data[i]['userName']+'</th>' +
                  '<th>'+result.data[i]['countNoCostByWebsite']+'</th>' +
-                 '<th>'+((result.data[i]['billStandardRate']).toFixed(2))*100+'%</th>' +
+                 '<th>'+(((result.data[i]['billStandardRate']).toFixed(2))*100).toFixed(2)+'%</th>' +
                  '<th>'+result.data[i]['keywordsCount']+'</th><th>'+result.data[i]['billCount']+'</th>' +
-                 '<th>'+result.data[i]['weekCount']+'</th><th>'+result.data[i]['monthCount']+'</th><th>'+result.data[i]['cost']+'</th>' +
-                 '<th>'+result.data[i]['allCost']+'</th> </tr>';
+                 '<th>'+result.data[i]['weekCount']+'</th><th>'+result.data[i]['monthCount']+'</th>' +
+                 '<th>'+result.data[i]['cost']+'</th>' +
+                 '<th>'+result.data[i]['allCost']+'</th>' +
+                 '<th>'+((result.data[i]['cost'])/(result.data[i]['allCost'])*100).toFixed(2)+'%</th>' +
+                 ' </tr>';
          }
           $("#caozuoyuanTbody").append(str);
     }

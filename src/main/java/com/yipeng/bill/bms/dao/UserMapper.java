@@ -75,4 +75,8 @@ public interface UserMapper {
     List<User> selectUserNameById(Map<String, Object> map);
 
     List<Map<String, Object>> selectCustomer(Long userId);
+
+    //查询客户详细
+    List<Map<String, Object>> selectByCustomerList(Map<String, Object> params);
+
 }

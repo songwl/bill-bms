@@ -22,9 +22,19 @@
 
     <div class="nav_R2 right" >
         <div>
-            客户ID:
+            网址:
         </div>
-        <input name="acid" class="form-control" value="" style="width: 60px;" type="text">
+        <input id="website" name="userName" class="form-control" value="" style="width: 150px;" type="text">
+        <div>
+            客户:
+        </div>
+        <select style="height: 35px;border: 1px solid #aaaaaa;" id="searchUserName">
+             <option>--请选择--</option>
+             <#list userList as user>
+                 <option value="${user.id}">${user.userName}</option>
+             </#list>
+         </select>
+        <span id="searchButton">查询</span>
     </div>
     <div class="cls">
     </div>

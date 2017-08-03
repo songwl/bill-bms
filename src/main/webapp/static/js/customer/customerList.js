@@ -556,13 +556,14 @@ var TableInit = function () {
                     title: '任务数',
 
 
+
                 },
                 {
                     field: "balance",
                     align: 'center',
                     valign: 'middle',
                     title: '余额',
-
+                    sortable: true,
 
                 },
                 {

@@ -144,9 +144,9 @@
             <table id="caozuoyuanTable" class="table table-striped  table-condensed table-responsive" style="color:#09c; width:100%;font-size: 13px;font-family:" 微软雅黑>
                 <thead>
                 <tr>
-                    <th >编号</th>
+                    <th>编号</th>
                     <th>操作员</th>
-                    <th>按网址没有扣费</th>
+                    <th>按网址无扣费</th>
                     <th>达标率</th>
                     <th>任务数</th>
                     <th>订单数</th>
@@ -154,9 +154,10 @@
                     <th>月接单</th>
                     <th>实际扣费</th>
                     <th>总扣费</th>
+                    <th>扣费率</th>
                 </tr>
                 </thead>
-                <tbody id="caozuoyuanTbody"></tbody>
+                <tbody id="caozuoyuanTbody" style="border: 1px solid #ddd;"></tbody>
 
 
             </table>
